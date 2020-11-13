@@ -63,6 +63,25 @@ class NewApiClient():
         request = requests.delete(API_BASE + "/token/" + tokenId, headers = self.headers_default)
         return request.status_code
 
+    def getDomainActivity(self, domainId, page = None, limit = None, dateFrom = None, dateTo = None, event = None):
+        self.domainId = domainId
+        self.page = page
+        self.limit = limit
+        self.dateFrom = dateFrom
+        self.dateTo = dateTo
+        self.event = event
+
+        _data = {
+            "page": page or None,
+            "limit": limit or None,
+            "dateFrom": dateFrom or None,
+            "dateTo": dateTo or None,
+            "event": event or None
+        } 
+
+        request = requests.get(API_BASE + "/activity/" + domainId, headers = self.headers_default, json = _data)
+        return request.text
+
     def getDomains(self):
         request = requests.get(API_BASE + "/domains", headers = self.headers_default)
         return request.text
