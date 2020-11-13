@@ -22,6 +22,26 @@ class NewApiClient():
         }
 
         super(NewApiClient, self).__init__()
+
+    def _generateConfigChangeBody(self, key, value):
+        self.key = key
+        self.value = value
+
+        data = {
+            key: value
+        }
+
+        return data
+
+    def getDomains(self):
+        request = requests.get(API_BASE + "/domains", headers = self.headers_default)
+        return request.text
+
+    def getDomainById(self, domainId):
+        self.domainId = domainId
+
+        request = requests.get(API_BASE + "/domains/" + domainId, headers = self.headers_default)
+        return request.text
     
     def getMessageById(self, messageId):
         self.messageId = messageId
@@ -38,12 +58,78 @@ class NewApiClient():
         return request.text
 
     def getRecipientById(self, recipientId):
+        self.recipientId = recipientId
         request = requests.get(API_BASE + "/recipients/" + recipientId, headers = self.headers_default)
         return request.text
 
     def deleteRecipient(self, recipientId):
+        self.recipientId = recipientId
         request = requests.delete(API_BASE + "/recipients/" + recipientId, headers = self.headers_default)
         return request.status_code
+
+    def sendPaused(self, domainId, enable = True):
+        self.domainId = domainId
+        self.enable = enable
+        _data = self._generateConfigChangeBody("send_paused", enable)
+        request = requests.put(API_BASE + "/domains/" + domainId + "/settings", headers = self.headers_default, json=_data)
+        return request.text
+
+    def trackClicks(self, domainId, enable = True):
+        self.domainId = domainId
+        self.enable = enable
+        _data = self._generateConfigChangeBody("track_clicks", enable)
+        request = requests.put(API_BASE + "/domains/" + domainId + "/settings", headers = self.headers_default, json=_data)
+        return request.text
+
+    def trackOpens(self, domainId, enable = True):
+        self.domainId = domainId
+        self.enable = enable
+        _data = self._generateConfigChangeBody("track_opens", enable)
+        request = requests.put(API_BASE + "/domains/" + domainId + "/settings", headers = self.headers_default, json=_data)
+        return request.text
+
+    def trackUnsubscribe(self, domainId, enable = True):
+        self.domainId = domainId
+        self.enable = enable
+        _data = self._generateConfigChangeBody("track_unsubscribe", enable)
+        request = requests.put(API_BASE + "/domains/" + domainId + "/settings", headers = self.headers_default, json=_data)
+        return request.text
+
+    def trackUnsubscribeHtml(self, domainId, html):
+        self.domainId = domainId
+        self.html = html
+        _data = self._generateConfigChangeBody("track_unsubscribe_html", html)
+        request = requests.put(API_BASE + "/domains/" + domainId + "/settings", headers = self.headers_default, json=_data)
+        return request.text
+
+    def trackUnsubscribePlain(self, domainId, plaintext):
+        self.domainId = domainId
+        self.plaintext = plaintext
+        _data = self._generateConfigChangeBody("track_unsubscribe_plain", plaintext)
+        request = requests.put(API_BASE + "/domains/" + domainId + "/settings", headers = self.headers_default, json=_data)
+        return request.text
+
+
+    def trackContent(self, domainId, enable = True):
+        self.domainId = domainId
+        self.enable = enable
+        _data = self._generateConfigChangeBody("track_content", enable)
+        request = requests.put(API_BASE + "/domains/" + domainId + "/settings", headers = self.headers_default, json=_data)
+        return request.text
+
+    def customTracking(self, domainId, enable = True):
+        self.domainId = domainId
+        self.enable = enable
+        _data = self._generateConfigChangeBody("custom_tracking_enabled", enable)
+        request = requests.put(API_BASE + "/domains/" + domainId + "/settings", headers = self.headers_default, json=_data)
+        return request.text
+
+    def setCustomTrackingSubdomain(self, domainId, subdomain):
+        self.domainId = domainId
+        self.subdomain = subdomain
+        _data = self._generateConfigChangeBody("custom_tracking_subdomain", subdomain)
+        request = requests.put(API_BASE + "/domains/" + domainId + "/settings", headers = self.headers_default, json=_data)
+        return request.text
 
     def send(self, mail_from, mail_to, mail_subject, mail_content, mail_text=None):
         
