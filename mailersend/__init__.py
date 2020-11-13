@@ -33,6 +33,36 @@ class NewApiClient():
 
         return data
 
+    def createToken(self, token_name, token_scopes):
+        self.token_name = token_name
+        self.token_scopes = token_scopes
+
+        _data = {
+            "name": token_name,
+            "scopes": token_scopes
+        }
+        
+        request = requests.post(API_BASE + "/token", headers = self.headers_default, json=_data)
+        return request.text
+
+    def freezeToken(self, token_id, pause=True):
+        self.token_id = token_id
+        self.pause = pause
+
+        if pause == True:
+            _data = self._generateConfigChangeBody("status", "pause")
+        else:
+            _data = self._generateConfigChangeBody("status", "unpause")
+
+        request = requests.put(API_BASE + "/token/" + token_id + "/settings", headers = self.headers_default, json=_data)
+        return request.text
+
+    def deleteToken(self, token_id):
+        self.token_id = token_id
+
+        request = requests.delete(API_BASE + "/token/" + tokenId, headers = self.headers_default)
+        return request.status_code
+
     def getDomains(self):
         request = requests.get(API_BASE + "/domains", headers = self.headers_default)
         return request.text
