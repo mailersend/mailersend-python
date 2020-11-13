@@ -42,6 +42,26 @@ mailer.send(my_mail, subscriber_list, subject, html, text)
 
 ```
 
+### Get ID by name
+
+This helper function allows to programatically gather IDs for domains and subscribers for later
+use in the code. Takes 2 arguments, `category` and `name`, and returns the respective ID of the searched-for item.
+
+Available options for category:
+ 
+- domains
+- recipients
+
+
+
+``` python
+import mailersend
+
+mailer = mailersend.NewApiClient()
+
+mailer.getIdByName("domains", "mailersend.com")
+```
+
 ### Get activity list
 
 The activity list can be filtered using the [available query parameters](https://developers.mailersend.com/api/v1/activity.html#request-parameters),
