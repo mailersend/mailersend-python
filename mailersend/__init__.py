@@ -33,20 +33,20 @@ class NewApiClient():
 
         return data
 
-    def createToken(self, token_name, token_scopes):
-        self.token_name = token_name
-        self.token_scopes = token_scopes
+    def createToken(self, tokenName, tokenScopes):
+        self.tokenName = tokenName
+        self.tokenScopes = tokenScopes
 
         _data = {
-            "name": token_name,
-            "scopes": token_scopes
+            "name": tokenName,
+            "scopes": tokenScopes
         }
         
         request = requests.post(API_BASE + "/token", headers = self.headers_default, json=_data)
         return request.text
 
-    def freezeToken(self, token_id, pause=True):
-        self.token_id = token_id
+    def freezeToken(self, tokenId, pause=True):
+        self.tokenId = tokenId
         self.pause = pause
 
         if pause == True:
@@ -54,11 +54,11 @@ class NewApiClient():
         else:
             _data = self._generateConfigChangeBody("status", "unpause")
 
-        request = requests.put(API_BASE + "/token/" + token_id + "/settings", headers = self.headers_default, json=_data)
+        request = requests.put(API_BASE + "/token/" + tokenId + "/settings", headers = self.headers_default, json=_data)
         return request.text
 
-    def deleteToken(self, token_id):
-        self.token_id = token_id
+    def deleteToken(self, tokenId):
+        self.tokenId = tokenId
 
         request = requests.delete(API_BASE + "/token/" + tokenId, headers = self.headers_default)
         return request.status_code
