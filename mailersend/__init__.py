@@ -91,6 +91,29 @@ class NewApiClient():
 
         request = requests.get(API_BASE + "/domains/" + domainId, headers = self.headers_default)
         return request.text
+
+    def getIdByName(self, category, name):
+        self.category = category
+        self.name = name
+
+        request = requests.get(API_BASE + "/" + category, headers = self.headers_default)
+
+        _json_req = request.json()
+
+        category_search_asset = {
+            "recipients": "email",
+            "domains": "name"
+        }
+
+        _data_block = _json_req['data']
+
+        for data in _data_block:
+            if data[category_search_asset.get(category)] == name:
+                return data['id']
+            else:
+                raise ValueError('Not found')
+
+        return request.text
     
     def getMessageById(self, messageId):
         self.messageId = messageId
