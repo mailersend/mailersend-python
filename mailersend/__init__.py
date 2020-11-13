@@ -1,1 +1,64 @@
-__version__ = '0.1.0'
+import os
+import requests
+import json
+
+API_BASE = "https://api.mailersend.com/v1"
+class NewApiClient():
+
+    def __init__(
+        self,
+        api_base = API_BASE,
+        headers_default = None,
+        headers_auth = None,
+        mailersend_api_key = None):
+
+        self.mailersend_api_key = os.environ.get("MAILERSEND_API_KEY")
+        self.headers_auth = 'Bearer {}'.format(self.mailersend_api_key)
+        self.headers_default = {
+            "Content-Type": "application/json",
+            "X-Requested-With": "XMLHttpRequest",
+            "User-Agent": "MailerSend-Client-python-v1",
+            "Authorization": self.headers_auth
+        }
+
+        super(NewApiClient, self).__init__()
+    
+    def getMessages(self):
+        request = requests.get(API_BASE+"/messages", headers = self.headers_default)
+        return request.text
+
+    def send(self, mail_from, mail_to, mail_subject, mail_content, mail_text=None):
+        
+        self.mail_from = {
+            "from": {
+                "email": mail_from
+            }
+        }
+        
+        mail_data = [ { "email": receiver } for receiver in mail_to ]
+        self.mail_to = {
+            "to": mail_data
+        }
+        
+    
+        self.mail_subject = {
+            "subject": mail_subject
+        }
+
+        self.mail_content = {
+                "html": mail_content
+            }
+        
+        self.mail_text = {
+            "text": mail_text or "foo"
+        }
+
+        message = { **self.mail_from, **self.mail_to, **self.mail_subject, **self.mail_content, **self.mail_text } 
+
+        # print(json.dumps(self.headers_default))
+        # print(json.dumps(message))
+        
+        request = requests.post(API_BASE + "/email", headers = self.headers_default, json=message)
+        return request.status_code, request.text
+
+        
