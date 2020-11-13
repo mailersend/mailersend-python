@@ -21,7 +21,9 @@ $ python3 -m pip install mailersend
 <a name="usage"></a>
 # Usage
 
-Sending a basic email (requires the `MAILERSEND_API_KEY` environment variable).
+### Requires the `MAILERSEND_API_KEY` environment variable
+
+### Sending a basic email.
 
 ``` python
 import mailersend
@@ -32,13 +34,42 @@ subject = "Subject"
 text = "This is the text content"
 html = "<p>This is the HTML content</p>"
 
-my_mail = "owner@verified_domain.com
+my_mail = "owner@verified_domain.com"
 subscriber_list = [ 'pamela@dundermifflin.com',
 'dwight@dunderfmifflin.com', 'jim@dundermifflin.com']
 
 mailer.send(my_mail, subscriber_list, subject, html, text)
 
 ```
+
+### Get activity list
+
+The activity list can be filtered using the [available query parameters](https://developers.mailersend.com/api/v1/activity.html#request-parameters),
+found at [MailerSend official documentation](https://developers.mailersend.com).
+
+``` python
+import mailersend
+
+mailer = mailersend.NewApiClient()
+
+mailer.getDomainActivity("DOMAIN_ID")
+
+```
+
+### Get domain list
+
+The activity list can be filtered using the [available query parameters](https://developers.mailersend.com/api/v1/domains.html#get-a-list-of-domains),
+found at [MailerSend official documentation](https://developers.mailersend.com).
+
+``` python
+import mailersend
+
+mailer = mailersend.NewApiClient()
+
+mailer.getDomains("DOMAIN_ID")
+
+```
+
 
 <a name="testing"></a>
 
