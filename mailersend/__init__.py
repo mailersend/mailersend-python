@@ -23,9 +23,27 @@ class NewApiClient():
 
         super(NewApiClient, self).__init__()
     
-    def getMessages(self):
-        request = requests.get(API_BASE+"/messages", headers = self.headers_default)
+    def getMessageById(self, messageId):
+        self.messageId = messageId
+
+        request = requests.get(API_BASE + "/messages/" + messageId, headers = self.headers_default)
         return request.text
+
+    def getMessages(self):
+        request = requests.get(API_BASE+ "/messages", headers = self.headers_default)
+        return request.text
+
+    def getRecipients(self):
+        request = requests.get(API_BASE+ "/recipients", headers = self.headers_default)
+        return request.text
+
+    def getRecipientById(self, recipientId):
+        request = requests.get(API_BASE + "/recipients/" + recipientId, headers = self.headers_default)
+        return request.text
+
+    def deleteRecipient(self, recipientId):
+        request = requests.delete(API_BASE + "/recipients/" + recipientId, headers = self.headers_default)
+        return request.status_code
 
     def send(self, mail_from, mail_to, mail_subject, mail_content, mail_text=None):
         
@@ -59,6 +77,6 @@ class NewApiClient():
         # print(json.dumps(message))
         
         request = requests.post(API_BASE + "/email", headers = self.headers_default, json=message)
-        return request.status_code, request.text
+        return request.text
 
         
