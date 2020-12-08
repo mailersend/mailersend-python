@@ -29,3 +29,5 @@ jobs:
 
       - name: Run tests
         run: poetry run python -m unittest discover
+        env:
+          MAILERSEND_API_KEY: ${{ secrets.MAILERSEND_API_KEY }}
