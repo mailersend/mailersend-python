@@ -1,3 +1,11 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - main
+      - feature/**
+
 jobs:
   test:
     strategy:
