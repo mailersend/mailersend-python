@@ -28,6 +28,6 @@ jobs:
         run: poetry install
 
       - name: Run tests
-        run: poetry run python -m unittest discover
+        run: poetry run python -m unittest test/test_mailersend.py
         env:
           MAILERSEND_API_KEY: ${{ secrets.MAILERSEND_API_KEY }}
