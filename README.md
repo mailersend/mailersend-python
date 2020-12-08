@@ -1,5 +1,7 @@
 <a href="https://www.mailersend.com"><img src="https://www.mailersend.com/images/logo.svg" width="200px"/></a>
 
+[![Actions Status](https://github.com/mailersend/mailersend-python/workflows/test/badge.svg)](https://github.com/mailersend/mailersend-python/actions)
+
 MailerSend Python SDK
 
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE.md)
