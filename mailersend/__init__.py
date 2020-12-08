@@ -3,9 +3,10 @@ import os
 
 import requests
 
-__version__ = 0.1.0
+__version__ = "0.1.0"
 
 API_BASE = "https://api.mailersend.com/v1"
+
 
 class NewApiClient:
     def __init__(
@@ -282,4 +283,3 @@ class NewApiClient:
             API_BASE + "/email", headers=self.headers_default, json=message
         )
         return request.text
-
