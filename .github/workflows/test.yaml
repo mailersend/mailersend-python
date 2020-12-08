@@ -23,7 +23,7 @@ jobs:
 
       - name: Install poetry and dependencies
         run: |
-          python -m pip install -u pip
+          python -m pip install --upgrade pip
           pip install poetry
           poetry install
 
