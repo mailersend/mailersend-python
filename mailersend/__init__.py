@@ -3,8 +3,9 @@ import os
 
 import requests
 
-API_BASE = "https://api.mailersend.com/v1"
+__version__ = 0.1.0
 
+API_BASE = "https://api.mailersend.com/v1"
 
 class NewApiClient:
     def __init__(
