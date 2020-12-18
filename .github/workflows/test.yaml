@@ -12,8 +12,9 @@ jobs:
       fail-fast: false
       matrix:
         python-version: [3.8]
-        poetry-version: [1.0, 1.1.2]
-        os: [ubuntu-18.04, macos-latest, windows-latest]
+        # poetry-version: [1.0, 1.1.2]
+        os: [ubuntu-18.04]
+        # :up: , macos-latest, windows-latest
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
@@ -37,7 +38,7 @@ jobs:
         with:
           apiHost: https://grfn-annttns.mlsend.io
           apiToken: ${{ secrets.GRAFANA_API_TOKEN }}
-          text: Deployment of ${{ github.sha }}
+          text: Deployment of ${{ github.event_name }} by ${{ github.actor }}
           dashboardId: 3
           panelId: 77
           tags: deployment,github
