@@ -38,7 +38,7 @@ jobs:
         with:
           apiHost: https://grfn-annttns.mlsend.io
           apiToken: ${{ secrets.GRAFANA_API_TOKEN }}
-          text: ${{ github.event_name }} ${{ github.ref }} by ${{ github.actor }}
+          text: "${{ github.repository }}: ${{ github.event_name }} ${{ github.ref }} by ${{ github.actor }}"
           dashboardId: 3
           panelId: 77
           tags: deployment,github
