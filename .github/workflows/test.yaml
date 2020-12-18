@@ -28,6 +28,16 @@ jobs:
         run: poetry install
 
       - name: Run tests
-        run: poetry run python -m unittest test/test_mailersend.py
+        run: python -m unittest test/test_mailersend.py
         env:
           MAILERSEND_API_KEY: ${{ secrets.MAILERSEND_API_KEY }}
+
+      - name: Annotate
+        uses: frankie567/grafana-annotation-action@v1.0.2
+        with:
+          apiHost: https://grfn-annttns.mlsend.io
+          apiToken: ${{ secrets.GRAFANA_API_TOKEN }}
+          text: Deployment of ${{ github.sha }}
+          dashboardId: 3
+          panelId: 77
+          tags: deployment,github
