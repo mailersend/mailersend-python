@@ -35,10 +35,10 @@ text = "This is the text content"
 html = "<p>This is the HTML content</p>"
 
 my_mail = "owner@verified_domain.com"
-subscriber_list = [ 'pamela@dundermifflin.com',
+recipient_list = [ 'pamela@dundermifflin.com',
 'dwight@dunderfmifflin.com', 'jim@dundermifflin.com']
 
-mailer.send(my_mail, subscriber_list, subject, html, text)
+mailer.send(my_mail, recipient_list, subject, html, text)
 
 ```
 
