@@ -8,11 +8,11 @@ API_BASE = "https://api.mailersend.com/v1"
 
 class NewApiClient:
     def __init__(
-        self,
-        api_base=API_BASE,
-        headers_default=None,
-        headers_auth=None,
-        mailersend_api_key=None,
+            self,
+            api_base=API_BASE,
+            headers_default=None,
+            headers_auth=None,
+            mailersend_api_key=None,
     ):
 
         self.mailersend_api_key = os.environ.get("MAILERSEND_API_KEY")
@@ -70,7 +70,7 @@ class NewApiClient:
         return request.status_code
 
     def getDomainActivity(
-        self, domainId, page=None, limit=None, dateFrom=None, dateTo=None, event=None
+            self, domainId, page=None, limit=None, dateFrom=None, dateTo=None, event=None
     ):
         self.domainId = domainId
         self.page = page
@@ -254,6 +254,9 @@ class NewApiClient:
         return request.text
 
     def send(self, mail_from, mail_to, mail_subject, mail_content, mail_text=None):
+        """
+       Send an email using coded HTML and content
+       """
 
         self.mail_from = {"from": {"email": mail_from}}
 
@@ -274,11 +277,28 @@ class NewApiClient:
             **self.mail_text,
         }
 
-        # print(json.dumps(self.headers_default))
-        # print(json.dumps(message))
+        return self.email_send_request(message)
 
+    def send_mail_with_template(self, mail_from: str, mail_to: list, template_id: str) -> str:
+        """
+        Send an email using a template created on sendermail.
+        """
+
+        self.mail_from = {"from": {"email": mail_from}}
+        mail_data = [{"email": receiver} for receiver in mail_to]
+        self.mail_to = {"to": mail_data}
+        self.template_id = {"template_id": template_id}
+
+        message = {
+            **self.mail_from,
+            **self.mail_to,
+            **self.template_id
+        }
+
+        return self.email_send_request(message)
+
+    def email_send_request(self, message: dict):
         request = requests.post(
             API_BASE + "/email", headers=self.headers_default, json=message
         )
         return request.text
-
