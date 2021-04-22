@@ -38,7 +38,11 @@ my_mail = "owner@verified_domain.com"
 recipient_list = [ 'pamela@dundermifflin.com',
 'dwight@dunderfmifflin.com', 'jim@dundermifflin.com']
 
+# send mail with custom (HTML) text and content
 mailer.send(my_mail, recipient_list, subject, html, text)
+
+# send mail using template ID
+mailer.send(my_mail, recipient_list, subject, None, None, "<TEMPLATE_ID>")
 
 ```
 

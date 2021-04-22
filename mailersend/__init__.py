@@ -253,7 +253,7 @@ class NewApiClient:
         )
         return request.text
 
-    def send(self, mail_from, mail_to, mail_subject, mail_content, mail_text=None):
+    def send(self, mail_from, mail_to, mail_subject, mail_content=None, mail_text=None, template_id=None):
 
         self.mail_from = {"from": {"email": mail_from}}
 
@@ -262,23 +262,34 @@ class NewApiClient:
 
         self.mail_subject = {"subject": mail_subject}
 
-        self.mail_content = {"html": mail_content}
+        self.mail_content = {"html": mail_content or None}
 
-        self.mail_text = {"text": mail_text or "foo"}
+        self.mail_text = {"text": mail_text or None}
 
-        message = {
-            **self.mail_from,
-            **self.mail_to,
-            **self.mail_subject,
-            **self.mail_content,
-            **self.mail_text,
-        }
+        self.template_id = {"template_id": template_id or None}
 
-        # print(json.dumps(self.headers_default))
-        # print(json.dumps(message))
+        if mail_content is None and mail_text is None:
+            message = {
+                **self.mail_from,
+                **self.mail_to,
+                **self.mail_subject,
+                **self.template_id,
+            }
+        else:
+            message = {
+                **self.mail_from,
+                **self.mail_to,
+                **self.mail_subject,
+                **self.mail_content,
+                **self.mail_text,
+            }
 
         request = requests.post(
             API_BASE + "/email", headers=self.headers_default, json=message
         )
-        return request.text
+
+        print(json.dumps(self.headers_default))
+        print(json.dumps(message))
+
+        return print(request.json)
 
