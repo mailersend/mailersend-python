@@ -288,8 +288,8 @@ class NewApiClient:
             API_BASE + "/email", headers=self.headers_default, json=message
         )
 
-        print(json.dumps(self.headers_default))
-        print(json.dumps(message))
+        # print(json.dumps(self.headers_default))
+        # print(json.dumps(message))
 
         return print(request.json)
 
