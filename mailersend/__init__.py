@@ -280,4 +280,4 @@ class NewApiClient:
         request = requests.post(
             API_BASE + "/email", headers=self.headers_default, json=message
         )
-        return request.status_code
+        return print(request.status_code)
