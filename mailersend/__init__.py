@@ -274,8 +274,8 @@ class NewApiClient:
             **self.mail_text,
         }
 
-        # print(json.dumps(self.headers_default))
-        # print(json.dumps(message))
+            print(json.dumps(self.headers_default))
+             print(json.dumps(message))
 
         request = requests.post(
             API_BASE + "/email", headers=self.headers_default, json=message
