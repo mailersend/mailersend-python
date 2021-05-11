@@ -135,6 +135,44 @@ mailer.getDomains("DOMAIN_ID")
 
 ```
 
+### Update domain settings
+
+There is a function that can be used per domain setting ([available domain settings](https://developers.mailersend.com/api/v1/domains.html#update-domain-settings)).
+
+A full example for all domain settings is showcased here:
+
+``` python
+import mailersend
+
+mailer = mailersend.NewApiClient()
+
+# enable send_paused
+mailer.sendPaused('<domainID>', True)
+
+# enable clicks tracking
+mailer.trackClicks('<domainID>', True)
+
+# enable opens tracking
+mailer.trackOpens('<domainID>', True)
+
+# enable unsubscribes tracking
+mailer.trackUnsubscribe('<domainID>', True)
+
+# add unsubscribe custom plaintext string
+mailer.trackUnsubscribePlain('<domainID>', 'Click here to unsubscribe')
+
+# add unsubscribe custom HTML string
+mailer.trackUnsubscribeHtml('<domainID>', '<p>Click here to <a href=\"{$unsubscribe}\">unsubscribe<\/a><\/p>')
+
+# enable content tracking
+mailer.trackContent('<domainID>', True)
+
+# enable custom tracking
+mailer.customTracking('<domainID>', True)
+
+# set custom tracking subdomain
+mailer.setCustomTrackingSubdomain('<domainID>', 'track.dundermifflin.com')
+```
 
 <a name="testing"></a>
 
