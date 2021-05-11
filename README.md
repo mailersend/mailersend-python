@@ -174,6 +174,16 @@ mailer.customTracking('<domainID>', True)
 mailer.setCustomTrackingSubdomain('<domainID>', 'track.dundermifflin.com')
 ```
 
+### Delete a domain
+
+```python
+import mailersend
+
+mailer = mailersend.NewApiClient()
+
+mailer.deleteDomain(mailer.getIdByName('<domainID>')
+```
+
 <a name="testing"></a>
 
 # Testing
