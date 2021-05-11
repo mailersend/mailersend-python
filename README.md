@@ -38,8 +38,53 @@ my_mail = "owner@verified_domain.com"
 recipient_list = [ 'pamela@dundermifflin.com',
 'dwight@dunderfmifflin.com', 'jim@dundermifflin.com']
 
-mailer.send(my_mail, recipient_list, subject, html, text)
+mailer.send(my_mail, recipient_list, subject, html, text, None, None)
+```
 
+### Sending a basic email using template ID.
+
+``` python
+import mailersend
+
+mailer = mailersend.NewApiClient()
+
+subject = "Subject"
+template_id = '351ndrxrx45zqx8k'
+
+my_mail = "owner@verified_domain.com"
+recipient_list = [ 'pamela@dundermifflin.com',
+'dwight@dunderfmifflin.com', 'jim@dundermifflin.com']
+
+mailer.send(my_mail, recipient_list, subject, None, None, template_id, None)
+```
+
+### Sending an email with simple personalization.
+
+``` python
+import mailersend
+
+mailer = mailersend.NewApiClient()
+
+subject = "Hello from {$company}"
+text = "This is the text content"
+html = "<p>This is the HTML content, {$name}</p>"
+
+my_mail = "owner@verified_domain.com"
+recipient_list = [ 'pamela@dundermifflin.com',
+'dwight@dunderfmifflin.com', 'jim@dundermifflin.com']
+variables = [{
+    "email": "pamela@dundermifflin.com",
+    "substitutions": [{
+        "var": "name",
+        "value": "Pam",
+    },
+    {
+        "var": "company",
+        "value": "Dunder Mifflin",
+    },]
+}]
+
+mailer.send(my_mail, recipient_list, subject, html, text, None, variables)
 ```
 
 ### Get ID by name
