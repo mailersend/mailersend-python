@@ -103,6 +103,14 @@ class NewApiClient:
         request = requests.get(API_BASE + "/domains", headers=self.headers_default)
         return request.text
 
+    def deleteDomain(self, domainId):
+        self.domainId = domainId
+
+        request = requests.delete(
+            API_BASE + "/domains/" + domainId, headers=self.headers_default
+        )
+        return request.status_code
+
     def getDomainById(self, domainId):
         self.domainId = domainId
 
