@@ -131,6 +131,25 @@ mailer.getDomainActivity("DOMAIN_ID")
 
 ```
 
+### Get activity by date
+
+The activity list can be filtered using the [available query parameters](https://developers.mailersend.com/api/v1/analytics.html#activity-data-by-date),
+found at [MailerSend official documentation](https://developers.mailersend.com).
+
+``` python
+import mailersend
+
+mailer = mailersend.NewApiClient()
+
+eventList = [
+    'processed', 'queued', 'sent', 'delivered',
+    'soft_bounced', 'hard_bounced', 'junk', 'opened',
+    'clicked', 'unsubscribed', 'spam_complaints',
+]
+
+mailer.getActivityByDate('<domainId>', 1443661141, 1620772339, '<groupBy>', eventList)
+```
+
 ### Get domain list
 
 The activity list can be filtered using the [available query parameters](https://developers.mailersend.com/api/v1/domains.html#get-a-list-of-domains),
