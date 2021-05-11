@@ -76,6 +76,31 @@ class NewApiClient:
         )
         return request.status_code
 
+    def getActivityByDate(self, domainId, dateFrom, dateTo, groupBy, event):
+        self.domainId = domainId
+        self.dateFrom = dateFrom
+        self.dateTo = dateTo
+        self.groupBy = groupBy
+        self.event = event
+
+        _data = {
+            "date_from": dateFrom,
+            "date_to": dateTo,
+            "event": event,
+        }
+
+        if domainId is not None:
+            _data["domain_id"] = domainId
+
+        if groupBy is not None:
+            _data["group_by"] = groupBy
+
+        request = requests.get(
+            API_BASE + "/analytics/date", headers=self.headers_default, json=_data
+        )
+
+        return print(request.text)
+
     def getDomainActivity(
         self, domainId, page=None, limit=None, dateFrom=None, dateTo=None, event=None
     ):
