@@ -107,6 +107,16 @@ mailer = mailersend.NewApiClient()
 mailer.getIdByName("domains", "mailersend.com")
 ```
 
+### Get recipients by domain
+
+``` python
+import mailersend
+
+mailer = mailersend.NewApiClient()
+
+mailer.getRecipientsForDomain('<domainId>')
+```
+
 ### Get activity list
 
 The activity list can be filtered using the [available query parameters](https://developers.mailersend.com/api/v1/activity.html#request-parameters),

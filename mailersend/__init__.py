@@ -162,6 +162,15 @@ class NewApiClient:
         )
         return request.text
 
+    def getRecipientsForDomain(self, domainId):
+        self.domainId = domainId
+
+        request = requests.get(
+            API_BASE + "/domains/" + domainId + "/recipients",
+            headers=self.headers_default,
+        )
+        return print(request.text)
+
     def deleteRecipient(self, recipientId):
         self.recipientId = recipientId
         request = requests.delete(
