@@ -1,9 +1,16 @@
+"""
+MailerSend Official Python DSK
+@maintainer: Alexandros Orfanos (alexandros at remotecompany dot com)
+"""
 import json
 import os
 
 import requests
 
 API_BASE = "https://api.mailersend.com/v1"
+
+# initiate empty dict - this will fill up with e-mail info
+message = {}
 
 
 class NewApiClient:
@@ -69,6 +76,31 @@ class NewApiClient:
         )
         return request.status_code
 
+    def getActivityByDate(self, domainId, dateFrom, dateTo, groupBy, event):
+        self.domainId = domainId
+        self.dateFrom = dateFrom
+        self.dateTo = dateTo
+        self.groupBy = groupBy
+        self.event = event
+
+        _data = {
+            "date_from": dateFrom,
+            "date_to": dateTo,
+            "event": event,
+        }
+
+        if domainId is not None:
+            _data["domain_id"] = domainId
+
+        if groupBy is not None:
+            _data["group_by"] = groupBy
+
+        request = requests.get(
+            API_BASE + "/analytics/date", headers=self.headers_default, json=_data
+        )
+
+        return print(request.text)
+
     def getDomainActivity(
         self, domainId, page=None, limit=None, dateFrom=None, dateTo=None, event=None
     ):
@@ -95,6 +127,14 @@ class NewApiClient:
     def getDomains(self):
         request = requests.get(API_BASE + "/domains", headers=self.headers_default)
         return request.text
+
+    def deleteDomain(self, domainId):
+        self.domainId = domainId
+
+        request = requests.delete(
+            API_BASE + "/domains/" + domainId, headers=self.headers_default
+        )
+        return request.status_code
 
     def getDomainById(self, domainId):
         self.domainId = domainId
@@ -146,6 +186,15 @@ class NewApiClient:
             API_BASE + "/recipients/" + recipientId, headers=self.headers_default
         )
         return request.text
+
+    def getRecipientsForDomain(self, domainId):
+        self.domainId = domainId
+
+        request = requests.get(
+            API_BASE + "/domains/" + domainId + "/recipients",
+            headers=self.headers_default,
+        )
+        return print(request.text)
 
     def deleteRecipient(self, recipientId):
         self.recipientId = recipientId
@@ -253,7 +302,16 @@ class NewApiClient:
         )
         return request.text
 
-    def send(self, mail_from, mail_to, mail_subject, mail_content, mail_text=None):
+    def send(
+        self,
+        mail_from,
+        mail_to,
+        mail_subject,
+        mail_content,
+        mail_text=None,
+        template_id=None,
+        variables=None,
+    ):
 
         self.mail_from = {"from": {"email": mail_from}}
 
@@ -264,18 +322,24 @@ class NewApiClient:
 
         self.mail_content = {"html": mail_content}
 
-        self.mail_text = {"text": mail_text or "foo"}
+        self.mail_text = {"text": mail_text or None}
 
-        message = {
-            **self.mail_from,
-            **self.mail_to,
-            **self.mail_subject,
-            **self.mail_content,
-            **self.mail_text,
-        }
+        self.template_id = {"template_id": template_id}
 
-        # print(json.dumps(self.headers_default))
-        # print(json.dumps(message))
+        message["from"] = {"email": mail_from}
+        message["to"] = mail_data
+        message["subject"] = mail_subject
+
+        if template_id is None:
+            message["html"] = mail_content or None
+            message["text"] = mail_text or None
+        else:
+            message["template_id"] = template_id
+
+        if variables is None:
+            pass
+        else:
+            message["variables"] = variables
 
         request = requests.post(
             API_BASE + "/email", headers=self.headers_default, json=message
