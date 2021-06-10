@@ -23,12 +23,12 @@ class NewApiClient:
     ):
 
         self.mailersend_api_key = os.environ.get("MAILERSEND_API_KEY")
-        self.headers_auth = "Bearer {}".format(self.mailersend_api_key)
+        self.headers_auth = f"Bearer {self.mailersend_api_key}"
         self.headers_default = {
             "Content-Type": "application/json",
             "X-Requested-With": "XMLHttpRequest",
             "User-Agent": "MailerSend-Client-python-v1",
-            "Authorization": self.headers_auth,
+            "Authorization": f"{self.headers_auth}",
         }
 
         super(NewApiClient, self).__init__()
@@ -48,7 +48,7 @@ class NewApiClient:
         _data = {"name": tokenName, "scopes": tokenScopes}
 
         request = requests.post(
-            API_BASE + "/token", headers=self.headers_default, json=_data
+            f"{API_BASE}/token", headers=self.headers_default, json=_data
         )
         return request.text
 
@@ -62,7 +62,7 @@ class NewApiClient:
             _data = self._generateConfigChangeBody("status", "unpause")
 
         request = requests.put(
-            API_BASE + "/token/" + tokenId + "/settings",
+            f"{API_BASE}/token/{tokenId}/settings",
             headers=self.headers_default,
             json=_data,
         )
@@ -72,7 +72,7 @@ class NewApiClient:
         self.tokenId = tokenId
 
         request = requests.delete(
-            API_BASE + "/token/" + tokenId, headers=self.headers_default
+            f"{API_BASE}/token/{token_id}/", headers=self.headers_default
         )
         return request.status_code
 
@@ -96,7 +96,7 @@ class NewApiClient:
             _data["group_by"] = groupBy
 
         request = requests.get(
-            API_BASE + "/analytics/date", headers=self.headers_default, json=_data
+            f"{API_BASE}/analytics/date", headers=self.headers_default, json=_data
         )
 
         return print(request.text)
@@ -120,19 +120,19 @@ class NewApiClient:
         }
 
         request = requests.get(
-            API_BASE + "/activity/" + domainId, headers=self.headers_default, json=_data
+            f"{API_BASE}/activity/{domainId}", headers=self.headers_default, json=_data
         )
         return request.text
 
     def getDomains(self):
-        request = requests.get(API_BASE + "/domains", headers=self.headers_default)
+        request = requests.get(f"{API_BASE}/domains", headers=self.headers_default)
         return request.text
 
     def deleteDomain(self, domainId):
         self.domainId = domainId
 
         request = requests.delete(
-            API_BASE + "/domains/" + domainId, headers=self.headers_default
+            f"{API_BASE}/domains/{domainId}", headers=self.headers_default
         )
         return request.status_code
 
@@ -140,7 +140,7 @@ class NewApiClient:
         self.domainId = domainId
 
         request = requests.get(
-            API_BASE + "/domains/" + domainId, headers=self.headers_default
+            f"{API_BASE}/domains/{domainId}", headers=self.headers_default
         )
         return request.text
 
@@ -148,7 +148,7 @@ class NewApiClient:
         self.category = category
         self.name = name
 
-        request = requests.get(API_BASE + "/" + category, headers=self.headers_default)
+        request = requests.get(f"{API_BASE}/{category}", headers=self.headers_default)
 
         _json_req = request.json()
 
@@ -168,22 +168,22 @@ class NewApiClient:
         self.messageId = messageId
 
         request = requests.get(
-            API_BASE + "/messages/" + messageId, headers=self.headers_default
+            f"{API_BASE}/messages/{messageId}", headers=self.headers_default
         )
         return request.text
 
     def getMessages(self):
-        request = requests.get(API_BASE + "/messages", headers=self.headers_default)
+        request = requests.get(f"{API_BASE}/messages", headers=self.headers_default)
         return request.text
 
     def getRecipients(self):
-        request = requests.get(API_BASE + "/recipients", headers=self.headers_default)
+        request = requests.get(f"{API_BASE}/recipients", headers=self.headers_default)
         return request.text
 
     def getRecipientById(self, recipientId):
         self.recipientId = recipientId
         request = requests.get(
-            API_BASE + "/recipients/" + recipientId, headers=self.headers_default
+            f"{API_BASE}/recipients/{recipientId}", headers=self.headers_default
         )
         return request.text
 
@@ -191,7 +191,7 @@ class NewApiClient:
         self.domainId = domainId
 
         request = requests.get(
-            API_BASE + "/domains/" + domainId + "/recipients",
+            f"{API_BASE}/domains/{domainId}/recipients",
             headers=self.headers_default,
         )
         return print(request.text)
@@ -199,7 +199,7 @@ class NewApiClient:
     def deleteRecipient(self, recipientId):
         self.recipientId = recipientId
         request = requests.delete(
-            API_BASE + "/recipients/" + recipientId, headers=self.headers_default
+            f"{API_BASE}/recipients/{recipientId}", headers=self.headers_default
         )
         return request.status_code
 
@@ -208,7 +208,7 @@ class NewApiClient:
         self.enable = enable
         _data = self._generateConfigChangeBody("send_paused", enable)
         request = requests.put(
-            API_BASE + "/domains/" + domainId + "/settings",
+            f"{API_BASE}/domains/{domainId}/settings",
             headers=self.headers_default,
             json=_data,
         )
@@ -219,7 +219,7 @@ class NewApiClient:
         self.enable = enable
         _data = self._generateConfigChangeBody("track_clicks", enable)
         request = requests.put(
-            API_BASE + "/domains/" + domainId + "/settings",
+            f"{API_BASE}/domains/{domainId}/settings",
             headers=self.headers_default,
             json=_data,
         )
@@ -230,7 +230,7 @@ class NewApiClient:
         self.enable = enable
         _data = self._generateConfigChangeBody("track_opens", enable)
         request = requests.put(
-            API_BASE + "/domains/" + domainId + "/settings",
+            f"{API_BASE}/domains/{domainId}/settings",
             headers=self.headers_default,
             json=_data,
         )
@@ -241,7 +241,7 @@ class NewApiClient:
         self.enable = enable
         _data = self._generateConfigChangeBody("track_unsubscribe", enable)
         request = requests.put(
-            API_BASE + "/domains/" + domainId + "/settings",
+            f"{API_BASE}/domains/{domainId}/settings",
             headers=self.headers_default,
             json=_data,
         )
@@ -252,7 +252,7 @@ class NewApiClient:
         self.html = html
         _data = self._generateConfigChangeBody("track_unsubscribe_html", html)
         request = requests.put(
-            API_BASE + "/domains/" + domainId + "/settings",
+            f"{API_BASE}/domains/{domainId}/settings",
             headers=self.headers_default,
             json=_data,
         )
@@ -263,7 +263,7 @@ class NewApiClient:
         self.plaintext = plaintext
         _data = self._generateConfigChangeBody("track_unsubscribe_plain", plaintext)
         request = requests.put(
-            API_BASE + "/domains/" + domainId + "/settings",
+            f"{API_BASE}/domains/{domainId}/settings",
             headers=self.headers_default,
             json=_data,
         )
@@ -274,7 +274,7 @@ class NewApiClient:
         self.enable = enable
         _data = self._generateConfigChangeBody("track_content", enable)
         request = requests.put(
-            API_BASE + "/domains/" + domainId + "/settings",
+            f"{API_BASE}/domains/{domainId}/settings",
             headers=self.headers_default,
             json=_data,
         )
@@ -285,7 +285,7 @@ class NewApiClient:
         self.enable = enable
         _data = self._generateConfigChangeBody("custom_tracking_enabled", enable)
         request = requests.put(
-            API_BASE + "/domains/" + domainId + "/settings",
+            f"{API_BASE}/domains/{domainId}/settings",
             headers=self.headers_default,
             json=_data,
         )
@@ -296,7 +296,7 @@ class NewApiClient:
         self.subdomain = subdomain
         _data = self._generateConfigChangeBody("custom_tracking_subdomain", subdomain)
         request = requests.put(
-            API_BASE + "/domains/" + domainId + "/settings",
+            f"{API_BASE}/domains/{domainId}/settings",
             headers=self.headers_default,
             json=_data,
         )
@@ -342,6 +342,6 @@ class NewApiClient:
             message["variables"] = variables
 
         request = requests.post(
-            API_BASE + "/email", headers=self.headers_default, json=message
+            f"{API_BASE}/email", headers=self.headers_default, json=message
         )
         return print(request.status_code)
