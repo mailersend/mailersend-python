@@ -339,9 +339,13 @@ class NewApiClient:
         if variables is None:
             pass
         else:
-            message["variables"] = variables
+            if "'data':" in str(variables):
+                message["personalization"] = variables
+            else:
+                message["variables"] = variables
 
         request = requests.post(
             f"{API_BASE}/email", headers=self.headers_default, json=message
         )
-        return print(request.status_code)
+
+        return print(f"{request.status_code}\n{request.text}")
