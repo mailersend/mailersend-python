@@ -87,6 +87,41 @@ variables = [{
 mailer.send(my_mail, recipient_list, subject, html, text, None, variables)
 ```
 
+### Sending an email with advanced personalization.
+
+``` python
+import mailersend
+
+mailer = mailersend.NewApiClient()
+
+subject = "Hello from {$company}"
+text = "This is the text content"
+html = "<p>This is the HTML content, {$name}</p>"
+
+my_mail = "owner@verified_domain.com"
+recipient_list = [ 'pamela@dundermifflin.com',
+'dwight@dunderfmifflin.com', 'jim@dundermifflin.com']
+variables = [{
+    "email": "dwight@dundermifflin.com",
+    "data": {
+        "var": "name",
+        "boolean": True,
+        "object": {
+            "key": "object-value"
+        },
+        "number": 2,
+        "array": [
+            1,
+            2,
+            3
+        ]
+    }
+}]
+
+
+mailer.send(my_mail, recipient_list, subject, html, text, None, variables)
+```
+
 ### Get ID by name
 
 This helper function allows to programatically gather IDs for domains and subscribers for later
