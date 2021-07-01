@@ -72,7 +72,7 @@ class NewApiClient:
         self.tokenId = tokenId
 
         request = requests.delete(
-            f"{API_BASE}/token/{token_id}/", headers=self.headers_default
+            f"{API_BASE}/token/{tokenId}/", headers=self.headers_default
         )
         return request.status_code
 
