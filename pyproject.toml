@@ -5,7 +5,7 @@ description = "The official MailerSend Python SDK"
 authors = ["Alex Orfanos <alexandros@mailerlite.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.6.1"
 requests = "^2.25.0"
 pre-commit = "^2.12.1"
 
