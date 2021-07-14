@@ -39,4 +39,16 @@ class NewDomain(base.NewAPIClient):
             f"{self.api_base}/domains/{domainId}/recipients",
             headers=self.headers_default,
         )
-        return print(request.text)
+        return request.text
+
+    def updateDomainSetting(self, domainId, key, value):
+        self.domainId = domainId
+
+        data = {f"{key}": value}
+
+        request = requests.put(
+            f"{self.api_base}/domains/{domainId}/settings",
+            headers=self.headers_default,
+            json=data,
+        )
+        return request.text
