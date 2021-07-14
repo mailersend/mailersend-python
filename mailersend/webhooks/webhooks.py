@@ -1,5 +1,5 @@
 import requests
-from mailersend.endpoints import base
+from mailersend.base import base
 
 data = {}
 
