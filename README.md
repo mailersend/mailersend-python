@@ -347,26 +347,14 @@ mailersend.getRecipientsForDomain("domain-id")
 
 **Update domain settings**
 
-Here you can set as many properties as you need, one or multiple.
+You can find a full list of settings [here](https://developers.mailersend.com/api/v1/domains.html#request-body).
 
-```php
-use MailerSend\MailerSend;
-use MailerSend\Helpers\Builder\DomainSettingsParams;
+```python
+import mailersend.endpoints.domains as domains
 
-$mailersend = new MailerSend(['api_key' => 'key']);
+mailersend = domains.NewDomain()
 
-$domainSettingsParam = (new DomainSettingsParams())
-                            ->setSendPaused(true)
-                            ->setTrackClicks(true)
-                            ->setTrackOpens(false)
-                            ->setTrackUnsubscribe(false)
-                            ->setTrackContent(true)
-                            ->setTrackUnsubscribeHtml('html')
-                            ->setTrackUnsubscribePlain('plain')
-                            ->setCustomTrackingEnabled(true)
-                            ->setCustomTrackingSubdomain(false);
-
-$mailersend->domain->domainSettings($domainId = 'domain_id', $domainSettingsParam);
+mailersend.updateDomainSetting("domain-id", "send_paused", True)
 ```
 ## Messages
 
