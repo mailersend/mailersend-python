@@ -47,7 +47,7 @@ python -m pip install mailersend
 ## Sending a basic email.
 
 ```python
-import mailersend.endpoints.emails as emails
+import mailersend.emails.emails as emails
 
 mailer = emails.NewEmail()
 
@@ -75,7 +75,7 @@ mailer.send(mail_body)
 Send an email with CC and BCC.
 
 ```python
-import mailersend.endpoints.emails as emails
+import mailersend.emails.emails as emails
 
 mailer = emails.NewEmail()
 
@@ -110,7 +110,7 @@ mailer.send(mail_body)
 ## Sending an email with variables (simple personalization)
 
 ```python
-import mailersend.endpoints.emails as emails
+import mailersend.emails.emails as emails
 
 mailer = emails.NewEmail()
 
@@ -153,7 +153,7 @@ mailer.send(mail_body)
 ## Sending an email with personalization (advanced personalization)
 
 ```python
-import mailersend.endpoints.emails as emails
+import mailersend.emails.emails as emails
 
 mailer = emails.NewEmail()
 
@@ -199,7 +199,7 @@ mailer.send(mail_body)
 ## Sending a template-based email
 
 ```python
-import mailersend.endpoints.emails as emails
+import mailersend.emails.emails as emails
 
 mailer = emails.NewEmail()
 
@@ -241,7 +241,7 @@ mailer.send(mail_body)
 ## Sending an email with attachment
 
 ```python
-import mailersend.endpoints.emails as emails
+import mailersend.emails.emails as emails
 
 mailer = emails.NewEmail()
 
@@ -297,7 +297,7 @@ mailer.send(mail_body)
 **Get all domains**
 
 ```python
-import mailersend.endpoints.domains as domains
+import mailersend.domains.domains as domains
 
 mailersend = domains.NewDomain()
 
@@ -307,7 +307,7 @@ mailersend.getDomains()
 **Get a single domain**
 
 ```python
-import mailersend.endpoints.domains as domains
+import mailersend.domains.domains as domains
 
 mailersend = domains.NewDomain()
 
@@ -317,7 +317,7 @@ mailersend.getDomainByID("domain-id")
 **Get a single domain using helper function**
 
 ```python
-import mailersend.endpoints.domains as domains
+import mailersend.domains.domains as domains
 import mailersend.utils.helpers as helpers
 
 mailersend = domains.NewDomain()
@@ -328,7 +328,7 @@ mailersend.getDomainByID(helpers.getIDByName("domains","domain-name"))
 **Delete a domain**
 
 ```python
-import mailersend.endpoints.domains as domains
+import mailersend.domains.domains as domains
 
 mailersend = domains.NewDomain()
 
@@ -338,7 +338,7 @@ mailersend.deleteDomain("domain-id")
 **Get recipients for a domain**
 
 ```python
-import mailersend.endpoints.domains as domains
+import mailersend.domains.domains as domains
 
 mailersend = domains.NewDomain()
 
@@ -350,7 +350,7 @@ mailersend.getRecipientsForDomain("domain-id")
 You can find a full list of settings [here](https://developers.mailersend.com/api/v1/domains.html#request-body).
 
 ```python
-import mailersend.endpoints.domains as domains
+import mailersend.domains.domains as domains
 
 mailersend = domains.NewDomain()
 
@@ -361,7 +361,7 @@ mailersend.updateDomainSetting("domain-id", "send_paused", True)
 **List messages**
 
 ```python
-import mailersend.endpoints.messages as messages
+import mailersend.messages.messages as messages
 
 mailersend = messages.NewMessage()
 
@@ -371,7 +371,7 @@ mailersend.getMessages()
 **Find a specific message**
 
 ```python
-import mailersend.endpoints.messages as messages
+import mailersend.messages.messages as messages
 
 mailersend = messages.NewMessage()
 
@@ -385,7 +385,7 @@ mailersend.getMessageByID("message-id")
 **List recipients**
 
 ```python
-import mailersend.endpoints.recipients as recipients
+import mailersend.recipients.recipients as recipients
 
 mailersend = recipients.NewRecipient()
 
@@ -395,7 +395,7 @@ mailersend.getRecipients()
 **List recipients in a specific domain**
 
 ```python
-import mailersend.endpoints.recipients as recipients
+import mailersend.recipients.recipients as recipients
 
 mailersend = recipients.NewRecipient()
 
@@ -405,7 +405,7 @@ mailersend.getRecipientsForDomain("domain-id")
 **Find a specific recipient**
 
 ```python
-import mailersend.endpoints.recipients as recipients
+import mailersend.recipients.recipients as recipients
 
 mailersend = recipients.NewRecipient()
 
@@ -415,7 +415,7 @@ mailersend.getRecipientByID("recipient-id")
 **Delete a recipient**
 
 ```python
-import mailersend.endpoints.recipients as recipients
+import mailersend.recipients.recipients as recipients
 
 mailersend = recipients.NewRecipient()
 
@@ -429,7 +429,7 @@ mailersend.deleteRecipient("recipient-id")
 **Create a new token**
 
 ```python
-import mailersend.endpoints.token as token
+import mailersend.token.token as token
 
 mailersend = token.NewToken()
 
@@ -441,7 +441,7 @@ mailersend.createToken("my-token", scopes)
 Because of security reasons, we only allow access token appearance once during creation. In order to see the access token created you can do:
 
 ```python
-import mailersend.endpoints.token as token
+import mailersend.token.token as token
 
 mailersend = token.NewToken()
 
@@ -453,7 +453,7 @@ print(mailersend.createToken("my-token", scopes))
 **Pause / Unpause Token**
 
 ```python
-import mailersend.endpoints.token as token
+import mailersend.token.token as token
 
 mailersend = token.NewToken()
 
@@ -467,7 +467,7 @@ mailersend.freezeToken("my-token", pause=False)
 **Delete Token**
 
 ```python
-import mailersend.endpoints.token as token
+import mailersend.token.token as token
 
 mailersend = token.NewToken()
 
@@ -480,7 +480,7 @@ mailersend.deleteToken("token-id")
 **List Webhooks**
 
 ```python
-import mailersend.endpoints.webhooks as webhooks
+import mailersend.webhooks.webhooks as webhooks
 
 mailersend = webhooks.NewWebhook()
 
@@ -490,7 +490,7 @@ mailersend.getWebhooks("domain-id")
 **Find a Webhook**
 
 ```python
-import mailersend.endpoints.webhooks as webhooks
+import mailersend.webhooks.webhooks as webhooks
 
 mailersend = webhooks.NewWebhook()
 
@@ -500,7 +500,7 @@ mailersend.getWebhookByID("webhook-id")
 **Create a Webhook**
 
 ```python
-import mailersend.endpoints.webhooks as webhooks
+import mailersend.webhooks.webhooks as webhooks
 
 webhookEvents = ['activity.sent', 'activity.delivered']
 
@@ -516,7 +516,7 @@ mailersend.createWebhook()
 **Create a disabled Webhook**
 
 ```python
-import mailersend.endpoints.webhooks as webhooks
+import mailersend.webhooks.webhooks as webhooks
 
 webhookEvents = ['activity.sent', 'activity.delivered']
 
@@ -533,7 +533,7 @@ mailersend.createWebhook()
 **Update a Webhook**
 
 ```python
-import mailersend.endpoints.webhooks as webhooks
+import mailersend.webhooks.webhooks as webhooks
 
 mailersend = webhooks.NewWebhook()
 
@@ -543,7 +543,7 @@ mailersend.updateWebhook("webhook-id", "name", "a new webhook name")
 **Disable/Enable a Webhook**
 
 ```python
-import mailersend.endpoints.webhooks as webhooks
+import mailersend.webhooks.webhooks as webhooks
 
 mailersend = webhooks.NewWebhook()
 
@@ -553,7 +553,7 @@ mailersend.updateWebhook("webhook-id", "enabled", False)
 **Delete a Webhook**
 
 ```python
-import mailersend.endpoints.webhooks as webhooks
+import mailersend.webhooks.webhooks as webhooks
 
 mailersend = webhooks.NewWebhook()
 
