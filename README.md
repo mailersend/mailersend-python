@@ -57,7 +57,7 @@ mail_body = {}
 
 recipients = [
     'your@client.com',
-    'another@client.com
+    'another@client.com',
 ]
 
 mailer.setMailFrom('my-verified@mail.com', mail_body)
@@ -74,6 +74,8 @@ mailer.send(mail_body)
 ## Sending an email with CC and BCC
 
 Send an email with CC and BCC.
+
+### Using just email addresses for CC and BCC
 
 ```python
 import mailersend.emails.emails as emails
@@ -102,7 +104,51 @@ mailer.setSubject("Hello!", mail_body)
 mailer.setHTMLContent("This is the HTML content", mail_body)
 mailer.setPlaintextContent("This is the text content", mail_body)
 mailer.setCCRecipients(cc, mail_body)
-mailer.setCCRecipients(bcc, mail_body)
+mailer.setBCCRecipients(bcc, mail_body)
+
+mailer.send(mail_body)
+```
+
+### Using email and name for CC and BCC
+
+```python
+import mailersend.emails.emails as emails
+
+mailer = emails.NewEmail()
+
+# define an empty dict to populate with mail values
+mail_body = {}
+
+recipients = [
+    'your@client.com',
+    'another@client.com
+]
+
+cc = [
+    {
+        "name": "Client1",
+        "email": "yetanother@client.com"
+    },
+    {
+        "name": "Client2",
+        "email": "justanother@client.com"
+    }
+]
+
+bcc = [
+    {
+        "name": "Boss",
+        "email": "my@boss.com"
+    },
+]
+
+mailer.setMailFrom('my-verified@mail.com', mail_body)
+mailer.setMailTo(recipients, mail_body)
+mailer.setSubject("Hello!", mail_body)
+mailer.setHTMLContent("This is the HTML content", mail_body)
+mailer.setPlaintextContent("This is the text content", mail_body)
+mailer.setCCRecipients(cc, mail_body)
+mailer.setBCCRecipients(bcc, mail_body)
 
 mailer.send(mail_body)
 ```
