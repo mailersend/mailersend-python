@@ -86,3 +86,30 @@ class NewAnalytics(base.NewAPIClient):
         )
 
         return request.text
+
+    def getOpensByReadingEnvironment(
+        self, dateFrom, dateTo, domainId=None, recipients=None
+    ):
+        self.domainId = domainId
+        self.dateFrom = dateFrom
+        self.dateTo = dateTo
+        self.recipients = recipients
+
+        _data = {
+            "date_from": self.dateFrom,
+            "date_to": self.dateTo,
+        }
+
+        if domainId is not None:
+            _data["domain_id"] = domainId
+
+        if recipients is not None:
+            _data["recipient_id"] = groupBy
+
+        request = requests.get(
+            f"{self.api_base}/analytics/ua-type",
+            headers=self.headers_default,
+            json=_data,
+        )
+
+        return request.text
