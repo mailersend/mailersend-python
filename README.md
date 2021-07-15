@@ -14,6 +14,7 @@ MailerSend Python SDK
   * [Sending an email with personalization (advanced personalisation)](#personalization)
   * [Sending a template-based email](#template)
   * [Sending an email with attachment](#attachments)
+  * [Activity API](#activity)
   * [Analytics API](#analytics)
   * [Domains API](#domains)
   * [Messages API](#messages)
@@ -289,6 +290,46 @@ mailer.setSimplePersonalization(variables, mail_body)
 mailer.setAttachments(attachments, mail_body)
 
 mailer.send(mail_body)
+```
+<a name="activity"></a>
+## Activity
+
+**List activities (simple)**
+
+```python
+import mailersend.activity.activity as activity
+
+mailersend = activity.NewActivity()
+
+mailersend.getDomainActivity("domain-id")
+```
+
+**List activities (full)**
+
+```python
+import mailersend.activity.activity as activity
+
+mailersend = activity.NewActivity()
+
+page = 1
+limit = 20
+date_from = 1623073576
+date_to = 1623074976
+events = [
+    "processed",
+    "queued",
+    "sent",
+    "delivered",
+    "soft-bounced",
+    "hard-bounced",
+    "junk",
+    "opened",
+    "clicked",
+    "unsubscribed",
+    "spam_complaints",
+]
+
+mailersend.getDomainActivity("domain-id", page, limit, date_from, date_to, events)
 ```
 
 <a name="domains"></a>
