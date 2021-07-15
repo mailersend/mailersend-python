@@ -332,6 +332,62 @@ events = [
 mailersend.getDomainActivity("domain-id", page, limit, date_from, date_to, events)
 ```
 
+<a name="analytics"></a>
+## Analytics
+
+**Activity data by date**
+
+```python
+import mailersend.analytics.analytics as analytic
+
+analytics = analytic.NewAnalytics()
+
+date_from = 1623073576
+date_to = 1623074976
+events = [
+    "processed",
+    "sent",
+]
+
+# optional arguments
+domain_id = "domain-id"
+group_by = "days"
+
+analytics.getActivityByDate(date_from, date_to, events, domain_id, group_by)
+```
+
+**Opens by country**
+
+```python
+import mailersend.analytics.analytics as analytic
+
+analytics = analytic.NewAnalytics()
+
+date_from = 1623073576
+date_to = 1623074976
+
+# optional arguments
+domain_id = "domain-id"
+
+analytics.getOpensByCountry(date_from, date_to, domain_id)
+```
+
+**Opens by user-agent name**
+
+```python
+import mailersend.analytics.analytics as analytic
+
+analytics = analytic.NewAnalytics()
+
+date_from = 1623073576
+date_to = 1623074976
+
+# optional arguments
+domain_id = "domain-id"
+
+analytics.getOpensByUserAgent(date_from, date_to, domain_id)
+```
+
 <a name="domains"></a>
 ## Domains
 
