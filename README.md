@@ -388,6 +388,22 @@ domain_id = "domain-id"
 analytics.getOpensByUserAgent(date_from, date_to, domain_id)
 ```
 
+**Opens by reading environment**
+
+```python
+import mailersend.analytics.analytics as analytic
+
+analytics = analytic.NewAnalytics()
+
+date_from = 1623073576
+date_to = 1623074976
+
+# optional arguments
+domain_id = "domain-id"
+
+analytics.getOpensByReadingEnvironment(date_from, date_to, domain_id)
+```
+
 <a name="domains"></a>
 ## Domains
 
