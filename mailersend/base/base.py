@@ -15,8 +15,8 @@ class NewAPIClient(object):
         mailersend_api_key=None,
     ):
 
-        self.api_base = "https://api.mailersend.com/v1"
-        self.mailersend_api_key = os.environ.get("MAILERSEND_API_KEY")
+        self.api_base = API_BASE
+        self.mailersend_api_key = API_KEY
         self.headers_auth = f"Bearer {self.mailersend_api_key}"
         self.headers_default = {
             "Content-Type": "application/json",
