@@ -25,8 +25,6 @@ class NewAPIClient(object):
             "Authorization": f"{self.headers_auth}",
         }
 
-        # super(NewAPIClient, self).__init__()
-
     def generateConfigChangeBody(self, key, value):
         self.key = key
         self.value = value
