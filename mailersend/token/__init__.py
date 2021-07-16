@@ -23,7 +23,7 @@ class NewToken(base.NewAPIClient):
         )
         return request.text
 
-    def freezeToken(self, tokenId, pause=True):
+    def updateToken(self, tokenId, pause=True):
         self.tokenId = tokenId
         self.pause = pause
 
