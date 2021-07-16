@@ -2,65 +2,96 @@
 
 MailerSend Python SDK
 
-[![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE.md)
+[![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 
 # Table of Contents
-
-* [Installation](#installation)
-* [Usage](#usage)
-  * [Sending and email](#sending_an_email)
-  * [Sending and email with CC and BCC](#cc_and_bcc)
-  * [Sending an email with variables (simple personalisation)](#variables)
-  * [Sending an email with personalization (advanced personalisation)](#personalization)
-  * [Sending a template-based email](#template)
-  * [Sending an email with attachment](#attachments)
-  * [Activity API](#activity)
-  * [Analytics API](#analytics)
-  * [Domains API](#domains)
-  * [Messages API](#messages)
-  * [Recipients API](#recipients)
-  * [Tokens API](#tokens)
-  * [Webhooks API](#webhooks)
-* [Support and Feedback](#support-and-feedback)
-* [License](#license)
+- [Installation](#installation)
+- [Usage](#usage)
+    - [Email](#email)
+        - [Send an email](#send-an-email)
+        - [Add CC, BCC recipients](#add-cc-bcc-recipients)
+        - [Send a template-based email](#send-a-template-based-email)
+        - [Advanced personalization](#advanced-personalization)
+        - [Simple personalization](#simple-personalization)
+        - [Send email with attachment](#send-email-with-attachment)
+    - [Activity](#activity)
+        - [Get a list of activities](#get-a-list-of-activities)
+    - [Analytics](#analytics)
+        - [Activity data by date](#activity-data-by-date)
+        - [Opens by country](#opens-by-country)
+        - [Opens by user-agent name](#opens-by-user-agent-name)
+        - [Opens by reading environment](#opens-by-reading-environment)
+    - [Domains](#domains)
+        - [Get a list of domains](#get-a-list-of-domains)
+        - [Get a single domain](#get-a-single-domain)
+        - [Delete a domain](#delete-a-domain)
+        - [Get a list of recipients per domain](#get-a-list-of-recipients-per-domain)
+        - [Update domain settings](#update-domain-settings)
+    - [Messages](#messages)
+        - [Get a list of messages](#get-a-list-of-messages)
+        - [Get a single message](#get-a-single-message)
+    - [Recipients](#recipients)
+      - [Get a list of recipients](#get-a-list-of-recipients)
+      - [Get a single recipients](#get-a-single-recipient)
+      - [Delete a recipients](#delete-a-recipient)
+    - [Tokens](#tokens)
+      - [Create a token](#create-a-token)
+      - [Pause / Unpause Token](#pause--unpause-token)
+      - [Delete a token](#delete-a-token)
+    - [Webhooks](#webhooks)
+      - [Get a list of webhooks](#get-a-list-of-webhooks)
+      - [Get a single webhook](#get-a-single-webhook)
+      - [Create a webhook](#create-a-webhook)
+      - [Update a Webhook](#update-a-webhook)
+      - [Delete a Webhook](#delete-a-webhook)
+- [Types](#types)
+- [Helpers](#helpers)   
+- [Testing](#testing)
+- [Support and Feedback](#support-and-feedback)
+- [License](#license)
 
 <a name="installation"></a>
 
 # Installation
+
+```
+$ python -m pip install mailersend
+```
 
 ## Requirements
 
 - Python > 3.6.1
 - Python `pip`
 - An API Key from [mailersend.com](https://www.mailersend.com)
-
-## Setup
-
-```bash
-python -m pip install mailersend
-```
-
-<a name="usage"></a>
+- A `MAILERSEND_API_KEY` environment variable
 
 # Usage
 
-<a name="sending_an_email"></a>
-## Sending a basic email.
+## Email 
+
+### Send an email
 
 ```python
-import mailersend.emails.emails as emails
+import mailersend.emails as emails
 
 mailer = emails.NewEmail()
 
 # define an empty dict to populate with mail values
 mail_body = {}
 
+mail_from = {
+    "name": "Your Name",
+    "email": "your@domain.com",
+}
+
 recipients = [
-    'your@client.com',
-    'another@client.com',
+    {
+        "name": "Your Client",
+        "email": "your@client.com",
+    }
 ]
 
-mailer.setMailFrom('my-verified@mail.com', mail_body)
+mailer.setMailFrom(mail_from, mail_body)
 mailer.setMailTo(recipients, mail_body)
 mailer.setSubject("Hello!", mail_body)
 mailer.setHTMLContent("This is the HTML content", mail_body)
@@ -70,79 +101,43 @@ mailer.setPlaintextContent("This is the text content", mail_body)
 mailer.send(mail_body)
 ```
 
-<a name="cc_and_bcc"></a>
-## Sending an email with CC and BCC
-
-Send an email with CC and BCC.
-
-### Using just email addresses for CC and BCC
+### Add CC, BCC recipients
 
 ```python
-import mailersend.emails.emails as emails
+import mailersend.emails as emails
 
 mailer = emails.NewEmail()
 
 # define an empty dict to populate with mail values
 mail_body = {}
 
-recipients = [
-    'your@client.com',
-    'another@client.com
-]
-
-cc = [
-    'yetanother@client.com',
-]
-
-bcc = [
-    'myboss@company.com',
-]
-
-mailer.setMailFrom('my-verified@mail.com', mail_body)
-mailer.setMailTo(recipients, mail_body)
-mailer.setSubject("Hello!", mail_body)
-mailer.setHTMLContent("This is the HTML content", mail_body)
-mailer.setPlaintextContent("This is the text content", mail_body)
-mailer.setCCRecipients(cc, mail_body)
-mailer.setBCCRecipients(bcc, mail_body)
-
-mailer.send(mail_body)
-```
-
-### Using email and name for CC and BCC
-
-```python
-import mailersend.emails.emails as emails
-
-mailer = emails.NewEmail()
-
-# define an empty dict to populate with mail values
-mail_body = {}
+mail_from = {
+    "name": "Your Name",
+    "email": "your@domain.com",
+}
 
 recipients = [
-    'your@client.com',
-    'another@client.com
+    {
+        "name": "Your Client",
+        "email": "your@client.com",
+    }
 ]
 
 cc = [
     {
-        "name": "Client1",
-        "email": "yetanother@client.com"
-    },
-    {
-        "name": "Client2",
-        "email": "justanother@client.com"
+        "name": "CC",
+        "email": "cc@client.com" 
     }
 ]
 
 bcc = [
     {
-        "name": "Boss",
-        "email": "my@boss.com"
-    },
+        "name": "BCC",
+        "email": "bcc@client.com"
+    }
 ]
 
-mailer.setMailFrom('my-verified@mail.com', mail_body)
+mailer.setMailFrom(mail_from, mail_body)
 mailer.setMailTo(recipients, mail_body)
 mailer.setSubject("Hello!", mail_body)
 mailer.setHTMLContent("This is the HTML content", mail_body)
@@ -153,8 +148,7 @@ mailer.setBCCRecipients(bcc, mail_body)
 mailer.send(mail_body)
 ```
 
-<a name="variables"></a>
-## Sending an email with variables (simple personalization)
+### Send a template-based email
 
 ```python
 import mailersend.emails.emails as emails
@@ -164,52 +158,61 @@ mailer = emails.NewEmail()
 # define an empty dict to populate with mail values
 mail_body = {}
 
+mail_from = {
+    "name": "Your Name",
+    "email": "your@domain.com",
+}
+
 recipients = [
-    'your@client.com',
-    'another@client.com
+    {
+        "name": "Your Client",
+        "email": "your@client.com",
+    }
 ]
+
 
 variables = [
     {
         "email": "your@client.com",
         "substitutions": [
             {
-                "var": "company",
-                "value": "MailerSend"
+                "var": "foo",
+                "value": "bar"
             },
-            {
-                "var": "name",
-                "value": "Mailer"
-            }
         ]
     }
 ]
 
 
-mailer.setMailFrom('my-verified@mail.com', mail_body)
+mailer.setMailFrom(mail_from, mail_body)
 mailer.setMailTo(recipients, mail_body)
 mailer.setSubject("Hello from {$company}", mail_body)
-mailer.setHTMLContent("This is the HTML content, {$name}", mail_body)
-mailer.setPlaintextContent("This is the text content, {$name}", mail_body)
+mailer.setTemplate("templateID", mail_body)
 mailer.setSimplePersonalization(variables, mail_body)
 
 mailer.send(mail_body)
 ```
 
-<a name="personalization"></a>
-## Sending an email with personalization (advanced personalization)
+### Advanced personalization
 
 ```python
-import mailersend.emails.emails as emails
+import mailersend.emails as emails
 
 mailer = emails.NewEmail()
 
 # define an empty dict to populate with mail values
 mail_body = {}
 
+mail_from = {
+    "name": "Your Name",
+    "email": "your@domain.com",
+}
+
 recipients = [
-    'your@client.com',
-    'another@client.com
+    {
+        "name": "Your Client",
+        "email": "your@client.com",
+    }
 ]
 
 personalization = [
@@ -232,7 +235,7 @@ personalization = [
     ]
 
 
-mailer.setMailFrom('my-verified@mail.com', mail_body)
+mailer.setMailFrom(mail_from, mail_body)
 mailer.setMailTo(recipients, mail_body)
 mailer.setSubject("Hello from {$company}", mail_body)
 mailer.setHTMLContent("This is the HTML content, {$name}", mail_body)
@@ -242,20 +245,26 @@ mailer.setAdvancedPersonalization(personalization, mail_body)
 mailer.send(mail_body)
 ```
 
-<a name="template"></a>
-## Sending a template-based email
+### Simple personalization
 
 ```python
-import mailersend.emails.emails as emails
+import mailersend.emails as emails
 
 mailer = emails.NewEmail()
 
 # define an empty dict to populate with mail values
 mail_body = {}
 
+mail_from = {
+    "name": "Your Name",
+    "email": "your@domain.com",
+}
+
 recipients = [
-    'your@client.com',
-    'another@client.com
+    {
+        "name": "Your Client",
+        "email": "your@client.com",
+    }
 ]
 
 variables = [
@@ -263,41 +272,44 @@ variables = [
         "email": "your@client.com",
         "substitutions": [
             {
-                "var": "company",
-                "value": "MailerSend"
+                "var": "foo",
+                "value": "bar"
             },
-            {
-                "var": "name",
-                "value": "Mailer"
-            }
         ]
     }
 ]
 
 
-mailer.setMailFrom('my-verified@mail.com', mail_body)
+mailer.setMailFrom(mail_from, mail_body)
 mailer.setMailTo(recipients, mail_body)
-mailer.setSubject("Hello from {$company}", mail_body)
-mailer.setTemplate("templateID", mail_body)
+mailer.setSubject("Hello from {$foo}", mail_body)
+mailer.setHTMLContent("This is the HTML content, {$foo}", mail_body)
+mailer.setPlaintextContent("This is the text content, {$foo}", mail_body)
 mailer.setSimplePersonalization(variables, mail_body)
 
 mailer.send(mail_body)
 ```
 
-<a name="attachments"></a>
-## Sending an email with attachment
+### Send email with attachment
 
 ```python
-import mailersend.emails.emails as emails
+import mailersend.emails as emails
 
 mailer = emails.NewEmail()
 
 # define an empty dict to populate with mail values
 mail_body = {}
 
+mail_from = {
+    "name": "Your Name",
+    "email": "your@domain.com",
+}
+
 recipients = [
-    'your@client.com',
-    'another@client.com
+    {
+        "name": "Your Client",
+        "email": "your@client.com",
+    }
 ]
 
 variables = [
@@ -305,13 +317,9 @@ variables = [
         "email": "your@client.com",
         "substitutions": [
             {
-                "var": "company",
-                "value": "MailerSend"
+                "var": "foo",
+                "value": "bar"
             },
-            {
-                "var": "name",
-                "value": "Mailer"
-            }
         ]
     }
 ]
@@ -322,38 +330,40 @@ att_base64 = base64.b64encode(bytes(att_read))
 attachments = [
     {
         "id": "my-attached-file",
-        "filename": "filename.pdf",
+        "filename": "file.jpg",
         "content": f"{att_base64.decode('ascii')}"
     }
 ]
 
-mailer.setMailFrom('my-verified@mail.com', mail_body)
+mailer.setMailFrom(mail_from, mail_body)
 mailer.setMailTo(recipients, mail_body)
-mailer.setSubject("Hello from {$company}", mail_body)
-mailer.setHTMLContent("This is the HTML content, {$name}", mail_body)
-mailer.setPlaintextContent("This is the text content, {$name}", mail_body)
+mailer.setSubject("Hello from {$foo}", mail_body)
+mailer.setHTMLContent("This is the HTML content, {$foo}", mail_body)
+mailer.setPlaintextContent("This is the text content, {$foo}", mail_body)
 mailer.setSimplePersonalization(variables, mail_body)
 mailer.setAttachments(attachments, mail_body)
 
 mailer.send(mail_body)
 ```
+
 <a name="activity"></a>
+
 ## Activity
 
-**List activities (simple)**
+### Get a list of activities (simple)
 
 ```python
-import mailersend.activity.activity as activity
+import mailersend.activity as activity
 
 mailersend = activity.NewActivity()
 
 mailersend.getDomainActivity("domain-id")
 ```
 
-**List activities (full)**
+### Get a list of activities (full)
 
 ```python
-import mailersend.activity.activity as activity
+import mailersend.activity as activity
 
 mailersend = activity.NewActivity()
 
@@ -378,13 +388,12 @@ events = [
 mailersend.getDomainActivity("domain-id", page, limit, date_from, date_to, events)
 ```
 
-<a name="analytics"></a>
 ## Analytics
 
-**Activity data by date**
+### Activity data by date
 
 ```python
-import mailersend.analytics.analytics as analytic
+import mailersend.analytics as analytic
 
 analytics = analytic.NewAnalytics()
 
@@ -402,10 +411,10 @@ group_by = "days"
 analytics.getActivityByDate(date_from, date_to, events, domain_id, group_by)
 ```
 
-**Opens by country**
+### Opens by country
 
 ```python
-import mailersend.analytics.analytics as analytic
+import mailersend.analytics as analytic
 
 analytics = analytic.NewAnalytics()
 
@@ -418,10 +427,10 @@ domain_id = "domain-id"
 analytics.getOpensByCountry(date_from, date_to, domain_id)
 ```
 
-**Opens by user-agent name**
+### Opens by user-agent name
 
 ```python
-import mailersend.analytics.analytics as analytic
+import mailersend.analytics as analytic
 
 analytics = analytic.NewAnalytics()
 
@@ -434,10 +443,10 @@ domain_id = "domain-id"
 analytics.getOpensByUserAgent(date_from, date_to, domain_id)
 ```
 
-**Opens by reading environment**
+### Opens by reading environment
 
 ```python
-import mailersend.analytics.analytics as analytic
+import mailersend.analytics as analytic
 
 analytics = analytic.NewAnalytics()
 
@@ -450,145 +459,131 @@ domain_id = "domain-id"
 analytics.getOpensByReadingEnvironment(date_from, date_to, domain_id)
 ```
 
-<a name="domains"></a>
 ## Domains
 
-**Get all domains**
+### Get a list of domains
 
 ```python
-import mailersend.domains.domains as domains
+import mailersend.domains as domains
 
 mailersend = domains.NewDomain()
 
 mailersend.getDomains()
 ```
 
-**Get a single domain**
+### Get a single domain
 
 ```python
-import mailersend.domains.domains as domains
+import mailersend.domains as domains
 
 mailersend = domains.NewDomain()
 
 mailersend.getDomainByID("domain-id")
 ```
 
-**Get a single domain using helper function**
+### Get a single domain using helper function
 
 ```python
-import mailersend.domains.domains as domains
-import mailersend.utils.helpers as helpers
+import mailersend.domains as domains
+import mailersend.utils as helpers
 
 mailersend = domains.NewDomain()
 
 mailersend.getDomainByID(helpers.getIDByName("domains","domain-name"))
 ```
 
-**Delete a domain**
+### Delete a domain
 
 ```python
-import mailersend.domains.domains as domains
+import mailersend.domains as domains
 
 mailersend = domains.NewDomain()
 
 mailersend.deleteDomain("domain-id")
 ```
 
-**Get recipients for a domain**
+### Get a list of recipients per domain
 
 ```python
-import mailersend.domains.domains as domains
+import mailersend.domains as domains
 
 mailersend = domains.NewDomain()
 
 mailersend.getRecipientsForDomain("domain-id")
 ```
 
-**Update domain settings**
+### Update domain settings
 
 You can find a full list of settings [here](https://developers.mailersend.com/api/v1/domains.html#request-body).
 
 ```python
-import mailersend.domains.domains as domains
+import mailersend.domains as domains
 
 mailersend = domains.NewDomain()
 
 mailersend.updateDomainSetting("domain-id", "send_paused", True)
 ```
+
 ## Messages
 
-**List messages**
+### Get a list of messages
 
 ```python
-import mailersend.messages.messages as messages
+import mailersend.messages as messages
 
 mailersend = messages.NewMessage()
 
 mailersend.getMessages()
 ```
 
-**Find a specific message**
+### Get a single message
 
 ```python
-import mailersend.messages.messages as messages
+import mailersend.messages as messages
 
 mailersend = messages.NewMessage()
 
 mailersend.getMessageByID("message-id")
 ```
 
-<a name="recipients"></a>
-
 ## Recipients
 
-**List recipients**
+### Get a list of recipients
 
 ```python
-import mailersend.recipients.recipients as recipients
+import mailersend.recipients as recipients
 
 mailersend = recipients.NewRecipient()
 
 mailersend.getRecipients()
 ```
 
-**List recipients in a specific domain**
+### Get a single recipient
 
 ```python
-import mailersend.recipients.recipients as recipients
-
-mailersend = recipients.NewRecipient()
-
-mailersend.getRecipientsForDomain("domain-id")
-```
-
-**Find a specific recipient**
-
-```python
-import mailersend.recipients.recipients as recipients
+import mailersend.recipients as recipients
 
 mailersend = recipients.NewRecipient()
 
 mailersend.getRecipientByID("recipient-id")
 ```
 
-**Delete a recipient**
+### Delete a recipient
 
 ```python
-import mailersend.recipients.recipients as recipients
+import mailersend.recipients as recipients
 
 mailersend = recipients.NewRecipient()
 
 mailersend.deleteRecipient("recipient-id")
 ```
 
-<a name="tokens"></a>
-
 ## Tokens
 
-**Create a new token**
+### Create a token
 
 ```python
-import mailersend.token.token as token
+import mailersend.token as token
 
 mailersend = token.NewToken()
 
@@ -600,7 +595,7 @@ mailersend.createToken("my-token", scopes)
 Because of security reasons, we only allow access token appearance once during creation. In order to see the access token created you can do:
 
 ```python
-import mailersend.token.token as token
+import mailersend.token as token
 
 mailersend = token.NewToken()
 
@@ -609,57 +604,56 @@ scopes = ["email_full", "analytics_read"]
 print(mailersend.createToken("my-token", scopes))
 ```
 
-**Pause / Unpause Token**
+### Pause / Unpause Token
 
 ```python
-import mailersend.token.token as token
+import mailersend.token as token
 
 mailersend = token.NewToken()
 
 # pause
-mailersend.freezeToken("my-token")
+mailersend.updateToken("my-token")
 
 # unpause
-mailersend.freezeToken("my-token", pause=False)
+mailersend.updateToken("my-token", pause=False)
 ```
 
-**Delete Token**
+### Delete a Token
 
 ```python
-import mailersend.token.token as token
+import mailersend.token as token
 
 mailersend = token.NewToken()
 
 mailersend.deleteToken("token-id")
 ```
 
-<a name="webhooks"></a>
 ## Webhooks
 
-**List Webhooks**
+### Get a list of webhooks
 
 ```python
-import mailersend.webhooks.webhooks as webhooks
+import mailersend.webhooks as webhooks
 
 mailersend = webhooks.NewWebhook()
 
 mailersend.getWebhooks("domain-id")
 ```
 
-**Find a Webhook**
+### Get a single webhook
 
 ```python
-import mailersend.webhooks.webhooks as webhooks
+import mailersend.webhooks as webhooks
 
 mailersend = webhooks.NewWebhook()
 
 mailersend.getWebhookByID("webhook-id")
 ```
 
-**Create a Webhook**
+### Create a Webhook
 
 ```python
-import mailersend.webhooks.webhooks as webhooks
+import mailersend.webhooks as webhooks
 
 webhookEvents = ['activity.sent', 'activity.delivered']
 
@@ -672,10 +666,10 @@ webhook.setWebhookDomain("domain-id")
 mailersend.createWebhook()
 ```
 
-**Create a disabled Webhook**
+### Create a disabled webhook
 
 ```python
-import mailersend.webhooks.webhooks as webhooks
+import mailersend.webhooks as webhooks
 
 webhookEvents = ['activity.sent', 'activity.delivered']
 
@@ -689,37 +683,56 @@ webhook.setWebhookEnabled(False)
 mailersend.createWebhook()
 ```
 
-**Update a Webhook**
+### Update a Webhook
 
 ```python
-import mailersend.webhooks.webhooks as webhooks
+import mailersend.webhooks as webhooks
 
 mailersend = webhooks.NewWebhook()
 
 mailersend.updateWebhook("webhook-id", "name", "a new webhook name")
 ```
 
-**Disable/Enable a Webhook**
+### Disable/Enable a Webhook
 
 ```python
-import mailersend.webhooks.webhooks as webhooks
+import mailersend.webhooks as webhooks
 
 mailersend = webhooks.NewWebhook()
 
 mailersend.updateWebhook("webhook-id", "enabled", False)
 ```
 
-**Delete a Webhook**
+### Delete a Webhook
 
 ```python
-import mailersend.webhooks.webhooks as webhooks
+import mailersend.webhooks as webhooks
 
 mailersend = webhooks.NewWebhook()
 
 mailersend.deleteWebhook("webhook-id")
 ```
 
-*If, at the moment, some endpoint is not available, please use the `requests` package and other available tools to access it. [Refer to official API docs for more info](https://developers.mailersend.com/).*
+# Testing
+
+TBD
+
+<a name="endpoints"></a>
+# Available endpoints
+
+| Feature group | Endpoint    | Available |
+| ------------- | ----------- | --------- |
+| Activity         | `GET activity` | ✅         |
+| Analytics         | `GET analytics` | ✅         |
+| Domains         | `{GET,PUT,DELETE} domains` | ✅         |
+| Emails         | `POST send` | ✅         |
+| Messages         | `GET messages` | ✅         |
+| Recipients         | `{GET,DELETE} recipients` | ✅         |
+| Templates         | `{GET,DELETE} templates` | ✅         |
+| Token         | `{POST,PUT,DELETE} tokens` | ✅         |
+| Webhooks         | `{GET,POST,PUT,DELETE} webhooks` | ✅         |
+
+*If, at the moment, some endpoint is not available, please use other available tools to access it. [Refer to official API docs for more info](https://developers.mailersend.com/).*
 
 
 <a name="support-and-feedback"></a>
@@ -736,4 +749,4 @@ The official documentation is at [https://developers.mailersend.com](https://dev
 <a name="license"></a>
 # License
 
-[The MIT License (MIT)](LICENSE.md)
+[The MIT License (MIT)](LICENSE)
