@@ -15,11 +15,9 @@ class NewEmail(base.NewAPIClient):
         )
 
     def setMailFrom(self, mail_from, message):
-        value = {"email": mail_from}
         message["from"] = value
 
     def setMailTo(self, mail_to, message):
-        mail_data = [{"email": receiver} for receiver in mail_to]
         message["to"] = mail_data
 
     def setSubject(self, subject, message):
