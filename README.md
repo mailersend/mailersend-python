@@ -15,7 +15,8 @@ MailerSend Python SDK
         - [Simple personalization](#simple-personalization)
         - [Send email with attachment](#send-email-with-attachment)
     - [Activity](#activity)
-        - [Get a list of activities](#get-a-list-of-activities)
+        - [Get a list of activities (simple)](#get-a-list-of-activities-simple)
+        - [Get a list of activities (full)](#get-a-list-of-activities-full)
     - [Analytics](#analytics)
         - [Activity data by date](#activity-data-by-date)
         - [Opens by country](#opens-by-country)
@@ -24,6 +25,7 @@ MailerSend Python SDK
     - [Domains](#domains)
         - [Get a list of domains](#get-a-list-of-domains)
         - [Get a single domain](#get-a-single-domain)
+        - [Get a single domain using helper function](#get-a-single-domain-using-helper-function)
         - [Delete a domain](#delete-a-domain)
         - [Get a list of recipients per domain](#get-a-list-of-recipients-per-domain)
         - [Update domain settings](#update-domain-settings)
@@ -42,10 +44,9 @@ MailerSend Python SDK
       - [Get a list of webhooks](#get-a-list-of-webhooks)
       - [Get a single webhook](#get-a-single-webhook)
       - [Create a webhook](#create-a-webhook)
+      - [Create a disabled webhook](#create-a-disabled-webhook)
       - [Update a Webhook](#update-a-webhook)
       - [Delete a Webhook](#delete-a-webhook)
-- [Types](#types)
-- [Helpers](#helpers)   
 - [Testing](#testing)
 - [Support and Feedback](#support-and-feedback)
 - [License](#license)
@@ -151,7 +152,7 @@ mailer.send(mail_body)
 ### Send a template-based email
 
 ```python
-import mailersend.emails.emails as emails
+import mailersend.emails as emails
 
 mailer = emails.NewEmail()
 
