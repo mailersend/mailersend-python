@@ -15,10 +15,10 @@ class NewEmail(base.NewAPIClient):
         )
 
     def setMailFrom(self, mail_from, message):
-        message["from"] = value
+        message["from"] = mail_from
 
     def setMailTo(self, mail_to, message):
-        message["to"] = mail_data
+        message["to"] = mail_to
 
     def setSubject(self, subject, message):
         message["subject"] = subject
