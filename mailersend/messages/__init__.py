@@ -4,23 +4,22 @@ from mailersend.base import base
 
 class NewMessage(base.NewAPIClient):
     def __init__(self):
-        baseObj = base.NewAPIClient()
+        baseobj = base.NewAPIClient()
         super(NewMessage, self).__init__(
-            baseObj.api_base,
-            baseObj.headers_default,
-            baseObj.headers_auth,
-            baseObj.mailersend_api_key,
+            baseobj.api_base,
+            baseobj.headers_default,
+            baseobj.headers_auth,
+            baseobj.mailersend_api_key,
         )
 
-    def getMessageById(self, messageId):
-        self.messageId = messageId
+    def get_message_by_id(self, message_id):
 
         request = requests.get(
-            f"{self.api_base}/messages/{messageId}", headers=self.headers_default
+            f"{self.api_base}/messages/{message_id}", headers=self.headers_default
         )
         return request.text
 
-    def getMessages(self):
+    def get_messages(self):
         request = requests.get(
             f"{self.api_base}/messages", headers=self.headers_default
         )

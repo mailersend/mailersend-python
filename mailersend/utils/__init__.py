@@ -4,17 +4,15 @@ from mailersend.base import base
 
 class NewHelper(base.NewAPIClient):
     def __init__(self):
-        baseObj = base.NewAPIClient()
+        baseobj = base.NewAPIClient()
         super(NewHelper, self).__init__(
-            baseObj.api_base,
-            baseObj.headers_default,
-            baseObj.headers_auth,
-            baseObj.mailersend_api_key,
+            baseobj.api_base,
+            baseobj.headers_default,
+            baseobj.headers_auth,
+            baseobj.mailersend_api_key,
         )
 
-    def getIDByName(self, category, name):
-        self.category = category
-        self.name = name
+    def get_id_by_name(self, category, name):
 
         request = requests.get(
             f"{self.api_base}/{category}", headers=self.headers_default

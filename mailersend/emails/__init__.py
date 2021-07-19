@@ -1,53 +1,51 @@
 import requests
 from mailersend.base import base
 
-message = {}
-
 
 class NewEmail(base.NewAPIClient):
     def __init__(self):
-        baseObj = base.NewAPIClient()
+        baseobj = base.NewAPIClient()
         super(NewEmail, self).__init__(
-            baseObj.api_base,
-            baseObj.headers_default,
-            baseObj.headers_auth,
-            baseObj.mailersend_api_key,
+            baseobj.api_base,
+            baseobj.headers_default,
+            baseobj.headers_auth,
+            baseobj.mailersend_api_key,
         )
 
-    def setMailFrom(self, mail_from, message):
+    def set_mail_from(self, mail_from, message):
         message["from"] = mail_from
 
-    def setMailTo(self, mail_to, message):
+    def set_mail_to(self, mail_to, message):
         message["to"] = mail_to
 
-    def setSubject(self, subject, message):
+    def set_subject(self, subject, message):
         message["subject"] = subject
 
-    def setHTMLContent(self, content, message):
+    def set_html_content(self, content, message):
         message["html"] = content
 
-    def setPlaintextContent(self, text, message):
+    def set_plaintext_content(self, text, message):
         message["text"] = text
 
-    def setTemplate(self, template_id, message):
+    def set_template(self, template_id, message):
         message["template_id"] = template_id
 
-    def setSimplePersonalization(self, personalization, message):
+    def set_simple_personalization(self, personalization, message):
         message["variables"] = personalization
 
-    def setAdvancedPersonalization(self, personalization, message):
+    def set_advanced_personalization(self, personalization, message):
         message["personalization"] = personalization
 
-    def setCCRecipients(self, cc, message):
+    def set_cc_recipients(self, cc, message):
         message["cc"] = cc
 
-    def setBCCRecipients(self, bcc, message):
+    def set_bcc_recipients(self, bcc, message):
         message["bcc"] = bcc
 
-    def setTags(self, tags, message):
+    def set_tags(self, tags, message):
         message["tags"] = tags
 
-    def setAttachments(self, attachments, message):
+    def set_attachments(self, attachments, message):
         message["attachments"] = attachments
 
     def send(self, message):
