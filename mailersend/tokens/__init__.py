@@ -4,45 +4,40 @@ from mailersend.base import base
 
 class NewToken(base.NewAPIClient):
     def __init__(self):
-        baseObj = base.NewAPIClient()
+        baseobj = base.NewAPIClient()
         super(NewToken, self).__init__(
-            baseObj.api_base,
-            baseObj.headers_default,
-            baseObj.headers_auth,
-            baseObj.mailersend_api_key,
+            baseobj.api_base,
+            baseobj.headers_default,
+            baseobj.headers_auth,
+            baseobj.mailersend_api_key,
         )
 
-    def createToken(self, tokenName, tokenScopes):
-        self.tokenName = tokenName
-        self.tokenScopes = tokenScopes
+    def create_token(self, token_name, token_scopes):
 
-        _data = {"name": tokenName, "scopes": tokenScopes}
+        _data = {"name": token_name, "scopes": token_scopes}
 
         request = requests.post(
             f"{self.api_base}/token", headers=self.headers_default, json=_data
         )
         return request.text
 
-    def updateToken(self, tokenId, pause=True):
-        self.tokenId = tokenId
-        self.pause = pause
+    def update_token(self, token_id, pause=True):
 
-        if pause == True:
-            _data = self.generateConfigChangeBody("status", "pause")
+        if pause:
+            _data = self.generate_config_change_json_body("status", "pause")
         else:
-            _data = self.generateConfigChangeBody("status", "unpause")
+            _data = self.generate_config_change_json_body("status", "unpause")
 
         request = requests.put(
-            f"{self.api_base}/token/{tokenId}/settings",
+            f"{self.api_base}/token/{token_id}/settings",
             headers=self.headers_default,
             json=_data,
         )
         return request.text
 
-    def deleteToken(self, tokenId):
-        self.tokenId = tokenId
+    def delete_token(self, token_id):
 
         request = requests.delete(
-            f"{self.api_base}/token/{tokenId}/", headers=self.headers_default
+            f"{self.api_base}/token/{token_id}/", headers=self.headers_default
         )
         return request.status_code
