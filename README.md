@@ -92,11 +92,11 @@ recipients = [
     }
 ]
 
-mailer.setMailFrom(mail_from, mail_body)
-mailer.setMailTo(recipients, mail_body)
-mailer.setSubject("Hello!", mail_body)
-mailer.setHTMLContent("This is the HTML content", mail_body)
-mailer.setPlaintextContent("This is the text content", mail_body)
+mailer.set_mail_from(mail_from, mail_body)
+mailer.set_mail_to(recipients, mail_body)
+mailer.set_subject("Hello!", mail_body)
+mailer.set_html_content("This is the HTML content", mail_body)
+mailer.set_plaintext_content("This is the text content", mail_body)
 
 # using print() will also return status code and data
 mailer.send(mail_body)
@@ -138,13 +138,13 @@ bcc = [
     }
 ]
 
-mailer.setMailFrom(mail_from, mail_body)
-mailer.setMailTo(recipients, mail_body)
-mailer.setSubject("Hello!", mail_body)
-mailer.setHTMLContent("This is the HTML content", mail_body)
-mailer.setPlaintextContent("This is the text content", mail_body)
-mailer.setCCRecipients(cc, mail_body)
-mailer.setBCCRecipients(bcc, mail_body)
+mailer.set_mail_from(mail_from, mail_body)
+mailer.set_mail_to(recipients, mail_body)
+mailer.set_subject("Hello!", mail_body)
+mailer.set_html_content("This is the HTML content", mail_body)
+mailer.set_plaintext_content("This is the text content", mail_body)
+mailer.set_cc_recipients(cc, mail_body)
+mailer.set_bcc_recipients(bcc, mail_body)
 
 mailer.send(mail_body)
 ```
@@ -185,11 +185,11 @@ variables = [
 ]
 
 
-mailer.setMailFrom(mail_from, mail_body)
-mailer.setMailTo(recipients, mail_body)
-mailer.setSubject("Hello from {$company}", mail_body)
-mailer.setTemplate("templateID", mail_body)
-mailer.setSimplePersonalization(variables, mail_body)
+mailer.set_mail_from(mail_from, mail_body)
+mailer.set_mail_to(recipients, mail_body)
+mailer.set_subject("Hello from {$company}", mail_body)
+mailer.set_template("templateID", mail_body)
+mailer.set_simple_personalization(variables, mail_body)
 
 mailer.send(mail_body)
 ```
@@ -236,12 +236,12 @@ personalization = [
     ]
 
 
-mailer.setMailFrom(mail_from, mail_body)
-mailer.setMailTo(recipients, mail_body)
-mailer.setSubject("Hello from {$company}", mail_body)
-mailer.setHTMLContent("This is the HTML content, {$name}", mail_body)
-mailer.setPlaintextContent("This is the text content, {$name}", mail_body)
-mailer.setAdvancedPersonalization(personalization, mail_body)
+mailer.set_mail_from(mail_from, mail_body)
+mailer.set_mail_to(recipients, mail_body)
+mailer.set_subject("Hello from {$company}", mail_body)
+mailer.set_html_content("This is the HTML content, {$name}", mail_body)
+mailer.set_plaintext_content("This is the text content, {$name}", mail_body)
+mailer.set_advanced_personalization(personalization, mail_body)
 
 mailer.send(mail_body)
 ```
@@ -281,12 +281,12 @@ variables = [
 ]
 
 
-mailer.setMailFrom(mail_from, mail_body)
-mailer.setMailTo(recipients, mail_body)
-mailer.setSubject("Hello from {$foo}", mail_body)
-mailer.setHTMLContent("This is the HTML content, {$foo}", mail_body)
-mailer.setPlaintextContent("This is the text content, {$foo}", mail_body)
-mailer.setSimplePersonalization(variables, mail_body)
+mailer.set_mail_from(mail_from, mail_body)
+mailer.set_mail_to(recipients, mail_body)
+mailer.set_subject("Hello from {$foo}", mail_body)
+mailer.set_html_content("This is the HTML content, {$foo}", mail_body)
+mailer.set_plaintext_content("This is the text content, {$foo}", mail_body)
+mailer.set_simple_personalization(variables, mail_body)
 
 mailer.send(mail_body)
 ```
@@ -336,13 +336,13 @@ attachments = [
     }
 ]
 
-mailer.setMailFrom(mail_from, mail_body)
-mailer.setMailTo(recipients, mail_body)
-mailer.setSubject("Hello from {$foo}", mail_body)
-mailer.setHTMLContent("This is the HTML content, {$foo}", mail_body)
-mailer.setPlaintextContent("This is the text content, {$foo}", mail_body)
-mailer.setSimplePersonalization(variables, mail_body)
-mailer.setAttachments(attachments, mail_body)
+mailer.set_mail_from(mail_from, mail_body)
+mailer.set_mail_to(recipients, mail_body)
+mailer.set_subject("Hello from {$foo}", mail_body)
+mailer.set_html_content("This is the HTML content, {$foo}", mail_body)
+mailer.set_plaintext_content("This is the text content, {$foo}", mail_body)
+mailer.set_simple_personalization(variables, mail_body)
+mailer.set_attachments(attachments, mail_body)
 
 mailer.send(mail_body)
 ```
@@ -409,7 +409,7 @@ events = [
 domain_id = "domain-id"
 group_by = "days"
 
-analytics.getActivityByDate(date_from, date_to, events, domain_id, group_by)
+analytics.get_activity_by_date(date_from, date_to, events, domain_id, group_by)
 ```
 
 ### Opens by country
@@ -425,7 +425,7 @@ date_to = 1623074976
 # optional arguments
 domain_id = "domain-id"
 
-analytics.getOpensByCountry(date_from, date_to, domain_id)
+analytics.get_opens_by_country(date_from, date_to, domain_id)
 ```
 
 ### Opens by user-agent name
@@ -441,7 +441,7 @@ date_to = 1623074976
 # optional arguments
 domain_id = "domain-id"
 
-analytics.getOpensByUserAgent(date_from, date_to, domain_id)
+analytics.get_opens_by_user_agent(date_from, date_to, domain_id)
 ```
 
 ### Opens by reading environment
@@ -457,7 +457,7 @@ date_to = 1623074976
 # optional arguments
 domain_id = "domain-id"
 
-analytics.getOpensByReadingEnvironment(date_from, date_to, domain_id)
+analytics.get_opens_by_reading_environment(date_from, date_to, domain_id)
 ```
 
 ## Domains
@@ -469,7 +469,7 @@ import mailersend.domains as domains
 
 mailersend = domains.NewDomain()
 
-mailersend.getDomains()
+mailersend.get_domains()
 ```
 
 ### Get a single domain
@@ -479,7 +479,7 @@ import mailersend.domains as domains
 
 mailersend = domains.NewDomain()
 
-mailersend.getDomainByID("domain-id")
+mailersend.get_domain_by_id("domain-id")
 ```
 
 ### Get a single domain using helper function
@@ -490,7 +490,7 @@ import mailersend.utils as helpers
 
 mailersend = domains.NewDomain()
 
-mailersend.getDomainByID(helpers.getIDByName("domains","domain-name"))
+mailersend.get_domain_by_id(helpers.getIDByName("domains","domain-name"))
 ```
 
 ### Delete a domain
@@ -500,7 +500,7 @@ import mailersend.domains as domains
 
 mailersend = domains.NewDomain()
 
-mailersend.deleteDomain("domain-id")
+mailersend.delete_domain("domain-id")
 ```
 
 ### Get a list of recipients per domain
@@ -510,7 +510,7 @@ import mailersend.domains as domains
 
 mailersend = domains.NewDomain()
 
-mailersend.getRecipientsForDomain("domain-id")
+mailersend.get_recipients_for_domain("domain-id")
 ```
 
 ### Update domain settings
@@ -522,7 +522,7 @@ import mailersend.domains as domains
 
 mailersend = domains.NewDomain()
 
-mailersend.updateDomainSetting("domain-id", "send_paused", True)
+mailersend.update_domain_setting("domain-id", "send_paused", True)
 ```
 
 ## Messages
@@ -534,7 +534,7 @@ import mailersend.messages as messages
 
 mailersend = messages.NewMessage()
 
-mailersend.getMessages()
+mailersend.get_messages()
 ```
 
 ### Get a single message
@@ -544,7 +544,7 @@ import mailersend.messages as messages
 
 mailersend = messages.NewMessage()
 
-mailersend.getMessageByID("message-id")
+mailersend.get_message_by_id("message-id")
 ```
 
 ## Recipients
@@ -556,7 +556,7 @@ import mailersend.recipients as recipients
 
 mailersend = recipients.NewRecipient()
 
-mailersend.getRecipients()
+mailersend.get_recipients()
 ```
 
 ### Get a single recipient
@@ -566,7 +566,7 @@ import mailersend.recipients as recipients
 
 mailersend = recipients.NewRecipient()
 
-mailersend.getRecipientByID("recipient-id")
+mailersend.get_recipient_by_id("recipient-id")
 ```
 
 ### Delete a recipient
@@ -576,7 +576,7 @@ import mailersend.recipients as recipients
 
 mailersend = recipients.NewRecipient()
 
-mailersend.deleteRecipient("recipient-id")
+mailersend.delete_recipient("recipient-id")
 ```
 
 ## Tokens
@@ -590,7 +590,7 @@ mailersend = token.NewToken()
 
 scopes = ["email_full", "analytics_read"]
 
-mailersend.createToken("my-token", scopes)
+mailersend.create_token("my-token", scopes)
 ```
 
 Because of security reasons, we only allow access token appearance once during creation. In order to see the access token created you can do:
@@ -602,7 +602,7 @@ mailersend = token.NewToken()
 
 scopes = ["email_full", "analytics_read"]
 
-print(mailersend.createToken("my-token", scopes))
+print(mailersend.create_token("my-token", scopes))
 ```
 
 ### Pause / Unpause Token
@@ -613,10 +613,10 @@ import mailersend.token as token
 mailersend = token.NewToken()
 
 # pause
-mailersend.updateToken("my-token")
+mailersend.update_token("my-token")
 
 # unpause
-mailersend.updateToken("my-token", pause=False)
+mailersend.update_token("my-token", pause=False)
 ```
 
 ### Delete a Token
@@ -626,7 +626,7 @@ import mailersend.token as token
 
 mailersend = token.NewToken()
 
-mailersend.deleteToken("token-id")
+mailersend.delete_token("token-id")
 ```
 
 ## Webhooks
@@ -638,7 +638,7 @@ import mailersend.webhooks as webhooks
 
 mailersend = webhooks.NewWebhook()
 
-mailersend.getWebhooks("domain-id")
+mailersend.get_webhooks("domain-id")
 ```
 
 ### Get a single webhook
@@ -648,7 +648,7 @@ import mailersend.webhooks as webhooks
 
 mailersend = webhooks.NewWebhook()
 
-mailersend.getWebhookByID("webhook-id")
+mailersend.get_webhook_by_id("webhook-id")
 ```
 
 ### Create a Webhook
@@ -659,12 +659,12 @@ import mailersend.webhooks as webhooks
 webhookEvents = ['activity.sent', 'activity.delivered']
 
 mailersend = webhooks.NewWebhook()
-webhook.setWebhookURL("https://webhooks.mysite.com")
-webhook.setWebhookName("my first webhook")
-webhook.setWebhookEvents(webhookEvents)
-webhook.setWebhookDomain("domain-id")
+webhook.set_webhook_url("https://webhooks.mysite.com")
+webhook.set_webhook_name("my first webhook")
+webhook.set_webhook_events(webhookEvents)
+webhook.set_webhook_domain("domain-id")
 
-mailersend.createWebhook()
+mailersend.create_webhook()
 ```
 
 ### Create a disabled webhook
@@ -675,11 +675,11 @@ import mailersend.webhooks as webhooks
 webhookEvents = ['activity.sent', 'activity.delivered']
 
 mailersend = webhooks.NewWebhook()
-webhook.setWebhookURL("https://webhooks.mysite.com")
-webhook.setWebhookName("my first webhook")
-webhook.setWebhookEvents(webhookEvents)
-webhook.setWebhookDomain("domain-id")
-webhook.setWebhookEnabled(False)
+webhook.set_webhook_url("https://webhooks.mysite.com")
+webhook.set_webhook_name("my first webhook")
+webhook.set_webhook_events(webhookEvents)
+webhook.set_webhook_domain("domain-id")
+webhook.set_webhook_enabled(False)
 
 mailersend.createWebhook()
 ```
@@ -691,7 +691,7 @@ import mailersend.webhooks as webhooks
 
 mailersend = webhooks.NewWebhook()
 
-mailersend.updateWebhook("webhook-id", "name", "a new webhook name")
+mailersend.update_webhook("webhook-id", "name", "a new webhook name")
 ```
 
 ### Disable/Enable a Webhook
@@ -701,7 +701,7 @@ import mailersend.webhooks as webhooks
 
 mailersend = webhooks.NewWebhook()
 
-mailersend.updateWebhook("webhook-id", "enabled", False)
+mailersend.update_webhook("webhook-id", "enabled", False)
 ```
 
 ### Delete a Webhook
@@ -711,7 +711,7 @@ import mailersend.webhooks as webhooks
 
 mailersend = webhooks.NewWebhook()
 
-mailersend.deleteWebhook("webhook-id")
+mailersend.delete_webhook("webhook-id")
 ```
 
 # Testing

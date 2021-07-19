@@ -4,30 +4,31 @@ from mailersend.base import base
 
 class NewRecipient(base.NewAPIClient):
     def __init__(self):
-        baseObj = base.NewAPIClient()
+        baseobj = base.NewAPIClient()
         super(NewRecipient, self).__init__(
-            baseObj.api_base,
-            baseObj.headers_default,
-            baseObj.headers_auth,
-            baseObj.mailersend_api_key,
+            baseobj.api_base,
+            baseobj.headers_default,
+            baseobj.headers_auth,
+            baseobj.mailersend_api_key,
         )
 
-    def getRecipients(self):
+    def get_recipients(self):
+
         request = requests.get(
             f"{self.api_base}/recipients", headers=self.headers_default
         )
         return request.text
 
-    def getRecipientByID(self, recipientId):
-        self.recipientId = recipientId
+    def get_recipient_by_id(self, recipient_id):
+
         request = requests.get(
-            f"{self.api_base}/recipients/{recipientId}", headers=self.headers_default
+            f"{self.api_base}/recipients/{recipient_id}", headers=self.headers_default
         )
         return request.text
 
-    def deleteRecipient(self, recipientId):
-        self.recipientId = recipientId
+    def delete_recipient(self, recipient_id):
+
         request = requests.delete(
-            f"{self.api_base}/recipients/{recipientId}", headers=self.headers_default
+            f"{self.api_base}/recipients/{recipient_id}", headers=self.headers_default
         )
         return request.status_code
