@@ -12,7 +12,7 @@ class NewActivity(base.NewAPIClient):
             baseobj.mailersend_api_key,
         )
 
-    def getDomainActivity(
+    def get_domain_activity(
         self, domain_id, page=None, limit=None, date_from=None, date_to=None, event=None
     ):
 

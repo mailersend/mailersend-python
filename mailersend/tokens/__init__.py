@@ -24,9 +24,9 @@ class NewToken(base.NewAPIClient):
     def update_token(self, token_id, pause=True):
 
         if pause:
-            _data = self.generate_config_change_json_body("status", "pause")
+            _data = base.generate_config_change_json_body("status", "pause")
         else:
-            _data = self.generate_config_change_json_body("status", "unpause")
+            _data = base.generate_config_change_json_body("status", "unpause")
 
         request = requests.put(
             f"{self.api_base}/token/{token_id}/settings",
