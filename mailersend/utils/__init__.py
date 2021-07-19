@@ -27,7 +27,5 @@ class NewHelper(base.NewAPIClient):
         for data in _data_block:
             if data[category_search_asset.get(category)] == name:
                 return data["id"]
-            else:
-                raise ValueError("Not found")
 
         return request.text

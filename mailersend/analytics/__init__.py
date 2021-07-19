@@ -13,7 +13,7 @@ class NewAnalytics(base.NewAPIClient):
         )
 
     def get_activity_by_date(
-        self, date_from, date_to, event, domainId=None, groupBy=None
+        self, date_from, date_to, event, domain_id=None, group_by=None
     ):
 
         _data = {
@@ -22,11 +22,11 @@ class NewAnalytics(base.NewAPIClient):
             "event": event,
         }
 
-        if domainId is not None:
-            _data["domain_id"] = domainId
+        if domain_id is not None:
+            _data["domain_id"] = domain_id
 
-        if groupBy is not None:
-            _data["group_by"] = groupBy
+        if group_by is not None:
+            _data["group_by"] = group_by
 
         request = requests.get(
             f"{self.api_base}/analytics/date", headers=self.headers_default, json=_data
@@ -37,8 +37,8 @@ class NewAnalytics(base.NewAPIClient):
     def get_opens_by_country(self, date_from, date_to, domain_id=None, recipients=None):
 
         _data = {
-            "date_from": self.dateFrom,
-            "date_to": self.dateTo,
+            "date_from": date_from,
+            "date_to": date_to,
         }
 
         if domain_id is not None:

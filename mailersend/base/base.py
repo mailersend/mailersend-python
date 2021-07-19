@@ -1,6 +1,4 @@
-import json
 import os
-import requests
 
 API_BASE = "https://api.mailersend.com/v1"
 API_KEY = os.environ.get("MAILERSEND_API_KEY")
@@ -26,7 +24,7 @@ class NewAPIClient(object):
         }
 
 
-def generate_config_change_json_body(self, key, value):
+def generate_config_change_json_body(key, value):
     data = {key: value}
 
     return data
