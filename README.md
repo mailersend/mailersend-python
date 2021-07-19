@@ -358,7 +358,7 @@ import mailersend.activity as activity
 
 mailersend = activity.NewActivity()
 
-mailersend.getDomainActivity("domain-id")
+mailersend.get_domain_activity("domain-id")
 ```
 
 ### Get a list of activities (full)
@@ -386,7 +386,7 @@ events = [
     "spam_complaints",
 ]
 
-mailersend.getDomainActivity("domain-id", page, limit, date_from, date_to, events)
+mailersend.get_domain_activity("domain-id", page, limit, date_from, date_to, events)
 ```
 
 ## Analytics
