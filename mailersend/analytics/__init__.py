@@ -4,24 +4,21 @@ from mailersend.base import base
 
 class NewAnalytics(base.NewAPIClient):
     def __init__(self):
-        baseObj = base.NewAPIClient()
+        baseobj = base.NewAPIClient()
         super(NewAnalytics, self).__init__(
-            baseObj.api_base,
-            baseObj.headers_default,
-            baseObj.headers_auth,
-            baseObj.mailersend_api_key,
+            baseobj.api_base,
+            baseobj.headers_default,
+            baseobj.headers_auth,
+            baseobj.mailersend_api_key,
         )
 
-    def getActivityByDate(self, dateFrom, dateTo, event, domainId=None, groupBy=None):
-        self.domainId = domainId
-        self.dateFrom = dateFrom
-        self.dateTo = dateTo
-        self.groupBy = groupBy
-        self.event = event
+    def get_activity_by_date(
+        self, date_from, date_to, event, domainId=None, groupBy=None
+    ):
 
         _data = {
-            "date_from": dateFrom,
-            "date_to": dateTo,
+            "date_from": date_from,
+            "date_to": date_to,
             "event": event,
         }
 
@@ -37,22 +34,18 @@ class NewAnalytics(base.NewAPIClient):
 
         return request.text
 
-    def getOpensByCountry(self, dateFrom, dateTo, domainId=None, recipients=None):
-        self.domainId = domainId
-        self.dateFrom = dateFrom
-        self.dateTo = dateTo
-        self.recipients = recipients
+    def get_opens_by_country(self, date_from, date_to, domain_id=None, recipients=None):
 
         _data = {
             "date_from": self.dateFrom,
             "date_to": self.dateTo,
         }
 
-        if domainId is not None:
-            _data["domain_id"] = domainId
+        if domain_id is not None:
+            _data["domain_id"] = domain_id
 
         if recipients is not None:
-            _data["recipient_id"] = groupBy
+            _data["recipient_id"] = recipients
 
         request = requests.get(
             f"{self.api_base}/analytics/country",
@@ -62,22 +55,20 @@ class NewAnalytics(base.NewAPIClient):
 
         return request.text
 
-    def getOpensByUserAgent(self, dateFrom, dateTo, domainId=None, recipients=None):
-        self.domainId = domainId
-        self.dateFrom = dateFrom
-        self.dateTo = dateTo
-        self.recipients = recipients
+    def get_opens_by_user_agent(
+        self, date_from, date_to, domain_id=None, recipients=None
+    ):
 
         _data = {
-            "date_from": self.dateFrom,
-            "date_to": self.dateTo,
+            "date_from": date_from,
+            "date_to": date_to,
         }
 
-        if domainId is not None:
-            _data["domain_id"] = domainId
+        if domain_id is not None:
+            _data["domain_id"] = domain_id
 
         if recipients is not None:
-            _data["recipient_id"] = groupBy
+            _data["recipient_id"] = recipients
 
         request = requests.get(
             f"{self.api_base}/analytics/ua-name",
@@ -87,24 +78,20 @@ class NewAnalytics(base.NewAPIClient):
 
         return request.text
 
-    def getOpensByReadingEnvironment(
-        self, dateFrom, dateTo, domainId=None, recipients=None
+    def get_opens_by_reading_environment(
+        self, date_from, date_to, domain_id=None, recipients=None
     ):
-        self.domainId = domainId
-        self.dateFrom = dateFrom
-        self.dateTo = dateTo
-        self.recipients = recipients
 
         _data = {
-            "date_from": self.dateFrom,
-            "date_to": self.dateTo,
+            "date_from": date_from,
+            "date_to": date_to,
         }
 
-        if domainId is not None:
-            _data["domain_id"] = domainId
+        if domain_id is not None:
+            _data["domain_id"] = domain_id
 
         if recipients is not None:
-            _data["recipient_id"] = groupBy
+            _data["recipient_id"] = recipients
 
         request = requests.get(
             f"{self.api_base}/analytics/ua-type",

@@ -4,34 +4,28 @@ from mailersend.base import base
 
 class NewActivity(base.NewAPIClient):
     def __init__(self):
-        baseObj = base.NewAPIClient()
+        baseobj = base.NewAPIClient()
         super(NewActivity, self).__init__(
-            baseObj.api_base,
-            baseObj.headers_default,
-            baseObj.headers_auth,
-            baseObj.mailersend_api_key,
+            baseobj.api_base,
+            baseobj.headers_default,
+            baseobj.headers_auth,
+            baseobj.mailersend_api_key,
         )
 
     def getDomainActivity(
-        self, domainId, page=None, limit=None, dateFrom=None, dateTo=None, event=None
+        self, domain_id, page=None, limit=None, date_from=None, date_to=None, event=None
     ):
-        self.domainId = domainId
-        self.page = page
-        self.limit = limit
-        self.dateFrom = dateFrom
-        self.dateTo = dateTo
-        self.event = event
 
         _data = {
             "page": page or None,
             "limit": limit or None,
-            "dateFrom": dateFrom or None,
-            "dateTo": dateTo or None,
+            "dateFrom": date_from or None,
+            "dateTo": date_to or None,
             "event": event or None,
         }
 
         request = requests.get(
-            f"{self.api_base}/activity/{domainId}",
+            f"{self.api_base}/activity/{domain_id}",
             headers=self.headers_default,
             json=_data,
         )

@@ -6,15 +6,15 @@ data = {}
 
 class NewWebhook(base.NewAPIClient):
     def __init__(self):
-        baseObj = base.NewAPIClient()
+        baseobj = base.NewAPIClient()
         super(NewWebhook, self).__init__(
-            baseObj.api_base,
-            baseObj.headers_default,
-            baseObj.headers_auth,
-            baseObj.mailersend_api_key,
+            baseobj.api_base,
+            baseobj.headers_default,
+            baseobj.headers_auth,
+            baseobj.mailersend_api_key,
         )
 
-    def getWebhooks(self, domain_id):
+    def get_webhooks(self, domain_id):
         request = requests.get(
             f"{self.api_base}/webhooks",
             headers=self.headers_default,
@@ -22,28 +22,28 @@ class NewWebhook(base.NewAPIClient):
         )
         return request.text
 
-    def getWebhookByID(self, webhook_id):
+    def get_webhook_by_id(self, webhook_id):
         request = requests.get(
             f"{self.api_base}/webhooks/{webhook_id}", headers=self.headers_default
         )
         return request.text
 
-    def setWebhookURL(self, webhook_url):
+    def set_webhook_url(self, webhook_url):
         data["url"] = webhook_url
 
-    def setWebhookName(self, webhook_name):
+    def set_webhook_name(self, webhook_name):
         data["name"] = webhook_name
 
-    def setWebhookEvents(self, events):
+    def set_webhook_events(self, events):
         data["events"] = events
 
-    def setWebhookEnabled(self, enabled=True):
+    def set_webhook_enabled(self, enabled=True):
         data["enabled"] = enabled
 
-    def setWebhookDomain(self, domain_id):
+    def set_webhook_domain(self, domain_id):
         data["domain_id"] = domain_id
 
-    def updateWebhook(self, webhook_id, key, value):
+    def update_webhook(self, webhook_id, key, value):
         request = requests.put(
             f"{self.api_base}/webhooks/{webhook_id}",
             headers=self.headers_default,
@@ -51,13 +51,13 @@ class NewWebhook(base.NewAPIClient):
         )
         return request.text
 
-    def deleteWebhook(self, webhook_id):
+    def delete_webhook(self, webhook_id):
         request = requests.delete(
             f"{self.api_base}/webhooks/{webhook_id}", headers=self.headers_default
         )
         return request.text
 
-    def createWebhook(self):
+    def create_webhook(self):
         request = requests.post(
             f"{self.api_base}/webhooks", headers=self.headers_default, json=data
         )

@@ -25,10 +25,8 @@ class NewAPIClient(object):
             "Authorization": f"{self.headers_auth}",
         }
 
-    def generateConfigChangeBody(self, key, value):
-        self.key = key
-        self.value = value
 
-        data = {key: value}
+def generate_config_change_json_body(self, key, value):
+    data = {key: value}
 
-        return data
+    return data
