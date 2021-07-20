@@ -4,7 +4,12 @@ API_BASE = "https://api.mailersend.com/v1"
 API_KEY = os.environ.get("MAILERSEND_API_KEY")
 
 
-class NewAPIClient(object):
+class NewAPIClient:
+    """
+    Instantiates the parent object all endpoints follow.
+    Provides necessary connection information to perform API operations.
+    """
+
     def __init__(
         self,
         api_base=None,
@@ -12,6 +17,9 @@ class NewAPIClient(object):
         headers_auth=None,
         mailersend_api_key=None,
     ):
+        """
+        NewAPIClient constructor
+        """
 
         self.api_base = API_BASE
         self.mailersend_api_key = API_KEY
@@ -25,6 +33,9 @@ class NewAPIClient(object):
 
 
 def generate_config_change_json_body(key, value):
+    """
+    Returns a key:value pair
+    """
     data = {key: value}
 
     return data
