@@ -17,7 +17,7 @@ class NewActivity(base.NewAPIClient):
         NewActivity constructor
         """
         baseobj = base.NewAPIClient()
-        super(NewActivity, self).__init__(
+        super().__init__(
             baseobj.api_base,
             baseobj.headers_default,
             baseobj.headers_auth,

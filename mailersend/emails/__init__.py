@@ -17,7 +17,7 @@ class NewEmail(base.NewAPIClient):
         NewEmail constructor
         """
         baseobj = base.NewAPIClient()
-        super(NewEmail, self).__init__(
+        super().__init__(
             baseobj.api_base,
             baseobj.headers_default,
             baseobj.headers_auth,

@@ -17,7 +17,7 @@ class NewAnalytics(base.NewAPIClient):
         NewAnalytics constructor
         """
         baseobj = base.NewAPIClient()
-        super(NewAnalytics, self).__init__(
+        super().__init__(
             baseobj.api_base,
             baseobj.headers_default,
             baseobj.headers_auth,

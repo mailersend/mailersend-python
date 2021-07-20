@@ -17,7 +17,7 @@ class NewToken(base.NewAPIClient):
         NewToken constructor
         """
         baseobj = base.NewAPIClient()
-        super(NewToken, self).__init__(
+        super().__init__(
             baseobj.api_base,
             baseobj.headers_default,
             baseobj.headers_auth,

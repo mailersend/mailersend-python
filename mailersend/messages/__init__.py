@@ -17,7 +17,7 @@ class NewMessage(base.NewAPIClient):
         NewMessage constructor
         """
         baseobj = base.NewAPIClient()
-        super(NewMessage, self).__init__(
+        super().__init__(
             baseobj.api_base,
             baseobj.headers_default,
             baseobj.headers_auth,

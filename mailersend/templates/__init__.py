@@ -17,7 +17,7 @@ class NewTemplate(base.NewAPIClient):
         NewTemplate constructor
         """
         baseobj = base.NewAPIClient()
-        super(NewTemplate, self).__init__(
+        super().__init__(
             baseobj.api_base,
             baseobj.headers_default,
             baseobj.headers_auth,
