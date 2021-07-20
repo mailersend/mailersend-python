@@ -585,9 +585,9 @@ mailer.delete_recipient("recipient-id")
 ### Create a token
 
 ```python
-from mailersend import token
+from mailersend import tokens
 
-mailer = token.NewToken()
+mailer = tokens.NewToken()
 
 scopes = ["email_full", "analytics_read"]
 
@@ -597,9 +597,9 @@ mailer.create_token("my-token", scopes)
 Because of security reasons, we only allow access token appearance once during creation. In order to see the access token created you can do:
 
 ```python
-from mailersend import token
+from mailersend import tokens
 
-mailer = token.NewToken()
+mailer = tokens.NewToken()
 
 scopes = ["email_full", "analytics_read"]
 
