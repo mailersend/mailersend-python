@@ -73,7 +73,7 @@ $ python -m pip install mailersend
 ### Send an email
 
 ```python
-import mailersend.emails as emails
+from mailersend import emails
 
 mailer = emails.NewEmail()
 
@@ -105,7 +105,7 @@ mailer.send(mail_body)
 ### Add CC, BCC recipients
 
 ```python
-import mailersend.emails as emails
+from mailersend import emails
 
 mailer = emails.NewEmail()
 
@@ -152,7 +152,7 @@ mailer.send(mail_body)
 ### Send a template-based email
 
 ```python
-import mailersend.emails as emails
+from mailersend import emails
 
 mailer = emails.NewEmail()
 
@@ -197,7 +197,7 @@ mailer.send(mail_body)
 ### Advanced personalization
 
 ```python
-import mailersend.emails as emails
+from mailersend import emails
 
 mailer = emails.NewEmail()
 
@@ -249,7 +249,7 @@ mailer.send(mail_body)
 ### Simple personalization
 
 ```python
-import mailersend.emails as emails
+from mailersend import emails
 
 mailer = emails.NewEmail()
 
@@ -294,7 +294,7 @@ mailer.send(mail_body)
 ### Send email with attachment
 
 ```python
-import mailersend.emails as emails
+from mailersend import emails
 
 mailer = emails.NewEmail()
 
@@ -354,7 +354,7 @@ mailer.send(mail_body)
 ### Get a list of activities (simple)
 
 ```python
-import mailersend.activity as activity
+from mailersend import activity
 
 mailersend = activity.NewActivity()
 
@@ -364,9 +364,9 @@ mailersend.get_domain_activity("domain-id")
 ### Get a list of activities (full)
 
 ```python
-import mailersend.activity as activity
+from mailersend import activity
 
-mailersend = activity.NewActivity()
+mailer = activity.NewActivity()
 
 page = 1
 limit = 20
@@ -386,7 +386,7 @@ events = [
     "spam_complaints",
 ]
 
-mailersend.get_domain_activity("domain-id", page, limit, date_from, date_to, events)
+mailer.get_domain_activity("domain-id", page, limit, date_from, date_to, events)
 ```
 
 ## Analytics
@@ -394,9 +394,9 @@ mailersend.get_domain_activity("domain-id", page, limit, date_from, date_to, eve
 ### Activity data by date
 
 ```python
-import mailersend.analytics as analytic
+from mailersend import analytics
 
-analytics = analytic.NewAnalytics()
+mailer = analytics.NewAnalytics()
 
 date_from = 1623073576
 date_to = 1623074976
@@ -409,15 +409,15 @@ events = [
 domain_id = "domain-id"
 group_by = "days"
 
-analytics.get_activity_by_date(date_from, date_to, events, domain_id, group_by)
+mailer.get_activity_by_date(date_from, date_to, events, domain_id, group_by)
 ```
 
 ### Opens by country
 
 ```python
-import mailersend.analytics as analytic
+from mailersend import analytics
 
-analytics = analytic.NewAnalytics()
+mailer = analytics.NewAnalytics()
 
 date_from = 1623073576
 date_to = 1623074976
@@ -425,15 +425,15 @@ date_to = 1623074976
 # optional arguments
 domain_id = "domain-id"
 
-analytics.get_opens_by_country(date_from, date_to, domain_id)
+mailer.get_opens_by_country(date_from, date_to, domain_id)
 ```
 
 ### Opens by user-agent name
 
 ```python
-import mailersend.analytics as analytic
+from mailersend import analytics
 
-analytics = analytic.NewAnalytics()
+mailer = analytics.NewAnalytics()
 
 date_from = 1623073576
 date_to = 1623074976
@@ -441,15 +441,15 @@ date_to = 1623074976
 # optional arguments
 domain_id = "domain-id"
 
-analytics.get_opens_by_user_agent(date_from, date_to, domain_id)
+mailer.get_opens_by_user_agent(date_from, date_to, domain_id)
 ```
 
 ### Opens by reading environment
 
 ```python
-import mailersend.analytics as analytic
+from mailersend import analytics
 
-analytics = analytic.NewAnalytics()
+mailer = analytics.NewAnalytics()
 
 date_from = 1623073576
 date_to = 1623074976
@@ -457,7 +457,7 @@ date_to = 1623074976
 # optional arguments
 domain_id = "domain-id"
 
-analytics.get_opens_by_reading_environment(date_from, date_to, domain_id)
+mailer.get_opens_by_reading_environment(date_from, date_to, domain_id)
 ```
 
 ## Domains
@@ -465,52 +465,53 @@ analytics.get_opens_by_reading_environment(date_from, date_to, domain_id)
 ### Get a list of domains
 
 ```python
-import mailersend.domains as domains
+from mailersend import domains
 
-mailersend = domains.NewDomain()
+mailer = domains.NewDomain()
 
-mailersend.get_domains()
+mailer.get_domains()
 ```
 
 ### Get a single domain
 
 ```python
-import mailersend.domains as domains
+from mailersend import domains
 
-mailersend = domains.NewDomain()
+mailer = domains.NewDomain()
 
-mailersend.get_domain_by_id("domain-id")
+mailer.get_domain_by_id("domain-id")
 ```
 
 ### Get a single domain using helper function
 
 ```python
-import mailersend.domains as domains
-import mailersend.utils as helpers
+from mailersend import domains
+from mailersend import helpers
 
-mailersend = domains.NewDomain()
+mailer = domains.NewDomain()
+helper = helpers.NewHelper()
 
-mailersend.get_domain_by_id(helpers.getIDByName("domains","domain-name"))
+mailer.get_domain_by_id(helper.getIDByName("domains","domain-name"))
 ```
 
 ### Delete a domain
 
 ```python
-import mailersend.domains as domains
+from mailersend import domains
 
-mailersend = domains.NewDomain()
+mailer = domains.NewDomain()
 
-mailersend.delete_domain("domain-id")
+mailer.delete_domain("domain-id")
 ```
 
 ### Get a list of recipients per domain
 
 ```python
-import mailersend.domains as domains
+from mailersend import domains
 
-mailersend = domains.NewDomain()
+mailer = domains.NewDomain()
 
-mailersend.get_recipients_for_domain("domain-id")
+mailer.get_recipients_for_domain("domain-id")
 ```
 
 ### Update domain settings
@@ -518,11 +519,11 @@ mailersend.get_recipients_for_domain("domain-id")
 You can find a full list of settings [here](https://developers.mailersend.com/api/v1/domains.html#request-body).
 
 ```python
-import mailersend.domains as domains
+from mailersend import domains
 
-mailersend = domains.NewDomain()
+mailer = domains.NewDomain()
 
-mailersend.update_domain_setting("domain-id", "send_paused", True)
+mailer.update_domain_setting("domain-id", "send_paused", True)
 ```
 
 ## Messages
@@ -530,21 +531,21 @@ mailersend.update_domain_setting("domain-id", "send_paused", True)
 ### Get a list of messages
 
 ```python
-import mailersend.messages as messages
+from mailersend import messages
 
-mailersend = messages.NewMessage()
+mailer = messages.NewMessage()
 
-mailersend.get_messages()
+mailer.get_messages()
 ```
 
 ### Get a single message
 
 ```python
-import mailersend.messages as messages
+from mailersend import messages
 
-mailersend = messages.NewMessage()
+mailer = messages.NewMessage()
 
-mailersend.get_message_by_id("message-id")
+mailer.get_message_by_id("message-id")
 ```
 
 ## Recipients
@@ -552,31 +553,31 @@ mailersend.get_message_by_id("message-id")
 ### Get a list of recipients
 
 ```python
-import mailersend.recipients as recipients
+from mailersend import recipients
 
-mailersend = recipients.NewRecipient()
+mailer = recipients.NewRecipient()
 
-mailersend.get_recipients()
+mailer.get_recipients()
 ```
 
 ### Get a single recipient
 
 ```python
-import mailersend.recipients as recipients
+from mailersend import recipients
 
-mailersend = recipients.NewRecipient()
+mailer = recipients.NewRecipient()
 
-mailersend.get_recipient_by_id("recipient-id")
+mailer.get_recipient_by_id("recipient-id")
 ```
 
 ### Delete a recipient
 
 ```python
-import mailersend.recipients as recipients
+from mailersend import recipients
 
-mailersend = recipients.NewRecipient()
+mailer = recipients.NewRecipient()
 
-mailersend.delete_recipient("recipient-id")
+mailer.delete_recipient("recipient-id")
 ```
 
 ## Tokens
@@ -584,49 +585,49 @@ mailersend.delete_recipient("recipient-id")
 ### Create a token
 
 ```python
-import mailersend.token as token
+from mailersend import token
 
-mailersend = token.NewToken()
+mailer = token.NewToken()
 
 scopes = ["email_full", "analytics_read"]
 
-mailersend.create_token("my-token", scopes)
+mailer.create_token("my-token", scopes)
 ```
 
 Because of security reasons, we only allow access token appearance once during creation. In order to see the access token created you can do:
 
 ```python
-import mailersend.token as token
+from mailersend import token
 
-mailersend = token.NewToken()
+mailer = token.NewToken()
 
 scopes = ["email_full", "analytics_read"]
 
-print(mailersend.create_token("my-token", scopes))
+print(mailer.create_token("my-token", scopes))
 ```
 
 ### Pause / Unpause Token
 
 ```python
-import mailersend.token as token
+from mailersend import tokens
 
-mailersend = token.NewToken()
+mailer = tokens.NewToken()
 
 # pause
-mailersend.update_token("my-token")
+mailer.update_token("my-token")
 
 # unpause
-mailersend.update_token("my-token", pause=False)
+mailer.update_token("my-token", pause=False)
 ```
 
 ### Delete a Token
 
 ```python
-import mailersend.token as token
+from mailersend import tokens
 
-mailersend = token.NewToken()
+mailer = token.NewToken()
 
-mailersend.delete_token("token-id")
+mailer.delete_token("token-id")
 ```
 
 ## Webhooks
@@ -634,84 +635,84 @@ mailersend.delete_token("token-id")
 ### Get a list of webhooks
 
 ```python
-import mailersend.webhooks as webhooks
+from mailersend import webhooks
 
-mailersend = webhooks.NewWebhook()
+mailer = webhooks.NewWebhook()
 
-mailersend.get_webhooks("domain-id")
+mailer.get_webhooks("domain-id")
 ```
 
 ### Get a single webhook
 
 ```python
-import mailersend.webhooks as webhooks
+from mailersend import webhooks
 
-mailersend = webhooks.NewWebhook()
+mailer = webhooks.NewWebhook()
 
-mailersend.get_webhook_by_id("webhook-id")
+mailer.get_webhook_by_id("webhook-id")
 ```
 
 ### Create a Webhook
 
 ```python
-import mailersend.webhooks as webhooks
+from mailersend import webhooks
 
 webhookEvents = ['activity.sent', 'activity.delivered']
 
-mailersend = webhooks.NewWebhook()
+webhook = webhooks.NewWebhook()
 webhook.set_webhook_url("https://webhooks.mysite.com")
 webhook.set_webhook_name("my first webhook")
 webhook.set_webhook_events(webhookEvents)
 webhook.set_webhook_domain("domain-id")
 
-mailersend.create_webhook()
+webhook.create_webhook()
 ```
 
 ### Create a disabled webhook
 
 ```python
-import mailersend.webhooks as webhooks
+from mailersend import webhooks
 
 webhookEvents = ['activity.sent', 'activity.delivered']
 
-mailersend = webhooks.NewWebhook()
+webhook = webhooks.NewWebhook()
 webhook.set_webhook_url("https://webhooks.mysite.com")
 webhook.set_webhook_name("my first webhook")
 webhook.set_webhook_events(webhookEvents)
 webhook.set_webhook_domain("domain-id")
 webhook.set_webhook_enabled(False)
 
-mailersend.createWebhook()
+webhook.createWebhook()
 ```
 
 ### Update a Webhook
 
 ```python
-import mailersend.webhooks as webhooks
+from mailersend import webhooks
 
-mailersend = webhooks.NewWebhook()
+webhook = webhooks.NewWebhook()
 
-mailersend.update_webhook("webhook-id", "name", "a new webhook name")
+webhook.update_webhook("webhook-id", "name", "a new webhook name")
 ```
 
 ### Disable/Enable a Webhook
 
 ```python
-import mailersend.webhooks as webhooks
+from mailersend import webhooks
 
-mailersend = webhooks.NewWebhook()
+webhook = webhooks.NewWebhook()
 
-mailersend.update_webhook("webhook-id", "enabled", False)
+webhook.update_webhook("webhook-id", "enabled", False)
 ```
 
 ### Delete a Webhook
 
 ```python
-import mailersend.webhooks as webhooks
+from mailersend import webhooks
 
-mailersend = webhooks.NewWebhook()
+webhook = webhooks.NewWebhook()
 
-mailersend.delete_webhook("webhook-id")
+webhook.delete_webhook("webhook-id")
 ```
 
 # Testing
