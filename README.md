@@ -357,9 +357,9 @@ mailer.send(mail_body)
 ```python
 from mailersend import activity
 
-mailersend = activity.NewActivity()
+mailer = activity.NewActivity()
 
-mailersend.get_domain_activity("domain-id")
+mailer.get_domain_activity("domain-id")
 ```
 
 ### Get a list of activities (full)
