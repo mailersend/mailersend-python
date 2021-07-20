@@ -1,3 +1,7 @@
+"""
+Base object handles connection information to the MailerSend API
+"""
+
 import os
 
 API_BASE = "https://api.mailersend.com/v1"

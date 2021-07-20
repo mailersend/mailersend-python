@@ -17,7 +17,7 @@ class NewDomain(base.NewAPIClient):
         NewDomain constructor
         """
         baseobj = base.NewAPIClient()
-        super(NewDomain, self).__init__(
+        super().__init__(
             baseobj.api_base,
             baseobj.headers_default,
             baseobj.headers_auth,

@@ -19,7 +19,7 @@ class NewWebhook(base.NewAPIClient):
         NewWebhook constructor
         """
         baseobj = base.NewAPIClient()
-        super(NewWebhook, self).__init__(
+        super().__init__(
             baseobj.api_base,
             baseobj.headers_default,
             baseobj.headers_auth,

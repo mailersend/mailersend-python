@@ -16,7 +16,7 @@ class NewHelper(base.NewAPIClient):
         NewHelper constructor
         """
         baseobj = base.NewAPIClient()
-        super(NewHelper, self).__init__(
+        super().__init__(
             baseobj.api_base,
             baseobj.headers_default,
             baseobj.headers_auth,
