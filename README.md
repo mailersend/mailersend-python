@@ -492,7 +492,7 @@ from mailersend import utils
 mailer = domains.NewDomain()
 helper = utils.NewHelper()
 
-mailer.get_domain_by_id(helper.getIDByName("domains","domain-name"))
+mailer.get_domain_by_id(helper.get_id_by_name("domains","domain-name"))
 ```
 
 ### Delete a domain
@@ -683,7 +683,7 @@ webhook.set_webhook_events(webhookEvents)
 webhook.set_webhook_domain("domain-id")
 webhook.set_webhook_enabled(False)
 
-webhook.createWebhook()
+webhook.create_webhook()
 ```
 
 ### Update a Webhook
