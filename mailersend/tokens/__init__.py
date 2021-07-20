@@ -1,11 +1,23 @@
+"""
+Handles /tokens endpoint
+Doc: https://developers.mailersend.com/api/v1/tokens.html
+"""
+
 import requests
 from mailersend.base import base
 
 
 class NewToken(base.NewAPIClient):
+    """
+    Instantiates the /tokens endpoint object
+    """
+
     def __init__(self):
+        """
+        NewToken constructor
+        """
         baseobj = base.NewAPIClient()
-        super(NewToken, self).__init__(
+        super().__init__(
             baseobj.api_base,
             baseobj.headers_default,
             baseobj.headers_auth,
@@ -13,6 +25,9 @@ class NewToken(base.NewAPIClient):
         )
 
     def create_token(self, token_name, token_scopes):
+        """
+        Returns a JSON response from the MailerSend API
+        """
 
         _data = {"name": token_name, "scopes": token_scopes}
 
@@ -22,6 +37,9 @@ class NewToken(base.NewAPIClient):
         return request.text
 
     def update_token(self, token_id, pause=True):
+        """
+        Returns a JSON response from the MailerSend API
+        """
 
         if pause:
             _data = base.generate_config_change_json_body("status", "pause")
@@ -36,6 +54,9 @@ class NewToken(base.NewAPIClient):
         return request.text
 
     def delete_token(self, token_id):
+        """
+        Returns a HTTP status code from the MailerSend API
+        """
 
         request = requests.delete(
             f"{self.api_base}/token/{token_id}/", headers=self.headers_default
