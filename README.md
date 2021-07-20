@@ -221,7 +221,7 @@ personalization = [
         "email": "test@mailersend.com",
         "data": {
         "var": "value",
-        "boolean": true,
+        "boolean": True,
         "object": {
             "key" : "object-value"
         },
@@ -295,6 +295,7 @@ mailer.send(mail_body)
 
 ```python
 from mailersend import emails
+import base64
 
 mailer = emails.NewEmail()
 
@@ -486,10 +487,10 @@ mailer.get_domain_by_id("domain-id")
 
 ```python
 from mailersend import domains
-from mailersend import helpers
+from mailersend import utils
 
 mailer = domains.NewDomain()
-helper = helpers.NewHelper()
+helper = utils.NewHelper()
 
 mailer.get_domain_by_id(helper.getIDByName("domains","domain-name"))
 ```
@@ -625,7 +626,7 @@ mailer.update_token("my-token", pause=False)
 ```python
 from mailersend import tokens
 
-mailer = token.NewToken()
+mailer = tokens.NewToken()
 
 mailer.delete_token("token-id")
 ```
@@ -731,7 +732,7 @@ TBD
 | Messages         | `GET messages` | ✅         |
 | Recipients         | `{GET,DELETE} recipients` | ✅         |
 | Templates         | `{GET,DELETE} templates` | ✅         |
-| Token         | `{POST,PUT,DELETE} tokens` | ✅         |
+| Tokens         | `{POST,PUT,DELETE} tokens` | ✅         |
 | Webhooks         | `{GET,POST,PUT,DELETE} webhooks` | ✅         |
 
 *If, at the moment, some endpoint is not available, please use other available tools to access it. [Refer to official API docs for more info](https://developers.mailersend.com/).*
