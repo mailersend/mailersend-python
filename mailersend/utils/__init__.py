@@ -1,9 +1,20 @@
+"""
+Provides helper functions to convenience devs
+"""
+
 import requests
 from mailersend.base import base
 
 
 class NewHelper(base.NewAPIClient):
+    """
+    NewHelper extends base.NewAPIClient to inherit connection details
+    """
+
     def __init__(self):
+        """
+        NewHelper constructor
+        """
         baseobj = base.NewAPIClient()
         super(NewHelper, self).__init__(
             baseobj.api_base,
@@ -13,6 +24,13 @@ class NewHelper(base.NewAPIClient):
         )
 
     def get_id_by_name(self, category, name):
+        """
+        Returns an ID given a category and item name from the MailerSend API
+
+        @params:
+          category (str): Can be one of "recipients", "domains"
+          name (str): Object name
+        """
 
         request = requests.get(
             f"{self.api_base}/{category}", headers=self.headers_default

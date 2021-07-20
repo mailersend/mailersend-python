@@ -1,9 +1,21 @@
+"""
+Handles /analytics endpoint
+Doc: https://developers.mailersend.com/api/v1/analytics.html
+"""
+
 import requests
 from mailersend.base import base
 
 
 class NewAnalytics(base.NewAPIClient):
+    """
+    Instantiates the /activity endpoint object
+    """
+
     def __init__(self):
+        """
+        NewAnalytics constructor
+        """
         baseobj = base.NewAPIClient()
         super(NewAnalytics, self).__init__(
             baseobj.api_base,
@@ -15,6 +27,9 @@ class NewAnalytics(base.NewAPIClient):
     def get_activity_by_date(
         self, date_from, date_to, event, domain_id=None, group_by=None
     ):
+        """
+        Returns a JSON response from the MailerSend API
+        """
 
         _data = {
             "date_from": date_from,
@@ -35,6 +50,9 @@ class NewAnalytics(base.NewAPIClient):
         return request.text
 
     def get_opens_by_country(self, date_from, date_to, domain_id=None, recipients=None):
+        """
+        Returns a JSON response from the MailerSend API
+        """
 
         _data = {
             "date_from": date_from,
@@ -58,6 +76,9 @@ class NewAnalytics(base.NewAPIClient):
     def get_opens_by_user_agent(
         self, date_from, date_to, domain_id=None, recipients=None
     ):
+        """
+        Returns a JSON response from the MailerSend API
+        """
 
         _data = {
             "date_from": date_from,
@@ -81,6 +102,9 @@ class NewAnalytics(base.NewAPIClient):
     def get_opens_by_reading_environment(
         self, date_from, date_to, domain_id=None, recipients=None
     ):
+        """
+        Returns a JSON response from the MailerSend API
+        """
 
         _data = {
             "date_from": date_from,
