@@ -251,7 +251,7 @@ class NewRecipient(base.NewAPIClient):
         if ids is not None:
             message["ids"] = ids
         if remove_all is True:
-            message["all"] = "true"
+            message["all"] = True
 
         request = requests.delete(
             f"{self.api_base}/suppressions/unsubscribes",
