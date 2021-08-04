@@ -34,8 +34,20 @@ MailerSend Python SDK
         - [Get a single message](#get-a-single-message)
     - [Recipients](#recipients)
       - [Get a list of recipients](#get-a-list-of-recipients)
-      - [Get a single recipients](#get-a-single-recipient)
-      - [Delete a recipients](#delete-a-recipient)
+      - [Get a single recipient](#get-a-single-recipient)
+      - [Delete a recipient](#delete-a-recipient)
+      - [Get recipients from a blocklist](#get-recipients-from-a-blocklist)
+      - [Get recipients from hard bounces](#get-recipients-from-hard-bounces)
+      - [Get recipients from spam complaints](#get-recipients-from-spam-complaints)
+      - [Get recipients from unsubscribes](#get-recipients-from-unsubscribes)
+      - [Add recipients to blocklist](#add-recipients-to-blocklist)
+      - [Add hard bounced recipients](#add-hard-bounced-recipients)
+      - [Add spam complaints](#add-spam-complaints)
+      - [Add recipients to unsubscribe list](#add-recipients-to-unsubcribe-list)
+      - [Delete recipients from blocklist](#delete-recipients-from-blocklist)
+      - [Delete hard bounced recipients](#delete-hard-bounced-recipients)
+      - [Delete spam complaints](#delete-spam-complaints)
+      - [Delete recipients from unsubscribe list](#delete-recipients-from-unsubscribe-list)
     - [Tokens](#tokens)
       - [Create a token](#create-a-token)
       - [Pause / Unpause Token](#pause--unpause-token)
@@ -579,6 +591,174 @@ from mailersend import recipients
 mailer = recipients.NewRecipient()
 
 mailer.delete_recipient("recipient-id")
+```
+
+### Get recipients from a blocklist
+
+```python
+from mailersend import recipients
+
+mailer = recipients.NewRecipient()
+
+mailer.get_recipients_from_blocklist("domain-id")
+```
+
+### Get recipients from hard bounces
+
+```python
+from mailersend import recipients
+
+mailer = recipients.NewRecipient()
+
+mailer.get_hard_bounces("domain-id")
+```
+
+### Get recipients from spam complaints
+
+```python
+from mailersend import recipients
+
+mailer = recipients.NewRecipient()
+
+mailer.get_spam_complaints("domain-id")
+```
+
+### Get recipients from unsubscribes
+
+```python
+from mailersend import recipients
+
+mailer = recipients.NewRecipient()
+
+mailer.get_unsubscribes("domain-id")
+```
+
+### Add recipients to blocklist
+
+Using recipients:
+
+```python
+from mailersend import recipients
+
+mailer = recipients.NewRecipient()
+
+recipient_list = [
+    'blocked@client.com'
+]
+
+mailer.add_to_blocklist("domain-id", recipients=recipient_list)
+```
+
+Using patterns:
+
+```python
+from mailersend import recipients
+
+mailer = recipients.NewRecipient()
+
+recipient_patterns = [
+    '*@client.com'
+]
+
+mailer.add_to_blocklist("domain-id", patterns=recipient_patterns)
+```
+
+# Add hard bounced recipients
+
+```python
+from mailersend import recipients
+
+mailer = recipients.NewRecipient()
+
+recipient_list = [
+    "your@client.com"
+]
+
+mailer.add_hard_bounces("domain-id", recipient_list)
+```
+
+# Add spam complaints
+
+```python
+from mailersend import recipients
+
+mailer = recipients.NewRecipient()
+
+recipient_list = [
+    "your@client.com"
+]
+
+mailer.add_spam_complaints("domain-id", recipient_list)
+```
+
+# Add recipients to unsubscribe list
+
+```python
+from mailersend import recipients
+
+mailer = recipients.NewRecipient()
+
+recipient_list = [
+    "your@client.com"
+]
+
+mailer.add_unsubscribes("domain-id", recipient_list)
+```
+
+# Delete recipients from blocklist
+
+```python
+from mailersend import recipients
+
+mailer = recipients.NewRecipient()
+
+recipient_list = [
+    "your@client.com"
+]
+
+mailer.delete_from_blocklist("domain-id", recipient_list)
+```
+
+# Delete hard bounced recipients 
+
+```python
+from mailersend import recipients
+
+mailer = recipients.NewRecipient()
+
+recipient_list = [
+    "your@client.com"
+]
+
+mailer.delete_hard_bounces("domain-id", recipient_list)
+```
+
+# Delete spam complaints 
+
+```python
+from mailersend import recipients
+
+mailer = recipients.NewRecipient()
+
+recipient_list = [
+    "your@client.com"
+]
+
+mailer.delete_spam_complaints("domain-id", recipient_list)
+```
+
+# Delete recipients from unsubscribe list
+
+```python
+from mailersend import recipients
+
+mailer = recipients.NewRecipient()
+
+recipient_list = [
+    "your@client.com"
+]
+
+mailer.delete_unsubscribes("domain-id", recipient_list)
 ```
 
 ## Tokens
