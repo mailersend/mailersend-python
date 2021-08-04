@@ -663,7 +663,7 @@ recipient_patterns = [
 mailer.add_to_blocklist("domain-id", patterns=recipient_patterns)
 ```
 
-# Add hard bounced recipients
+### Add hard bounced recipients
 
 ```python
 from mailersend import recipients
@@ -677,7 +677,7 @@ recipient_list = [
 mailer.add_hard_bounces("domain-id", recipient_list)
 ```
 
-# Add spam complaints
+### Add spam complaints
 
 ```python
 from mailersend import recipients
@@ -691,7 +691,7 @@ recipient_list = [
 mailer.add_spam_complaints("domain-id", recipient_list)
 ```
 
-# Add recipients to unsubscribe list
+### Add recipients to unsubscribe list
 
 ```python
 from mailersend import recipients
@@ -705,7 +705,7 @@ recipient_list = [
 mailer.add_unsubscribes("domain-id", recipient_list)
 ```
 
-# Delete recipients from blocklist
+### Delete recipients from blocklist
 
 ```python
 from mailersend import recipients
@@ -719,7 +719,7 @@ recipient_list = [
 mailer.delete_from_blocklist("domain-id", recipient_list)
 ```
 
-# Delete hard bounced recipients 
+### Delete hard bounced recipients 
 
 ```python
 from mailersend import recipients
@@ -733,7 +733,7 @@ recipient_list = [
 mailer.delete_hard_bounces("domain-id", recipient_list)
 ```
 
-# Delete spam complaints 
+### Delete spam complaints 
 
 ```python
 from mailersend import recipients
@@ -747,7 +747,7 @@ recipient_list = [
 mailer.delete_spam_complaints("domain-id", recipient_list)
 ```
 
-# Delete recipients from unsubscribe list
+### Delete recipients from unsubscribe list
 
 ```python
 from mailersend import recipients
