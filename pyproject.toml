@@ -10,7 +10,7 @@ requests = "^2.25.0"
 pre-commit = "^2.12.1"
 
 [tool.poetry.dev-dependencies]
-pytest = "^5.2"
+pytest = "^6.2"
 
 [build-system]
 requires = ["poetry>=0.12"]
