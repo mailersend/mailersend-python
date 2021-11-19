@@ -96,6 +96,12 @@ class NewEmail(base.NewAPIClient):
         """
         message["attachments"] = attachments
 
+    def set_reply_to(self, reply_to, message):
+        """
+        Appends 'reply to' on an e-mail
+        """
+        message["reply_to"] = reply_to
+
     def send(self, message):
         """
         Handles e-mail sending
