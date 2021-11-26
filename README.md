@@ -26,9 +26,12 @@ MailerSend Python SDK
         - [Get a list of domains](#get-a-list-of-domains)
         - [Get a single domain](#get-a-single-domain)
         - [Get a single domain using helper function](#get-a-single-domain-using-helper-function)
+        - [Add a domain](#add-a-domain)
         - [Delete a domain](#delete-a-domain)
         - [Get a list of recipients per domain](#get-a-list-of-recipients-per-domain)
         - [Update domain settings](#update-domain-settings)
+        - [Get dns records](#get-dns-records)
+        - [Verify a domain](#verify-a-domain)
     - [Messages](#messages)
         - [Get a list of messages](#get-a-list-of-messages)
         - [Get a single message](#get-a-single-message)
@@ -515,6 +518,19 @@ helper = utils.NewHelper()
 mailer.get_domain_by_id(helper.get_id_by_name("domains","domain-name"))
 ```
 
+### Add a domain
+
+You can find a full list of settings [here](https://developers.mailersend.com/api/v1/domains.html#request-parameters-3).
+
+```python
+from mailersend import domains
+
+mailer = domains.NewDomain()
+
+mailer.add_domain("name", "example.com")
+```
+
+
 ### Delete a domain
 
 ```python
@@ -546,6 +562,27 @@ mailer = domains.NewDomain()
 
 mailer.update_domain_setting("domain-id", "send_paused", True)
 ```
+
+### Get DNS Records
+
+```python
+from mailersend import domains
+
+mailer = domains.NewDomain()
+
+mailer.get_dns_records("domain-id")
+```
+
+### Verify a domain
+
+```python
+from mailersend import domains
+
+mailer = domains.NewDomain()
+
+mailer.verify_domain("domain-id")
+```
+
 
 ## Messages
 
