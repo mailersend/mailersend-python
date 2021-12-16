@@ -12,17 +12,7 @@ class NewDomain(base.NewAPIClient):
     Instantiates the /domains endpoint object
     """
 
-    def __init__(self):
-        """
-        NewDomain constructor
-        """
-        baseobj = base.NewAPIClient()
-        super().__init__(
-            baseobj.api_base,
-            baseobj.headers_default,
-            baseobj.headers_auth,
-            baseobj.mailersend_api_key,
-        )
+    pass
 
     def get_domains(self):
         """
@@ -124,7 +114,7 @@ class NewDomain(base.NewAPIClient):
 
         request = requests.get(
             f"{self.api_base}/domains/{domain_id}/dns-records",
-            headers=self.headers_default
+            headers=self.headers_default,
         )
         return request.text
 
@@ -138,10 +128,6 @@ class NewDomain(base.NewAPIClient):
         """
 
         request = requests.get(
-            f"{self.api_base}/domains/{domain_id}/verify",
-            headers=self.headers_default
+            f"{self.api_base}/domains/{domain_id}/verify", headers=self.headers_default
         )
         return request.text
-
-
-

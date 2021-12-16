@@ -15,13 +15,7 @@ class NewHelper(base.NewAPIClient):
         """
         NewHelper constructor
         """
-        baseobj = base.NewAPIClient()
-        super().__init__(
-            baseobj.api_base,
-            baseobj.headers_default,
-            baseobj.headers_auth,
-            baseobj.mailersend_api_key,
-        )
+        pass
 
     def get_id_by_name(self, category, name):
         """

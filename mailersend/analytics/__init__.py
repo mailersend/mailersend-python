@@ -12,17 +12,7 @@ class NewAnalytics(base.NewAPIClient):
     Instantiates the /activity endpoint object
     """
 
-    def __init__(self):
-        """
-        NewAnalytics constructor
-        """
-        baseobj = base.NewAPIClient()
-        super().__init__(
-            baseobj.api_base,
-            baseobj.headers_default,
-            baseobj.headers_auth,
-            baseobj.mailersend_api_key,
-        )
+    pass
 
     def get_activity_by_date(
         self, date_from, date_to, event, domain_id=None, group_by=None
