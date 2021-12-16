@@ -12,17 +12,7 @@ class NewActivity(base.NewAPIClient):
     Instantiates the /activity endpoint object
     """
 
-    def __init__(self):
-        """
-        NewActivity constructor
-        """
-        baseobj = base.NewAPIClient()
-        super().__init__(
-            baseobj.api_base,
-            baseobj.headers_default,
-            baseobj.headers_auth,
-            baseobj.mailersend_api_key,
-        )
+    pass
 
     def get_domain_activity(
         self, domain_id, page=None, limit=None, date_from=None, date_to=None, event=None

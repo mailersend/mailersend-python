@@ -12,17 +12,7 @@ class NewRecipient(base.NewAPIClient):
     Instantiates the /recipients endpoint object
     """
 
-    def __init__(self):
-        """
-        NewRecipient constructor
-        """
-        baseobj = base.NewAPIClient()
-        super().__init__(
-            baseobj.api_base,
-            baseobj.headers_default,
-            baseobj.headers_auth,
-            baseobj.mailersend_api_key,
-        )
+    pass
 
     def get_recipients(self):
         """

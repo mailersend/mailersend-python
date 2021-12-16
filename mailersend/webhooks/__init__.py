@@ -18,13 +18,7 @@ class NewWebhook(base.NewAPIClient):
         """
         NewWebhook constructor
         """
-        baseobj = base.NewAPIClient()
-        super().__init__(
-            baseobj.api_base,
-            baseobj.headers_default,
-            baseobj.headers_auth,
-            baseobj.mailersend_api_key,
-        )
+        pass
 
     def get_webhooks(self, domain_id):
         """
