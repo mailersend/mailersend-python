@@ -9,20 +9,10 @@ from mailersend.base import base
 
 class NewEmail(base.NewAPIClient):
     """
-    Instantiates the /email endpoint object
+    Send an e-mail
     """
 
-    def __init__(self):
-        """
-        NewEmail constructor
-        """
-        baseobj = base.NewAPIClient()
-        super().__init__(
-            baseobj.api_base,
-            baseobj.headers_default,
-            baseobj.headers_auth,
-            baseobj.mailersend_api_key,
-        )
+    pass
 
     def set_mail_from(self, mail_from, message):
         """

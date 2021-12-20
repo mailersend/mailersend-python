@@ -79,7 +79,31 @@ $ python -m pip install mailersend
 - Python > 3.6.1
 - Python `pip`
 - An API Key from [mailersend.com](https://www.mailersend.com)
-- A `MAILERSEND_API_KEY` environment variable
+
+## Authentication
+
+You can use either the `MAILERSEND_API_KEY` environment variable or explicitly
+set a variable in-code.
+
+- Using environment variable
+```python
+from mailersend import domains
+
+mailer = domains.NewDomain()
+
+mailer.get_domains()
+```
+
+- Explicit declaration
+```python
+from mailersend import domains
+
+api_key = "API key here"
+
+mailer = domains.NewDomain(api_key)
+
+mailer.get_domains()
+```
 
 # Usage
 
@@ -90,7 +114,9 @@ $ python -m pip install mailersend
 ```python
 from mailersend import emails
 
-mailer = emails.NewEmail()
+api_key = "API key here"
+
+mailer = emails.NewEmail(api_key)
 
 # define an empty dict to populate with mail values
 mail_body = {}
@@ -130,7 +156,9 @@ mailer.send(mail_body)
 ```python
 from mailersend import emails
 
-mailer = emails.NewEmail()
+api_key = "API key here"
+
+mailer = emails.NewEmail(api_key)
 
 # define an empty dict to populate with mail values
 mail_body = {}
@@ -177,7 +205,9 @@ mailer.send(mail_body)
 ```python
 from mailersend import emails
 
-mailer = emails.NewEmail()
+api_key = "API key here"
+
+mailer = emails.NewEmail(api_key)
 
 # define an empty dict to populate with mail values
 mail_body = {}
@@ -222,7 +252,9 @@ mailer.send(mail_body)
 ```python
 from mailersend import emails
 
-mailer = emails.NewEmail()
+api_key = "API key here"
+
+mailer = emails.NewEmail(api_key)
 
 # define an empty dict to populate with mail values
 mail_body = {}
@@ -274,7 +306,9 @@ mailer.send(mail_body)
 ```python
 from mailersend import emails
 
-mailer = emails.NewEmail()
+api_key = "API key here"
+
+mailer = emails.NewEmail(api_key)
 
 # define an empty dict to populate with mail values
 mail_body = {}
@@ -320,7 +354,9 @@ mailer.send(mail_body)
 from mailersend import emails
 import base64
 
-mailer = emails.NewEmail()
+api_key = "API key here"
+
+mailer = emails.NewEmail(api_key)
 
 # define an empty dict to populate with mail values
 mail_body = {}
@@ -380,7 +416,9 @@ mailer.send(mail_body)
 ```python
 from mailersend import activity
 
-mailer = activity.NewActivity()
+api_key = "API key here"
+
+mailer = activity.NewActivity(api_key)
 
 mailer.get_domain_activity("domain-id")
 ```
@@ -390,7 +428,9 @@ mailer.get_domain_activity("domain-id")
 ```python
 from mailersend import activity
 
-mailer = activity.NewActivity()
+api_key = "API key here"
+
+mailer = activity.NewActivity(api_key)
 
 page = 1
 limit = 20
@@ -420,7 +460,9 @@ mailer.get_domain_activity("domain-id", page, limit, date_from, date_to, events)
 ```python
 from mailersend import analytics
 
-mailer = analytics.NewAnalytics()
+api_key = "API key here"
+
+mailer = analytics.NewAnalytics(api_key)
 
 date_from = 1623073576
 date_to = 1623074976
@@ -441,7 +483,9 @@ mailer.get_activity_by_date(date_from, date_to, events, domain_id, group_by)
 ```python
 from mailersend import analytics
 
-mailer = analytics.NewAnalytics()
+api_key = "API key here"
+
+mailer = analytics.NewAnalytics(api_key)
 
 date_from = 1623073576
 date_to = 1623074976
@@ -457,7 +501,9 @@ mailer.get_opens_by_country(date_from, date_to, domain_id)
 ```python
 from mailersend import analytics
 
-mailer = analytics.NewAnalytics()
+api_key = "API key here"
+
+mailer = analytics.NewAnalytics(api_key)
 
 date_from = 1623073576
 date_to = 1623074976
@@ -473,7 +519,9 @@ mailer.get_opens_by_user_agent(date_from, date_to, domain_id)
 ```python
 from mailersend import analytics
 
-mailer = analytics.NewAnalytics()
+api_key = "API key here"
+
+mailer = analytics.NewAnalytics(api_key)
 
 date_from = 1623073576
 date_to = 1623074976
@@ -491,7 +539,9 @@ mailer.get_opens_by_reading_environment(date_from, date_to, domain_id)
 ```python
 from mailersend import domains
 
-mailer = domains.NewDomain()
+api_key = "API key here"
+
+mailer = domains.NewDomain(api_key)
 
 mailer.get_domains()
 ```
@@ -501,7 +551,9 @@ mailer.get_domains()
 ```python
 from mailersend import domains
 
-mailer = domains.NewDomain()
+api_key = "API key here"
+
+mailer = domains.NewDomain(api_key)
 
 mailer.get_domain_by_id("domain-id")
 ```
@@ -512,8 +564,10 @@ mailer.get_domain_by_id("domain-id")
 from mailersend import domains
 from mailersend import utils
 
-mailer = domains.NewDomain()
-helper = utils.NewHelper()
+api_key = "API key here"
+
+mailer = domains.NewDomain(api_key)
+helper = utils.NewHelper(api_key)
 
 mailer.get_domain_by_id(helper.get_id_by_name("domains","domain-name"))
 ```
@@ -525,7 +579,9 @@ You can find a full list of settings [here](https://developers.mailersend.com/ap
 ```python
 from mailersend import domains
 
-mailer = domains.NewDomain()
+api_key = "API key here"
+
+mailer = domains.NewDomain(api_key)
 
 mailer.add_domain("name", "example.com")
 ```
@@ -536,7 +592,9 @@ mailer.add_domain("name", "example.com")
 ```python
 from mailersend import domains
 
-mailer = domains.NewDomain()
+api_key = "API key here"
+
+mailer = domains.NewDomain(api_key)
 
 mailer.delete_domain("domain-id")
 ```
@@ -546,7 +604,9 @@ mailer.delete_domain("domain-id")
 ```python
 from mailersend import domains
 
-mailer = domains.NewDomain()
+api_key = "API key here"
+
+mailer = domains.NewDomain(api_key)
 
 mailer.get_recipients_for_domain("domain-id")
 ```
@@ -558,7 +618,9 @@ You can find a full list of settings [here](https://developers.mailersend.com/ap
 ```python
 from mailersend import domains
 
-mailer = domains.NewDomain()
+api_key = "API key here"
+
+mailer = domains.NewDomain(api_key)
 
 mailer.update_domain_setting("domain-id", "send_paused", True)
 ```
@@ -568,7 +630,9 @@ mailer.update_domain_setting("domain-id", "send_paused", True)
 ```python
 from mailersend import domains
 
-mailer = domains.NewDomain()
+api_key = "API key here"
+
+mailer = domains.NewDomain(api_key)
 
 mailer.get_dns_records("domain-id")
 ```
@@ -578,7 +642,9 @@ mailer.get_dns_records("domain-id")
 ```python
 from mailersend import domains
 
-mailer = domains.NewDomain()
+api_key = "API key here"
+
+mailer = domains.NewDomain(api_key)
 
 mailer.verify_domain("domain-id")
 ```
@@ -591,7 +657,9 @@ mailer.verify_domain("domain-id")
 ```python
 from mailersend import messages
 
-mailer = messages.NewMessage()
+api_key = "API key here"
+
+mailer = messages.NewMessage(api_key)
 
 mailer.get_messages()
 ```
@@ -601,7 +669,9 @@ mailer.get_messages()
 ```python
 from mailersend import messages
 
-mailer = messages.NewMessage()
+api_key = "API key here"
+
+mailer = messages.NewMessage(api_key)
 
 mailer.get_message_by_id("message-id")
 ```
@@ -613,7 +683,9 @@ mailer.get_message_by_id("message-id")
 ```python
 from mailersend import recipients
 
-mailer = recipients.NewRecipient()
+api_key = "API key here"
+
+mailer = recipients.NewRecipient(api_key)
 
 mailer.get_recipients()
 ```
@@ -623,7 +695,9 @@ mailer.get_recipients()
 ```python
 from mailersend import recipients
 
-mailer = recipients.NewRecipient()
+api_key = "API key here"
+
+mailer = recipients.NewRecipient(api_key)
 
 mailer.get_recipient_by_id("recipient-id")
 ```
@@ -633,7 +707,9 @@ mailer.get_recipient_by_id("recipient-id")
 ```python
 from mailersend import recipients
 
-mailer = recipients.NewRecipient()
+api_key = "API key here"
+
+mailer = recipients.NewRecipient(api_key)
 
 mailer.delete_recipient("recipient-id")
 ```
@@ -643,7 +719,9 @@ mailer.delete_recipient("recipient-id")
 ```python
 from mailersend import recipients
 
-mailer = recipients.NewRecipient()
+api_key = "API key here"
+
+mailer = recipients.NewRecipient(api_key)
 
 mailer.get_recipients_from_blocklist("domain-id")
 ```
@@ -653,7 +731,9 @@ mailer.get_recipients_from_blocklist("domain-id")
 ```python
 from mailersend import recipients
 
-mailer = recipients.NewRecipient()
+api_key = "API key here"
+
+mailer = recipients.NewRecipient(api_key)
 
 mailer.get_hard_bounces("domain-id")
 ```
@@ -663,7 +743,9 @@ mailer.get_hard_bounces("domain-id")
 ```python
 from mailersend import recipients
 
-mailer = recipients.NewRecipient()
+api_key = "API key here"
+
+mailer = recipients.NewRecipient(api_key)
 
 mailer.get_spam_complaints("domain-id")
 ```
@@ -673,7 +755,9 @@ mailer.get_spam_complaints("domain-id")
 ```python
 from mailersend import recipients
 
-mailer = recipients.NewRecipient()
+api_key = "API key here"
+
+mailer = recipients.NewRecipient(api_key)
 
 mailer.get_unsubscribes("domain-id")
 ```
@@ -685,7 +769,9 @@ Using recipients:
 ```python
 from mailersend import recipients
 
-mailer = recipients.NewRecipient()
+api_key = "API key here"
+
+mailer = recipients.NewRecipient(api_key)
 
 recipient_list = [
     'blocked@client.com'
@@ -699,7 +785,9 @@ Using patterns:
 ```python
 from mailersend import recipients
 
-mailer = recipients.NewRecipient()
+api_key = "API key here"
+
+mailer = recipients.NewRecipient(api_key)
 
 recipient_patterns = [
     '*@client.com'
@@ -713,7 +801,9 @@ mailer.add_to_blocklist("domain-id", patterns=recipient_patterns)
 ```python
 from mailersend import recipients
 
-mailer = recipients.NewRecipient()
+api_key = "API key here"
+
+mailer = recipients.NewRecipient(api_key)
 
 recipient_list = [
     "your@client.com"
@@ -727,7 +817,9 @@ mailer.add_hard_bounces("domain-id", recipient_list)
 ```python
 from mailersend import recipients
 
-mailer = recipients.NewRecipient()
+api_key = "API key here"
+
+mailer = recipients.NewRecipient(api_key)
 
 recipient_list = [
     "your@client.com"
@@ -741,7 +833,9 @@ mailer.add_spam_complaints("domain-id", recipient_list)
 ```python
 from mailersend import recipients
 
-mailer = recipients.NewRecipient()
+api_key = "API key here"
+
+mailer = recipients.NewRecipient(api_key)
 
 recipient_list = [
     "your@client.com"
@@ -755,7 +849,9 @@ mailer.add_unsubscribes("domain-id", recipient_list)
 ```python
 from mailersend import recipients
 
-mailer = recipients.NewRecipient()
+api_key = "API key here"
+
+mailer = recipients.NewRecipient(api_key)
 
 recipient_list = [
     "your@client.com"
@@ -769,7 +865,9 @@ mailer.delete_from_blocklist("domain-id", recipient_list)
 ```python
 from mailersend import recipients
 
-mailer = recipients.NewRecipient()
+api_key = "API key here"
+
+mailer = recipients.NewRecipient(api_key)
 
 recipient_list = [
     "your@client.com"
@@ -783,7 +881,9 @@ mailer.delete_hard_bounces("domain-id", recipient_list)
 ```python
 from mailersend import recipients
 
-mailer = recipients.NewRecipient()
+api_key = "API key here"
+
+mailer = recipients.NewRecipient(api_key)
 
 recipient_list = [
     "your@client.com"
@@ -797,7 +897,9 @@ mailer.delete_spam_complaints("domain-id", recipient_list)
 ```python
 from mailersend import recipients
 
-mailer = recipients.NewRecipient()
+api_key = "API key here"
+
+mailer = recipients.NewRecipient(api_key)
 
 recipient_list = [
     "your@client.com"
@@ -813,7 +915,9 @@ mailer.delete_unsubscribes("domain-id", recipient_list)
 ```python
 from mailersend import tokens
 
-mailer = tokens.NewToken()
+api_key = "API key here"
+
+mailer = tokens.NewToken(api_key)
 
 scopes = ["email_full", "analytics_read"]
 
@@ -825,7 +929,9 @@ Because of security reasons, we only allow access token appearance once during c
 ```python
 from mailersend import tokens
 
-mailer = tokens.NewToken()
+api_key = "API key here"
+
+mailer = tokens.NewToken(api_key)
 
 scopes = ["email_full", "analytics_read"]
 
@@ -837,7 +943,9 @@ print(mailer.create_token("my-token", scopes))
 ```python
 from mailersend import tokens
 
-mailer = tokens.NewToken()
+api_key = "API key here"
+
+mailer = tokens.NewToken(api_key)
 
 # pause
 mailer.update_token("my-token")
@@ -851,7 +959,9 @@ mailer.update_token("my-token", pause=False)
 ```python
 from mailersend import tokens
 
-mailer = tokens.NewToken()
+api_key = "API key here"
+
+mailer = tokens.NewToken(api_key)
 
 mailer.delete_token("token-id")
 ```
@@ -863,7 +973,9 @@ mailer.delete_token("token-id")
 ```python
 from mailersend import webhooks
 
-mailer = webhooks.NewWebhook()
+api_key = "API key here"
+
+mailer = webhooks.NewWebhook(api_key)
 
 mailer.get_webhooks("domain-id")
 ```
@@ -873,7 +985,9 @@ mailer.get_webhooks("domain-id")
 ```python
 from mailersend import webhooks
 
-mailer = webhooks.NewWebhook()
+api_key = "API key here"
+
+mailer = webhooks.NewWebhook(api_key)
 
 mailer.get_webhook_by_id("webhook-id")
 ```
@@ -883,9 +997,11 @@ mailer.get_webhook_by_id("webhook-id")
 ```python
 from mailersend import webhooks
 
+api_key = "API key here"
+
 webhookEvents = ['activity.sent', 'activity.delivered']
 
-webhook = webhooks.NewWebhook()
+webhook = webhooks.NewWebhook(api_key)
 webhook.set_webhook_url("https://webhooks.mysite.com")
 webhook.set_webhook_name("my first webhook")
 webhook.set_webhook_events(webhookEvents)
@@ -899,9 +1015,11 @@ webhook.create_webhook()
 ```python
 from mailersend import webhooks
 
+api_key = "API key here"
+
 webhookEvents = ['activity.sent', 'activity.delivered']
 
-webhook = webhooks.NewWebhook()
+webhook = webhooks.NewWebhook(api_key)
 webhook.set_webhook_url("https://webhooks.mysite.com")
 webhook.set_webhook_name("my first webhook")
 webhook.set_webhook_events(webhookEvents)
@@ -916,7 +1034,9 @@ webhook.create_webhook()
 ```python
 from mailersend import webhooks
 
-webhook = webhooks.NewWebhook()
+api_key = "API key here"
+
+webhook = webhooks.NewWebhook(api_key)
 
 webhook.update_webhook("webhook-id", "name", "a new webhook name")
 ```
@@ -926,7 +1046,9 @@ webhook.update_webhook("webhook-id", "name", "a new webhook name")
 ```python
 from mailersend import webhooks
 
-webhook = webhooks.NewWebhook()
+api_key = "API key here"
+
+webhook = webhooks.NewWebhook(api_key)
 
 webhook.update_webhook("webhook-id", "enabled", False)
 ```
@@ -936,7 +1058,9 @@ webhook.update_webhook("webhook-id", "enabled", False)
 ```python
 from mailersend import webhooks
 
-webhook = webhooks.NewWebhook()
+api_key = "API key here"
+
+webhook = webhooks.NewWebhook(api_key)
 
 webhook.delete_webhook("webhook-id")
 ```

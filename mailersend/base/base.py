@@ -16,17 +16,17 @@ class NewAPIClient:
 
     def __init__(
         self,
+        mailersend_api_key=API_KEY,
         api_base=None,
         headers_default=None,
         headers_auth=None,
-        mailersend_api_key=None,
     ):
         """
         NewAPIClient constructor
         """
 
         self.api_base = API_BASE
-        self.mailersend_api_key = API_KEY
+        self.mailersend_api_key = mailersend_api_key
         self.headers_auth = f"Bearer {self.mailersend_api_key}"
         self.headers_default = {
             "Content-Type": "application/json",

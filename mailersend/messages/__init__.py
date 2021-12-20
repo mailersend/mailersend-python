@@ -12,17 +12,7 @@ class NewMessage(base.NewAPIClient):
     Instantiates the /messages endpoint object
     """
 
-    def __init__(self):
-        """
-        NewMessage constructor
-        """
-        baseobj = base.NewAPIClient()
-        super().__init__(
-            baseobj.api_base,
-            baseobj.headers_default,
-            baseobj.headers_auth,
-            baseobj.mailersend_api_key,
-        )
+    pass
 
     def get_message_by_id(self, message_id):
         """

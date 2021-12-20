@@ -12,17 +12,7 @@ class NewTemplate(base.NewAPIClient):
     Instantiates the /templates endpoint object
     """
 
-    def __init__(self):
-        """
-        NewTemplate constructor
-        """
-        baseobj = base.NewAPIClient()
-        super().__init__(
-            baseobj.api_base,
-            baseobj.headers_default,
-            baseobj.headers_auth,
-            baseobj.mailersend_api_key,
-        )
+    pass
 
     def get_templates(self):
         """

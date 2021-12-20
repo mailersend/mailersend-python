@@ -12,17 +12,7 @@ class NewToken(base.NewAPIClient):
     Instantiates the /tokens endpoint object
     """
 
-    def __init__(self):
-        """
-        NewToken constructor
-        """
-        baseobj = base.NewAPIClient()
-        super().__init__(
-            baseobj.api_base,
-            baseobj.headers_default,
-            baseobj.headers_auth,
-            baseobj.mailersend_api_key,
-        )
+    pass
 
     def create_token(self, token_name, token_scopes):
         """
