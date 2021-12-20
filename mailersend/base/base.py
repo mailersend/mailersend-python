@@ -16,7 +16,7 @@ class NewAPIClient:
 
     def __init__(
         self,
-        mailersend_api_key,
+        mailersend_api_key=API_KEY,
         api_base=None,
         headers_default=None,
         headers_auth=None,

@@ -80,6 +80,31 @@ $ python -m pip install mailersend
 - Python `pip`
 - An API Key from [mailersend.com](https://www.mailersend.com)
 
+## Authentication
+
+You can use either the `MAILERSEND_API_KEY` environment variable or explicitly
+set a variable in-code.
+
+- Using environment variable
+```python
+from mailersend import domains
+
+mailer = domains.NewDomain()
+
+mailer.get_domains()
+```
+
+- Explicit declaration
+```python
+from mailersend import domains
+
+api_key = "API key here"
+
+mailer = domains.NewDomain(api_key)
+
+mailer.get_domains()
+```
+
 # Usage
 
 ## Email 
