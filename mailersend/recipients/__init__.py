@@ -163,7 +163,7 @@ class NewRecipient(base.NewAPIClient):
         )
         return request.text
 
-    def delete_hard_bounces(self, domain_id=None, ids=None, remove_all=False):
+    def delete_hard_bounces(self, domain_id, ids=None, remove_all=False):
         """
         Returns a HTTP status code from the MailerSend API
         """
@@ -182,7 +182,7 @@ class NewRecipient(base.NewAPIClient):
         )
         return request.text
 
-    def add_spam_complaints(self, domain_id=None, recipients=None):
+    def add_spam_complaints(self, domain_id, recipients=None):
         """
         Returns a HTTP status code from the MailerSend API
         """
@@ -199,7 +199,7 @@ class NewRecipient(base.NewAPIClient):
         )
         return request.text
 
-    def delete_spam_complaints(self, domain_id=None, ids=None, remove_all=False):
+    def delete_spam_complaints(self, domain_id, ids=None, remove_all=False):
         """
         Returns a HTTP status code from the MailerSend API
         """
@@ -235,7 +235,7 @@ class NewRecipient(base.NewAPIClient):
         )
         return request.text
 
-    def delete_unsubscribes(self, domain_id=None, ids=None, remove_all=False):
+    def delete_unsubscribes(self, domain_id, ids=None, remove_all=False):
         """
         Returns a HTTP status code from the MailerSend API
         """
