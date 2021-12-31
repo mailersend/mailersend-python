@@ -182,7 +182,7 @@ class NewRecipient(base.NewAPIClient):
         )
         return request.text
 
-    def add_spam_complaints(self, domain_id, recipients=None):
+    def add_spam_complaints(self, domain_id=None, recipients=None):
         """
         Returns a HTTP status code from the MailerSend API
         """
