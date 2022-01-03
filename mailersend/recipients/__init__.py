@@ -127,11 +127,12 @@ class NewRecipient(base.NewAPIClient):
         )
         return request.text
 
-    def delete_from_blocklist(self, ids=None, remove_all=False):
+    def delete_from_blocklist(self, domain_id, ids=None, remove_all=False):
         """
         Returns a HTTP status code from the MailerSend API
         """
         message = {}
+        message["domain_id"] = domain_id
 
         if ids is not None:
             message["ids"] = ids
@@ -162,11 +163,12 @@ class NewRecipient(base.NewAPIClient):
         )
         return request.text
 
-    def delete_hard_bounces(self, ids=None, remove_all=False):
+    def delete_hard_bounces(self, domain_id, ids=None, remove_all=False):
         """
         Returns a HTTP status code from the MailerSend API
         """
         message = {}
+        message["domain_id"] = domain_id
 
         if ids is not None:
             message["ids"] = ids
@@ -197,12 +199,13 @@ class NewRecipient(base.NewAPIClient):
         )
         return request.text
 
-    def delete_spam_complaints(self, ids=None, remove_all=False):
+    def delete_spam_complaints(self, domain_id, ids=None, remove_all=False):
         """
         Returns a HTTP status code from the MailerSend API
         """
         message = {}
-
+        message["domain_id"] = domain_id
+        
         if ids is not None:
             message["ids"] = ids
         if remove_all is True:
@@ -232,11 +235,12 @@ class NewRecipient(base.NewAPIClient):
         )
         return request.text
 
-    def delete_unsubscribes(self, ids=None, remove_all=False):
+    def delete_unsubscribes(self, domain_id, ids=None, remove_all=False):
         """
         Returns a HTTP status code from the MailerSend API
         """
         message = {}
+        message["domain_id"] = domain_id
 
         if ids is not None:
             message["ids"] = ids
