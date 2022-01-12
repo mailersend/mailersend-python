@@ -87,22 +87,18 @@ set a variable in-code.
 
 - Using environment variable
 ```python
-from mailersend import domains
+from mailersend import emails
 
-mailer = domains.NewDomain()
-
-mailer.get_domains()
+mailer = emails.NewEmail(os.getEnv("MAILERSEND_API_LEY))
 ```
 
 - Explicit declaration
 ```python
-from mailersend import domains
+from mailersend import emails
 
 api_key = "API key here"
 
-mailer = domains.NewDomain(api_key)
-
-mailer.get_domains()
+mailer = emails.NewEmail(api_key)
 ```
 
 # Usage
