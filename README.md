@@ -62,6 +62,8 @@ MailerSend Python SDK
       - [Create a disabled webhook](#create-a-disabled-webhook)
       - [Update a Webhook](#update-a-webhook)
       - [Delete a Webhook](#delete-a-webhook)
+- [Troubleshooting](#troubleshooting)
+    - [Emails not being sent](#emails-not-being-sent)
 - [Testing](#testing)
 - [Support and Feedback](#support-and-feedback)
 - [License](#license)
@@ -1124,6 +1126,28 @@ api_key = "API key here"
 webhook = webhooks.NewWebhook(api_key)
 
 webhook.delete_webhook("webhook-id")
+```
+
+# Troubleshooting
+
+## Emails not being sent
+
+Print the output of `mailer.send()` to view status code and errors.
+
+```python
+from mailersend import emails
+
+mailer = emails.NewEmail()
+
+mail_body = {}
+
+...
+
+print(mailer.send(mail_body))
+
+# 422
+# {"message":"The given data was invalid.","errors":{"variables.0.substitutions":["The variables.0.substitutions field is required when variables.0.email is present."]}}
+
 ```
 
 # Testing
