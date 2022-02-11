@@ -104,3 +104,18 @@ class NewEmail(base.NewAPIClient):
             f"{self.api_base}/email", headers=self.headers_default, json=message
         )
         return f"{request.status_code}\n{request.text}"
+
+    def send_bulk(self, message_list):
+        """
+        Handles bulk e-mail sending
+
+        @params:
+          message_list (list): A list containing e-mail dicts
+        """
+
+        request = requests.post(
+            f"{self.api_base}/bulk-email",
+            headers=self.headers_default,
+            json=message_list,
+        )
+        return f"{request.status_code}\n{request.text}"
