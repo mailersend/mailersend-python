@@ -22,6 +22,12 @@ MailerSend Python SDK
         - [Opens by country](#opens-by-country)
         - [Opens by user-agent name](#opens-by-user-agent-name)
         - [Opens by reading environment](#opens-by-reading-environment)
+    - [Inbound Routes](#inbound-routes)
+       - [Get a list of inbound routes](#get-a-list-of-inbound-routes)
+       - [Get a single inbound route](#get-a-single-inbound-route)
+       - [Add an inbound route](#add-an-inbound-route)
+       - [Update an inbound route](#update-an-inbound-route)
+       - [Delete an inbound route](#delete-an-inbound-route)
     - [Domains](#domains)
         - [Get a list of domains](#get-a-list-of-domains)
         - [Get a single domain](#get-a-single-domain)
@@ -591,6 +597,121 @@ date_to = 1623074976
 domain_id = "domain-id"
 
 mailer.get_opens_by_reading_environment(date_from, date_to, domain_id)
+```
+
+## Inbound Routes
+
+### Get a list of inbound routes
+
+```python
+from mailersend import inbound_routing
+
+api_key = "API key here"
+
+mailer = inbound_routing.NewInbound(api_key)
+
+print(mailer.get_inbound_routes())
+```
+
+### Get a single inbound route
+
+```python
+from mailersend import inbound_routing
+
+api_key = "API key here"
+
+mailer = inbound_routing.NewInbound(api_key)
+
+print(mailer.get_inbound_by_id("inbound-id"))
+```
+
+### Add an inbound route
+
+```python
+from mailersend import inbound_routing
+
+mailer = inbound_routing.NewInbound()
+
+options = {}
+
+_catch_filter = {
+    "type": "catch_recipient",
+    "filters": [
+        {
+            "comparer": "equal",
+            "value": "test"
+        }
+    ]
+}
+
+_match_filter = {
+    "type": "match_all"
+}
+
+_forwards = [
+    {
+        "type": "webhook",
+        "value": "https://www.mailersend.com/hook"
+    }
+]
+mailer.set_name("Example route", options)
+mailer.set_domain_enabled(True, options)
+mailer.set_inbound_domain("test.remotecompany.com", options)
+mailer.set_catch_filter(_catch_filter, options)
+
+print(mailer.add_inbound_route())
+```
+
+### Update an inbound route
+
+```python
+from mailersend import inbound_routing
+
+route_id = "inbound-route-id"
+
+mailer = inbound_routing.NewInbound()
+
+options = {}
+
+_catch_filter = {
+    "type": "catch_recipient",
+    "filters": [
+        {
+            "comparer": "equal",
+            "value": "test"
+        }
+    ]
+}
+
+_match_filter = {
+    "type": "match_all"
+}
+
+_forwards = [
+    {
+        "type": "webhook",
+        "value": "https://www.mailersend.com/hook"
+    }
+]
+mailer.set_name("Example route", options)
+mailer.set_domain_enabled(True, options)
+mailer.set_inbound_domain("test.remotecompany.com", options)
+mailer.set_catch_filter(_catch_filter, options)
+
+print(mailer.update_inbound_route(route_id))
+```
+
+### Delete an inbound route
+
+```python
+from mailersend import inbound_routing
+
+api_key = "API key here"
+route_id = "inbound-route-id"
+
+mailer = inbound_routing.NewInbound(api_key)
+
+print(mailer.delete_inbound_route(route_id))
 ```
 
 ## Domains
