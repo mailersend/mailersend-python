@@ -92,6 +92,12 @@ class NewEmail(base.NewAPIClient):
         """
         message["reply_to"] = reply_to
 
+    def set_send_at(self, send_at, message):
+        """
+        Sets the 'send_at' parameter for scheduled messages
+        """
+        message["send_at"] = send_at
+
     def send(self, message):
         """
         Handles e-mail sending
