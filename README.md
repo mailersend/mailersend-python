@@ -35,6 +35,10 @@ MailerSend Python SDK
     - [Messages](#messages)
         - [Get a list of messages](#get-a-list-of-messages)
         - [Get a single message](#get-a-single-message)
+    - [Scheduled Messages](#scheduled-messages)
+       - [Get a list of scheduled messages](#get-a-list-of-scheduled-messages)
+       - [Get a single scheduled message](#get-a-single-scheduled-message)
+       - [Delete a scheduled message](#delete-a-scheduled-message)
     - [Recipients](#recipients)
       - [Get a list of recipients](#get-a-list-of-recipients)
       - [Get a single recipient](#get-a-single-recipient)
@@ -735,6 +739,44 @@ api_key = "API key here"
 mailer = messages.NewMessage(api_key)
 
 mailer.get_message_by_id("message-id")
+```
+
+## Scheduled messages
+
+### Get a list of scheduled messages
+
+```python
+from mailersend import scheduled_messages
+
+api_key = "API key here"
+
+mailer = scheduled_messages.NewMessageSchedule(api_key)
+
+print(mailer.get_scheduled_messages())
+```
+
+### Get a single scheduled message
+
+```python
+from mailersend import scheduled_messages
+
+api_key = "API key here"
+
+mailer = scheduled_messages.NewMessageSchedule(api_key)
+
+print(mailer.get_scheduled_message_by_id("scheduled-message-id"))
+```
+
+### Delete a scheduled message
+
+```python
+from mailersend import scheduled_messages
+
+api_key = "API key here"
+
+mailer = scheduled_messages.NewMessageSchedule(api_key)
+
+print(mailer.delete_scheduled_message("scheduled-message-id"))
 ```
 
 ## Recipients
