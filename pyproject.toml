@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mailersend"
-version = "0.2.0"
+version = "0.2.1"
 description = "The official MailerSend Python SDK"
 authors = ["Alex Orfanos <alexandros@mailerlite.com>"]
 
