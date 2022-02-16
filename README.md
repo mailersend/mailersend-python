@@ -14,6 +14,9 @@ MailerSend Python SDK
         - [Advanced personalization](#advanced-personalization)
         - [Simple personalization](#simple-personalization)
         - [Send email with attachment](#send-email-with-attachment)
+    - [Bulk Email](#bulk-email)
+       - [Send bulk email](#send-bulk-email)
+       - [Get bulk email status](#get-bulk-email-status)
     - [Activity](#activity)
         - [Get a list of activities (simple)](#get-a-list-of-activities-simple)
         - [Get a list of activities (full)](#get-a-list-of-activities-full)
@@ -478,6 +481,65 @@ mailer.set_simple_personalization(variables, mail_body)
 mailer.set_attachments(attachments, mail_body)
 
 mailer.send(mail_body)
+```
+
+## Bulk Email
+
+### Send bulk email
+
+```python
+from mailersend import emails
+
+api_key = "API key here"
+
+mailer = mailersend.NewEmail(api_key)
+
+mail_list = [
+  {
+    "from": {
+      "email": "your@domain.com",
+      "name": "Your Name"
+    },
+    "to": [
+      {
+        "email": "your@client.com",
+        "name": "Your Client"
+      }
+    ],
+    "subject": "Subject",
+    "text": "This is the text content",
+    "html": "<p>This is the HTML content</p>",
+  },
+  {
+    "from": {
+      "email": "your@domain.com",
+      "name": "Your Name"
+    },
+    "to": [
+      {
+        "email": "your@client.com",
+        "name": "Your Client"
+      }
+    ],
+    "subject": "Subject",
+    "text": "This is the text content",
+    "html": "<p>This is the HTML content</p>",
+  }
+]
+
+print(mailer.send_bulk(mail_list))
+```
+
+### Get bulk email status
+
+```python
+from mailersend import emails
+
+api_key = "API key here"
+
+mailer = mailersend.NewEmail(api_key)
+
+print(mailer.get_bulk_status_by_id("bulk-email-id"))
 ```
 
 <a name="activity"></a>
