@@ -485,55 +485,33 @@ mailer = mailersend.NewEmail(api_key)
 mail_list = [
   {
     "from": {
-      "email": "hello@mailersend.com",
-      "name": "MailerSend"
+      "email": "your@domain.com",
+      "name": "Your Name"
     },
     "to": [
       {
-        "email": "john@mailersend.com",
-        "name": "John Mailer"
+        "email": "your@client.com",
+        "name": "Your Client"
       }
     ],
-    "subject": "Hello from {$company}!",
-    "text": "This is just a friendly hello from your friends at {$company}.",
-    "html": "<b>This is just a friendly hello from your friends at {$company}.</b>",
-    "variables": [
-      {
-        "email": "john@mailersend.com",
-        "substitutions": [
-          {
-            "var": "company",
-            "value": "MailerSend"
-          }
-        ]
-      }
-    ]
+    "subject": "Subject",
+    "text": "This is the text content",
+    "html": "<p>This is the HTML content</p>",
   },
   {
     "from": {
-      "email": "hello@mailersend.com",
-      "name": "MailerSend"
+      "email": "your@domain.com",
+      "name": "Your Name"
     },
     "to": [
       {
-        "email": "jane@mailersend.com",
-        "name": "Jane Mailer"
+        "email": "your@client.com",
+        "name": "Your Client"
       }
     ],
-    "subject": "Welcome to {$company}!",
-    "text": "This is a welcoming message from your friends at {$company}.",
-    "html": "<b>This is a welcoming message from your friends at {$company}.</b>",
-    "variables": [
-      {
-        "email": "jane@mailersend.com",
-        "substitutions": [
-          {
-            "var": "company",
-            "value": "MailerSend"
-          }
-        ]
-      }
-    ]
+    "subject": "Subject",
+    "text": "This is the text content",
+    "html": "<p>This is the HTML content</p>",
   }
 ]
 
