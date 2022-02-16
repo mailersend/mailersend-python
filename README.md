@@ -14,6 +14,9 @@ MailerSend Python SDK
         - [Advanced personalization](#advanced-personalization)
         - [Simple personalization](#simple-personalization)
         - [Send email with attachment](#send-email-with-attachment)
+    - [Bulk Email](#bulk-email)
+       - [Send bulk email](#send-bulk-email)
+       - [Get bulk email status](#get-bulk-email-status)
     - [Activity](#activity)
         - [Get a list of activities (simple)](#get-a-list-of-activities-simple)
         - [Get a list of activities (full)](#get-a-list-of-activities-full)
@@ -466,6 +469,87 @@ mailer.set_simple_personalization(variables, mail_body)
 mailer.set_attachments(attachments, mail_body)
 
 mailer.send(mail_body)
+```
+
+## Bulk Email
+
+### Send bulk email
+
+```python
+from mailersend import emails
+
+api_key = "API key here"
+
+mailer = mailersend.NewEmail(api_key)
+
+mail_list = [
+  {
+    "from": {
+      "email": "hello@mailersend.com",
+      "name": "MailerSend"
+    },
+    "to": [
+      {
+        "email": "john@mailersend.com",
+        "name": "John Mailer"
+      }
+    ],
+    "subject": "Hello from {$company}!",
+    "text": "This is just a friendly hello from your friends at {$company}.",
+    "html": "<b>This is just a friendly hello from your friends at {$company}.</b>",
+    "variables": [
+      {
+        "email": "john@mailersend.com",
+        "substitutions": [
+          {
+            "var": "company",
+            "value": "MailerSend"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "from": {
+      "email": "hello@mailersend.com",
+      "name": "MailerSend"
+    },
+    "to": [
+      {
+        "email": "jane@mailersend.com",
+        "name": "Jane Mailer"
+      }
+    ],
+    "subject": "Welcome to {$company}!",
+    "text": "This is a welcoming message from your friends at {$company}.",
+    "html": "<b>This is a welcoming message from your friends at {$company}.</b>",
+    "variables": [
+      {
+        "email": "jane@mailersend.com",
+        "substitutions": [
+          {
+            "var": "company",
+            "value": "MailerSend"
+          }
+        ]
+      }
+    ]
+  }
+]
+
+print(mailer.send_bulk(mail_list))
+```
+
+### Get bulk email status
+
+```python
+from mailersend import emails
+
+api_key = "API key here"
+
+mailer = mailersend.NewEmail(api_key)
+
+print(mailer.get_bulk_status_by_id("bulk-email-id"))
 ```
 
 <a name="activity"></a>
