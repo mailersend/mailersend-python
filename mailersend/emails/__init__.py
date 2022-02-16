@@ -105,6 +105,16 @@ class NewEmail(base.NewAPIClient):
         )
         return f"{request.status_code}\n{request.text}"
 
+    def get_bulk_status_by_id(self, bulk_email_id):
+        """
+        Returns a JSON response from the MailerSend API
+        """
+
+        request = requests.get(
+            f"{self.api_base}/bulk-email/{bulk_email_id}", headers=self.headers_default
+        )
+        return request.text
+
     def send_bulk(self, message_list):
         """
         Handles bulk e-mail sending
