@@ -35,4 +35,4 @@ class NewSmsSending(base.NewAPIClient):
             f"{self.api_base}/sms", headers=self.headers_default, json=data
         )
 
-        return f"{request.status_code}\n{request.text}"
+        return f"{request.status_code}\n{request.headers['X-SMS-Message-Id']}"
