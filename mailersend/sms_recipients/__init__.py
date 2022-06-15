@@ -1,0 +1,41 @@
+"""
+Handles /sms-recipients endpoint
+"""
+
+import requests
+from mailersend.base import base
+
+
+class NewSmsRecipients(base.NewAPIClient):
+    """
+    Instantiates the /sms-recipients endpoint object
+    """
+
+    def get_recipients(self, status="active", sms_number_id=None, page=None, limit=25):
+        """
+        Get information about SMS recipients.
+
+        @params:
+          status (string) - Possible values are `active` and `opt_out`
+          sms_number_id (string)
+          page (int)
+          limit (int): Min: `10`, Max: `100`, default is 25
+        """
+
+        passed_arguments = locals()
+        query_params = {}
+
+        for key, value in passed_arguments.items():
+            if key != "self":
+                query_params[key] = value
+
+        request = requests.get(
+            f"{self.api_base}/sms-recipients", headers=self.headers_default, params=query_params
+        )
+
+        return f"{request.status_code}\n{request.text}"
+
+
+    def update_recipient(self, sms_recipient_id, status):
+        pass
+
