@@ -74,6 +74,10 @@ MailerSend Python SDK
       - [Get an SMS phone number](#get-an-sms-phone-number)
       - [Update a single SMS phone number](#update-a-single-sms-phone-number)
       - [Delete an SMS phone number](#delete-an-sms-phone-number)
+    - [SMS Recipients](#sms-recipients)
+      - [Get a list of SMS recipients](#get-a-list-of-sms-recipients)
+      - [Get an SMS recipient](#get-an-sms-recipient)
+      - [Update a single SMS recipient](#update-a-single-sms-recipient)
     - [Tokens](#tokens)
       - [Create a token](#create-a-token)
       - [Pause / Unpause Token](#pause--unpause-token)
@@ -1478,6 +1482,52 @@ mailer = sms_phone_numbers.NewSmsNumbers(api_key)
 sms_number_id = "9pq3enl6842vwrzx"
 
 print(mailer.delete_phone_number(sms_number_id))
+```
+
+## SMS Recipients
+
+### Get a list of SMS recipients
+```python
+from mailersend import sms_recipients
+
+api_key = "API key here"
+
+mailer = sms_recipients.NewSmsRecipients(api_key)
+
+#Request parameters
+sms_number_id = "9pq3enl6842vwrzx"
+status = "active"
+
+print(mailer.get_recipients(status=status, sms_number_id=sms_number_id))
+```
+
+### Get an SMS recipient
+```python
+from mailersend import sms_recipients
+
+api_key = "API key here"
+
+mailer = sms_recipients.NewSmsRecipients(api_key)
+
+#Request parameters
+sms_recipient_id = "627e756fd30078fb2208cc87"
+
+print(mailer.get_recipient(sms_recipient_id))
+```
+
+### Update a single SMS recipient
+```python
+from mailersend import sms_recipients
+
+api_key = "API key here"
+
+mailer = sms_recipients.NewSmsRecipients(api_key)
+
+#Request parameters
+sms_recipient_id = "627e756fd30078fb2208cc87"
+status = "opt_out"
+
+print(mailer.update_recipient(sms_recipient_id, status))
 ```
 
 # Troubleshooting
