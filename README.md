@@ -1375,6 +1375,30 @@ print(mailer.send(mail_body))
 
 ```
 
+## SMS
+
+## Sending SMS messages
+```python
+from mailersend import sms_sending
+
+api_key = "API key here"
+
+mailer = sms_sending.NewSmsSending(api_key)
+
+#Number belonging to your account in E164 format
+number_from = "+11234567890"
+
+#You can add up to 50 recipient numbers
+numbers_to = [
+    "+11234567891",
+    "+11234567892"
+]
+text = "This is the text content"
+
+print(mailer.send_sms(number_from, numbers_to, text))
+```
+
+
 # Testing
 
 TBD
