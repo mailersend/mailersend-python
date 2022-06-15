@@ -50,5 +50,23 @@ class NewSmsRecipients(base.NewAPIClient):
         return f"{request.status_code}\n{request.text}"
 
     def update_recipient(self, sms_recipient_id, status):
-        pass
+        """
+        Update a specific SMS recipient
+
+        @params:
+          sms_recipient_id (string)
+          status (string)
+        """
+
+        query_params = {
+            "status": status
+        }
+        data = {"sms_recipient_id": sms_recipient_id}
+
+        request = requests.put(
+            f"{self.api_base}/sms-recipients/{sms_recipient_id}",
+            headers=self.headers_default, params=query_params, json=data
+        )
+
+        return f"{request.status_code}\n{request.text}"
 
