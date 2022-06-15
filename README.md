@@ -1353,6 +1353,66 @@ webhook = webhooks.NewWebhook(api_key)
 webhook.delete_webhook("webhook-id")
 ```
 
+## SMS
+
+### Sending SMS messages
+```python
+from mailersend import sms_sending
+
+api_key = "API key here"
+
+mailer = sms_sending.NewSmsSending(api_key)
+
+#Number belonging to your account in E164 format
+number_from = "+11234567890"
+
+#You can add up to 50 recipient numbers
+numbers_to = [
+    "+11234567891",
+    "+11234567892"
+]
+text = "This is the text content"
+
+print(mailer.send_sms(number_from, numbers_to, text))
+```
+
+## SMS Activity
+
+### Get a list of activities
+```python
+from mailersend import sms_activity
+
+api_key = "API key here"
+
+mailer = sms_activity.NewSmsActivity(api_key)
+
+#Request parameters
+sms_number_id = 1365743
+date_from = 1655157601
+date_to = 1655158601
+status = ["queued", "failed"]
+page = 1
+limit = 200
+
+print(mailer.get_activities(sms_number_id=sms_number_id, date_from=date_from, date_to=date_to, status=status, page=page, limit=limit))
+```
+
+### Get activity of a single message
+```python
+from mailersend import sms_activity
+
+api_key = "API key here"
+
+mailer = sms_activity.NewSmsActivity(api_key)
+
+#Request parameters
+sms_message_id = "62a9d12b07852eaf2207b417"
+
+print(mailer.get_activity(sms_message_id))
+```
+
+
+
 # Troubleshooting
 
 ## Emails not being sent
@@ -1374,30 +1434,6 @@ print(mailer.send(mail_body))
 # {"message":"The given data was invalid.","errors":{"variables.0.substitutions":["The variables.0.substitutions field is required when variables.0.email is present."]}}
 
 ```
-
-## SMS
-
-## Sending SMS messages
-```python
-from mailersend import sms_sending
-
-api_key = "API key here"
-
-mailer = sms_sending.NewSmsSending(api_key)
-
-#Number belonging to your account in E164 format
-number_from = "+11234567890"
-
-#You can add up to 50 recipient numbers
-numbers_to = [
-    "+11234567891",
-    "+11234567892"
-]
-text = "This is the text content"
-
-print(mailer.send_sms(number_from, numbers_to, text))
-```
-
 
 # Testing
 
