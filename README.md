@@ -64,6 +64,16 @@ MailerSend Python SDK
       - [Delete hard bounced recipients](#delete-hard-bounced-recipients)
       - [Delete spam complaints](#delete-spam-complaints)
       - [Delete recipients from unsubscribe list](#delete-recipients-from-unsubscribe-list)
+    - [SMS sending](#sms)
+      - [Sending SMS messages](#sending-sms-messages)
+    - [SMS Activity](#sms-activity)
+      - [Get a list of activities](#get-a-list-of-activities)
+      - [Get activity of a single message](#get-activity-of-a-single-message)
+    - [SMS Phone Numbers](#sms-phone-numbers)
+      - [Get a list of SMS phone numbers](#get-a-list-of-sms-phone-numbers)
+      - [Get an SMS phone number](#get-an-sms-phone-number)
+      - [Update a single SMS phone number](#update-a-single-sms-phone-number)
+      - [Delete an SMS phone number](#delete-an-sms-phone-number)
     - [Tokens](#tokens)
       - [Create a token](#create-a-token)
       - [Pause / Unpause Token](#pause--unpause-token)
@@ -1411,7 +1421,64 @@ sms_message_id = "62a9d12b07852eaf2207b417"
 print(mailer.get_activity(sms_message_id))
 ```
 
+## SMS Phone Numbers
 
+### Get a list of SMS phone numbers
+```python
+from mailersend import sms_phone_numbers
+
+api_key = "API key here"
+
+mailer = sms_phone_numbers.NewSmsNumbers(api_key)
+
+#Request parameters
+paused = False
+
+print(mailer.get_phone_numbers(paused))
+```
+
+### Get an SMS phone number
+```python
+from mailersend import sms_phone_numbers
+
+api_key = "API key here"
+
+mailer = sms_phone_numbers.NewSmsNumbers(api_key)
+
+#Request parameters
+sms_number_id = "9pq3enl6842vwrzx"
+
+print(mailer.get_phone_number(sms_number_id))
+```
+
+### Update a single SMS phone number
+```python
+from mailersend import sms_phone_numbers
+
+api_key = "API key here"
+
+mailer = sms_phone_numbers.NewSmsNumbers(api_key)
+
+#Request parameters
+sms_number_id = "9pq3enl6842vwrzx"
+paused = True
+
+print(mailer.update_phone_number(sms_number_id, paused))
+```
+
+### Delete an SMS phone number
+```python
+from mailersend import sms_phone_numbers
+
+api_key = "API key here"
+
+mailer = sms_phone_numbers.NewSmsNumbers(api_key)
+
+#Request parameters
+sms_number_id = "9pq3enl6842vwrzx"
+
+print(mailer.delete_phone_number(sms_number_id))
+```
 
 # Troubleshooting
 
