@@ -53,7 +53,25 @@ class NewSmsNumbers(base.NewAPIClient):
 
         return f"{request.status_code}\n{request.text}"
 
+    def update_phone_number(self, sms_number_id, paused=True):
+        """
+        Update a specific SMS phone number
 
+        @params:
+          sms_number_id (string)
+           paused (bool)
+        """
+
+        query_params = {
+            "paused": int(paused)
+        }
+        data = {"sms_number_id": sms_number_id}
+
+        request = requests.put(
+            f"{self.api_base}/sms-numbers/{sms_number_id}", headers=self.headers_default, params=query_params, json=data
+        )
+
+        return f"{request.status_code}\n{request.text}"
 
     def delete_phone_number(self):
         pass
