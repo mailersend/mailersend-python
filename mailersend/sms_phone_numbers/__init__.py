@@ -73,5 +73,18 @@ class NewSmsNumbers(base.NewAPIClient):
 
         return f"{request.status_code}\n{request.text}"
 
-    def delete_phone_number(self):
-        pass
+    def delete_phone_number(self, sms_number_id):
+        """
+        Delete a specific SMS phone number
+
+        @params:
+          sms_number_id (string)
+        """
+
+        data = {"sms_number_id": sms_number_id}
+
+        request = requests.delete(
+            f"{self.api_base}/sms-numbers/{sms_number_id}", headers=self.headers_default, json=data
+        )
+
+        return f"{request.status_code}\n{request.text}"
