@@ -35,6 +35,19 @@ class NewSmsRecipients(base.NewAPIClient):
 
         return f"{request.status_code}\n{request.text}"
 
+    def get_recipient(self, sms_recipient_id):
+        """
+        Get information about a specific SMS recipient.
+
+        @params:
+          sms_recipient_id (string) - Possible values are `active` and `opt_out`
+        """
+
+        request = requests.get(
+            f"{self.api_base}/sms-recipients/{sms_recipient_id}", headers=self.headers_default
+        )
+
+        return f"{request.status_code}\n{request.text}"
 
     def update_recipient(self, sms_recipient_id, status):
         pass
