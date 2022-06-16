@@ -78,6 +78,9 @@ MailerSend Python SDK
       - [Get a list of SMS recipients](#get-a-list-of-sms-recipients)
       - [Get an SMS recipient](#get-an-sms-recipient)
       - [Update a single SMS recipient](#update-a-single-sms-recipient)
+    - [SMS Messages](#sms-messages)
+      - [Get a list of SMS messages](#get-a-list-of-sms-messages)
+      - [Get an SMS message](#get-an-sms-message)
     - [Tokens](#tokens)
       - [Create a token](#create-a-token)
       - [Pause / Unpause Token](#pause--unpause-token)
@@ -1530,6 +1533,33 @@ status = "opt_out"
 print(mailer.update_recipient(sms_recipient_id, status))
 ```
 
+## SMS Messages
+
+### Get a list of SMS messages
+```python
+from mailersend import sms_messages
+
+api_key = "API key here"
+
+mailer = sms_messages.NewSmsMessages(api_key)
+
+print(mailer.get_messages())
+```
+
+### Get an SMS message
+```python
+from mailersend import sms_messages
+
+api_key = "API key here"
+
+#Request parameters
+sms_message_id = "627e756fd30078fb2208cc87"
+
+mailer = sms_messages.NewSmsMessages(api_key)
+
+print(mailer.get_message(sms_message_id))
+```
+
 # Troubleshooting
 
 ## Emails not being sent
@@ -1559,17 +1589,22 @@ TBD
 <a name="endpoints"></a>
 # Available endpoints
 
-| Feature group | Endpoint    | Available |
-| ------------- | ----------- | --------- |
-| Activity         | `GET activity` | ✅         |
-| Analytics         | `GET analytics` | ✅         |
-| Domains         | `{GET,PUT,DELETE} domains` | ✅         |
-| Emails         | `POST send` | ✅         |
-| Messages         | `GET messages` | ✅         |
-| Recipients         | `{GET,DELETE} recipients` | ✅         |
-| Templates         | `{GET,DELETE} templates` | ✅         |
-| Tokens         | `{POST,PUT,DELETE} tokens` | ✅         |
-| Webhooks         | `{GET,POST,PUT,DELETE} webhooks` | ✅         |
+| Feature group     | Endpoint                            | Available |
+|-------------------|-------------------------------------|-----------|
+| Activity          | `GET activity`                      | ✅         |
+| Analytics         | `GET analytics`                     | ✅         |
+| Domains           | `{GET, PUT, DELETE} domains`        | ✅         |
+| Emails            | `POST send`                         | ✅         |
+| Messages          | `GET messages`                      | ✅         |
+| Recipients        | `{GET, DELETE} recipients`          | ✅         |
+| Templates         | `{GET, DELETE} templates`           | ✅         |
+| Tokens            | `{POST, PUT, DELETE} tokens`        | ✅         |
+| Webhooks          | `{GET, POST, PUT, DELETE} webhooks` | ✅         |
+| SMS Sending       | `{POST} sms`                        | ✅         |
+| SMS Activity      | `{GET} sms-activity`                | ✅         |
+| SMS Phone numbers | `{GET, PUT, DELETE} sms-numbers`    | ✅         |
+| SMS Recipients    | `{GET, PUT} sms-recipients`         | ✅         |
+| SMS Messages      | `{GET} sms-messages`                | ✅         |
 
 *If, at the moment, some endpoint is not available, please use other available tools to access it. [Refer to official API docs for more info](https://developers.mailersend.com/).*
 
