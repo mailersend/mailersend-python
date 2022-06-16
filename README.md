@@ -15,8 +15,8 @@ MailerSend Python SDK
         - [Simple personalization](#simple-personalization)
         - [Send email with attachment](#send-email-with-attachment)
     - [Bulk Email](#bulk-email)
-       - [Send bulk email](#send-bulk-email)
-       - [Get bulk email status](#get-bulk-email-status)
+        - [Send bulk email](#send-bulk-email)
+        - [Get bulk email status](#get-bulk-email-status)
     - [Activity](#activity)
         - [Get a list of activities (simple)](#get-a-list-of-activities-simple)
         - [Get a list of activities (full)](#get-a-list-of-activities-full)
@@ -26,11 +26,11 @@ MailerSend Python SDK
         - [Opens by user-agent name](#opens-by-user-agent-name)
         - [Opens by reading environment](#opens-by-reading-environment)
     - [Inbound Routes](#inbound-routes)
-       - [Get a list of inbound routes](#get-a-list-of-inbound-routes)
-       - [Get a single inbound route](#get-a-single-inbound-route)
-       - [Add an inbound route](#add-an-inbound-route)
-       - [Update an inbound route](#update-an-inbound-route)
-       - [Delete an inbound route](#delete-an-inbound-route)
+        - [Get a list of inbound routes](#get-a-list-of-inbound-routes)
+        - [Get a single inbound route](#get-a-single-inbound-route)
+        - [Add an inbound route](#add-an-inbound-route)
+        - [Update an inbound route](#update-an-inbound-route)
+        - [Delete an inbound route](#delete-an-inbound-route)
     - [Domains](#domains)
         - [Get a list of domains](#get-a-list-of-domains)
         - [Get a single domain](#get-a-single-domain)
@@ -45,53 +45,53 @@ MailerSend Python SDK
         - [Get a list of messages](#get-a-list-of-messages)
         - [Get a single message](#get-a-single-message)
     - [Scheduled Messages](#scheduled-messages)
-       - [Get a list of scheduled messages](#get-a-list-of-scheduled-messages)
-       - [Get a single scheduled message](#get-a-single-scheduled-message)
-       - [Delete a scheduled message](#delete-a-scheduled-message)
+        - [Get a list of scheduled messages](#get-a-list-of-scheduled-messages)
+        - [Get a single scheduled message](#get-a-single-scheduled-message)
+        - [Delete a scheduled message](#delete-a-scheduled-message)
     - [Recipients](#recipients)
-      - [Get a list of recipients](#get-a-list-of-recipients)
-      - [Get a single recipient](#get-a-single-recipient)
-      - [Delete a recipient](#delete-a-recipient)
-      - [Get recipients from a blocklist](#get-recipients-from-a-blocklist)
-      - [Get recipients from hard bounces](#get-recipients-from-hard-bounces)
-      - [Get recipients from spam complaints](#get-recipients-from-spam-complaints)
-      - [Get recipients from unsubscribes](#get-recipients-from-unsubscribes)
-      - [Add recipients to blocklist](#add-recipients-to-blocklist)
-      - [Add hard bounced recipients](#add-hard-bounced-recipients)
-      - [Add spam complaints](#add-spam-complaints)
-      - [Add recipients to unsubscribe list](#add-recipients-to-unsubcribe-list)
-      - [Delete recipients from blocklist](#delete-recipients-from-blocklist)
-      - [Delete hard bounced recipients](#delete-hard-bounced-recipients)
-      - [Delete spam complaints](#delete-spam-complaints)
-      - [Delete recipients from unsubscribe list](#delete-recipients-from-unsubscribe-list)
+        - [Get a list of recipients](#get-a-list-of-recipients)
+        - [Get a single recipient](#get-a-single-recipient)
+        - [Delete a recipient](#delete-a-recipient)
+        - [Get recipients from a blocklist](#get-recipients-from-a-blocklist)
+        - [Get recipients from hard bounces](#get-recipients-from-hard-bounces)
+        - [Get recipients from spam complaints](#get-recipients-from-spam-complaints)
+        - [Get recipients from unsubscribes](#get-recipients-from-unsubscribes)
+        - [Add recipients to blocklist](#add-recipients-to-blocklist)
+        - [Add hard bounced recipients](#add-hard-bounced-recipients)
+        - [Add spam complaints](#add-spam-complaints)
+        - [Add recipients to unsubscribe list](#add-recipients-to-unsubcribe-list)
+        - [Delete recipients from blocklist](#delete-recipients-from-blocklist)
+        - [Delete hard bounced recipients](#delete-hard-bounced-recipients)
+        - [Delete spam complaints](#delete-spam-complaints)
+        - [Delete recipients from unsubscribe list](#delete-recipients-from-unsubscribe-list)
     - [SMS sending](#sms)
-      - [Sending SMS messages](#sending-sms-messages)
+        - [Sending SMS messages](#sending-sms-messages)
     - [SMS Activity](#sms-activity)
-      - [Get a list of activities](#get-a-list-of-activities)
-      - [Get activity of a single message](#get-activity-of-a-single-message)
+        - [Get a list of activities](#get-a-list-of-activities)
+        - [Get activity of a single message](#get-activity-of-a-single-message)
     - [SMS Phone Numbers](#sms-phone-numbers)
-      - [Get a list of SMS phone numbers](#get-a-list-of-sms-phone-numbers)
-      - [Get an SMS phone number](#get-an-sms-phone-number)
-      - [Update a single SMS phone number](#update-a-single-sms-phone-number)
-      - [Delete an SMS phone number](#delete-an-sms-phone-number)
+        - [Get a list of SMS phone numbers](#get-a-list-of-sms-phone-numbers)
+        - [Get an SMS phone number](#get-an-sms-phone-number)
+        - [Update a single SMS phone number](#update-a-single-sms-phone-number)
+        - [Delete an SMS phone number](#delete-an-sms-phone-number)
     - [SMS Recipients](#sms-recipients)
-      - [Get a list of SMS recipients](#get-a-list-of-sms-recipients)
-      - [Get an SMS recipient](#get-an-sms-recipient)
-      - [Update a single SMS recipient](#update-a-single-sms-recipient)
+        - [Get a list of SMS recipients](#get-a-list-of-sms-recipients)
+        - [Get an SMS recipient](#get-an-sms-recipient)
+        - [Update a single SMS recipient](#update-a-single-sms-recipient)
     - [SMS Messages](#sms-messages)
-      - [Get a list of SMS messages](#get-a-list-of-sms-messages)
-      - [Get an SMS message](#get-an-sms-message)
+        - [Get a list of SMS messages](#get-a-list-of-sms-messages)
+        - [Get an SMS message](#get-an-sms-message)
     - [Tokens](#tokens)
-      - [Create a token](#create-a-token)
-      - [Pause / Unpause Token](#pause--unpause-token)
-      - [Delete a token](#delete-a-token)
+        - [Create a token](#create-a-token)
+        - [Pause / Unpause Token](#pause--unpause-token)
+        - [Delete a token](#delete-a-token)
     - [Webhooks](#webhooks)
-      - [Get a list of webhooks](#get-a-list-of-webhooks)
-      - [Get a single webhook](#get-a-single-webhook)
-      - [Create a webhook](#create-a-webhook)
-      - [Create a disabled webhook](#create-a-disabled-webhook)
-      - [Update a Webhook](#update-a-webhook)
-      - [Delete a Webhook](#delete-a-webhook)
+        - [Get a list of webhooks](#get-a-list-of-webhooks)
+        - [Get a single webhook](#get-a-single-webhook)
+        - [Create a webhook](#create-a-webhook)
+        - [Create a disabled webhook](#create-a-disabled-webhook)
+        - [Update a Webhook](#update-a-webhook)
+        - [Delete a Webhook](#delete-a-webhook)
 - [Troubleshooting](#troubleshooting)
     - [Emails not being sent](#emails-not-being-sent)
 - [Testing](#testing)
@@ -200,7 +200,7 @@ mailer.send(mail_body)
 
 # Usage
 
-## Email 
+## Email
 
 ### Send an email
 
@@ -271,7 +271,7 @@ recipients = [
 cc = [
     {
         "name": "CC",
-        "email": "cc@client.com" 
+        "email": "cc@client.com"
     }
 ]
 
@@ -368,20 +368,20 @@ personalization = [
     {
         "email": "test@mailersend.com",
         "data": {
-        "var": "value",
-        "boolean": True,
-        "object": {
-            "key" : "object-value"
-        },
-        "number": 2,
-        "array": [
-            1,
-            2,
-            3
-        ]
+            "var": "value",
+            "boolean": True,
+            "object": {
+                "key" : "object-value"
+            },
+            "number": 2,
+            "array": [
+                1,
+                2,
+                3
+            ]
         }
     }
-    ]
+]
 
 
 mailer.set_mail_from(mail_from, mail_body)
@@ -512,36 +512,36 @@ api_key = "API key here"
 mailer = mailersend.NewEmail(api_key)
 
 mail_list = [
-  {
-    "from": {
-      "email": "your@domain.com",
-      "name": "Your Name"
+    {
+        "from": {
+            "email": "your@domain.com",
+            "name": "Your Name"
+        },
+        "to": [
+            {
+                "email": "your@client.com",
+                "name": "Your Client"
+            }
+        ],
+        "subject": "Subject",
+        "text": "This is the text content",
+        "html": "<p>This is the HTML content</p>",
     },
-    "to": [
-      {
-        "email": "your@client.com",
-        "name": "Your Client"
-      }
-    ],
-    "subject": "Subject",
-    "text": "This is the text content",
-    "html": "<p>This is the HTML content</p>",
-  },
-  {
-    "from": {
-      "email": "your@domain.com",
-      "name": "Your Name"
-    },
-    "to": [
-      {
-        "email": "your@client.com",
-        "name": "Your Client"
-      }
-    ],
-    "subject": "Subject",
-    "text": "This is the text content",
-    "html": "<p>This is the HTML content</p>",
-  }
+    {
+        "from": {
+            "email": "your@domain.com",
+            "name": "Your Name"
+        },
+        "to": [
+            {
+                "email": "your@client.com",
+                "name": "Your Client"
+            }
+        ],
+        "subject": "Subject",
+        "text": "This is the text content",
+        "html": "<p>This is the HTML content</p>",
+    }
 ]
 
 print(mailer.send_bulk(mail_list))
@@ -1165,7 +1165,7 @@ recipient_list = [
 mailer.delete_from_blocklist("domain-id", recipient_list)
 ```
 
-### Delete hard bounced recipients 
+### Delete hard bounced recipients
 
 ```python
 from mailersend import recipients
@@ -1181,7 +1181,7 @@ recipient_list = [
 mailer.delete_hard_bounces("domain-id", recipient_list)
 ```
 
-### Delete spam complaints 
+### Delete spam complaints
 
 ```python
 from mailersend import recipients
@@ -1558,6 +1558,86 @@ sms_message_id = "627e756fd30078fb2208cc87"
 mailer = sms_messages.NewSmsMessages(api_key)
 
 print(mailer.get_message(sms_message_id))
+```
+
+## SMS Webhooks
+
+### Get a list of SMS webhooks
+```python
+from mailersend import sms_webhooks
+
+api_key = "API key here"
+
+mailer = sms_webhooks.NewSmsWebhooks(api_key)
+
+#Request parameters
+sms_number_id = "9pq3enl6842vwrzx"
+
+print(mailer.get_webhooks(sms_number_id))
+```
+
+### Get a single SMS webhook
+```python
+from mailersend import sms_webhooks
+
+api_key = "API key here"
+
+mailer = sms_webhooks.NewSmsWebhooks(api_key)
+
+#Request parameters
+sms_webhook_id = "9pq3enl6842vwrzx"
+
+print(mailer.get_webhook(sms_webhook_id))
+```
+
+### Create an SMS webhook
+```python
+from mailersend import sms_webhooks
+
+api_key = "API key here"
+
+mailer = sms_webhooks.NewSmsWebhooks(api_key)
+
+#Request parameters
+url = "https://mywebhookurl.com"
+name = "My webhook name"
+events = ["sms.failed", "sms.sent"]
+sms_number_id = "9pq3enl6842vwrzx"
+enabled = True
+
+print(mailer.create_webhook(url, name, events, sms_number_id, enabled))
+```
+
+### Update a single SMS webhook
+```python
+from mailersend import sms_webhooks
+
+api_key = "API key here"
+
+mailer = sms_webhooks.NewSmsWebhooks(api_key)
+
+#Request parameters
+url = "https://different-url.com"
+name = "A better webhook name"
+events = ["sms.failed"]
+sms_webhook_id = "12enl6242epizx"
+enabled = False
+
+print(mailer.update_webhook(sms_webhook_id, url, name, events, enabled))
+```
+
+### Delete an SMS webhook
+```python
+from mailersend import sms_webhooks
+
+api_key = "API key here"
+
+mailer = sms_webhooks.NewSmsWebhooks(api_key)
+
+#Request parameters
+sms_webhook_id = "12enl6242epizx"
+
+print(mailer.delete_webhook(sms_webhook_id))
 ```
 
 # Troubleshooting
