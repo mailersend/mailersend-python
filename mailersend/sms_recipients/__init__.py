@@ -11,6 +11,8 @@ class NewSmsRecipients(base.NewAPIClient):
     Instantiates the /sms-recipients endpoint object
     """
 
+    pass
+
     def get_recipients(self, status="active", sms_number_id=None, page=None, limit=25):
         """
         Get information about SMS recipients.
