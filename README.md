@@ -1675,22 +1675,23 @@ TBD
 <a name="endpoints"></a>
 # Available endpoints
 
-| Feature group     | Endpoint                            | Available |
-|-------------------|-------------------------------------|-----------|
-| Activity          | `GET activity`                      | ✅         |
-| Analytics         | `GET analytics`                     | ✅         |
-| Domains           | `{GET, PUT, DELETE} domains`        | ✅         |
-| Emails            | `POST send`                         | ✅         |
-| Messages          | `GET messages`                      | ✅         |
-| Recipients        | `{GET, DELETE} recipients`          | ✅         |
-| Templates         | `{GET, DELETE} templates`           | ✅         |
-| Tokens            | `{POST, PUT, DELETE} tokens`        | ✅         |
-| Webhooks          | `{GET, POST, PUT, DELETE} webhooks` | ✅         |
-| SMS Sending       | `{POST} sms`                        | ✅         |
-| SMS Activity      | `{GET} sms-activity`                | ✅         |
-| SMS Phone numbers | `{GET, PUT, DELETE} sms-numbers`    | ✅         |
-| SMS Recipients    | `{GET, PUT} sms-recipients`         | ✅         |
-| SMS Messages      | `{GET} sms-messages`                | ✅         |
+| Feature group     | Endpoint                                | Available |
+|-------------------|-----------------------------------------|-----------|
+| Activity          | `GET activity`                          | ✅         |
+| Analytics         | `GET analytics`                         | ✅         |
+| Domains           | `{GET, PUT, DELETE} domains`            | ✅         |
+| Emails            | `POST send`                             | ✅         |
+| Messages          | `GET messages`                          | ✅         |
+| Recipients        | `{GET, DELETE} recipients`              | ✅         |
+| Templates         | `{GET, DELETE} templates`               | ✅         |
+| Tokens            | `{POST, PUT, DELETE} tokens`            | ✅         |
+| Webhooks          | `{GET, POST, PUT, DELETE} webhooks`     | ✅         |
+| SMS Sending       | `{POST} sms`                            | ✅         |
+| SMS Activity      | `{GET} sms-activity`                    | ✅         |
+| SMS Phone numbers | `{GET, PUT, DELETE} sms-numbers`        | ✅         |
+| SMS Recipients    | `{GET, PUT} sms-recipients`             | ✅         |
+| SMS Messages      | `{GET} sms-messages`                    | ✅         |
+| SMS Webhooks      | `{GET, POST, PUT, DELETE} sms-webhooks` | ✅         |
 
 *If, at the moment, some endpoint is not available, please use other available tools to access it. [Refer to official API docs for more info](https://developers.mailersend.com/).*
 
