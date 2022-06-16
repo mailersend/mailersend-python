@@ -81,6 +81,12 @@ MailerSend Python SDK
     - [SMS Messages](#sms-messages)
       - [Get a list of SMS messages](#get-a-list-of-sms-messages)
       - [Get an SMS message](#get-an-sms-message)
+    - [SMS Webhooks](#sms-webhooks)
+      - [Get a list of SMS webhooks](#get-a-list-of-sms-webhooks)
+      - [Get a single SMS webhook](#get-a-single-sms-webhook)
+      - [Create an SMS webhook](#create-an-sms-webhook)
+      - [Update a single SMS webhook](#update-a-single-sms-webhook)
+      - [Delete an SMS webhook](#delete-an-sms-webhook)
     - [Tokens](#tokens)
       - [Create a token](#create-a-token)
       - [Pause / Unpause Token](#pause--unpause-token)
@@ -1560,6 +1566,80 @@ mailer = sms_messages.NewSmsMessages(api_key)
 print(mailer.get_message(sms_message_id))
 ```
 
+## SMS Webhooks
+### Get a list of SMS webhooks
+```python
+from mailersend import sms_webhooks
+
+api_key = "API key here"
+mailer = sms_webhooks.NewSmsWebhooks(api_key)
+
+#Request parameters
+sms_number_id = "9pq3enl6842vwrzx"
+
+print(mailer.get_webhooks(sms_message_id))
+```
+
+### Get a single SMS webhook
+```python
+from mailersend import sms_webhooks
+
+api_key = "API key here"
+mailer = sms_webhooks.NewSmsWebhooks(api_key)
+
+#Request parameters
+sms_webhook_id = "2351ndgwr4zqx8ko"
+
+print(mailer.get_webhook(sms_webhook_id))
+```
+
+### Create an SMS webhook
+```python
+from mailersend import sms_webhooks
+
+api_key = "API key here"
+mailer = sms_webhooks.NewSmsWebhooks(api_key)
+
+#Request parameters
+url = "https://someurl.com"
+name = "My webhook name"
+events = ["sms.sent", "sms.failed", "sms.delivered"]
+sms_number_id = "9pq3enl6842vwrzx"
+enabled = True
+
+print(mailer.create_webhook(url, name, events, sms_number_id, enabled))
+```
+
+### Update a single SMS webhook
+```python
+from mailersend import sms_webhooks
+
+api_key = "API key here"
+mailer = sms_webhooks.NewSmsWebhooks(api_key)
+
+#Request parameters
+url = "https://differenturl.com"
+name = "A different name"
+events = ["sms.sent"]
+sms_webhook_id = "2351ndgwr4zqx8ko"
+enabled = False
+
+print(mailer.create_webhook(sms_webhook_id, url, name, events, enabled))
+```
+
+### Delete an SMS webhook
+```python
+from mailersend import sms_webhooks
+
+api_key = "API key here"
+mailer = sms_webhooks.NewSmsWebhooks(api_key)
+
+#Request parameters
+sms_webhook_id = "2351ndgwr4zqx8ko"
+
+print(mailer.delete_webhook(sms_webhook_id))
+```
+
 # Troubleshooting
 
 ## Emails not being sent
@@ -1589,22 +1669,23 @@ TBD
 <a name="endpoints"></a>
 # Available endpoints
 
-| Feature group     | Endpoint                            | Available |
-|-------------------|-------------------------------------|-----------|
-| Activity          | `GET activity`                      | ✅         |
-| Analytics         | `GET analytics`                     | ✅         |
-| Domains           | `{GET, PUT, DELETE} domains`        | ✅         |
-| Emails            | `POST send`                         | ✅         |
-| Messages          | `GET messages`                      | ✅         |
-| Recipients        | `{GET, DELETE} recipients`          | ✅         |
-| Templates         | `{GET, DELETE} templates`           | ✅         |
-| Tokens            | `{POST, PUT, DELETE} tokens`        | ✅         |
-| Webhooks          | `{GET, POST, PUT, DELETE} webhooks` | ✅         |
-| SMS Sending       | `{POST} sms`                        | ✅         |
-| SMS Activity      | `{GET} sms-activity`                | ✅         |
-| SMS Phone numbers | `{GET, PUT, DELETE} sms-numbers`    | ✅         |
-| SMS Recipients    | `{GET, PUT} sms-recipients`         | ✅         |
-| SMS Messages      | `{GET} sms-messages`                | ✅         |
+| Feature group     | Endpoint                                | Available |
+|-------------------|-----------------------------------------|-----------|
+| Activity          | `GET activity`                          | ✅         |
+| Analytics         | `GET analytics`                         | ✅         |
+| Domains           | `{GET, PUT, DELETE} domains`            | ✅         |
+| Emails            | `POST send`                             | ✅         |
+| Messages          | `GET messages`                          | ✅         |
+| Recipients        | `{GET, DELETE} recipients`              | ✅         |
+| Templates         | `{GET, DELETE} templates`               | ✅         |
+| Tokens            | `{POST, PUT, DELETE} tokens`            | ✅         |
+| Webhooks          | `{GET, POST, PUT, DELETE} webhooks`     | ✅         |
+| SMS Sending       | `{POST} sms`                            | ✅         |
+| SMS Activity      | `{GET} sms-activity`                    | ✅         |
+| SMS Phone numbers | `{GET, PUT, DELETE} sms-numbers`        | ✅         |
+| SMS Recipients    | `{GET, PUT} sms-recipients`             | ✅         |
+| SMS Messages      | `{GET} sms-messages`                    | ✅         |
+| SMS Webhooks      | `{GET, POST, PUT, DELETE} sms-webhooks` | ✅         |
 
 *If, at the moment, some endpoint is not available, please use other available tools to access it. [Refer to official API docs for more info](https://developers.mailersend.com/).*
 
