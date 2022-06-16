@@ -14,7 +14,7 @@ class NewSmsInbounds(base.NewAPIClient):
     # you shall not
     pass
 
-    def get_inbound_routes(self, sms_number_id=None, enabled=None, page=1, limit=25):
+    def get_inbound_routes(self, sms_number_id=None, enabled=True, page=1, limit=25):
         """
         Get a list of SMS inbound routes.
 
@@ -38,7 +38,7 @@ class NewSmsInbounds(base.NewAPIClient):
         request = requests.get(
             f"{self.api_base}/sms-inbounds", headers=self.headers_default, params=query_params
         )
-
+        print(request.url)
         return f"{request.status_code}\n{request.text}"
 
     def get_inbound_route(self, sms_inbound_id):
