@@ -24,7 +24,7 @@ class NewAnalytics(base.NewAPIClient):
         _data = {
             "date_from": date_from,
             "date_to": date_to,
-            "event": event,
+            "event[]": event,
         }
 
         if domain_id is not None:
@@ -34,7 +34,7 @@ class NewAnalytics(base.NewAPIClient):
             _data["group_by"] = group_by
 
         request = requests.get(
-            f"{self.api_base}/analytics/date", headers=self.headers_default, json=_data
+            f"{self.api_base}/analytics/date", headers=self.headers_default, params=_data
         )
 
         return request.text
