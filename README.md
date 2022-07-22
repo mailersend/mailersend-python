@@ -91,6 +91,10 @@ MailerSend Python SDK
       - [Create a token](#create-a-token)
       - [Pause / Unpause Token](#pause--unpause-token)
       - [Delete a token](#delete-a-token)
+    - [Templates](#templates)
+      - [Get a list of templates](#get-a-list-of-templates)
+      - [Get a single template](#get-a-single-template)
+      - [Delete a template](#delete-template)
     - [Webhooks](#webhooks)
       - [Get a list of webhooks](#get-a-list-of-webhooks)
       - [Get a single webhook](#get-a-single-webhook)
@@ -1275,6 +1279,46 @@ api_key = "API key here"
 mailer = tokens.NewToken(api_key)
 
 mailer.delete_token("token-id")
+```
+
+## Templates
+
+### Get a list of templates
+
+```python
+from mailersend import templates
+
+api_key = "API key here"
+
+mailer = templates.NewTemplate(api_key)
+
+mailer.get_templates()
+```
+
+### Get a single template
+
+```python
+from mailersend import templates
+
+api_key = "API key here"
+
+mailer = templates.NewTemplate(api_key)
+template_id = 1234
+
+mailer.get_template_by_id()
+```
+
+### Delete template
+
+```python
+from mailersend import templates
+
+api_key = "API key here"
+
+mailer = templates.NewTemplate(api_key)
+template_id = 1234
+
+mailer.delete_template()
 ```
 
 ## Webhooks
