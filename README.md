@@ -97,6 +97,10 @@ MailerSend Python SDK
         - [Create a token](#create-a-token)
         - [Pause / Unpause Token](#pause--unpause-token)
         - [Delete a token](#delete-a-token)
+    - [Templates](#templates)
+        - [Get a list of templates](#get-a-list-of-templates)
+        - [Get a single template](#get-a-single-template)
+        - [Delete a template](#delete-template)
     - [Webhooks](#webhooks)
         - [Get a list of webhooks](#get-a-list-of-webhooks)
         - [Get a single webhook](#get-a-single-webhook)
@@ -1283,6 +1287,46 @@ mailer = tokens.NewToken(api_key)
 mailer.delete_token("token-id")
 ```
 
+## Templates
+
+### Get a list of templates
+
+```python
+from mailersend import templates
+
+api_key = "API key here"
+
+mailer = templates.NewTemplate(api_key)
+
+mailer.get_templates()
+```
+
+### Get a single template
+
+```python
+from mailersend import templates
+
+api_key = "API key here"
+
+mailer = templates.NewTemplate(api_key)
+template_id = 1234
+
+mailer.get_template_by_id()
+```
+
+### Delete template
+
+```python
+from mailersend import templates
+
+api_key = "API key here"
+
+mailer = templates.NewTemplate(api_key)
+template_id = 1234
+
+mailer.delete_template()
+```
+
 ## Webhooks
 
 ### Get a list of webhooks
@@ -1784,23 +1828,24 @@ TBD
 <a name="endpoints"></a>
 # Available endpoints
 
-| Feature group     | Endpoint                             | Available |
-|-------------------|--------------------------------------|-----------|
-| Activity          | `GET activity`                       | ✅         |
-| Analytics         | `GET analytics`                      | ✅         |
-| Domains           | `{GET, PUT, DELETE} domains`         | ✅         |
-| Emails            | `POST send`                          | ✅         |
-| Messages          | `GET messages`                       | ✅         |
-| Recipients        | `{GET, DELETE} recipients`           | ✅         |
-| Templates         | `{GET, DELETE} templates`            | ✅         |
-| Tokens            | `{POST, PUT, DELETE} tokens`         | ✅         |
-| Webhooks          | `{GET, POST, PUT, DELETE} webhooks`  | ✅         |
-| SMS Sending       | `{POST} sms`                         | ✅         |
-| SMS Activity      | `{GET} sms-activity`                 | ✅         |
-| SMS Phone numbers | `{GET, PUT, DELETE} sms-numbers`     | ✅         |
-| SMS Recipients    | `{GET, PUT} sms-recipients`          | ✅         |
-| SMS Messages      | `{GET} sms-messages`                 | ✅         |
-| SMS Webhooks      | `{GET,POST,PUT,DELETE} sms-webhooks` | ✅         |
+| Feature group     | Endpoint                                | Available |
+|-------------------|-----------------------------------------|-----------|
+| Activity          | `GET activity`                          | ✅         |
+| Analytics         | `GET analytics`                         | ✅         |
+| Domains           | `{GET, PUT, DELETE} domains`            | ✅         |
+| Emails            | `POST send`                             | ✅         |
+| Messages          | `GET messages`                          | ✅         |
+| Recipients        | `{GET, DELETE} recipients`              | ✅         |
+| Templates         | `{GET, DELETE} templates`               | ✅         |
+| Tokens            | `{POST, PUT, DELETE} tokens`            | ✅         |
+| Webhooks          | `{GET, POST, PUT, DELETE} webhooks`     | ✅         |
+| SMS Sending       | `{POST} sms`                            | ✅         |
+| SMS Activity      | `{GET} sms-activity`                    | ✅         |
+| SMS Phone numbers | `{GET, PUT, DELETE} sms-numbers`        | ✅         |
+| SMS Recipients    | `{GET, PUT} sms-recipients`             | ✅         |
+| SMS Messages      | `{GET} sms-messages`                    | ✅         |
+| SMS Webhooks      | `{GET, POST, PUT, DELETE} sms-webhooks` | ✅         |
+| SMS Inbounds      | `{GET, POST, PUT, DELETE} sms-inbounds` | ✅         |
 
 *If, at the moment, some endpoint is not available, please use other available tools to access it. [Refer to official API docs for more info](https://developers.mailersend.com/).*
 
