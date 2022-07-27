@@ -87,6 +87,12 @@ MailerSend Python SDK
         - [Create an SMS webhook](#create-an-sms-webhook)
         - [Update a single SMS webhook](#update-a-single-sms-webhook)
         - [Delete an SMS webhook](#delete-an-sms-webhook)
+    - [SMS Inbounds](#sms-inbouds)
+        - [Get a list of SMS Inbound routes](#get-a-list-of-inbound-routes)
+        - [Get a single SMS Inbound route](#get-a-single-inbound-route)
+        - [Create an SMS Inbound route](#add-an-inbound-route)
+        - [Update an SMS Inbound route](#update-an-inbound-route)
+        - [Delete an SMS Inbound route](#delete-an-inbound-route)
     - [Tokens](#tokens)
         - [Create a token](#create-a-token)
         - [Pause / Unpause Token](#pause--unpause-token)
@@ -1644,6 +1650,109 @@ mailer = sms_webhooks.NewSmsWebhooks(api_key)
 sms_webhook_id = "aaui13enl12f2vzx"
 
 print(mailer.delete_webhook(sms_webhook_id))
+```
+
+### Get a list of SMS webhooks
+```python
+from mailersend import sms_webhooks
+
+api_key = "API key here"
+
+mailer = sms_webhooks.NewSmsWebhooks(api_key)
+
+#Request parameters
+sms_number_id = "9pq3enl6842vwrzx"
+
+print(mailer.get_webhooks(sms_number_id))
+```
+
+## SMS Inbouds
+
+### Get a list of SMS inbound routes
+```python
+from mailersend import sms_inbounds
+
+api_key = "API key here"
+
+mailer = sms_inbounds.NewSmsInbounds(api_key)
+
+#Request parameters
+sms_number_id = "123456789"
+enabled = True
+page = 1
+limit = 25
+
+print(mailer.get_inbound_routes(sms_number_id, enabled, page, limit))
+```
+
+### Get a single SMS inbound route
+```python
+from mailersend import sms_inbounds
+
+api_key = "API key here"
+
+mailer = sms_inbounds.NewSmsInbounds(api_key)
+
+#Request parameters
+sms_inbound_id = "123456789"
+
+print(mailer.get_inbound_route(sms_inbound_id))
+```
+
+### Create an SMS inbound route
+```python
+from mailersend import sms_inbounds
+
+api_key = "API key here"
+
+mailer = sms_inbounds.NewSmsInbounds(api_key)
+
+#Request parameters
+sms_number_id = "123456789"
+name = "My route"
+forward_url = "https://some.url"
+filter = {
+    "comparer": "equal",
+    "value": "START"
+}
+enabled = True
+
+print(mailer.create_inbound_route(sms_number_id, name, forward_url, filter, enabled))
+```
+
+### Update an SMS inbound route
+```python
+from mailersend import sms_inbounds
+
+api_key = "API key here"
+
+mailer = sms_inbounds.NewSmsInbounds(api_key)
+
+#Request parameters
+sms_number_id = "123456789"
+name = "New name"
+forward_url = "https://news.url"
+filter = {
+    "comparer": "contains",
+    "value": "some-value"
+}
+enabled = True
+
+print(mailer.update_inbound_route(sms_number_id, name, forward_url, filter, enabled))
+```
+
+### Delete an SMS inbound route
+```python
+from mailersend import sms_inbounds
+
+api_key = "API key here"
+
+mailer = sms_inbounds.NewSmsInbounds(api_key)
+
+#Request parameters
+sms_inbound_id = "123456789"
+
+print(mailer.delete_inbound_route()(sms_inbound_id))
 ```
 
 # Troubleshooting
