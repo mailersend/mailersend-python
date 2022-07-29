@@ -14,6 +14,12 @@ MailerSend Python SDK
         - [Advanced personalization](#advanced-personalization)
         - [Simple personalization](#simple-personalization)
         - [Send email with attachment](#send-email-with-attachment)
+    - [Email verification](#email-verification)
+        - [Get all email verification lists](#get-all-email-verification-lists) 
+        - [Get a single email verification list](#get-a-single-email-verification-list)
+        - [Create a email verification list](#create-a-email-verification-list)
+        - [Verify a list](#verify-a-list)
+        - [Get list results](#get-list-results)
     - [Bulk Email](#bulk-email)
         - [Send bulk email](#send-bulk-email)
         - [Get bulk email status](#get-bulk-email-status)
@@ -515,6 +521,81 @@ mailer.set_attachments(attachments, mail_body)
 
 mailer.send(mail_body)
 ```
+
+## Email Verification
+
+### Get all email verification lists
+
+```python
+from mailersend import email_verification
+
+api_key = "API key here"
+
+mailer = email_verification.NewEmailVerification(api_key)
+
+mailer.get_all_lists()
+```
+
+### Get a single email verification list
+
+```python
+from mailersend import email_verification
+
+api_key = "API key here"
+
+mailer = email_verification.NewEmailVerification(api_key)
+
+email_verification_list_id = 123456
+
+mailer.get_list(email_verification_list_id)
+```
+
+### Create a email verification list
+
+```python
+from mailersend import email_verification
+
+api_key = "API key here"
+
+mailer = email_verification.NewEmailVerification(api_key)
+
+name = "My List"
+emails = [
+    "some@email.com",
+    "another@email.com"
+]
+
+mailer.create_list(name, emails)
+```
+
+### Verify a list
+
+```python
+from mailersend import email_verification
+
+api_key = "API key here"
+
+mailer = email_verification.NewEmailVerification(api_key)
+
+email_verification_list_id = 123456
+
+mailer.verify_list(email_verification_list_id)
+```
+
+### Get list results
+
+```python
+from mailersend import email_verification
+
+api_key = "API key here"
+
+mailer = email_verification.NewEmailVerification(api_key)
+
+email_verification_list_id = 123456
+
+mailer.get_list_results(email_verification_list_id)
+```
+
 
 ## Bulk Email
 
