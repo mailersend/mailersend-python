@@ -1510,6 +1510,8 @@ webhook.delete_webhook("webhook-id")
 ## SMS
 
 ### Sending SMS messages
+
+Without personalization:
 ```python
 from mailersend import sms_sending
 
@@ -1517,10 +1519,10 @@ api_key = "API key here"
 
 mailer = sms_sending.NewSmsSending(api_key)
 
-#Number belonging to your account in E164 format
+# Number belonging to your account in E164 format
 number_from = "+11234567890"
 
-#You can add up to 50 recipient numbers
+# You can add up to 50 recipient numbers
 numbers_to = [
     "+11234567891",
     "+11234567892"
@@ -1528,6 +1530,41 @@ numbers_to = [
 text = "This is the text content"
 
 print(mailer.send_sms(number_from, numbers_to, text))
+```
+
+With personalization:
+```python
+from mailersend import sms_sending
+
+api_key = "API key here"
+
+mailer = sms_sending.NewSmsSending(api_key)
+
+# Number belonging to your account in E164 format
+number_from = "+11234567890"
+
+# You can add up to 50 recipient numbers
+numbers_to = [
+    "+11234567891",
+    "+11234567892"
+]
+text = "Hi {{name}} how are you?"
+personalization = [
+    {
+        "phone_number": "+11234567891",
+        "data": {
+            "name": "Mike"
+        }
+    },
+    {
+        "phone_number": "+11234567892",
+        "data": {
+            "name": "John"
+        }
+    }
+]
+
+print(mailer.send_sms(number_from, numbers_to, text, personalization))
 ```
 
 ## SMS Activity
