@@ -13,7 +13,7 @@ class NewSmsSending(base.NewAPIClient):
 
     pass
 
-    def send_sms(self, number_from, numbers_to, text):
+    def send_sms(self, number_from, numbers_to, text, personalization=None):
         """
         Send SMS message to one or more recipients
 
@@ -23,13 +23,18 @@ class NewSmsSending(base.NewAPIClient):
           number_from (str): Number belonging to your account in E164 format
           numbers_to (dict): Recipient phone numbers (up to 50)
           text (str): Message test
+          personalization: Allows using personalization in {{ var }} syntax. Can be used in the text fields
         """
 
         data = {
             "from": number_from,
             "to": numbers_to,
-            "text": text
+            "text": text,
+            "personalization": personalization
         }
+
+        if personalization is None:
+            data["personalization"] = []
 
         request = requests.post(
             f"{self.api_base}/sms", headers=self.headers_default, json=data
