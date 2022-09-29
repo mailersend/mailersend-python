@@ -606,7 +606,7 @@ from mailersend import emails
 
 api_key = "API key here"
 
-mailer = mailersend.NewEmail(api_key)
+mailer = emails.NewEmail(api_key)
 
 mail_list = [
   {
@@ -651,7 +651,7 @@ from mailersend import emails
 
 api_key = "API key here"
 
-mailer = mailersend.NewEmail(api_key)
+mailer = emails.NewEmail(api_key)
 
 print(mailer.get_bulk_status_by_id("bulk-email-id"))
 ```
