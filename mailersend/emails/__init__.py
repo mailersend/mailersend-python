@@ -92,6 +92,12 @@ class NewEmail(base.NewAPIClient):
         """
         message["reply_to"] = reply_to
 
+    def set_in_reply_to(self, in_reply_to, message):
+        """
+        Appends 'in reply to' on an e-mail
+        """
+        message["in_reply_to"] = in_reply_to
+
     def set_send_at(self, send_at, message):
         """
         Sets the 'send_at' parameter for scheduled messages
