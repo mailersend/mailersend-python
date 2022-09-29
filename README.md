@@ -507,7 +507,8 @@ attachments = [
     {
         "id": "my-attached-file",
         "filename": "file.jpg",
-        "content": f"{att_base64.decode('ascii')}"
+        "content": f"{att_base64.decode('ascii')}",
+        "disposition": "attachment"
     }
 ]
 
