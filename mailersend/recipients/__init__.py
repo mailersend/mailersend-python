@@ -205,7 +205,7 @@ class NewRecipient(base.NewAPIClient):
         """
         message = {}
         message["domain_id"] = domain_id
-        
+
         if ids is not None:
             message["ids"] = ids
         if remove_all is True:

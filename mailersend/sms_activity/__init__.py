@@ -13,7 +13,15 @@ class NewSmsActivity(base.NewAPIClient):
 
     pass
 
-    def get_activities(self, sms_number_id=None, date_from=None, date_to=None, status=[], page=None, limit=25):
+    def get_activities(
+        self,
+        sms_number_id=None,
+        date_from=None,
+        date_to=None,
+        status=[],
+        page=None,
+        limit=25,
+    ):
         """
         Retrieve every single data point of the activity that happened for a specific phone number.
 
@@ -37,7 +45,9 @@ class NewSmsActivity(base.NewAPIClient):
                     query_params[key] = value
 
         request = requests.get(
-            f"{self.api_base}/sms-activity", headers=self.headers_default, params=query_params
+            f"{self.api_base}/sms-activity",
+            headers=self.headers_default,
+            params=query_params,
         )
 
         return f"{request.status_code}\n{request.text}"
@@ -51,7 +61,8 @@ class NewSmsActivity(base.NewAPIClient):
         """
 
         request = requests.get(
-            f"{self.api_base}/sms-messages/{sms_message_id}", headers=self.headers_default
+            f"{self.api_base}/sms-messages/{sms_message_id}",
+            headers=self.headers_default,
         )
 
         return f"{request.status_code}\n{request.text}"

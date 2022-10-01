@@ -29,7 +29,9 @@ class NewSmsMessages(base.NewAPIClient):
             query_params[key] = value
 
         request = requests.get(
-            f"{self.api_base}/sms-messages", headers=self.headers_default, params=query_params
+            f"{self.api_base}/sms-messages",
+            headers=self.headers_default,
+            params=query_params,
         )
 
         return f"{request.status_code}\n{request.text}"
@@ -43,10 +45,8 @@ class NewSmsMessages(base.NewAPIClient):
         """
 
         request = requests.get(
-            f"{self.api_base}/sms-messages/{sms_message_id}", headers=self.headers_default
+            f"{self.api_base}/sms-messages/{sms_message_id}",
+            headers=self.headers_default,
         )
 
         return f"{request.status_code}\n{request.text}"
-
-
-

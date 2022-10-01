@@ -30,7 +30,7 @@ class NewSmsSending(base.NewAPIClient):
             "from": number_from,
             "to": numbers_to,
             "text": text,
-            "personalization": personalization
+            "personalization": personalization,
         }
 
         if personalization is None:

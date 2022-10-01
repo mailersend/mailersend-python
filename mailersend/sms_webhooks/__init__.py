@@ -23,12 +23,12 @@ class NewSmsWebhooks(base.NewAPIClient):
         """
 
         passed_arguments = locals()
-        query_params = {
-            "sms_number_id": sms_number_id
-        }
+        query_params = {"sms_number_id": sms_number_id}
 
         request = requests.get(
-            f"{self.api_base}/sms-webhooks", headers=self.headers_default, params=query_params
+            f"{self.api_base}/sms-webhooks",
+            headers=self.headers_default,
+            params=query_params,
         )
 
         return f"{request.status_code}\n{request.text}"
@@ -42,7 +42,8 @@ class NewSmsWebhooks(base.NewAPIClient):
         """
 
         request = requests.get(
-            f"{self.api_base}/sms-webhooks/{sms_webhook_id}", headers=self.headers_default
+            f"{self.api_base}/sms-webhooks/{sms_webhook_id}",
+            headers=self.headers_default,
         )
 
         return f"{request.status_code}\n{request.text}"
@@ -64,7 +65,7 @@ class NewSmsWebhooks(base.NewAPIClient):
             "name": name,
             "events": events,
             "sms_number_id": sms_number_id,
-            "enabled": int(enabled)
+            "enabled": int(enabled),
         }
 
         request = requests.post(
@@ -73,7 +74,9 @@ class NewSmsWebhooks(base.NewAPIClient):
 
         return f"{request.status_code}\n{request.text}"
 
-    def update_webhook(self, sms_webhook_id, url=None, name=None, events=None, enabled=None):
+    def update_webhook(
+        self, sms_webhook_id, url=None, name=None, events=None, enabled=None
+    ):
         """
         Update a single SMS Webhook.
 
@@ -96,7 +99,9 @@ class NewSmsWebhooks(base.NewAPIClient):
                     data[key] = value
 
         request = requests.put(
-            f"{self.api_base}/sms-webhooks/{sms_webhook_id}", headers=self.headers_default, json=data
+            f"{self.api_base}/sms-webhooks/{sms_webhook_id}",
+            headers=self.headers_default,
+            json=data,
         )
 
         return f"{request.status_code}\n{request.text}"
@@ -110,7 +115,8 @@ class NewSmsWebhooks(base.NewAPIClient):
         """
 
         request = requests.delete(
-            f"{self.api_base}/sms-webhooks/{sms_webhook_id}", headers=self.headers_default
+            f"{self.api_base}/sms-webhooks/{sms_webhook_id}",
+            headers=self.headers_default,
         )
 
         return f"{request.status_code}\n{request.text}"
