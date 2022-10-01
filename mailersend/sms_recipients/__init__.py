@@ -32,7 +32,9 @@ class NewSmsRecipients(base.NewAPIClient):
                 query_params[key] = value
 
         request = requests.get(
-            f"{self.api_base}/sms-recipients", headers=self.headers_default, params=query_params
+            f"{self.api_base}/sms-recipients",
+            headers=self.headers_default,
+            params=query_params,
         )
 
         return f"{request.status_code}\n{request.text}"
@@ -46,7 +48,8 @@ class NewSmsRecipients(base.NewAPIClient):
         """
 
         request = requests.get(
-            f"{self.api_base}/sms-recipients/{sms_recipient_id}", headers=self.headers_default
+            f"{self.api_base}/sms-recipients/{sms_recipient_id}",
+            headers=self.headers_default,
         )
 
         return f"{request.status_code}\n{request.text}"
@@ -60,15 +63,14 @@ class NewSmsRecipients(base.NewAPIClient):
           status (string)
         """
 
-        query_params = {
-            "status": status
-        }
+        query_params = {"status": status}
         data = {"sms_recipient_id": sms_recipient_id}
 
         request = requests.put(
             f"{self.api_base}/sms-recipients/{sms_recipient_id}",
-            headers=self.headers_default, params=query_params, json=data
+            headers=self.headers_default,
+            params=query_params,
+            json=data,
         )
 
         return f"{request.status_code}\n{request.text}"
-

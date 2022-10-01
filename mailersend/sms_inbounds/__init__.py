@@ -36,7 +36,9 @@ class NewSmsInbounds(base.NewAPIClient):
                     query_params[key] = value
 
         request = requests.get(
-            f"{self.api_base}/sms-inbounds", headers=self.headers_default, params=query_params
+            f"{self.api_base}/sms-inbounds",
+            headers=self.headers_default,
+            params=query_params,
         )
 
         return f"{request.status_code}\n{request.text}"
@@ -50,12 +52,15 @@ class NewSmsInbounds(base.NewAPIClient):
         """
 
         request = requests.get(
-            f"{self.api_base}/sms-inbounds/{sms_inbound_id}", headers=self.headers_default
+            f"{self.api_base}/sms-inbounds/{sms_inbound_id}",
+            headers=self.headers_default,
         )
 
         return f"{request.status_code}\n{request.text}"
 
-    def create_inbound_route(self, sms_number_id, name, forward_url, filter={}, enabled=True):
+    def create_inbound_route(
+        self, sms_number_id, name, forward_url, filter={}, enabled=True
+    ):
         """
         Add an SMS inbound route.
 
@@ -72,7 +77,7 @@ class NewSmsInbounds(base.NewAPIClient):
             "name": name,
             "forward_url": forward_url,
             "filter": filter,
-            "enabled": int(enabled)
+            "enabled": int(enabled),
         }
 
         request = requests.post(
@@ -81,7 +86,9 @@ class NewSmsInbounds(base.NewAPIClient):
 
         return f"{request.status_code}\n{request.text}"
 
-    def update_inbound_route(self, sms_inbound_id, name=None, forward_url=None, filter=None, enabled=None):
+    def update_inbound_route(
+        self, sms_inbound_id, name=None, forward_url=None, filter=None, enabled=None
+    ):
         """
         Update an inbound route.
 
@@ -104,7 +111,9 @@ class NewSmsInbounds(base.NewAPIClient):
                     data[key] = value
 
         request = requests.put(
-            f"{self.api_base}/sms-inbounds/{sms_inbound_id}", headers=self.headers_default, json=data
+            f"{self.api_base}/sms-inbounds/{sms_inbound_id}",
+            headers=self.headers_default,
+            json=data,
         )
 
         return f"{request.status_code}\n{request.text}"
@@ -118,7 +127,8 @@ class NewSmsInbounds(base.NewAPIClient):
         """
 
         request = requests.delete(
-            f"{self.api_base}/sms-inbounds/{sms_inbound_id}", headers=self.headers_default
+            f"{self.api_base}/sms-inbounds/{sms_inbound_id}",
+            headers=self.headers_default,
         )
 
         return f"{request.status_code}\n{request.text}"

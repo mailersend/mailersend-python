@@ -34,7 +34,9 @@ class NewSmsNumbers(base.NewAPIClient):
                     query_params[key] = value
 
         request = requests.get(
-            f"{self.api_base}/sms-numbers", headers=self.headers_default, params=query_params
+            f"{self.api_base}/sms-numbers",
+            headers=self.headers_default,
+            params=query_params,
         )
 
         return f"{request.status_code}\n{request.text}"
@@ -62,13 +64,14 @@ class NewSmsNumbers(base.NewAPIClient):
            paused (bool)
         """
 
-        query_params = {
-            "paused": int(paused)
-        }
+        query_params = {"paused": int(paused)}
         data = {"sms_number_id": sms_number_id}
 
         request = requests.put(
-            f"{self.api_base}/sms-numbers/{sms_number_id}", headers=self.headers_default, params=query_params, json=data
+            f"{self.api_base}/sms-numbers/{sms_number_id}",
+            headers=self.headers_default,
+            params=query_params,
+            json=data,
         )
 
         return f"{request.status_code}\n{request.text}"
@@ -84,7 +87,9 @@ class NewSmsNumbers(base.NewAPIClient):
         data = {"sms_number_id": sms_number_id}
 
         request = requests.delete(
-            f"{self.api_base}/sms-numbers/{sms_number_id}", headers=self.headers_default, json=data
+            f"{self.api_base}/sms-numbers/{sms_number_id}",
+            headers=self.headers_default,
+            json=data,
         )
 
         return f"{request.status_code}\n{request.text}"
