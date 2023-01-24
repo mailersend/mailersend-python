@@ -10,7 +10,7 @@ keywords = ["mailersend", "mail"]
 [tool.poetry.dependencies]
 python = "^3.7"
 requests = "^2.25.0"
-pre-commit = "^2.12.1"
+pre-commit = "^3.0.0"
 setuptools = "^65.0.0"
 
 [tool.poetry.dev-dependencies]
