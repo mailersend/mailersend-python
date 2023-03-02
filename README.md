@@ -142,8 +142,7 @@ $ python -m pip install mailersend
 
 ## Authentication
 
-You can use either the `MAILERSEND_API_KEY` environment variable or explicitly
-set a variable in-code.
+We recommend you to define `MAILERSEND_API_KEY` environment variable in the `.env` file, and use it to store the API key.
 
 - Using environment variable
 ```python
