@@ -5,118 +5,124 @@ MailerSend Python SDK
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 
 # Table of Contents
+- [Table of Contents](#table-of-contents)
 - [Installation](#installation)
+  - [Requirements](#requirements)
+  - [Authentication](#authentication)
 - [Usage](#usage)
-    - [Email](#email)
-        - [Send an email](#send-an-email)
-        - [Add CC, BCC recipients](#add-cc-bcc-recipients)
-        - [Send a template-based email](#send-a-template-based-email)
-        - [Advanced personalization](#advanced-personalization)
-        - [Simple personalization](#simple-personalization)
-        - [Send email with attachment](#send-email-with-attachment)
-    - [Email verification](#email-verification)
-        - [Get all email verification lists](#get-all-email-verification-lists) 
-        - [Get a single email verification list](#get-a-single-email-verification-list)
-        - [Create a email verification list](#create-a-email-verification-list)
-        - [Verify a list](#verify-a-list)
-        - [Get list results](#get-list-results)
-    - [Bulk Email](#bulk-email)
-        - [Send bulk email](#send-bulk-email)
-        - [Get bulk email status](#get-bulk-email-status)
-    - [Activity](#activity)
-        - [Get a list of activities (simple)](#get-a-list-of-activities-simple)
-        - [Get a list of activities (full)](#get-a-list-of-activities-full)
-    - [Analytics](#analytics)
-        - [Activity data by date](#activity-data-by-date)
-        - [Opens by country](#opens-by-country)
-        - [Opens by user-agent name](#opens-by-user-agent-name)
-        - [Opens by reading environment](#opens-by-reading-environment)
-    - [Inbound Routes](#inbound-routes)
-        - [Get a list of inbound routes](#get-a-list-of-inbound-routes)
-        - [Get a single inbound route](#get-a-single-inbound-route)
-        - [Add an inbound route](#add-an-inbound-route)
-        - [Update an inbound route](#update-an-inbound-route)
-        - [Delete an inbound route](#delete-an-inbound-route)
-    - [Domains](#domains)
-        - [Get a list of domains](#get-a-list-of-domains)
-        - [Get a single domain](#get-a-single-domain)
-        - [Get a single domain using helper function](#get-a-single-domain-using-helper-function)
-        - [Add a domain](#add-a-domain)
-        - [Delete a domain](#delete-a-domain)
-        - [Get a list of recipients per domain](#get-a-list-of-recipients-per-domain)
-        - [Update domain settings](#update-domain-settings)
-        - [Get dns records](#get-dns-records)
-        - [Verify a domain](#verify-a-domain)
-    - [Messages](#messages)
-        - [Get a list of messages](#get-a-list-of-messages)
-        - [Get a single message](#get-a-single-message)
-    - [Scheduled Messages](#scheduled-messages)
-        - [Get a list of scheduled messages](#get-a-list-of-scheduled-messages)
-        - [Get a single scheduled message](#get-a-single-scheduled-message)
-        - [Delete a scheduled message](#delete-a-scheduled-message)
-    - [Recipients](#recipients)
-        - [Get a list of recipients](#get-a-list-of-recipients)
-        - [Get a single recipient](#get-a-single-recipient)
-        - [Delete a recipient](#delete-a-recipient)
-        - [Get recipients from a blocklist](#get-recipients-from-a-blocklist)
-        - [Get recipients from hard bounces](#get-recipients-from-hard-bounces)
-        - [Get recipients from spam complaints](#get-recipients-from-spam-complaints)
-        - [Get recipients from unsubscribes](#get-recipients-from-unsubscribes)
-        - [Add recipients to blocklist](#add-recipients-to-blocklist)
-        - [Add hard bounced recipients](#add-hard-bounced-recipients)
-        - [Add spam complaints](#add-spam-complaints)
-        - [Add recipients to unsubscribe list](#add-recipients-to-unsubcribe-list)
-        - [Delete recipients from blocklist](#delete-recipients-from-blocklist)
-        - [Delete hard bounced recipients](#delete-hard-bounced-recipients)
-        - [Delete spam complaints](#delete-spam-complaints)
-        - [Delete recipients from unsubscribe list](#delete-recipients-from-unsubscribe-list)
-    - [SMS sending](#sms)
-        - [Sending SMS messages](#sending-sms-messages)
-    - [SMS Activity](#sms-activity)
-        - [Get a list of activities](#get-a-list-of-activities)
-        - [Get activity of a single message](#get-activity-of-a-single-message)
-    - [SMS Phone Numbers](#sms-phone-numbers)
-        - [Get a list of SMS phone numbers](#get-a-list-of-sms-phone-numbers)
-        - [Get an SMS phone number](#get-an-sms-phone-number)
-        - [Update a single SMS phone number](#update-a-single-sms-phone-number)
-        - [Delete an SMS phone number](#delete-an-sms-phone-number)
-    - [SMS Recipients](#sms-recipients)
-        - [Get a list of SMS recipients](#get-a-list-of-sms-recipients)
-        - [Get an SMS recipient](#get-an-sms-recipient)
-        - [Update a single SMS recipient](#update-a-single-sms-recipient)
-    - [SMS Messages](#sms-messages)
-        - [Get a list of SMS messages](#get-a-list-of-sms-messages)
-        - [Get an SMS message](#get-an-sms-message)
-    - [SMS Webhooks](#sms-webhooks)
-        - [Get a list of SMS webhooks](#get-a-list-of-sms-webhooks)
-        - [Get a single SMS webhook](#get-a-single-sms-webhook)
-        - [Create an SMS webhook](#create-an-sms-webhook)
-        - [Update a single SMS webhook](#update-a-single-sms-webhook)
-        - [Delete an SMS webhook](#delete-an-sms-webhook)
-    - [SMS Inbounds](#sms-inbouds)
-        - [Get a list of SMS Inbound routes](#get-a-list-of-inbound-routes)
-        - [Get a single SMS Inbound route](#get-a-single-inbound-route)
-        - [Create an SMS Inbound route](#add-an-inbound-route)
-        - [Update an SMS Inbound route](#update-an-inbound-route)
-        - [Delete an SMS Inbound route](#delete-an-inbound-route)
-    - [Tokens](#tokens)
-        - [Create a token](#create-a-token)
-        - [Pause / Unpause Token](#pause--unpause-token)
-        - [Delete a token](#delete-a-token)
-    - [Templates](#templates)
-        - [Get a list of templates](#get-a-list-of-templates)
-        - [Get a single template](#get-a-single-template)
-        - [Delete a template](#delete-template)
-    - [Webhooks](#webhooks)
-        - [Get a list of webhooks](#get-a-list-of-webhooks)
-        - [Get a single webhook](#get-a-single-webhook)
-        - [Create a webhook](#create-a-webhook)
-        - [Create a disabled webhook](#create-a-disabled-webhook)
-        - [Update a Webhook](#update-a-webhook)
-        - [Delete a Webhook](#delete-a-webhook)
+  - [Email](#email)
+    - [Send an email](#send-an-email)
+    - [Add CC, BCC recipients](#add-cc-bcc-recipients)
+    - [Send a template-based email](#send-a-template-based-email)
+    - [Advanced personalization](#advanced-personalization)
+    - [Simple personalization](#simple-personalization)
+    - [Send email with attachment](#send-email-with-attachment)
+  - [Email Verification](#email-verification)
+    - [Get all email verification lists](#get-all-email-verification-lists)
+    - [Get a single email verification list](#get-a-single-email-verification-list)
+    - [Create a email verification list](#create-a-email-verification-list)
+    - [Verify a list](#verify-a-list)
+    - [Get list results](#get-list-results)
+  - [Bulk Email](#bulk-email)
+    - [Send bulk email](#send-bulk-email)
+    - [Get bulk email status](#get-bulk-email-status)
+  - [Activity](#activity)
+    - [Get a list of activities (simple)](#get-a-list-of-activities-simple)
+    - [Get a list of activities (full)](#get-a-list-of-activities-full)
+  - [Analytics](#analytics)
+    - [Activity data by date](#activity-data-by-date)
+    - [Opens by country](#opens-by-country)
+    - [Opens by user-agent name](#opens-by-user-agent-name)
+    - [Opens by reading environment](#opens-by-reading-environment)
+  - [Inbound Routes](#inbound-routes)
+    - [Get a list of inbound routes](#get-a-list-of-inbound-routes)
+    - [Get a single inbound route](#get-a-single-inbound-route)
+    - [Add an inbound route](#add-an-inbound-route)
+    - [Update an inbound route](#update-an-inbound-route)
+    - [Delete an inbound route](#delete-an-inbound-route)
+  - [Domains](#domains)
+    - [Get a list of domains](#get-a-list-of-domains)
+    - [Get a single domain](#get-a-single-domain)
+    - [Get a single domain using helper function](#get-a-single-domain-using-helper-function)
+    - [Add a domain](#add-a-domain)
+    - [Delete a domain](#delete-a-domain)
+    - [Get a list of recipients per domain](#get-a-list-of-recipients-per-domain)
+    - [Update domain settings](#update-domain-settings)
+    - [Get DNS Records](#get-dns-records)
+    - [Verify a domain](#verify-a-domain)
+  - [Messages](#messages)
+    - [Get a list of messages](#get-a-list-of-messages)
+    - [Get a single message](#get-a-single-message)
+  - [Scheduled messages](#scheduled-messages)
+    - [Get a list of scheduled messages](#get-a-list-of-scheduled-messages)
+    - [Get a single scheduled message](#get-a-single-scheduled-message)
+    - [Delete a scheduled message](#delete-a-scheduled-message)
+  - [Recipients](#recipients)
+    - [Get a list of recipients](#get-a-list-of-recipients)
+    - [Get a single recipient](#get-a-single-recipient)
+    - [Delete a recipient](#delete-a-recipient)
+    - [Get recipients from a blocklist](#get-recipients-from-a-blocklist)
+    - [Get recipients from hard bounces](#get-recipients-from-hard-bounces)
+    - [Get recipients from spam complaints](#get-recipients-from-spam-complaints)
+    - [Get recipients from unsubscribes](#get-recipients-from-unsubscribes)
+    - [Add recipients to blocklist](#add-recipients-to-blocklist)
+    - [Add hard bounced recipients](#add-hard-bounced-recipients)
+    - [Add spam complaints](#add-spam-complaints)
+    - [Add recipients to unsubscribe list](#add-recipients-to-unsubscribe-list)
+    - [Delete recipients from blocklist](#delete-recipients-from-blocklist)
+    - [Delete hard bounced recipients](#delete-hard-bounced-recipients)
+    - [Delete spam complaints](#delete-spam-complaints)
+    - [Delete recipients from unsubscribe list](#delete-recipients-from-unsubscribe-list)
+  - [Tokens](#tokens)
+    - [Create a token](#create-a-token)
+    - [Pause / Unpause Token](#pause--unpause-token)
+    - [Delete a Token](#delete-a-token)
+  - [Templates](#templates)
+    - [Get a list of templates](#get-a-list-of-templates)
+    - [Get a single template](#get-a-single-template)
+    - [Delete template](#delete-template)
+  - [Webhooks](#webhooks)
+    - [Get a list of webhooks](#get-a-list-of-webhooks)
+    - [Get a single webhook](#get-a-single-webhook)
+    - [Create a Webhook](#create-a-webhook)
+    - [Create a disabled webhook](#create-a-disabled-webhook)
+    - [Update a Webhook](#update-a-webhook)
+    - [Disable/Enable a Webhook](#disableenable-a-webhook)
+    - [Delete a Webhook](#delete-a-webhook)
+  - [SMS](#sms)
+    - [Sending SMS messages](#sending-sms-messages)
+  - [SMS Activity](#sms-activity)
+    - [Get a list of activities](#get-a-list-of-activities)
+    - [Get activity of a single message](#get-activity-of-a-single-message)
+  - [SMS Phone Numbers](#sms-phone-numbers)
+    - [Get a list of SMS phone numbers](#get-a-list-of-sms-phone-numbers)
+    - [Get an SMS phone number](#get-an-sms-phone-number)
+    - [Update a single SMS phone number](#update-a-single-sms-phone-number)
+    - [Delete an SMS phone number](#delete-an-sms-phone-number)
+  - [SMS Recipients](#sms-recipients)
+    - [Get a list of SMS recipients](#get-a-list-of-sms-recipients)
+    - [Get an SMS recipient](#get-an-sms-recipient)
+    - [Update a single SMS recipient](#update-a-single-sms-recipient)
+  - [SMS Messages](#sms-messages)
+    - [Get a list of SMS messages](#get-a-list-of-sms-messages)
+    - [Get an SMS message](#get-an-sms-message)
+  - [SMS Webhooks](#sms-webhooks)
+    - [Get a list of SMS webhooks](#get-a-list-of-sms-webhooks)
+    - [Get a single SMS webhook](#get-a-single-sms-webhook)
+    - [Create an SMS webhook](#create-an-sms-webhook)
+    - [Update a single SMS webhook](#update-a-single-sms-webhook)
+    - [Delete an SMS webhook](#delete-an-sms-webhook)
+    - [Get a list of SMS webhooks](#get-a-list-of-sms-webhooks-1)
+  - [SMS Inbouds](#sms-inbouds)
+    - [Get a list of SMS inbound routes](#get-a-list-of-sms-inbound-routes)
+    - [Get a single SMS inbound route](#get-a-single-sms-inbound-route)
+    - [Create an SMS inbound route](#create-an-sms-inbound-route)
+    - [Update an SMS inbound route](#update-an-sms-inbound-route)
+    - [Delete an SMS inbound route](#delete-an-sms-inbound-route)
 - [Troubleshooting](#troubleshooting)
-    - [Emails not being sent](#emails-not-being-sent)
+  - [Emails not being sent](#emails-not-being-sent)
 - [Testing](#testing)
+- [Available endpoints](#available-endpoints)
 - [Support and Feedback](#support-and-feedback)
 - [License](#license)
 
@@ -182,10 +188,11 @@ mailer.send(mail_body)
 - Explicit declaration
 ```python
 from mailersend import emails
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = emails.NewEmail(api_key)
+mailer = emails.NewEmail(os.getenv('MAILERSEND_API_KEY'))
 
 # define an empty dict to populate with mail values
 mail_body = {}
@@ -228,10 +235,11 @@ mailer.send(mail_body)
 
 ```python
 from mailersend import emails
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = emails.NewEmail(api_key)
+mailer = emails.NewEmail(os.getenv('MAILERSEND_API_KEY'))
 
 # define an empty dict to populate with mail values
 mail_body = {}
@@ -270,10 +278,11 @@ mailer.send(mail_body)
 
 ```python
 from mailersend import emails
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = emails.NewEmail(api_key)
+mailer = emails.NewEmail(os.getenv('MAILERSEND_API_KEY'))
 
 # define an empty dict to populate with mail values
 mail_body = {}
@@ -319,10 +328,11 @@ mailer.send(mail_body)
 
 ```python
 from mailersend import emails
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = emails.NewEmail(api_key)
+mailer = emails.NewEmail(os.getenv('MAILERSEND_API_KEY'))
 
 # define an empty dict to populate with mail values
 mail_body = {}
@@ -366,10 +376,11 @@ mailer.send(mail_body)
 
 ```python
 from mailersend import emails
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = emails.NewEmail(api_key)
+mailer = emails.NewEmail(os.getenv('MAILERSEND_API_KEY'))
 
 # define an empty dict to populate with mail values
 mail_body = {}
@@ -420,10 +431,11 @@ mailer.send(mail_body)
 
 ```python
 from mailersend import emails
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = emails.NewEmail(api_key)
+mailer = emails.NewEmail(os.getenv('MAILERSEND_API_KEY'))
 
 # define an empty dict to populate with mail values
 mail_body = {}
@@ -468,10 +480,11 @@ mailer.send(mail_body)
 ```python
 from mailersend import emails
 import base64
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = emails.NewEmail(api_key)
+mailer = emails.NewEmail(os.getenv('MAILERSEND_API_KEY'))
 
 # define an empty dict to populate with mail values
 mail_body = {}
@@ -529,10 +542,11 @@ mailer.send(mail_body)
 
 ```python
 from mailersend import email_verification
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = email_verification.NewEmailVerification(api_key)
+mailer = email_verification.NewEmailVerification(os.getenv('MAILERSEND_API_KEY'))
 
 mailer.get_all_lists()
 ```
@@ -541,10 +555,11 @@ mailer.get_all_lists()
 
 ```python
 from mailersend import email_verification
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = email_verification.NewEmailVerification(api_key)
+mailer = email_verification.NewEmailVerification(os.getenv('MAILERSEND_API_KEY'))
 
 email_verification_list_id = 123456
 
@@ -555,10 +570,11 @@ mailer.get_list(email_verification_list_id)
 
 ```python
 from mailersend import email_verification
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = email_verification.NewEmailVerification(api_key)
+mailer = email_verification.NewEmailVerification(os.getenv('MAILERSEND_API_KEY'))
 
 name = "My List"
 emails = [
@@ -573,10 +589,11 @@ mailer.create_list(name, emails)
 
 ```python
 from mailersend import email_verification
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = email_verification.NewEmailVerification(api_key)
+mailer = email_verification.NewEmailVerification(os.getenv('MAILERSEND_API_KEY'))
 
 email_verification_list_id = 123456
 
@@ -587,10 +604,11 @@ mailer.verify_list(email_verification_list_id)
 
 ```python
 from mailersend import email_verification
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = email_verification.NewEmailVerification(api_key)
+mailer = email_verification.NewEmailVerification(os.getenv('MAILERSEND_API_KEY'))
 
 email_verification_list_id = 123456
 
@@ -604,10 +622,11 @@ mailer.get_list_results(email_verification_list_id)
 
 ```python
 from mailersend import emails
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = emails.NewEmail(api_key)
+mailer = emails.NewEmail(os.getenv('MAILERSEND_API_KEY'))
 
 mail_list = [
   {
@@ -649,10 +668,11 @@ print(mailer.send_bulk(mail_list))
 
 ```python
 from mailersend import emails
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = emails.NewEmail(api_key)
+mailer = emails.NewEmail(os.getenv('MAILERSEND_API_KEY'))
 
 print(mailer.get_bulk_status_by_id("bulk-email-id"))
 ```
@@ -665,10 +685,11 @@ print(mailer.get_bulk_status_by_id("bulk-email-id"))
 
 ```python
 from mailersend import activity
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = activity.NewActivity(api_key)
+mailer = activity.NewActivity(os.getenv('MAILERSEND_API_KEY'))
 
 mailer.get_domain_activity("domain-id")
 ```
@@ -677,10 +698,11 @@ mailer.get_domain_activity("domain-id")
 
 ```python
 from mailersend import activity
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = activity.NewActivity(api_key)
+mailer = activity.NewActivity(os.getenv('MAILERSEND_API_KEY'))
 
 page = 1
 limit = 20
@@ -709,10 +731,11 @@ mailer.get_domain_activity("domain-id", page, limit, date_from, date_to, events)
 
 ```python
 from mailersend import analytics
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = analytics.NewAnalytics(api_key)
+mailer = analytics.NewAnalytics(os.getenv('MAILERSEND_API_KEY'))
 
 date_from = 1623073576
 date_to = 1623074976
@@ -732,10 +755,11 @@ mailer.get_activity_by_date(date_from, date_to, events, domain_id, group_by)
 
 ```python
 from mailersend import analytics
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = analytics.NewAnalytics(api_key)
+mailer = analytics.NewAnalytics(os.getenv('MAILERSEND_API_KEY'))
 
 date_from = 1623073576
 date_to = 1623074976
@@ -750,10 +774,11 @@ mailer.get_opens_by_country(date_from, date_to, domain_id)
 
 ```python
 from mailersend import analytics
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = analytics.NewAnalytics(api_key)
+mailer = analytics.NewAnalytics(os.getenv('MAILERSEND_API_KEY'))
 
 date_from = 1623073576
 date_to = 1623074976
@@ -768,10 +793,11 @@ mailer.get_opens_by_user_agent(date_from, date_to, domain_id)
 
 ```python
 from mailersend import analytics
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = analytics.NewAnalytics(api_key)
+mailer = analytics.NewAnalytics(os.getenv('MAILERSEND_API_KEY'))
 
 date_from = 1623073576
 date_to = 1623074976
@@ -788,10 +814,11 @@ mailer.get_opens_by_reading_environment(date_from, date_to, domain_id)
 
 ```python
 from mailersend import inbound_routing
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = inbound_routing.NewInbound(api_key)
+mailer = inbound_routing.NewInbound(os.getenv('MAILERSEND_API_KEY'))
 
 print(mailer.get_inbound_routes())
 ```
@@ -800,10 +827,11 @@ print(mailer.get_inbound_routes())
 
 ```python
 from mailersend import inbound_routing
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = inbound_routing.NewInbound(api_key)
+mailer = inbound_routing.NewInbound(os.getenv('MAILERSEND_API_KEY'))
 
 print(mailer.get_inbound_by_id("inbound-id"))
 ```
@@ -812,8 +840,11 @@ print(mailer.get_inbound_by_id("inbound-id"))
 
 ```python
 from mailersend import inbound_routing
+from dotenv import load_dotenv
 
-mailer = inbound_routing.NewInbound()
+load_dotenv()
+
+mailer = inbound_routing.NewInbound(os.getenv('MAILERSEND_API_KEY'))
 
 options = {}
 
@@ -849,10 +880,13 @@ print(mailer.add_inbound_route())
 
 ```python
 from mailersend import inbound_routing
+from dotenv import load_dotenv
+
+load_dotenv()
 
 route_id = "inbound-route-id"
 
-mailer = inbound_routing.NewInbound()
+mailer = inbound_routing.NewInbound(os.getenv('MAILERSEND_API_KEY'))
 
 options = {}
 
@@ -888,11 +922,13 @@ print(mailer.update_inbound_route(route_id))
 
 ```python
 from mailersend import inbound_routing
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
+
 route_id = "inbound-route-id"
 
-mailer = inbound_routing.NewInbound(api_key)
+mailer = inbound_routing.NewInbound(os.getenv('MAILERSEND_API_KEY'))
 
 print(mailer.delete_inbound_route(route_id))
 ```
@@ -903,10 +939,11 @@ print(mailer.delete_inbound_route(route_id))
 
 ```python
 from mailersend import domains
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = domains.NewDomain(api_key)
+mailer = domains.NewDomain(os.getenv('MAILERSEND_API_KEY'))
 
 mailer.get_domains()
 ```
@@ -915,10 +952,11 @@ mailer.get_domains()
 
 ```python
 from mailersend import domains
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = domains.NewDomain(api_key)
+mailer = domains.NewDomain(os.getenv('MAILERSEND_API_KEY'))
 
 mailer.get_domain_by_id("domain-id")
 ```
@@ -928,11 +966,12 @@ mailer.get_domain_by_id("domain-id")
 ```python
 from mailersend import domains
 from mailersend import utils
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = domains.NewDomain(api_key)
-helper = utils.NewHelper(api_key)
+mailer = domains.NewDomain(os.getenv('MAILERSEND_API_KEY'))
+helper = utils.NewHelper(os.getenv('MAILERSEND_API_KEY'))
 
 mailer.get_domain_by_id(helper.get_id_by_name("domains","domain-name"))
 ```
@@ -943,10 +982,11 @@ You can find a full list of settings [here](https://developers.mailersend.com/ap
 
 ```python
 from mailersend import domains
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = domains.NewDomain(api_key)
+mailer = domains.NewDomain(os.getenv('MAILERSEND_API_KEY'))
 
 mailer.add_domain("name", "example.com")
 ```
@@ -956,10 +996,11 @@ mailer.add_domain("name", "example.com")
 
 ```python
 from mailersend import domains
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = domains.NewDomain(api_key)
+mailer = domains.NewDomain(os.getenv('MAILERSEND_API_KEY'))
 
 mailer.delete_domain("domain-id")
 ```
@@ -968,10 +1009,11 @@ mailer.delete_domain("domain-id")
 
 ```python
 from mailersend import domains
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = domains.NewDomain(api_key)
+mailer = domains.NewDomain(os.getenv('MAILERSEND_API_KEY'))
 
 mailer.get_recipients_for_domain("domain-id")
 ```
@@ -982,10 +1024,11 @@ You can find a full list of settings [here](https://developers.mailersend.com/ap
 
 ```python
 from mailersend import domains
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = domains.NewDomain(api_key)
+mailer = domains.NewDomain(os.getenv('MAILERSEND_API_KEY'))
 
 mailer.update_domain_setting("domain-id", "send_paused", True)
 ```
@@ -994,10 +1037,11 @@ mailer.update_domain_setting("domain-id", "send_paused", True)
 
 ```python
 from mailersend import domains
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = domains.NewDomain(api_key)
+mailer = domains.NewDomain(os.getenv('MAILERSEND_API_KEY'))
 
 mailer.get_dns_records("domain-id")
 ```
@@ -1006,10 +1050,11 @@ mailer.get_dns_records("domain-id")
 
 ```python
 from mailersend import domains
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = domains.NewDomain(api_key)
+mailer = domains.NewDomain(os.getenv('MAILERSEND_API_KEY'))
 
 mailer.verify_domain("domain-id")
 ```
@@ -1021,10 +1066,11 @@ mailer.verify_domain("domain-id")
 
 ```python
 from mailersend import messages
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = messages.NewMessage(api_key)
+mailer = messages.NewMessage(os.getenv('MAILERSEND_API_KEY'))
 
 mailer.get_messages()
 ```
@@ -1033,10 +1079,11 @@ mailer.get_messages()
 
 ```python
 from mailersend import messages
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = messages.NewMessage(api_key)
+mailer = messages.NewMessage(os.getenv('MAILERSEND_API_KEY'))
 
 mailer.get_message_by_id("message-id")
 ```
@@ -1047,10 +1094,11 @@ mailer.get_message_by_id("message-id")
 
 ```python
 from mailersend import scheduled_messages
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = scheduled_messages.NewMessageSchedule(api_key)
+mailer = scheduled_messages.NewMessageSchedule(os.getenv('MAILERSEND_API_KEY'))
 
 print(mailer.get_scheduled_messages())
 ```
@@ -1059,10 +1107,11 @@ print(mailer.get_scheduled_messages())
 
 ```python
 from mailersend import scheduled_messages
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = scheduled_messages.NewMessageSchedule(api_key)
+mailer = scheduled_messages.NewMessageSchedule(os.getenv('MAILERSEND_API_KEY'))
 
 print(mailer.get_scheduled_message_by_id("scheduled-message-id"))
 ```
@@ -1071,10 +1120,11 @@ print(mailer.get_scheduled_message_by_id("scheduled-message-id"))
 
 ```python
 from mailersend import scheduled_messages
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = scheduled_messages.NewMessageSchedule(api_key)
+mailer = scheduled_messages.NewMessageSchedule(os.getenv('MAILERSEND_API_KEY'))
 
 print(mailer.delete_scheduled_message("scheduled-message-id"))
 ```
@@ -1085,10 +1135,11 @@ print(mailer.delete_scheduled_message("scheduled-message-id"))
 
 ```python
 from mailersend import recipients
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = recipients.NewRecipient(api_key)
+mailer = recipients.NewRecipient(os.getenv('MAILERSEND_API_KEY'))
 
 mailer.get_recipients()
 ```
@@ -1097,10 +1148,11 @@ mailer.get_recipients()
 
 ```python
 from mailersend import recipients
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = recipients.NewRecipient(api_key)
+mailer = recipients.NewRecipient(os.getenv('MAILERSEND_API_KEY'))
 
 mailer.get_recipient_by_id("recipient-id")
 ```
@@ -1109,10 +1161,11 @@ mailer.get_recipient_by_id("recipient-id")
 
 ```python
 from mailersend import recipients
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = recipients.NewRecipient(api_key)
+mailer = recipients.NewRecipient(os.getenv('MAILERSEND_API_KEY'))
 
 mailer.delete_recipient("recipient-id")
 ```
@@ -1121,10 +1174,11 @@ mailer.delete_recipient("recipient-id")
 
 ```python
 from mailersend import recipients
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = recipients.NewRecipient(api_key)
+mailer = recipients.NewRecipient(os.getenv('MAILERSEND_API_KEY'))
 
 mailer.get_recipients_from_blocklist("domain-id")
 ```
@@ -1133,10 +1187,11 @@ mailer.get_recipients_from_blocklist("domain-id")
 
 ```python
 from mailersend import recipients
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = recipients.NewRecipient(api_key)
+mailer = recipients.NewRecipient(os.getenv('MAILERSEND_API_KEY'))
 
 mailer.get_hard_bounces("domain-id")
 ```
@@ -1145,10 +1200,11 @@ mailer.get_hard_bounces("domain-id")
 
 ```python
 from mailersend import recipients
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = recipients.NewRecipient(api_key)
+mailer = recipients.NewRecipient(os.getenv('MAILERSEND_API_KEY'))
 
 mailer.get_spam_complaints("domain-id")
 ```
@@ -1157,10 +1213,11 @@ mailer.get_spam_complaints("domain-id")
 
 ```python
 from mailersend import recipients
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = recipients.NewRecipient(api_key)
+mailer = recipients.NewRecipient(os.getenv('MAILERSEND_API_KEY'))
 
 mailer.get_unsubscribes("domain-id")
 ```
@@ -1171,10 +1228,11 @@ Using recipients:
 
 ```python
 from mailersend import recipients
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = recipients.NewRecipient(api_key)
+mailer = recipients.NewRecipient(os.getenv('MAILERSEND_API_KEY'))
 
 recipient_list = [
     'blocked@client.com'
@@ -1187,10 +1245,11 @@ Using patterns:
 
 ```python
 from mailersend import recipients
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = recipients.NewRecipient(api_key)
+mailer = recipients.NewRecipient(os.getenv('MAILERSEND_API_KEY'))
 
 recipient_patterns = [
     '*@client.com'
@@ -1203,10 +1262,11 @@ mailer.add_to_blocklist("domain-id", patterns=recipient_patterns)
 
 ```python
 from mailersend import recipients
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = recipients.NewRecipient(api_key)
+mailer = recipients.NewRecipient(os.getenv('MAILERSEND_API_KEY'))
 
 recipient_list = [
     "your@client.com"
@@ -1219,10 +1279,11 @@ mailer.add_hard_bounces("domain-id", recipient_list)
 
 ```python
 from mailersend import recipients
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = recipients.NewRecipient(api_key)
+mailer = recipients.NewRecipient(os.getenv('MAILERSEND_API_KEY'))
 
 recipient_list = [
     "your@client.com"
@@ -1235,10 +1296,11 @@ mailer.add_spam_complaints("domain-id", recipient_list)
 
 ```python
 from mailersend import recipients
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = recipients.NewRecipient(api_key)
+mailer = recipients.NewRecipient(os.getenv('MAILERSEND_API_KEY'))
 
 recipient_list = [
     "your@client.com"
@@ -1251,10 +1313,11 @@ mailer.add_unsubscribes("domain-id", recipient_list)
 
 ```python
 from mailersend import recipients
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = recipients.NewRecipient(api_key)
+mailer = recipients.NewRecipient(os.getenv('MAILERSEND_API_KEY'))
 
 recipient_list = [
     "your@client.com"
@@ -1267,10 +1330,11 @@ mailer.delete_from_blocklist("domain-id", recipient_list)
 
 ```python
 from mailersend import recipients
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = recipients.NewRecipient(api_key)
+mailer = recipients.NewRecipient(os.getenv('MAILERSEND_API_KEY'))
 
 recipient_list = [
     "your@client.com"
@@ -1283,10 +1347,11 @@ mailer.delete_hard_bounces("domain-id", recipient_list)
 
 ```python
 from mailersend import recipients
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = recipients.NewRecipient(api_key)
+mailer = recipients.NewRecipient(os.getenv('MAILERSEND_API_KEY'))
 
 recipient_list = [
     "your@client.com"
@@ -1299,10 +1364,11 @@ mailer.delete_spam_complaints("domain-id", recipient_list)
 
 ```python
 from mailersend import recipients
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = recipients.NewRecipient(api_key)
+mailer = recipients.NewRecipient(os.getenv('MAILERSEND_API_KEY'))
 
 recipient_list = [
     "your@client.com"
@@ -1317,10 +1383,11 @@ mailer.delete_unsubscribes("domain-id", recipient_list)
 
 ```python
 from mailersend import tokens
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = tokens.NewToken(api_key)
+mailer = tokens.NewToken(os.getenv('MAILERSEND_API_KEY'))
 
 scopes = ["email_full", "analytics_read"]
 
@@ -1331,10 +1398,11 @@ Because of security reasons, we only allow access token appearance once during c
 
 ```python
 from mailersend import tokens
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = tokens.NewToken(api_key)
+mailer = tokens.NewToken(os.getenv('MAILERSEND_API_KEY'))
 
 scopes = ["email_full", "analytics_read"]
 
@@ -1345,10 +1413,11 @@ print(mailer.create_token("my-token", scopes))
 
 ```python
 from mailersend import tokens
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = tokens.NewToken(api_key)
+mailer = tokens.NewToken(os.getenv('MAILERSEND_API_KEY'))
 
 # pause
 mailer.update_token("my-token")
@@ -1361,10 +1430,11 @@ mailer.update_token("my-token", pause=False)
 
 ```python
 from mailersend import tokens
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = tokens.NewToken(api_key)
+mailer = tokens.NewToken(os.getenv('MAILERSEND_API_KEY'))
 
 mailer.delete_token("token-id")
 ```
@@ -1375,10 +1445,11 @@ mailer.delete_token("token-id")
 
 ```python
 from mailersend import templates
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = templates.NewTemplate(api_key)
+mailer = templates.NewTemplate(os.getenv('MAILERSEND_API_KEY'))
 
 mailer.get_templates()
 ```
@@ -1387,10 +1458,11 @@ mailer.get_templates()
 
 ```python
 from mailersend import templates
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = templates.NewTemplate(api_key)
+mailer = templates.NewTemplate(os.getenv('MAILERSEND_API_KEY'))
 template_id = 1234
 
 mailer.get_template_by_id()
@@ -1400,10 +1472,11 @@ mailer.get_template_by_id()
 
 ```python
 from mailersend import templates
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = templates.NewTemplate(api_key)
+mailer = templates.NewTemplate(os.getenv('MAILERSEND_API_KEY'))
 template_id = 1234
 
 mailer.delete_template()
@@ -1415,10 +1488,11 @@ mailer.delete_template()
 
 ```python
 from mailersend import webhooks
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = webhooks.NewWebhook(api_key)
+mailer = webhooks.NewWebhook(os.getenv('MAILERSEND_API_KEY'))
 
 mailer.get_webhooks("domain-id")
 ```
@@ -1427,10 +1501,11 @@ mailer.get_webhooks("domain-id")
 
 ```python
 from mailersend import webhooks
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = webhooks.NewWebhook(api_key)
+mailer = webhooks.NewWebhook(os.getenv('MAILERSEND_API_KEY'))
 
 mailer.get_webhook_by_id("webhook-id")
 ```
@@ -1439,12 +1514,13 @@ mailer.get_webhook_by_id("webhook-id")
 
 ```python
 from mailersend import webhooks
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
 webhookEvents = ['activity.sent', 'activity.delivered']
 
-webhook = webhooks.NewWebhook(api_key)
+webhook = webhooks.NewWebhook(os.getenv('MAILERSEND_API_KEY'))
 webhook.set_webhook_url("https://webhooks.mysite.com")
 webhook.set_webhook_name("my first webhook")
 webhook.set_webhook_events(webhookEvents)
@@ -1457,12 +1533,13 @@ webhook.create_webhook()
 
 ```python
 from mailersend import webhooks
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
 webhookEvents = ['activity.sent', 'activity.delivered']
 
-webhook = webhooks.NewWebhook(api_key)
+webhook = webhooks.NewWebhook(os.getenv('MAILERSEND_API_KEY'))
 webhook.set_webhook_url("https://webhooks.mysite.com")
 webhook.set_webhook_name("my first webhook")
 webhook.set_webhook_events(webhookEvents)
@@ -1476,10 +1553,11 @@ webhook.create_webhook()
 
 ```python
 from mailersend import webhooks
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-webhook = webhooks.NewWebhook(api_key)
+webhook = webhooks.NewWebhook(os.getenv('MAILERSEND_API_KEY'))
 
 webhook.update_webhook("webhook-id", "name", "a new webhook name")
 ```
@@ -1488,10 +1566,11 @@ webhook.update_webhook("webhook-id", "name", "a new webhook name")
 
 ```python
 from mailersend import webhooks
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-webhook = webhooks.NewWebhook(api_key)
+webhook = webhooks.NewWebhook(os.getenv('MAILERSEND_API_KEY'))
 
 webhook.update_webhook("webhook-id", "enabled", False)
 ```
@@ -1500,10 +1579,11 @@ webhook.update_webhook("webhook-id", "enabled", False)
 
 ```python
 from mailersend import webhooks
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-webhook = webhooks.NewWebhook(api_key)
+webhook = webhooks.NewWebhook(os.getenv('MAILERSEND_API_KEY'))
 
 webhook.delete_webhook("webhook-id")
 ```
@@ -1515,10 +1595,11 @@ webhook.delete_webhook("webhook-id")
 Without personalization:
 ```python
 from mailersend import sms_sending
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = sms_sending.NewSmsSending(api_key)
+mailer = sms_sending.NewSmsSending(os.getenv('MAILERSEND_API_KEY'))
 
 # Number belonging to your account in E164 format
 number_from = "+11234567890"
@@ -1536,10 +1617,11 @@ print(mailer.send_sms(number_from, numbers_to, text))
 With personalization:
 ```python
 from mailersend import sms_sending
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = sms_sending.NewSmsSending(api_key)
+mailer = sms_sending.NewSmsSending(os.getenv('MAILERSEND_API_KEY'))
 
 # Number belonging to your account in E164 format
 number_from = "+11234567890"
@@ -1573,10 +1655,11 @@ print(mailer.send_sms(number_from, numbers_to, text, personalization))
 ### Get a list of activities
 ```python
 from mailersend import sms_activity
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = sms_activity.NewSmsActivity(api_key)
+mailer = sms_activity.NewSmsActivity(os.getenv('MAILERSEND_API_KEY'))
 
 #Request parameters
 sms_number_id = 1365743
@@ -1592,10 +1675,11 @@ print(mailer.get_activities(sms_number_id=sms_number_id, date_from=date_from, da
 ### Get activity of a single message
 ```python
 from mailersend import sms_activity
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = sms_activity.NewSmsActivity(api_key)
+mailer = sms_activity.NewSmsActivity(os.getenv('MAILERSEND_API_KEY'))
 
 #Request parameters
 sms_message_id = "62a9d12b07852eaf2207b417"
@@ -1608,10 +1692,11 @@ print(mailer.get_activity(sms_message_id))
 ### Get a list of SMS phone numbers
 ```python
 from mailersend import sms_phone_numbers
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = sms_phone_numbers.NewSmsNumbers(api_key)
+mailer = sms_phone_numbers.NewSmsNumbers(os.getenv('MAILERSEND_API_KEY'))
 
 #Request parameters
 paused = False
@@ -1622,10 +1707,11 @@ print(mailer.get_phone_numbers(paused))
 ### Get an SMS phone number
 ```python
 from mailersend import sms_phone_numbers
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = sms_phone_numbers.NewSmsNumbers(api_key)
+mailer = sms_phone_numbers.NewSmsNumbers(os.getenv('MAILERSEND_API_KEY'))
 
 #Request parameters
 sms_number_id = "9pq3enl6842vwrzx"
@@ -1636,10 +1722,11 @@ print(mailer.get_phone_number(sms_number_id))
 ### Update a single SMS phone number
 ```python
 from mailersend import sms_phone_numbers
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = sms_phone_numbers.NewSmsNumbers(api_key)
+mailer = sms_phone_numbers.NewSmsNumbers(os.getenv('MAILERSEND_API_KEY'))
 
 #Request parameters
 sms_number_id = "9pq3enl6842vwrzx"
@@ -1651,10 +1738,11 @@ print(mailer.update_phone_number(sms_number_id, paused))
 ### Delete an SMS phone number
 ```python
 from mailersend import sms_phone_numbers
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = sms_phone_numbers.NewSmsNumbers(api_key)
+mailer = sms_phone_numbers.NewSmsNumbers(os.getenv('MAILERSEND_API_KEY'))
 
 #Request parameters
 sms_number_id = "9pq3enl6842vwrzx"
@@ -1667,10 +1755,11 @@ print(mailer.delete_phone_number(sms_number_id))
 ### Get a list of SMS recipients
 ```python
 from mailersend import sms_recipients
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = sms_recipients.NewSmsRecipients(api_key)
+mailer = sms_recipients.NewSmsRecipients(os.getenv('MAILERSEND_API_KEY'))
 
 #Request parameters
 sms_number_id = "9pq3enl6842vwrzx"
@@ -1682,10 +1771,11 @@ print(mailer.get_recipients(status=status, sms_number_id=sms_number_id))
 ### Get an SMS recipient
 ```python
 from mailersend import sms_recipients
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = sms_recipients.NewSmsRecipients(api_key)
+mailer = sms_recipients.NewSmsRecipients(os.getenv('MAILERSEND_API_KEY'))
 
 #Request parameters
 sms_recipient_id = "627e756fd30078fb2208cc87"
@@ -1696,10 +1786,11 @@ print(mailer.get_recipient(sms_recipient_id))
 ### Update a single SMS recipient
 ```python
 from mailersend import sms_recipients
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = sms_recipients.NewSmsRecipients(api_key)
+mailer = sms_recipients.NewSmsRecipients(os.getenv('MAILERSEND_API_KEY'))
 
 #Request parameters
 sms_recipient_id = "627e756fd30078fb2208cc87"
@@ -1713,10 +1804,11 @@ print(mailer.update_recipient(sms_recipient_id, status))
 ### Get a list of SMS messages
 ```python
 from mailersend import sms_messages
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = sms_messages.NewSmsMessages(api_key)
+mailer = sms_messages.NewSmsMessages(os.getenv('MAILERSEND_API_KEY'))
 
 print(mailer.get_messages())
 ```
@@ -1724,13 +1816,14 @@ print(mailer.get_messages())
 ### Get an SMS message
 ```python
 from mailersend import sms_messages
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
 #Request parameters
 sms_message_id = "627e756fd30078fb2208cc87"
 
-mailer = sms_messages.NewSmsMessages(api_key)
+mailer = sms_messages.NewSmsMessages(os.getenv('MAILERSEND_API_KEY'))
 
 print(mailer.get_message(sms_message_id))
 ```
@@ -1740,10 +1833,11 @@ print(mailer.get_message(sms_message_id))
 ### Get a list of SMS webhooks
 ```python
 from mailersend import sms_webhooks
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = sms_webhooks.NewSmsWebhooks(api_key)
+mailer = sms_webhooks.NewSmsWebhooks(os.getenv('MAILERSEND_API_KEY'))
 
 #Request parameters
 sms_number_id = "9pq3enl6842vwrzx"
@@ -1754,10 +1848,11 @@ print(mailer.get_webhooks(sms_number_id))
 ### Get a single SMS webhook
 ```python
 from mailersend import sms_webhooks
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = sms_webhooks.NewSmsWebhooks(api_key)
+mailer = sms_webhooks.NewSmsWebhooks(os.getenv('MAILERSEND_API_KEY'))
 
 #Request parameters
 sms_webhook_id = "aaui13enl12f2vzx"
@@ -1768,10 +1863,11 @@ print(mailer.get_webhook(sms_webhook_id))
 ### Create an SMS webhook
 ```python
 from mailersend import sms_webhooks
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = sms_webhooks.NewSmsWebhooks(api_key)
+mailer = sms_webhooks.NewSmsWebhooks(os.getenv('MAILERSEND_API_KEY'))
 
 #Request parameters
 url = "https://webhook-url.com"
@@ -1786,10 +1882,11 @@ print(mailer.create_webhook(url, name, events, sms_number_id, enabled))
 ### Update a single SMS webhook
 ```python
 from mailersend import sms_webhooks
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = sms_webhooks.NewSmsWebhooks(api_key)
+mailer = sms_webhooks.NewSmsWebhooks(os.getenv('MAILERSEND_API_KEY'))
 
 #Request parameters
 url = "https://different-url.com"
@@ -1804,10 +1901,11 @@ print(mailer.update_webhook(sms_webhook_id, url, name, events, enabled))
 ### Delete an SMS webhook
 ```python
 from mailersend import sms_webhooks
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = sms_webhooks.NewSmsWebhooks(api_key)
+mailer = sms_webhooks.NewSmsWebhooks(os.getenv('MAILERSEND_API_KEY'))
 
 #Request parameters
 sms_webhook_id = "aaui13enl12f2vzx"
@@ -1818,10 +1916,11 @@ print(mailer.delete_webhook(sms_webhook_id))
 ### Get a list of SMS webhooks
 ```python
 from mailersend import sms_webhooks
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = sms_webhooks.NewSmsWebhooks(api_key)
+mailer = sms_webhooks.NewSmsWebhooks(os.getenv('MAILERSEND_API_KEY'))
 
 #Request parameters
 sms_number_id = "9pq3enl6842vwrzx"
@@ -1834,10 +1933,11 @@ print(mailer.get_webhooks(sms_number_id))
 ### Get a list of SMS inbound routes
 ```python
 from mailersend import sms_inbounds
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = sms_inbounds.NewSmsInbounds(api_key)
+mailer = sms_inbounds.NewSmsInbounds(os.getenv('MAILERSEND_API_KEY'))
 
 #Request parameters
 sms_number_id = "123456789"
@@ -1851,10 +1951,11 @@ print(mailer.get_inbound_routes(sms_number_id, enabled, page, limit))
 ### Get a single SMS inbound route
 ```python
 from mailersend import sms_inbounds
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = sms_inbounds.NewSmsInbounds(api_key)
+mailer = sms_inbounds.NewSmsInbounds(os.getenv('MAILERSEND_API_KEY'))
 
 #Request parameters
 sms_inbound_id = "123456789"
@@ -1865,10 +1966,11 @@ print(mailer.get_inbound_route(sms_inbound_id))
 ### Create an SMS inbound route
 ```python
 from mailersend import sms_inbounds
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = sms_inbounds.NewSmsInbounds(api_key)
+mailer = sms_inbounds.NewSmsInbounds(os.getenv('MAILERSEND_API_KEY'))
 
 #Request parameters
 sms_number_id = "123456789"
@@ -1886,10 +1988,11 @@ print(mailer.create_inbound_route(sms_number_id, name, forward_url, filter, enab
 ### Update an SMS inbound route
 ```python
 from mailersend import sms_inbounds
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = sms_inbounds.NewSmsInbounds(api_key)
+mailer = sms_inbounds.NewSmsInbounds(os.getenv('MAILERSEND_API_KEY'))
 
 #Request parameters
 sms_number_id = "123456789"
@@ -1907,10 +2010,11 @@ print(mailer.update_inbound_route(sms_number_id, name, forward_url, filter, enab
 ### Delete an SMS inbound route
 ```python
 from mailersend import sms_inbounds
+from dotenv import load_dotenv
 
-api_key = "API key here"
+load_dotenv()
 
-mailer = sms_inbounds.NewSmsInbounds(api_key)
+mailer = sms_inbounds.NewSmsInbounds(os.getenv('MAILERSEND_API_KEY'))
 
 #Request parameters
 sms_inbound_id = "123456789"
@@ -1931,13 +2035,7 @@ mailer = emails.NewEmail()
 
 mail_body = {}
 
-...
-
 print(mailer.send(mail_body))
-
-# 422
-# {"message":"The given data was invalid.","errors":{"variables.0.substitutions":["The variables.0.substitutions field is required when variables.0.email is present."]}}
-
 ```
 
 # Testing
