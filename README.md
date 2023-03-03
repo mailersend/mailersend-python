@@ -119,6 +119,12 @@ MailerSend Python SDK
     - [Create an SMS inbound route](#create-an-sms-inbound-route)
     - [Update an SMS inbound route](#update-an-sms-inbound-route)
     - [Delete an SMS inbound route](#delete-an-sms-inbound-route)
+  - [Sender Identities](#sender-identities)
+    - [Get a list of sender identities](#get-a-list-of-sender-identities)
+    - [Get a sender identity](#get-a-sender-identity)
+    - [Create a sender identity](#create-a-sender-identity)
+    - [Update a sender identity](#update-a-sender-identity)
+    - [Delete a sender identity](#delete-a-sender-identity)
 - [Troubleshooting](#troubleshooting)
   - [Emails not being sent](#emails-not-being-sent)
 - [Testing](#testing)
@@ -2018,6 +2024,84 @@ sms_inbound_id = "123456789"
 print(mailer.delete_inbound_route()(sms_inbound_id))
 ```
 
+## Sender Identities
+
+### Get a list of sender identities
+```python
+from mailersend import sender_identities
+from dotenv import load_dotenv
+
+load_dotenv()
+
+mailer = sender_identities.NewSenderIdentity(os.getenv('MAILERSEND_API_KEY'))
+
+print(mailer.get_identities())
+```
+
+### Get a sender identity
+```python
+from mailersend import sender_identities
+from dotenv import load_dotenv
+
+load_dotenv()
+
+mailer = sender_identities.NewSenderIdentity(os.getenv('MAILERSEND_API_KEY'))
+
+print(mailer.get_identity(identity_id="12345"))
+```
+
+### Create a sender identity
+```python
+from mailersend import sender_identities
+from dotenv import load_dotenv
+
+load_dotenv()
+
+mailer = sender_identities.NewSenderIdentity(os.getenv('MAILERSEND_API_KEY'))
+
+print(mailer.create_identity(
+    domain_id="123456",
+    name="John Doe",
+    email="email@domain.com",
+    reply_to_email="reply@domain.com",
+    reply_to_name="Doe John",
+    add_note=True,
+    personal_note="My awesome note",
+))
+```
+
+### Update a sender identity
+```python
+from mailersend import sender_identities
+from dotenv import load_dotenv
+
+load_dotenv()
+
+mailer = sender_identities.NewSenderIdentity(os.getenv('MAILERSEND_API_KEY'))
+
+print(mailer.update_identity(
+    identity_id="123456",
+    domain_id="123456",
+    name="Abe Doe",
+    email="email@mydomain.com",
+    reply_to_email="reply@mydomain.com",
+    reply_to_name="Doe Abe",
+    add_note=False
+))
+```
+
+### Delete a sender identity
+```python
+from mailersend import sender_identities
+from dotenv import load_dotenv
+
+load_dotenv()
+
+mailer = sender_identities.NewSenderIdentity(os.getenv('MAILERSEND_API_KEY'))
+
+print(mailer.delete_identity(identity_id="123456"))
+```
+
 # Troubleshooting
 
 ## Emails not being sent
@@ -2059,6 +2143,7 @@ TBD
 | SMS Messages      | `{GET} sms-messages`                    | ✅         |
 | SMS Webhooks      | `{GET, POST, PUT, DELETE} sms-webhooks` | ✅         |
 | SMS Inbounds      | `{GET, POST, PUT, DELETE} sms-inbounds` | ✅         |
+| Sender Identities | `{GET, POST, PUT, DELETE} identities`   | ✅         |
 
 *If, at the moment, some endpoint is not available, please use other available tools to access it. [Refer to official API docs for more info](https://developers.mailersend.com/).*
 
