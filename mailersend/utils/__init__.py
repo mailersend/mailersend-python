@@ -11,12 +11,6 @@ class NewHelper(base.NewAPIClient):
     NewHelper extends base.NewAPIClient to inherit connection details
     """
 
-    def __init__(self):
-        """
-        NewHelper constructor
-        """
-        pass
-
     def get_id_by_name(self, category, name):
         """
         Returns an ID given a category and item name from the MailerSend API
