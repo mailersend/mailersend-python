@@ -37,17 +37,15 @@ class NewDomain(base.NewAPIClient):
         )
         return request.text
 
-    def add_domain(self, key, value):
+    def add_domain(self, data):
         """
         Add a domain
 
         @params:
-          key (str): A key option to add
-          value (str): The respective value of key to add
+          data (dict): A dict containing required parameters for adding a domain
 
+        Returns the JSON response of MailerSend API
         """
-        data = {f"{key}": value}
-
         request = requests.post(
             f"{self.api_base}/domains",
             headers=self.headers_default,
