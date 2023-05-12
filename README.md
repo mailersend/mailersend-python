@@ -872,7 +872,7 @@ _forwards = [
 ]
 mailer.set_name("Example route", options)
 mailer.set_domain_enabled(True, options)
-mailer.set_inbound_domain("test.remotecompany.com", options)
+mailer.set_inbound_domain("test.mailersend.com", options)
 mailer.set_catch_filter(_catch_filter, options)
 
 print(mailer.add_inbound_route())
@@ -914,7 +914,7 @@ _forwards = [
 ]
 mailer.set_name("Example route", options)
 mailer.set_domain_enabled(True, options)
-mailer.set_inbound_domain("test.remotecompany.com", options)
+mailer.set_inbound_domain("test.mailersend.com", options)
 mailer.set_catch_filter(_catch_filter, options)
 
 print(mailer.update_inbound_route(route_id))
