@@ -148,7 +148,7 @@ $ python -m pip install mailersend
 
 ## Authentication
 
-We recommend you to define `MAILERSEND_API_KEY` environment variable in the `.env` file, and use it to store the API key. 
+We recommend you to define `MAILERSEND_API_KEY` environment variable in the `.env` file, and use it to store the API key.
 
 - Using environment variable
 ```python
@@ -711,7 +711,6 @@ limit = 20
 date_from = 1623073576
 date_to = 1623074976
 events = [
-    "processed",
     "queued",
     "sent",
     "delivered",
@@ -742,7 +741,6 @@ mailer = analytics.NewAnalytics(os.getenv('MAILERSEND_API_KEY'))
 date_from = 1623073576
 date_to = 1623074976
 events = [
-    "processed",
     "sent",
 ]
 
