@@ -125,6 +125,8 @@ MailerSend Python SDK
     - [Create a sender identity](#create-a-sender-identity)
     - [Update a sender identity](#update-a-sender-identity)
     - [Delete a sender identity](#delete-a-sender-identity)
+  - [API Quota](#api-quota)
+    - [Get API Quota](#get-api-quota)
 - [Troubleshooting](#troubleshooting)
   - [Emails not being sent](#emails-not-being-sent)
 - [Testing](#testing)
@@ -2119,6 +2121,19 @@ mailer = sender_identities.NewSenderIdentity(os.getenv('MAILERSEND_API_KEY'))
 print(mailer.delete_identity(identity_id="123456"))
 ```
 
+## API Quota
+### Get API Quota
+```python
+from mailersend import api_quota
+from dotenv import load_dotenv
+
+load_dotenv()
+
+mailer = api_quota.NewApiQuota(os.getenv('MAILERSEND_API_KEY'))
+
+print(mailer.get_quota())
+```
+
 # Troubleshooting
 
 ## Emails not being sent
@@ -2161,6 +2176,7 @@ TBD
 | SMS Webhooks      | `{GET, POST, PUT, DELETE} sms-webhooks` | ✅         |
 | SMS Inbounds      | `{GET, POST, PUT, DELETE} sms-inbounds` | ✅         |
 | Sender Identities | `{GET, POST, PUT, DELETE} identities`   | ✅         |
+| API Quota         | `{GET} api-quota`                       | ✅         |
 
 *If, at the moment, some endpoint is not available, please use other available tools to access it. [Refer to official API docs for more info](https://developers.mailersend.com/).*
 
