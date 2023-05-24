@@ -988,7 +988,13 @@ load_dotenv()
 
 mailer = domains.NewDomain(os.getenv('MAILERSEND_API_KEY'))
 
-mailer.add_domain("name", "example.com")
+domain_data = {
+    "name": "mydomain.com",
+    "return_path_subdomain": "rpsubdomain",
+    "custom_tracking_subdomain": "ctsubdomain",
+    "inbound_routing_subdomain": "irsubdomain"
+}
+mailer.add_domain("name", domain_data)
 ```
 
 
@@ -1030,7 +1036,20 @@ load_dotenv()
 
 mailer = domains.NewDomain(os.getenv('MAILERSEND_API_KEY'))
 
-mailer.update_domain_setting("domain-id", "send_paused", True)
+domain_data = {
+    "send_paused": True,
+    "track_clicks": True,
+    "track_opens": True,
+    "track_unsubscribe": True,
+    "track_unsubscribe_html": "<p>Click to <a href='{$unsubscribe}'>unsubscribe</a></p>",
+    "track_unsubscribe_plain": "Click to unsubscribe: {$unsubscribe}",
+    "track_content": True,
+    "custom_tracking_enabled": True,
+    "custom_tracking_subdomain": "email",
+    "precedence_bulk": False
+}
+
+mailer.update_domain_setting("domain-id", domain_data)
 ```
 
 ### Get DNS Records
