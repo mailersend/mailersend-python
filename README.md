@@ -174,12 +174,10 @@ recipients = [
     }
 ]
 
-reply_to = [
-    {
-        "name": "Name",
-        "email": "reply@domain.com",
-    }
-]
+reply_to = {
+    "name": "Name",
+    "email": "reply@domain.com",
+}
 
 mailer.set_mail_from(mail_from, mail_body)
 mailer.set_mail_to(recipients, mail_body)
@@ -213,12 +211,10 @@ recipients = [
     }
 ]
 
-reply_to = [
-    {
-        "name": "Name",
-        "email": "reply@domain.com",
-    }
-]
+reply_to = {
+    "name": "Name",
+    "email": "reply@domain.com",
+}
 
 mailer.set_mail_from(mail_from, mail_body)
 mailer.set_mail_to(recipients, mail_body)
