@@ -571,7 +571,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "flake8 (<5)", "pytest-co
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "a579a1164426cc776c18b8d652b87074dcbe435d0634d1d4df694769dcf008f9"
+content-hash = "d9e3d2ea8793fb2ee784112fd08d13159b8c6074891c6a765c85cda792e427fd"
 
 [metadata.files]
 bleach = []
