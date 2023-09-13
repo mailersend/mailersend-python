@@ -24,8 +24,8 @@ class NewActivity(base.NewAPIClient):
         _data = {
             "page": page or None,
             "limit": limit or None,
-            "dateFrom": date_from or None,
-            "dateTo": date_to or None,
+            "date_from": date_from or None,
+            "date_to": date_to or None,
             "event": event or None,
         }
 
