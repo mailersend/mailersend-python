@@ -8,13 +8,13 @@ keywords = ["mailersend", "mail"]
 
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.8"
 requests = "^2.25.0"
-setuptools = "^68.0.0"
+setuptools = "^70.0.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^8.0.0"
-twine = "^4.0.1"
+twine = "^5.0.0"
 pre-commit = "^2.12.1"
 
 [build-system]
