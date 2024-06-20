@@ -583,7 +583,7 @@ test = ["pytest (>=6,<8.1.0 || >=8.2.0)", "pytest-checkdocs (>=2.4)", "pytest-co
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "3ecc0869132febba5ebef0c4ae9de456e3df1258d3a7647e310091f6db5fb192"
+content-hash = "fc485c1e62ca237016789e6d8bfa1b444cc9fdada0f16074c3473f4524bb1fe2"
 
 [metadata.files]
 "backports.tarfile" = []
