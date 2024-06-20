@@ -6,11 +6,9 @@ authors = ["Igor Hrček <igor@mailerlite.com>"]
 readme = "README.md"
 keywords = ["mailersend", "mail"]
 
-
 [tool.poetry.dependencies]
 python = "^3.8"
 requests = "^2.25.0"
-setuptools = "70.1.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^8.0.0"
