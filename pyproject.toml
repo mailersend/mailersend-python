@@ -8,7 +8,7 @@ keywords = ["mailersend", "mail"]
 
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.8"
 requests = "^2.25.0"
 setuptools = "^68.0.0"
 
