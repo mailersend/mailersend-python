@@ -115,7 +115,7 @@ class NewEmail(base.NewAPIClient):
         request = requests.post(
             f"{self.api_base}/email", headers=self.headers_default, json=message
         )
-        return f"{request.status_code}\n{request.text}"
+        return (request.status_code,request.text, request.headers)
 
     def get_bulk_status_by_id(self, bulk_email_id):
         """
