@@ -50,13 +50,7 @@ class NewEmail(base.NewAPIClient):
         """
         message["template_id"] = template_id
 
-    def set_simple_personalization(self, personalization, message):
-        """
-        Handles simple personalization
-        """
-        message["variables"] = personalization
-
-    def set_advanced_personalization(self, personalization, message):
+    def set_personalization(self, personalization, message):
         """
         Handles advanced personalization
         """
