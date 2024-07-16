@@ -14,8 +14,7 @@ MailerSend Python SDK
     - [Send an email](#send-an-email)
     - [Add CC, BCC recipients](#add-cc-bcc-recipients)
     - [Send a template-based email](#send-a-template-based-email)
-    - [Advanced personalization](#advanced-personalization)
-    - [Simple personalization](#simple-personalization)
+    - [Personalization](#personalization)
     - [Send email with attachment](#send-email-with-attachment)
   - [Email Verification](#email-verification)
     - [Get all email verification lists](#get-all-email-verification-lists)
@@ -365,12 +364,12 @@ mailer.set_mail_from(mail_from, mail_body)
 mailer.set_mail_to(recipients, mail_body)
 mailer.set_subject("Hello from {$company}", mail_body)
 mailer.set_template("templateID", mail_body)
-mailer.set_simple_personalization(variables, mail_body)
+mailer.set_personalization(variables, mail_body)
 
 mailer.send(mail_body)
 ```
 
-### Advanced personalization
+### Personalization
 
 ```python
 from mailersend import emails
@@ -420,55 +419,7 @@ mailer.set_mail_to(recipients, mail_body)
 mailer.set_subject("Hello from {$company}", mail_body)
 mailer.set_html_content("This is the HTML content, {$name}", mail_body)
 mailer.set_plaintext_content("This is the text content, {$name}", mail_body)
-mailer.set_advanced_personalization(personalization, mail_body)
-
-mailer.send(mail_body)
-```
-
-### Simple personalization
-
-```python
-from mailersend import emails
-from dotenv import load_dotenv
-
-load_dotenv()
-
-mailer = emails.NewEmail(os.getenv('MAILERSEND_API_KEY'))
-
-# define an empty dict to populate with mail values
-mail_body = {}
-
-mail_from = {
-    "name": "Your Name",
-    "email": "your@domain.com",
-}
-
-recipients = [
-    {
-        "name": "Your Client",
-        "email": "your@client.com",
-    }
-]
-
-variables = [
-    {
-        "email": "your@client.com",
-        "substitutions": [
-            {
-                "var": "foo",
-                "value": "bar"
-            },
-        ]
-    }
-]
-
-
-mailer.set_mail_from(mail_from, mail_body)
-mailer.set_mail_to(recipients, mail_body)
-mailer.set_subject("Hello from {$foo}", mail_body)
-mailer.set_html_content("This is the HTML content, {$foo}", mail_body)
-mailer.set_plaintext_content("This is the text content, {$foo}", mail_body)
-mailer.set_simple_personalization(variables, mail_body)
+mailer.set_personalization(personalization, mail_body)
 
 mailer.send(mail_body)
 ```
@@ -528,7 +479,7 @@ mailer.set_mail_to(recipients, mail_body)
 mailer.set_subject("Hello from {$foo}", mail_body)
 mailer.set_html_content("This is the HTML content, {$foo}", mail_body)
 mailer.set_plaintext_content("This is the text content, {$foo}", mail_body)
-mailer.set_simple_personalization(variables, mail_body)
+mailer.set_personalization(variables, mail_body)
 mailer.set_attachments(attachments, mail_body)
 
 mailer.send(mail_body)
