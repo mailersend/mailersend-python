@@ -13,7 +13,7 @@ requests = "^2.25.0"
 [tool.poetry.dev-dependencies]
 pytest = "^8.0.0"
 twine = "^5.0.0"
-pre-commit = "^2.12.1"
+pre-commit = "^4.0.0"
 
 [build-system]
 requires = ["poetry>=0.12"]
