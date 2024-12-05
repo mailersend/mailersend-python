@@ -10,12 +10,7 @@ class NewHelper(base.NewAPIClient):
     """
     NewHelper extends base.NewAPIClient to inherit connection details
     """
-
-    def __init__(self):
-        """
-        NewHelper constructor
-        """
-        pass
+    pass
 
     def get_id_by_name(self, category, name):
         """
