@@ -4,6 +4,7 @@ MailerSend Python SDK - Official Python library for interacting with the MailerS
 
 from .client import MailerSendClient
 from .constants import __version__
+
 from .exceptions import (
     MailerSendError,
     ValidationError,

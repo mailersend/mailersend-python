@@ -1,13 +1,11 @@
-from typing import List, Dict, Optional, Any, Union
-from pydantic import BaseModel, Field, EmailStr, HttpUrl, validator
-from datetime import datetime
-import base64
+from typing import List, Dict, Optional, Any
+from pydantic import BaseModel, Field, EmailStr, ConfigDict, field_validator
 
 class EmailRecipient(BaseModel):
     email: EmailStr
     name: Optional[str] = None
 
-    @validator('name')
+    @field_validator('name')
     def validate_name(cls, v):
         if v and (';' in v or ',' in v):
             raise ValueError("Name cannot contain ';' or ','")
@@ -21,19 +19,30 @@ class EmailReplyTo(BaseModel):
     email: EmailStr
     name: Optional[str] = None
 
-class Attachment(BaseModel):
+class EmailAttachment(BaseModel):
     content: str  # Base64 encoded content
     disposition: str  # 'inline' or 'attachment'
     filename: str
     id: Optional[str] = None
     
-    @validator('disposition')
+    @field_validator('disposition')
     def validate_disposition(cls, v):
         if v not in ['inline', 'attachment']:
             raise ValueError("Disposition must be 'inline' or 'attachment'")
         return v
 
-class PersonalizationData(BaseModel):
+class EmailContent(BaseModel):
+    html: str
+    text: str
+    subject: str
+
+    @field_validator('subject')
+    def validate_subject_length(cls, v):
+        if v and len(v) > 998:
+            raise ValueError("Subject must be less than 998 characters")
+        return v
+
+class EmailPersonalization(BaseModel):
     email: EmailStr
     data: Dict[str, Any]
 
@@ -46,7 +55,7 @@ class EmailHeader(BaseModel):
     name: str
     value: str
     
-    @validator('name')
+    @field_validator('name')
     def validate_name(cls, v):
         if not v.replace('-', '').isalnum():
             raise ValueError("Header name must be alphanumeric and may contain '-'")
@@ -58,13 +67,13 @@ class EmailRequest(BaseModel):
     cc: Optional[List[EmailRecipient]] = None
     bcc: Optional[List[EmailRecipient]] = None
     reply_to: Optional[EmailReplyTo] = None
-    subject: Optional[str] = None
-    text: Optional[str] = None
-    html: Optional[str] = None
-    attachments: Optional[List[Attachment]] = None
+    subject: Optional[EmailContent] = None
+    text: Optional[EmailContent] = None
+    html: Optional[EmailContent] = None
+    attachments: Optional[List[EmailAttachment]] = None
     template_id: Optional[str] = None
     tags: Optional[List[str]] = None
-    personalization: Optional[List[PersonalizationData]] = None
+    personalization: Optional[List[EmailPersonalization]] = None
     precedence_bulk: Optional[bool] = None
     send_at: Optional[int] = None
     in_reply_to: Optional[str] = None
@@ -72,29 +81,23 @@ class EmailRequest(BaseModel):
     settings: Optional[EmailTrackingSettings] = None
     headers: Optional[List[EmailHeader]] = None
 
-    class Config:
-        allow_population_by_field_name = True
+    model_config = ConfigDict(validate_by_name = True)
         
-    @validator('tags')
+    @field_validator('tags')
     def validate_tags_count(cls, v):
         if v and len(v) > 5:
             raise ValueError("Maximum 5 tags are allowed")
         return v
         
-    @validator('to')
+    @field_validator('to')
     def validate_to_count(cls, v):
         if len(v) < 1 or len(v) > 50:
             raise ValueError("'to' must contain between 1 and 50 recipients")
         return v
         
-    @validator('cc', 'bcc')
+    @field_validator('cc', 'bcc')
     def validate_cc_bcc_count(cls, v):
         if v and len(v) > 10:
             raise ValueError("Maximum 10 recipients allowed for cc/bcc")
         return v
         
-    @validator('subject')
-    def validate_subject_length(cls, v):
-        if v and len(v) > 998:
-            raise ValueError("Subject must be less than 998 characters")
-        return v

@@ -11,7 +11,7 @@ from .exceptions import (
     MailerSendError, AuthenticationError, RateLimitExceeded, 
     ResourceNotFoundError, BadRequestError, ServerError
 )
-from .resources.email import Emails
+from .resources.email import Email
 from .logging import get_logger
 
 
@@ -77,7 +77,7 @@ class MailerSendClient:
         })
         
         # Initialize resources
-        self.emails = Emails(self)
+        self.emails = Email(self)
 
         
     def request(

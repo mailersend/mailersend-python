@@ -4,11 +4,11 @@ from typing import Dict, Any, List
 import logging
 
 from ..exceptions import ValidationError
-from ..models.email import Attachment
+from ..models.email import EmailAttachment
 
 logger = logging.getLogger(__name__)
 
-def process_file_attachments(attachments: List[Dict[str, Any]]) -> List[Attachment]:
+def process_file_attachments(attachments: List[Dict[str, Any]]) -> List[EmailAttachment]:
     """
     Process file attachments by reading file content and encoding as base64.
     
@@ -50,7 +50,7 @@ def process_file_attachments(attachments: List[Dict[str, Any]]) -> List[Attachme
         
         # Create Attachment object from the dict
         try:
-            attachment = Attachment(**attachment_data)
+            attachment = EmailAttachment(**attachment_data)
             processed_attachments.append(attachment)
             logger.debug(f"Processed attachment: {attachment.filename}")
         except Exception as e:
