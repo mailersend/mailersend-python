@@ -1,5 +1,4 @@
 from typing import Dict, Any, Optional, Union, List, TypeVar, Type, ClassVar
-from ..utils.api_helpers import ApiHelpers
 from ..models.base import BaseModel, ModelList
 
 T = TypeVar('T', bound=BaseModel)
