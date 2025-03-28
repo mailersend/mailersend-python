@@ -85,7 +85,11 @@ class EmailRequest(BaseModel):
     tags: Optional[List[str]] = None
     tracking: Optional[EmailTracking] = None
     precedence_bulk: Optional[bool] = None
-    send_at: Optional[datetime] = None
+    send_at: Optional[int] = None
+    in_reply_to: Optional[str] = None
+    references: Optional[str] = None
+    settings: Optional[EmailSettings] = None
+    headers: Optional[EmailHeaders] = None
 
     @validator('html', 'text', always=True)
     def validate_content(cls, v, values):
