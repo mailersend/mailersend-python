@@ -11,7 +11,7 @@ from .exceptions import (
     MailerSendError, AuthenticationError, RateLimitExceeded, 
     ResourceNotFoundError, BadRequestError, ServerError
 )
-from .resources.emails import Emails
+from .resources.email import Emails
 from .logging import get_logger
 
 
