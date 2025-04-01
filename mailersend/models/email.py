@@ -1,5 +1,6 @@
+from typing_extensions import Self
 from typing import List, Dict, Optional, Any
-from pydantic import BaseModel, Field, EmailStr, ConfigDict, field_validator
+from pydantic import BaseModel, Field, EmailStr, ConfigDict, field_validator, model_validator
 
 class EmailRecipient(BaseModel):
     email: EmailStr
@@ -31,9 +32,7 @@ class EmailAttachment(BaseModel):
             raise ValueError("Disposition must be 'inline' or 'attachment'")
         return v
 
-class EmailContent(BaseModel):
-    html: str
-    text: str
+class EmailSubject(BaseModel):
     subject: str
 
     @field_validator('subject')
@@ -41,6 +40,17 @@ class EmailContent(BaseModel):
         if v and len(v) > 998:
             raise ValueError("Subject must be less than 998 characters")
         return v
+
+class EmailContent(BaseModel):
+    html: Optional[str] = None
+    text: Optional[str] = None
+    template_id: Optional[str] = None
+    
+    @model_validator(mode='after')
+    def validate_content_exists(cls, values):
+        if values.html is None and values.text is None and values.template_id is None:
+            raise ValueError("At least one of 'text', 'html' or 'template_id' must be provided")
+        return values
 
 class EmailPersonalization(BaseModel):
     email: EmailStr
@@ -67,11 +77,11 @@ class EmailRequest(BaseModel):
     cc: Optional[List[EmailRecipient]] = None
     bcc: Optional[List[EmailRecipient]] = None
     reply_to: Optional[EmailReplyTo] = None
-    subject: Optional[EmailContent] = None
+    subject: EmailSubject
     text: Optional[EmailContent] = None
     html: Optional[EmailContent] = None
+    template_id: Optional[EmailContent] = None
     attachments: Optional[List[EmailAttachment]] = None
-    template_id: Optional[str] = None
     tags: Optional[List[str]] = None
     personalization: Optional[List[EmailPersonalization]] = None
     precedence_bulk: Optional[bool] = None
