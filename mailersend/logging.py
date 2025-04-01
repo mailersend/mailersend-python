@@ -14,6 +14,7 @@ def get_logger(name: Optional[str] = None) -> logging.Logger:
     """
     logger_name = f"mailersend.{name}" if name else "mailersend"
     logger = logging.getLogger(logger_name)
+    logger.setLevel(logging.DEBUG)
     
     # Don't add handlers if they've already been added
     # This prevents duplicate log messages

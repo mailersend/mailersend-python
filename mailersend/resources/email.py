@@ -12,7 +12,7 @@ class Email(BaseResource):
     """
     Client for interacting with the MailerSend Email API.
     """
-    
+
     def send(self, 
              email: Optional[EmailRequest] = None,
              **kwargs: Any) -> Dict[str, Any]:
@@ -24,26 +24,6 @@ class Email(BaseResource):
         
         Args:
             email: A complete EmailRequest object
-            **kwargs: Email components as keyword args:
-                - from_email (Dict): Sender information with 'email' and 'name'
-                - to (List): List of recipients with 'email' and 'name'
-                - subject (str): Email subject
-                - text (str, optional): Plain text version of the email
-                - html (str, optional): HTML version of the email
-                - template_id (str, optional): ID of the template to use
-                - personalization (List, optional): Personalization variables
-                - cc (List, optional): CC recipients
-                - bcc (List, optional): BCC recipients
-                - reply_to (Dict, optional): Reply-to address
-                - attachments (List, optional): List of attachments
-                - tags (List, optional): Tags for categorizing
-                - tracking (Dict, optional): Tracking settings
-                - precedence_bulk (bool, optional): Bulk precedence
-                - send_at (Union[int, datetime], optional): Scheduled send time
-                - in_reply_to (str, optional): Valid email address as per RFC 2821
-                - references (str, optional): List of Message-ID's that the current email is referencing
-                - settings (Dict, optional): Tracking settings (opens, clicks, content)
-                - headers (Dict, optional): Custom headers to include in the email
                 
         Returns:
             API response with email ID
@@ -53,20 +33,12 @@ class Email(BaseResource):
             MailerSendError: If the API returns an error
             
         Examples:
-            >>> # Using keyword arguments
-            >>> client.email.send(
-            ...     from_email={"email": "sender@example.com", "name": "Sender"},
-            ...     to=[{"email": "recipient@example.com", "name": "Recipient"}],
-            ...     subject="Hello",
-            ...     html="<p>Hello, world!</p>"
-            ... )
-            
             >>> # Using EmailRequest object
             >>> request = EmailRequest(
             ...     from_email=EmailFrom(email="sender@example.com", name="Sender"),
             ...     to=[EmailRecipient(email="recipient@example.com", name="Recipient")],
-            ...     subject="Hello",
-            ...     html="<p>Hello, world!</p>"
+            ...     subject=EmailSubject(subject="Hello"),
+            ...     html=EmailContent(html="<p>Hello, world!</p>")
             ... )
             >>> client.email.send(email=request)
 
@@ -91,14 +63,14 @@ class Email(BaseResource):
             
             # Process attachments if file_path is provided
             if 'attachments' in kwargs and isinstance(kwargs['attachments'], list):
-                self._process_file_attachments(kwargs['attachments'])
+                process_file_attachments(kwargs['attachments'])
                 
             # Convert send_at from datetime to timestamp if needed
             if 'send_at' in kwargs and isinstance(kwargs['send_at'], datetime):
                 kwargs['send_at'] = int(kwargs['send_at'].timestamp())
                 
             try:
-                email = EmailRequest(**kwargs)
+                email = self._create_email_request(kwargs)
                 self.logger.debug("Created email request from kwargs")
             except Exception as e:
                 self.logger.error(f"Failed to create email request: {str(e)}")
@@ -116,15 +88,78 @@ class Email(BaseResource):
             raise
         
         self.logger.info("Sending email request to API")
+        print(email.model_dump(by_alias=True, exclude_none=True))
 
-        response = self.client.request(
-            "POST",
-            "/email",
-            body=email.dict(by_alias=True, exclude_none=True)
-        )
+        # response = self.client.request(
+        #     "POST",
+        #     "email",
+        #     body=email.model_dump(by_alias=True, exclude_none=True)
+        # )
         
-        return response.json()
+        # return response.json()
     
+    def _create_email_request(self, kwargs: Dict[str, Any]) -> EmailRequest:
+        """
+        Create an EmailRequest from keyword arguments.
+        
+        Args:
+            kwargs: The keyword arguments to convert
+            
+        Returns:
+            An EmailRequest instance
+        """
+        from mailersend.models.email import EmailRequest, EmailFrom, EmailRecipient, EmailSubject, EmailContent, EmailReplyTo
+        
+        # Clone the kwargs to avoid modifying the original
+        processed = kwargs.copy()
+        
+        # Convert from_email to from field if needed
+        if 'from_email' in processed and 'from' not in processed:
+            processed['from'] = processed.pop('from_email')
+        
+        # Handle 'from' field - create EmailFrom object if it's a dict
+        if 'from' in processed and isinstance(processed['from'], dict):
+            processed['from'] = EmailFrom(**processed['from'])
+        
+        # Handle recipient fields - create EmailRecipient objects if they're dicts
+        for field in ['to', 'cc', 'bcc']:
+            if field in processed and isinstance(processed[field], list):
+                processed[field] = [
+                    EmailRecipient(**r) if isinstance(r, dict) else r
+                    for r in processed[field]
+                ]
+        
+        # Handle 'reply_to' field - create EmailReplyTo object if it's a dict
+        if 'reply_to' in processed and isinstance(processed['reply_to'], dict):
+            processed['reply_to'] = EmailReplyTo(**processed['reply_to'])
+        
+        # Create proper model objects for these fields (not nested)
+        if 'subject' in processed and isinstance(processed['subject'], str):
+            # Create EmailSubject instance directly
+            processed['subject'] = EmailSubject(subject=processed['subject'])
+        
+        if 'html' in processed and not isinstance(processed['html'], EmailContent):
+            if isinstance(processed['html'], str):
+                processed['html'] = EmailContent(html=processed['html'])
+            elif isinstance(processed['html'], dict):
+                processed['html'] = EmailContent(**processed['html'])
+        
+        if 'text' in processed and not isinstance(processed['text'], EmailContent):
+            if isinstance(processed['text'], str):
+                processed['text'] = EmailContent(text=processed['text'])
+            elif isinstance(processed['text'], dict):
+                processed['text'] = EmailContent(**processed['text'])
+        
+        if 'template_id' in processed and not isinstance(processed['template_id'], EmailContent):
+            if isinstance(processed['template_id'], str):
+                processed['template_id'] = EmailContent(template_id=processed['template_id'])
+            elif isinstance(processed['template_id'], dict):
+                processed['template_id'] = EmailContent(**processed['template_id'])
+        
+        # Create and return the EmailRequest
+        self.logger.debug(f"Creating EmailRequest with: {processed}")
+        return EmailRequest(**processed)
+
     def send_bulk(self, emails: List[EmailRequest]) -> Dict[str, Any]:
         """
         Send multiple emails in one request.
