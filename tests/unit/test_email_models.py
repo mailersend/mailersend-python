@@ -2,119 +2,44 @@ import pytest
 from pydantic import ValidationError
 
 from mailersend.models.email import (
-    EmailRecipient, EmailContent, EmailAttachment, 
-    EmailPersonalization, EmailRequest, EmailFrom, EmailReplyTo, EmailTrackingSettings, EmailHeader, EmailSubject
+    EmailContact, EmailAttachment,
+    EmailPersonalization, EmailRequest,
+    EmailTrackingSettings, EmailHeader
 )
 
-
-class TestEmailRecipient:
+class TestEmailContact:
     def test_valid_recipient(self):
-        """Test that valid recipient data passes validation."""
-        recipient = EmailRecipient(email="test@example.com", name="John Doe")
+        recipient = EmailContact(email="test@example.com", name="John Doe")
         
         assert recipient.email == "test@example.com"
         assert recipient.name == "John Doe"
     
     def test_email_required(self):
-        """Test that email is required."""
         with pytest.raises(ValidationError) as exc_info:
-            EmailRecipient(name="John Doe")
+            EmailContact(name="John Doe")
         
         errors = exc_info.value.errors()
         assert any(error["loc"][0] == "email" and "required" in error["msg"] for error in errors)
     
     def test_name_optional(self):
-        """Test that name is optional."""
-        recipient = EmailRecipient(email="test@example.com")
+        recipient = EmailContact(email="test@example.com")
         assert recipient.email == "test@example.com"
         assert recipient.name is None
     
     def test_invalid_email(self):
-        """Test that invalid email format is rejected."""
         with pytest.raises(ValidationError):
-            EmailRecipient(email="not-an-email", name="John Doe")
-    
-    def test_name_with_semicolon(self):
-        """Test that name with semicolon is rejected."""
-        with pytest.raises(ValidationError) as exc_info:
-            EmailRecipient(email="test@example.com", name="John; Doe")
-        
-        errors = exc_info.value.errors()
-        assert any(";" in error["msg"].lower() for error in errors)
-    
-    def test_name_with_comma(self):
-        """Test that name with comma is rejected."""
-        with pytest.raises(ValidationError) as exc_info:
-            EmailRecipient(email="test@example.com", name="John, Doe")
-        
-        errors = exc_info.value.errors()
-        assert any(";" in error["msg"].lower() for error in errors)
+            EmailContact(email="not-an-email", name="John Doe")
     
     def test_to_dict(self):
-        """Test conversion to dictionary format."""
-        recipient = EmailRecipient(email="test@example.com", name="John Doe")
+        recipient = EmailContact(email="test@example.com", name="John Doe")
         recipient_dict = recipient.model_dump()
         
         assert recipient_dict["email"] == "test@example.com"
         assert recipient_dict["name"] == "John Doe"
 
 
-class TestEmailContent:
-    def test_valid_content(self):
-        """Test that valid email content passes validation."""
-        content = EmailContent(html="<p>Test HTML</p>")
-        
-        assert content.html == "<p>Test HTML</p>"
-        assert content.text is None  # Default value
-
-    
-    def test_html_or_text_required(self):
-        """Test that either html or text is required."""
-        # Both provided - valid
-        content = EmailContent(html="<p>HTML</p>", text="Text")
-        assert content.html == "<p>HTML</p>"
-        assert content.text == "Text"
-        
-        # Only html provided - valid
-        content = EmailContent(html="<p>HTML</p>")
-        assert content.html == "<p>HTML</p>"
-        assert content.text is None
-        
-        # Only text provided - valid
-        content = EmailContent(text="Text")
-        assert content.html is None
-        assert content.text == "Text"
-        
-        # Neither provided - should raise validation error
-        with pytest.raises(ValidationError) as exc_info:
-            EmailContent(subject="Test")
-        
-        errors = exc_info.value.errors()
-        assert any("least one" in error["msg"].lower() for error in errors)
-    
-class TestEmailSubject:
-    def test_subject_required(self):
-        """Test that subject is required."""
-        with pytest.raises(ValidationError) as exc_info:
-            EmailSubject()
-        
-        errors = exc_info.value.errors()
-        assert any(error["loc"][0] == "subject" for error in errors)
-
-    def test_max_subject_length(self):
-        """Test that subject has a maximum length."""
-        long_subject = "A" * 1000  # Very long subject
-        
-        with pytest.raises(ValidationError) as exc_info:
-            EmailSubject(subject=long_subject)
-        
-        errors = exc_info.value.errors()
-        assert any(error["loc"][0] == "subject" for error in errors)
-
-
 class TestEmailAttachment:
     def test_valid_attachment(self):
-        """Test that a valid attachment passes validation."""
         attachment = EmailAttachment(
             content="SGVsbG8gV29ybGQ=",  # Base64 encoded "Hello World"
             filename="test.txt",
@@ -127,8 +52,6 @@ class TestEmailAttachment:
         assert attachment.disposition == "attachment"  # Default value
     
     def test_required_fields(self):
-        """Test that content and filename are required."""
-        # Missing content
         with pytest.raises(ValidationError) as exc_info:
             EmailAttachment(filename="test.txt")
         
@@ -143,7 +66,6 @@ class TestEmailAttachment:
         assert any(error["loc"][0] == "filename" for error in errors)
     
     def test_disposition_validation(self):
-        """Test that disposition must be one of the allowed values."""
         # Valid - attachment
         attachment = EmailAttachment(
             content="SGVsbG8gV29ybGQ=",
@@ -184,7 +106,6 @@ class TestEmailAttachment:
 
 class TestEmailPersonalization:
     def test_valid_personalization(self):
-        """Test that valid personalization passes validation."""
         personalization = EmailPersonalization(
             email="recipient@example.com",
             data={"name": "John", "product": "SDK"}
@@ -210,7 +131,6 @@ class TestEmailPersonalization:
         assert any(error["loc"][0] == "data" for error in errors)
     
     def test_data_must_be_dict(self):
-        """Test that data must be a dictionary."""
         with pytest.raises(ValidationError) as exc_info:
             EmailPersonalization(
                 email="recipient@example.com",
@@ -223,44 +143,41 @@ class TestEmailPersonalization:
 
 class TestEmailRequest:
     def test_valid_request_with_content(self):
-        """Test valid email request with direct content."""
         request = EmailRequest(
-            from_email=EmailFrom(email="sender@example.com", name="Sender"),
-            to=[EmailRecipient(email="recipient@example.com", name="Recipient")],
-            subject=EmailSubject(subject="Test Subject"),
-            html=EmailContent(html="<p>Test HTML</p>"),
-            text=EmailContent(text="Test Text")
+            from_email=EmailContact(email="sender@example.com", name="Sender"),
+            to=[EmailContact(email="recipient@example.com", name="Recipient")],
+            subject="Test Subject",
+            html="<p>Test HTML</p>",
+            text="Test Text"
         )
 
         assert request.from_email.email == "sender@example.com"
         assert request.to[0].email == "recipient@example.com"
-        assert request.subject.subject == "Test Subject"
-        assert request.html.html == "<p>Test HTML</p>"
-        assert request.text.text == "Test Text"
+        assert request.subject == "Test Subject"
+        assert request.html == "<p>Test HTML</p>"
+        assert request.text == "Test Text"
         assert request.template_id is None
     
     def test_valid_request_with_template(self):
-        """Test valid email request with template."""
         request = EmailRequest(
-            from_email=EmailFrom(email="sender@example.com", name="Sender"),
-            to=[EmailRecipient(email="recipient@example.com", name="Recipient")],
-            subject=EmailSubject(subject="Test Subject"),
-            template_id=EmailContent(template_id="template-123")
+            from_email=EmailContact(email="sender@example.com", name="Sender"),
+            to=[EmailContact(email="recipient@example.com", name="Recipient")],
+            subject="Test Subject",
+            template_id="template-123"
         )
         
         assert request.from_email.email == "sender@example.com"
         assert request.to[0].email == "recipient@example.com"
-        assert request.template_id.template_id == "template-123"
-        assert request.subject.subject is "Test Subject"
+        assert request.template_id == "template-123"
+        assert request.subject is "Test Subject"
         assert request.html is None
         assert request.text is None
     
     def test_required_fields(self):
-        """Test that from_email and to are required."""
         # Missing from_email
         with pytest.raises(ValidationError):
             EmailRequest(
-                to=[EmailRecipient(email="recipient@example.com")],
+                to=[EmailContact(email="recipient@example.com")],
                 subject="Test",
                 html="<p>Test</p>"
             )
@@ -268,32 +185,30 @@ class TestEmailRequest:
         # Missing to
         with pytest.raises(ValidationError):
             EmailRequest(
-                from_email=EmailRecipient(email="sender@example.com"),
+                from_email=EmailContact(email="sender@example.com"),
                 subject="Test",
                 html="<p>Test</p>"
             )
     
     def test_cc_and_bcc_optional(self):
-        """Test that cc and bcc are optional."""
         request = EmailRequest(
-            from_email=EmailFrom(email="sender@example.com"),
-            to=[EmailRecipient(email="recipient@example.com")],
-            cc=[EmailRecipient(email="cc@example.com")],
-            bcc=[EmailRecipient(email="bcc@example.com")],
-            subject=EmailSubject(subject="Test"),
-            html=EmailContent(html="<p>Test</p>")
+            from_email=EmailContact(email="sender@example.com"),
+            to=[EmailContact(email="recipient@example.com")],
+            cc=[EmailContact(email="cc@example.com")],
+            bcc=[EmailContact(email="bcc@example.com")],
+            subject="Test",
+            html="<p>Test</p>"
         )
         
         assert request.cc[0].email == "cc@example.com"
         assert request.bcc[0].email == "bcc@example.com"
     
     def test_attachments_optional(self):
-        """Test that attachments are optional."""
         request = EmailRequest(
-            from_email=EmailFrom(email="sender@example.com"),
-            to=[EmailRecipient(email="recipient@example.com")],
-            subject=EmailSubject(subject="Test"),
-            html=EmailContent(html="<p>Test</p>"),
+            from_email=EmailContact(email="sender@example.com"),
+            to=[EmailContact(email="recipient@example.com")],
+            subject="Test",
+            html="<p>Test</p>",
             attachments=[
                 EmailAttachment(content="SGVsbG8gV29ybGQ=", filename="test.txt", disposition="inline")
             ]
@@ -303,12 +218,11 @@ class TestEmailRequest:
         assert request.attachments[0].filename == "test.txt"
     
     def test_personalization_optional(self):
-        """Test that personalization is optional."""
         request = EmailRequest(
-            from_email=EmailFrom(email="sender@example.com"),
-            to=[EmailRecipient(email="recipient@example.com")],
-            subject=EmailSubject(subject="Test"),
-            html=EmailContent(html="<p>Test</p>"),
+            from_email=EmailContact(email="sender@example.com"),
+            to=[EmailContact(email="recipient@example.com")],
+            subject="Test",
+            html="<p>Test</p>",
             personalization=[
                 EmailPersonalization(
                     email="recipient@example.com",
@@ -321,43 +235,42 @@ class TestEmailRequest:
         assert request.personalization[0].email == "recipient@example.com"
         assert request.personalization[0].data == {"name": "John"}
 
-    # Tests for tags validator
     def test_tags_within_limit(self):
         # Test with no tags
         request = EmailRequest(
-            from_email=EmailFrom(email="sender@example.com"),
-            to=[EmailRecipient(email="recipient@example.com")],
-            subject=EmailSubject(subject="Test"),
-            html=EmailContent(html="<p>Test</p>"),
+            from_email=EmailContact(email="sender@example.com"),
+            to=[EmailContact(email="recipient@example.com")],
+            subject="Test",
+            html="<p>Test</p>",
         )
         assert request.tags is None
         
         # Test with empty list
         request = EmailRequest(
-            from_email=EmailFrom(email="sender@example.com"),
-            to=[EmailRecipient(email="recipient@example.com")],
-            subject=EmailSubject(subject="Test"),
-            html=EmailContent(html="<p>Test</p>"),
+            from_email=EmailContact(email="sender@example.com"),
+            to=[EmailContact(email="recipient@example.com")],
+            subject="Test",
+            html="<p>Test</p>",
             tags=[]
         )
         assert request.tags == []
         
         # Test with 1 tag
         request = EmailRequest(
-            from_email=EmailFrom(email="sender@example.com"),
-            to=[EmailRecipient(email="recipient@example.com")],
-            subject=EmailSubject(subject="Test"),
-            html=EmailContent(html="<p>Test</p>"),
+            from_email=EmailContact(email="sender@example.com"),
+            to=[EmailContact(email="recipient@example.com")],
+            subject="Test",
+            html="<p>Test</p>",
             tags=["tag1"]
         )
         assert request.tags == ["tag1"]
         
         # Test with 5 tags (max allowed)
         request = EmailRequest(
-            from_email=EmailFrom(email="sender@example.com"),
-            to=[EmailRecipient(email="recipient@example.com")],
-            subject=EmailSubject(subject="Test"),
-            html=EmailContent(html="<p>Test</p>"),
+            from_email=EmailContact(email="sender@example.com"),
+            to=[EmailContact(email="recipient@example.com")],
+            subject="Test",
+            html="<p>Test</p>",
             tags=["tag1", "tag2", "tag3", "tag4", "tag5"]
         )
 
@@ -367,10 +280,10 @@ class TestEmailRequest:
         # Test with 6 tags (exceeds limit)
         with pytest.raises(ValidationError) as exc_info:
             request = EmailRequest(
-                from_email=EmailFrom(email="sender@example.com"),
-                to=[EmailRecipient(email="recipient@example.com")],
-                subject=EmailSubject(subject="Test"),
-                html=EmailContent(html="<p>Test</p>"),
+                from_email=EmailContact(email="sender@example.com"),
+                to=[EmailContact(email="recipient@example.com")],
+                subject="Test",
+                html="<p>Test</p>",
                 tags=["tag1", "tag2", "tag3", "tag4", "tag5", "tag6"]
             )
         
@@ -381,21 +294,21 @@ class TestEmailRequest:
     def test_to_within_limit(self):
         # Test with 1 recipient (min allowed)
         request = EmailRequest(
-            from_email=EmailFrom(email="sender@example.com"),
-            to=[EmailRecipient(email="recipient@example.com")],
-            subject=EmailSubject(subject="Test"),
-            html=EmailContent(html="<p>Test</p>"),
+            from_email=EmailContact(email="sender@example.com"),
+            to=[EmailContact(email="recipient@example.com")],
+            subject="Test",
+            html="<p>Test</p>",
         )
         assert len(request.to) == 1
         
         # Test with 51 recipients
-        recipients = [EmailRecipient(email=f"recipient{i}@example.com") for i in range(1, 52)]
+        recipients = [EmailContact(email=f"recipient{i}@example.com") for i in range(1, 52)]
         with pytest.raises(ValidationError) as exc_info:
             request = EmailRequest(
-                from_email=EmailFrom(email="sender@example.com"),
+                from_email=EmailContact(email="sender@example.com"),
                 to=recipients,
-                subject=EmailSubject(subject="Test"),
-                html=EmailContent(html="<p>Test</p>"),
+                subject="Test",
+                html="<p>Test</p>",
             )
 
         errors = exc_info.value.errors()
@@ -404,16 +317,16 @@ class TestEmailRequest:
     def test_to_dict_conversion(self):
         """Test conversion to API-compatible dictionary."""
         request = EmailRequest(
-            from_email=EmailFrom(email="sender@example.com", name="Sender"),
-            to=[EmailRecipient(email="recipient@example.com", name="Recipient")],
-            subject=EmailSubject(subject="Test"),
-            html=EmailContent(html="<p>Test</p>"),
+            from_email=EmailContact(email="sender@example.com", name="Sender"),
+            to=[EmailContact(email="recipient@example.com", name="Recipient")],
+            subject="Test",
+            html="<p>Test</p>",
         )
         
         data = request.model_dump(exclude_none=True)
 
         assert data["from_email"] == {"email": "sender@example.com", "name": "Sender"}
         assert data["to"] == [{"email": "recipient@example.com", "name": "Recipient"}]
-        assert data["subject"] == {"subject": "Test"}
-        assert data["html"] == {"html": "<p>Test</p>"}
+        assert data["subject"] == "Test"
+        assert data["html"] == "<p>Test</p>"
         assert "template_id" not in data

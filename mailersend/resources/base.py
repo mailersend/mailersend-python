@@ -1,5 +1,7 @@
+import logging
 from typing import Dict, Any, Optional, Union, List, TypeVar, Type, ClassVar
 from ..models.base import BaseModel, ModelList
+from ..logging import get_logger
 
 T = TypeVar('T', bound=BaseModel)
 
@@ -10,7 +12,7 @@ class BaseResource:
     BASE_API_URL: ClassVar[str] = ""
     MODEL_CLASS: ClassVar[Type[BaseModel]] = BaseModel
     
-    def __init__(self, client):
+    def __init__(self, client, logger: Optional[logging.Logger] = None):
         """
         Initialize a resource with the API client.
         
@@ -18,6 +20,7 @@ class BaseResource:
             client: The MailerSendClient instance
         """
         self.client = client
+        self.logger = logger or get_logger()
         
     def _process_response(self, response_data: Dict[str, Any], model_class: Optional[Type[T]] = None) -> Union[T, ModelList[T], Dict[str, Any]]:
         """

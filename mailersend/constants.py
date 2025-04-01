@@ -3,7 +3,7 @@ import sys
 
 # Base API information
 API_VERSION = "v1"
-DEFAULT_BASE_URL = f"https://api.mailersend.com/{API_VERSION}"
+DEFAULT_BASE_URL = f"https://api.mailersend.com/{API_VERSION}/"
 DEFAULT_TIMEOUT = 30  # seconds
 
 # Package info for user agent
