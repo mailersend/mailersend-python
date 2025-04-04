@@ -17,7 +17,7 @@ vcr = VCR(
     match_on=["method", "scheme", "host", "port", "path", "query", "body"],
     filter_headers=["authorization"],
     filter_post_data_parameters=["api_key", "token"],
-    serializer="json"
+    serializer="yaml"
 )
 
 # Create a pytest fixture for the API key

@@ -42,7 +42,7 @@ def inject_common_objects(request, email_client, base_email_request):
         request.cls.email_request_factory = staticmethod(email_request_factory)
 
 class TestEmailSend:   
-    @vcr.use_cassette("email_send_with_base_params.json")
+    @vcr.use_cassette("email_send_with_base_params.yaml")
     def test_send_with_email_request_object(self):
         # Test sending with a complete EmailRequest object
         email_request = self.email_request_factory(
@@ -57,7 +57,7 @@ class TestEmailSend:
         assert "id" in result
 
 
-    @vcr.use_cassette("email_send_text_only.json")
+    @vcr.use_cassette("email_send_text_only.yaml")
     def test_send_with_text_only(self):
         # Test sending with text content only (no HTML)
         email_request = self.email_request_factory(
@@ -72,7 +72,7 @@ class TestEmailSend:
         assert isinstance(result, dict)
         assert "id" in result
 
-    @vcr.use_cassette("email_send_with_cc_bcc.json")
+    @vcr.use_cassette("email_send_with_cc_bcc.yaml")
     def test_send_with_cc_and_bcc(self):
         # Test sending with CC and BCC recipients
         email_request = self.email_request_factory(
@@ -91,7 +91,7 @@ class TestEmailSend:
         assert isinstance(result, dict)
         assert "id" in result
 
-    @vcr.use_cassette("email_send_with_scheduled_time.json")
+    @vcr.use_cassette("email_send_with_scheduled_time.yaml")
     def test_send_with_datetime_send_at(self):
         # Test sending with scheduled datetime
         # Schedule for 24 hours in the future to avoid test failures
@@ -109,7 +109,7 @@ class TestEmailSend:
         assert isinstance(result, dict)
         assert "id" in result
 
-    @vcr.use_cassette("email_send_with_attachments.json")
+    @vcr.use_cassette("email_send_with_attachments.yaml")
     def test_send_with_attachments(self):
         # Create a test file for attachment
         test_file_path = "tests/fixtures/test_attachment.txt"
@@ -146,7 +146,7 @@ class TestEmailSend:
             if os.path.exists(test_file_path):
                 os.remove(test_file_path)
 
-    @vcr.use_cassette("email_send_with_tags.json")
+    @vcr.use_cassette("email_send_with_tags.yaml")
     def test_send_with_tags(self):
         # Test sending with tags
         email_request = self.email_request_factory(
@@ -160,7 +160,7 @@ class TestEmailSend:
         assert isinstance(result, dict)
         assert "id" in result
 
-    @vcr.use_cassette("email_send_with_tracking.json")
+    @vcr.use_cassette("email_send_with_tracking.yaml")
     def test_send_with_tracking_settings(self):
         # Test sending with tracking settings
         email_request = self.email_request_factory(
@@ -174,7 +174,7 @@ class TestEmailSend:
         assert isinstance(result, dict)
         assert "id" in result
 
-    @vcr.use_cassette("email_send_with_template.json")
+    @vcr.use_cassette("email_send_with_template.yaml")
     def test_send_with_template_id(self):
         # Send email using template ID
         email_request = self.email_request_factory(
@@ -194,7 +194,7 @@ class TestEmailSend:
         assert isinstance(result, dict)
         assert "id" in result
 
-    @vcr.use_cassette("email_send_with_headers.json")
+    @vcr.use_cassette("email_send_with_headers.yaml")
     def test_send_with_custom_headers(self):
         # Test sending with custom headers
         email_request = self.email_request_factory(
@@ -210,7 +210,7 @@ class TestEmailSend:
         assert isinstance(result, dict)
         assert "id" in result
 
-    @vcr.use_cassette("email_send_with_reply_to.json")
+    @vcr.use_cassette("email_send_with_reply_to.yaml")
     def test_send_with_reply_to(self):
         # Test sending with reply-to address
         email_request = self.email_request_factory(
@@ -224,7 +224,7 @@ class TestEmailSend:
         assert isinstance(result, dict)
         assert "id" in result
 
-    @vcr.use_cassette("email_send_with_threading.json")
+    @vcr.use_cassette("email_send_with_threading.yaml")
     def test_send_with_in_reply_to_and_references(self):
         # Test sending with in-reply-to and references headers
         email_request = self.email_request_factory(
@@ -238,3 +238,35 @@ class TestEmailSend:
         # Verify response structure
         assert isinstance(result, dict)
         assert "id" in result
+
+    @vcr.use_cassette("email_send_bulk.yaml")
+    def test_send_bulk_emails(self):
+        # Test sending bulk emails with multiple EmailRequests
+        payload = [
+            self.email_request_factory(
+                self.base_email_request,
+                html="<p>First Email</p>"
+            ),
+            self.email_request_factory(
+                self.base_email_request,
+                html="<p>Second Email</p>"
+            ),
+        ]
+
+        result = self.email_client.emails.send_bulk(payload)
+
+        # Verify response structure
+        assert isinstance(result, dict)
+        assert "bulk_email_id" in result
+
+    @vcr.use_cassette("email_send_bulk_status.yaml")
+    def test_get_bulk_status(self):
+        # Test getting the status of a bulk email send
+        bulk_email_id = os.environ.get("SDK_BULK_EMAIL_ID")
+        
+        result = self.email_client.emails.get_bulk_status(bulk_email_id)
+
+        # Verify response structure
+        assert isinstance(result, dict)
+        assert "id" in result["data"]
+        assert "messages_id" in result["data"]

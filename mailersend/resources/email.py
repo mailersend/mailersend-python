@@ -54,28 +54,42 @@ class Email(BaseResource):
             
         Returns:
             API response with bulk email information
-            
-        Examples:
-            >>> requests = [
-            ...     EmailRequest(
-            ...         from_email=EmailFrom(email="sender@example.com", name="Sender"),
-            ...         to=[EmailRecipient(email="recipient1@example.com", name="Recipient 1")],
-            ...         subject="Hello 1",
-            ...         html="<p>Hello, recipient 1!</p>"
-            ...     ),
-            ...     EmailRequest(
-            ...         from_email=EmailFrom(email="sender@example.com", name="Sender"),
-            ...         to=[EmailRecipient(email="recipient2@example.com", name="Recipient 2")],
-            ...         subject="Hello 2",
-            ...         html="<p>Hello, recipient 2!</p>"
-            ...     )
-            ... ]
-            >>> client.email.send_bulk(requests)
         """
-        bulk_data = {"messages": [email.dict(by_alias=True) for email in emails]}
-        
-        return self.client.request(
-            "POST",
-            f"{self.BASE_API_URL}/bulk-email",
-            body=bulk_data
-        ).json()
+        self.logger.debug("Preparing to send emails in bulk")
+
+        payload = []
+        for email in emails:
+            if not isinstance(email, EmailRequest):
+                self.logger.error("Invalid EmailRequest object provided")
+                raise ValidationError("EmailRequest must be provided")
+            
+            # Prepare payload for each email
+            email_payload = email.model_dump(by_alias=True, exclude_none=True)
+            payload.append(email_payload)
+
+        self.logger.info("Sending email request to MailerSend API")
+        self.logger.debug(f"Payload: {payload}")
+
+        response = self.client.request("POST", "bulk-email", body=payload)
+
+        return response.json()
+    
+    def get_bulk_status(self, bulk_email_id: str) -> Dict[str, Any]:
+        """
+        Get the status of a bulk email send request.
+
+        Args:
+            bulk_email_id: The ID of the bulk email request
+
+        Returns:
+            API response with bulk email status
+        """
+        self.logger.debug("Getting bulk email status")
+
+        if not bulk_email_id:
+            self.logger.error("No bulk email ID provided")
+            raise ValidationError("Bulk email ID must be provided")
+
+        response = self.client.request("GET", f"bulk-email/{bulk_email_id}")
+
+        return response.json()
