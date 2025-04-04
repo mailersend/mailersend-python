@@ -1,0 +1,79 @@
+{
+    "version": 1,
+    "interactions": [
+        {
+            "request": {
+                "method": "POST",
+                "uri": "https://api.mailersend.com/v1/email",
+                "body": "{\"from\": {\"email\": \"ms-sdk@igor.fail\", \"name\": \"Sender\"}, \"to\": [{\"email\": \"igor@mailerlite.com\", \"name\": \"Recipient\"}], \"subject\": \"Test Email\", \"html\": \"<p>This is a test email</p>\", \"in_reply_to\": \"ms-sdk-replyto@igor.fail\", \"references\": [\"123456\"]}",
+                "headers": {
+                    "User-Agent": [
+                        "mailersend-python/2.0.0 (Python/3.9.1; OS/Darwin 24.3.0; Impl/CPython)"
+                    ],
+                    "Accept-Encoding": [
+                        "gzip, deflate"
+                    ],
+                    "Accept": [
+                        "application/json"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Content-Type": [
+                        "application/json"
+                    ],
+                    "Content-Length": [
+                        "253"
+                    ]
+                }
+            },
+            "response": {
+                "status": {
+                    "code": 202,
+                    "message": "Accepted"
+                },
+                "headers": {
+                    "x-apiquota-remaining": [
+                        "-1"
+                    ],
+                    "Date": [
+                        "Fri, 04 Apr 2025 12:45:43 GMT"
+                    ],
+                    "strict-transport-security": [
+                        "max-age=31536000; includeSubDomains"
+                    ],
+                    "CF-RAY": [
+                        "92b0e78c089cdc6f-BUD"
+                    ],
+                    "x-apiquota-reset": [
+                        "2025-04-05T00:00:00Z"
+                    ],
+                    "cf-cache-status": [
+                        "DYNAMIC"
+                    ],
+                    "Content-Type": [
+                        "text/html; charset=UTF-8"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Cache-Control": [
+                        "no-cache, private"
+                    ],
+                    "x-message-id": [
+                        "67efd477779eab064cd33d79"
+                    ],
+                    "Server": [
+                        "cloudflare"
+                    ],
+                    "Transfer-Encoding": [
+                        "chunked"
+                    ]
+                },
+                "body": {
+                    "string": ""
+                }
+            }
+        }
+    ]
+}

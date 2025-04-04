@@ -53,7 +53,7 @@ class EmailRequest(BaseModel):
     personalization: Optional[List[EmailPersonalization]] = None
     precedence_bulk: Optional[bool] = None
     send_at: Optional[int] = None
-    in_reply_to: Optional[str] = None
+    in_reply_to: Optional[EmailStr] = None
     references: Optional[List[str]] = None
     settings: Optional[EmailTrackingSettings] = None
     headers: Optional[List[EmailHeader]] = None
