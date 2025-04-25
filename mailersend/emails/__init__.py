@@ -98,6 +98,12 @@ class NewEmail(base.NewAPIClient):
         """
         message["send_at"] = send_at
 
+    def set_list_unsubscribe(self, list_unsubscribe, message):
+        """
+        Appends 'list_unsubscribe' on an e-mail
+        """
+        message["list_unsubscribe"] = list_unsubscribe
+
     def send(self, message):
         """
         Handles e-mail sending
