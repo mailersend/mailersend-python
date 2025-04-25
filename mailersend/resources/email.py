@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Dict, Any, List, Optional, Union
+from typing import Dict, Any, List
 
 from .base import BaseResource
 from ..models.email import EmailRequest
