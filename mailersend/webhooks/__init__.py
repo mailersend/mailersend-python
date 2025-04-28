@@ -13,12 +13,8 @@ class NewWebhook(base.NewAPIClient):
     """
     Instantiates the /webhooks endpoint object
     """
-
-    def __init__(self):
-        """
-        NewWebhook constructor
-        """
-        pass
+    
+    pass
 
     def get_webhooks(self, domain_id):
         """
