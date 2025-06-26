@@ -12,7 +12,7 @@ from .exceptions import (
     ResourceNotFoundError, BadRequestError, ServerError
 )
 from .resources.email import Email
-from .logging import get_logger
+from .logging import get_logger, RequestLogger
 
 
 class MailerSendClient:
@@ -24,7 +24,10 @@ class MailerSendClient:
     
     Examples:
         >>> client = MailerSendClient(api_key="your_api_key")
-        >>> campaigns = client.campaigns.list()
+        >>> response = client.emails.send(email_request)
+        
+        # Enable debug logging for detailed request/response info
+        >>> client = MailerSendClient(api_key="your_api_key", debug=True)
     """
     
     def __init__(
@@ -33,6 +36,7 @@ class MailerSendClient:
         base_url: str = DEFAULT_BASE_URL,
         timeout: int = DEFAULT_TIMEOUT,
         max_retries: int = 3,
+        debug: bool = False,
         logger: Optional[logging.Logger] = None
     ) -> None:
         """
@@ -43,6 +47,7 @@ class MailerSendClient:
             base_url: Base URL for API requests
             timeout: Request timeout in seconds
             max_retries: Maximum number of retries for failed requests
+            debug: Enable detailed debug logging
             logger: Custom logger instance
         
         Raises:
@@ -54,7 +59,9 @@ class MailerSendClient:
         self.api_key = api_key
         self.base_url = base_url
         self.timeout = timeout
-        self.logger = logger or get_logger()
+        self.debug = debug
+        self.logger = logger or get_logger(debug=debug)
+        self.request_logger = RequestLogger(self.logger)
         
         # Initialize session with retry logic
         self.session = requests.Session()
@@ -78,6 +85,10 @@ class MailerSendClient:
         
         # Initialize resources
         self.emails = Email(self)
+        
+        self.logger.info("MailerSend client initialized successfully")
+        if debug:
+            self.logger.info("🐛 Debug mode enabled - detailed logging active")
 
         
     def request(
@@ -108,7 +119,9 @@ class MailerSendClient:
             MailerSendError: For other API errors
         """
         url = urljoin(self.base_url, path)
-        self.logger.debug(f"Making {method} request to {url}")
+        
+        # Start request logging
+        request_id = self.request_logger.start_request(method, url, params, body)
         
         try:
             response = self.session.request(
@@ -119,11 +132,8 @@ class MailerSendClient:
                 timeout=self.timeout
             )
             
-            # Log request details at debug level
-            self.logger.debug(f"Request: {method} {url}")
-            self.logger.debug(f"Params: {params}")
-            self.logger.debug(f"Body: {body}")
-            self.logger.debug(f"Response: {response.status_code}")
+            # Log response details
+            self.request_logger.log_response(response)
             
             # Handle different response status codes
             if 200 <= response.status_code < 300:
@@ -132,11 +142,20 @@ class MailerSendClient:
             # Handle error responses
             error_message = self._get_error_message(response)
             
+            # Log the error details before raising
+            self.logger.error(f"API error {response.status_code}: {error_message}", 
+                            extra={'request_id': request_id})
+            
             if response.status_code == 401:
                 raise AuthenticationError(error_message, response)
             elif response.status_code == 404:
                 raise ResourceNotFoundError(error_message, response)
             elif response.status_code == 429:
+                # Log rate limit details
+                retry_after = response.headers.get('retry-after')
+                remaining = response.headers.get('x-apiquota-remaining')
+                self.logger.warning(f"⚠️ Rate limit exceeded. Retry after: {retry_after}s, Remaining: {remaining}", 
+                                  extra={'request_id': request_id})
                 raise RateLimitExceeded(error_message, response)
             elif 400 <= response.status_code < 500:
                 raise BadRequestError(error_message, response)
@@ -146,7 +165,7 @@ class MailerSendClient:
                 raise MailerSendError(error_message, response)
                 
         except requests.RequestException as e:
-            self.logger.error(f"Request failed: {str(e)}")
+            self.request_logger.log_error(e)
             raise MailerSendError(f"Request failed: {str(e)}")
     
     def _get_error_message(self, response: requests.Response) -> str:
@@ -167,3 +186,26 @@ class MailerSendClient:
             pass
         
         return f"Error {response.status_code}: {response.text}"
+    
+    def enable_debug(self):
+        """Enable debug logging for this client instance."""
+        self.debug = True
+        self.logger.setLevel(logging.DEBUG)
+        self.logger.info("🐛 Debug mode enabled")
+    
+    def disable_debug(self):
+        """Disable debug logging for this client instance."""
+        self.debug = False
+        self.logger.setLevel(logging.WARNING)
+        self.logger.info("Debug mode disabled")
+    
+    def get_debug_info(self) -> Dict[str, Any]:
+        """Get current debug and configuration information."""
+        return {
+            "debug_enabled": self.debug,
+            "base_url": self.base_url,
+            "timeout": self.timeout,
+            "user_agent": USER_AGENT,
+            "logger_level": self.logger.level,
+            "session_adapters": list(self.session.adapters.keys())
+        }

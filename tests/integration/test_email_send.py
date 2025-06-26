@@ -9,6 +9,7 @@ from mailersend.models.email import (
     EmailPersonalization, EmailRequest,
     EmailTrackingSettings, EmailHeader
 )
+from mailersend.models.base import APIResponse
 
 @pytest.fixture
 def base_email_request():
@@ -52,9 +53,12 @@ class TestEmailSend:
 
         result = self.email_client.emails.send(email_request)
         
-        # Verify response structure
-        assert isinstance(result, dict)
+        assert isinstance(result, APIResponse)
+        assert result.success is True
         assert "id" in result
+        assert result["id"] is not None
+        assert result.status_code == 202
+        assert isinstance(result.headers, dict)
 
 
     @vcr.use_cassette("email_send_text_only.yaml")
@@ -69,8 +73,10 @@ class TestEmailSend:
         result = self.email_client.emails.send(email_request)
         
         # Verify response structure
-        assert isinstance(result, dict)
+        assert isinstance(result, APIResponse)
+        assert result.success is True
         assert "id" in result
+        assert result["id"] is not None
 
     @vcr.use_cassette("email_send_with_cc_bcc.yaml")
     def test_send_with_cc_and_bcc(self):
@@ -88,8 +94,10 @@ class TestEmailSend:
         result = self.email_client.emails.send(email_request)
         
         # Verify response structure
-        assert isinstance(result, dict)
+        assert isinstance(result, APIResponse)
+        assert result.success is True
         assert "id" in result
+        assert result["id"] is not None
 
     @vcr.use_cassette("email_send_with_scheduled_time.yaml")
     def test_send_with_datetime_send_at(self):
@@ -106,8 +114,10 @@ class TestEmailSend:
         result = self.email_client.emails.send(email_request)
         
         # Verify response structure
-        assert isinstance(result, dict)
+        assert isinstance(result, APIResponse)
+        assert result.success is True
         assert "id" in result
+        assert result["id"] is not None
 
     @vcr.use_cassette("email_send_with_attachments.yaml")
     def test_send_with_attachments(self):
@@ -138,8 +148,10 @@ class TestEmailSend:
             result = self.email_client.emails.send(email_request)
             
             # Verify response structure
-            assert isinstance(result, dict)
+            assert isinstance(result, APIResponse)
+            assert result.success is True
             assert "id" in result
+            assert result["id"] is not None
         
         finally:
             # Clean up the test file
@@ -157,8 +169,10 @@ class TestEmailSend:
         result = self.email_client.emails.send(email_request)
         
         # Verify response structure
-        assert isinstance(result, dict)
+        assert isinstance(result, APIResponse)
+        assert result.success is True
         assert "id" in result
+        assert result["id"] is not None
 
     @vcr.use_cassette("email_send_with_tracking.yaml")
     def test_send_with_tracking_settings(self):
@@ -171,8 +185,10 @@ class TestEmailSend:
         result = self.email_client.emails.send(email_request)
         
         # Verify response structure
-        assert isinstance(result, dict)
+        assert isinstance(result, APIResponse)
+        assert result.success is True
         assert "id" in result
+        assert result["id"] is not None
 
     @vcr.use_cassette("email_send_with_template.yaml")
     def test_send_with_template_id(self):
@@ -191,8 +207,10 @@ class TestEmailSend:
         result = self.email_client.emails.send(email_request)
 
         # Verify response structure
-        assert isinstance(result, dict)
+        assert isinstance(result, APIResponse)
+        assert result.success is True
         assert "id" in result
+        assert result["id"] is not None
 
     @vcr.use_cassette("email_send_with_headers.yaml")
     def test_send_with_custom_headers(self):
@@ -207,8 +225,10 @@ class TestEmailSend:
         result = self.email_client.emails.send(email_request)
         
         # Verify response structure
-        assert isinstance(result, dict)
+        assert isinstance(result, APIResponse)
+        assert result.success is True
         assert "id" in result
+        assert result["id"] is not None
 
     @vcr.use_cassette("email_send_with_reply_to.yaml")
     def test_send_with_reply_to(self):
@@ -221,8 +241,10 @@ class TestEmailSend:
         result = self.email_client.emails.send(email_request)
         
         # Verify response structure
-        assert isinstance(result, dict)
+        assert isinstance(result, APIResponse)
+        assert result.success is True
         assert "id" in result
+        assert result["id"] is not None
 
     @vcr.use_cassette("email_send_with_threading.yaml")
     def test_send_with_in_reply_to_and_references(self):
@@ -236,8 +258,10 @@ class TestEmailSend:
         result = self.email_client.emails.send(email_request)
         
         # Verify response structure
-        assert isinstance(result, dict)
+        assert isinstance(result, APIResponse)
+        assert result.success is True
         assert "id" in result
+        assert result["id"] is not None
 
     @vcr.use_cassette("email_send_bulk.yaml")
     def test_send_bulk_emails(self):
@@ -256,8 +280,11 @@ class TestEmailSend:
         result = self.email_client.emails.send_bulk(payload)
 
         # Verify response structure
-        assert isinstance(result, dict)
+        assert isinstance(result, APIResponse)
+        assert result.success is True
         assert "bulk_email_id" in result
+        assert result["bulk_email_id"] is not None
+        assert result.status_code == 202
 
     @vcr.use_cassette("email_send_bulk_status.yaml")
     def test_get_bulk_status(self):
@@ -267,6 +294,12 @@ class TestEmailSend:
         result = self.email_client.emails.get_bulk_status(bulk_email_id)
 
         # Verify response structure
-        assert isinstance(result, dict)
+        assert isinstance(result, APIResponse)
+        assert result.success is True
+        # The bulk status response has a "data" wrapper
+        assert "data" in result
         assert "id" in result["data"]
         assert "messages_id" in result["data"]
+        assert result.status_code == 200
+        assert isinstance(result.headers, dict)
+
