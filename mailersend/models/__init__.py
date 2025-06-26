@@ -10,6 +10,14 @@ from .email import (
     EmailTrackingSettings, 
     EmailHeader
 )
+from .activity import (
+    ActivityRecipient,
+    ActivityEmail,
+    Activity,
+    ActivityQueryParams,
+    ActivityRequest,
+    SingleActivityRequest
+)
 
 __all__ = [
     "BaseModel",
@@ -18,5 +26,10 @@ __all__ = [
     "EmailPersonalization", 
     "EmailRequest",
     "EmailTrackingSettings", 
-    "EmailHeader"
+    "EmailHeader",
+    "ActivityRecipient",
+    "ActivityEmail",
+    "Activity",
+    "ActivityQueryParams",
+    "ActivityRequest"
 ]

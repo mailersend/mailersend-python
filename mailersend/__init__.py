@@ -1,43 +1,75 @@
 """
-MailerSend Python SDK - Official Python library for interacting with the MailerSend API.
+MailerSend Python SDK
+
+A comprehensive Python SDK for the MailerSend API.
 """
 
 from .client import MailerSendClient
-from .constants import __version__
-from .models.base import APIResponse
-from .logging import setup_debug_logging, get_logger
-from .builders import EmailBuilder
-
+from .builders.email import EmailBuilder
+from .builders.activity import ActivityBuilder, SingleActivityBuilder
+from .resources.email import Email
+from .resources.activity import Activity
+from .models.email import (
+    EmailContact, 
+    EmailAttachment,
+    EmailPersonalization, 
+    EmailRequest,
+    EmailTrackingSettings, 
+    EmailHeader
+)
+from .models.activity import (
+    ActivityRecipient,
+    ActivityEmail,
+    Activity as ActivityModel,
+    ActivityQueryParams,
+    SingleActivityRequest
+)
 from .exceptions import (
     MailerSendError,
-    ValidationError,
     AuthenticationError,
-    ResourceNotFoundError,
     RateLimitExceeded,
+    ResourceNotFoundError,
     BadRequestError,
     ServerError,
+    ValidationError
 )
 
+__version__ = "1.0.0"
+
 __all__ = [
-    # Main client
+    # Core client
     "MailerSendClient",
     
-    # Response object
-    "APIResponse",
-
+    # Builders
+    "EmailBuilder",
+    "ActivityBuilder",
+    "SingleActivityBuilder",
+    
+    # Resources
+    "Email",
+    "Activity",
+    
+    # Email models
+    "EmailContact",
+    "EmailAttachment", 
+    "EmailPersonalization",
+    "EmailRequest",
+    "EmailTrackingSettings",
+    "EmailHeader",
+    
+    # Activity models
+    "ActivityRecipient",
+    "ActivityEmail",
+    "ActivityModel",
+    "ActivityQueryParams",
+    "SingleActivityRequest",
+    
     # Exceptions
     "MailerSendError",
-    "ValidationError",
-    "AuthenticationError",
-    "ResourceNotFoundError",
+    "AuthenticationError", 
     "RateLimitExceeded",
+    "ResourceNotFoundError",
     "BadRequestError",
     "ServerError",
-
-    # Logging
-    "setup_debug_logging",
-    "get_logger",
-
-    # Builders
-    "EmailBuilder"
+    "ValidationError",
 ]

@@ -6,7 +6,10 @@ complex email requests with intelligent defaults and validation.
 """
 
 from .email import EmailBuilder
+from .activity import ActivityBuilder, SingleActivityBuilder
 
 __all__ = [
-    'EmailBuilder'
+    'EmailBuilder',
+    'ActivityBuilder',
+    'SingleActivityBuilder',
 ] 
