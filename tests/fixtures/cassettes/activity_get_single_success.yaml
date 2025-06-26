@@ -1,0 +1,46 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      User-Agent:
+      - mailersend-python/2.0.0 (Python/3.9.1; OS/Darwin 24.5.0; Impl/CPython)
+    method: GET
+    uri: https://api.mailersend.com/v1/activities/5ee0b166b251345e407c9207
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA6rmUlBQUFDKTS0uTkxPVbJSUApKLc4vLUpOVcjLL1FIyy/NS9FT4qoFAAAA//8D
+        AC9hLe8oAAAA
+    headers:
+      CF-RAY:
+      - 955da131dd2c8919-SOF
+      Cache-Control:
+      - no-cache, private
+      Connection:
+      - keep-alive
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/json
+      Date:
+      - Thu, 26 Jun 2025 15:10:07 GMT
+      Server:
+      - cloudflare
+      Transfer-Encoding:
+      - chunked
+      cf-cache-status:
+      - DYNAMIC
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+    status:
+      code: 404
+      message: Not Found
+version: 1

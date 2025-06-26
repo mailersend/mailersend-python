@@ -12,6 +12,7 @@ from .exceptions import (
     ResourceNotFoundError, BadRequestError, ServerError
 )
 from .resources.email import Email
+from .resources.activity import Activity
 from .logging import get_logger, RequestLogger
 
 
@@ -85,6 +86,7 @@ class MailerSendClient:
         
         # Initialize resources
         self.emails = Email(self)
+        self.activities = Activity(self)
         
         self.logger.info("MailerSend client initialized successfully")
         if debug:
