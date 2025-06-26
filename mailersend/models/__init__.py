@@ -18,6 +18,17 @@ from .activity import (
     ActivityRequest,
     SingleActivityRequest
 )
+from .analytics import (
+    AnalyticsRequest,
+    AnalyticsDateStats,
+    AnalyticsDateResponse,
+    AnalyticsCountryStats,
+    AnalyticsCountryResponse,
+    AnalyticsUserAgentStats,
+    AnalyticsUserAgentResponse,
+    AnalyticsReadingEnvironmentStats,
+    AnalyticsReadingEnvironmentResponse
+)
 
 __all__ = [
     "BaseModel",
@@ -31,5 +42,14 @@ __all__ = [
     "ActivityEmail",
     "Activity",
     "ActivityQueryParams",
-    "ActivityRequest"
+    "ActivityRequest",
+    "AnalyticsRequest",
+    "AnalyticsDateStats",
+    "AnalyticsDateResponse",
+    "AnalyticsCountryStats",
+    "AnalyticsCountryResponse",
+    "AnalyticsUserAgentStats",
+    "AnalyticsUserAgentResponse",
+    "AnalyticsReadingEnvironmentStats",
+    "AnalyticsReadingEnvironmentResponse"
 ]
