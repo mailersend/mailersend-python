@@ -1,7 +1,8 @@
 import logging
 from typing import Dict, Any, Optional, Union, List, TypeVar, Type, ClassVar
-from ..models.base import BaseModel, ModelList
+from ..models.base import BaseModel, ModelList, APIResponse
 from ..logging import get_logger
+import requests
 
 T = TypeVar('T', bound=BaseModel)
 
@@ -21,6 +22,51 @@ class BaseResource:
         """
         self.client = client
         self.logger = logger or get_logger()
+    
+    def _create_response(self, response: requests.Response, data: Any = None) -> APIResponse:
+        """
+        Create unified APIResponse object from HTTP response.
+        
+        Args:
+            response: The HTTP response object
+            data: Optional custom data to include (if None, uses response.json())
+            
+        Returns:
+            APIResponse object with data, headers, and metadata
+        """
+        if data is None:
+            try:
+                data = response.json() if response.content else {}
+            except Exception:
+                # If JSON parsing fails, use empty dict
+                data = {}
+                
+        return APIResponse(
+            data=data,
+            headers=dict(response.headers),
+            status_code=response.status_code,
+            request_id=response.headers.get("x-request-id"),
+            rate_limit_remaining=self._parse_int_header(response, "x-apiquota-remaining")
+        )
+    
+    def _parse_int_header(self, response: requests.Response, header: str) -> Optional[int]:
+        """
+        Safely parse integer header value.
+        
+        Args:
+            response: The HTTP response object
+            header: Header name to parse
+            
+        Returns:
+            Integer value or None if parsing fails
+        """
+        value = response.headers.get(header)
+        if value:
+            try:
+                return int(value)
+            except ValueError:
+                pass
+        return None
         
     def _process_response(self, response_data: Dict[str, Any], model_class: Optional[Type[T]] = None) -> Union[T, ModelList[T], Dict[str, Any]]:
         """

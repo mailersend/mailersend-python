@@ -4,6 +4,8 @@ MailerSend Python SDK - Official Python library for interacting with the MailerS
 
 from .client import MailerSendClient
 from .constants import __version__
+from .models.base import APIResponse
+from .logging import setup_debug_logging, get_logger
 
 from .exceptions import (
     MailerSendError,
@@ -18,6 +20,9 @@ from .exceptions import (
 __all__ = [
     # Main client
     "MailerSendClient",
+    
+    # Response object
+    "APIResponse",
 
     # Exceptions
     "MailerSendError",
@@ -27,4 +32,8 @@ __all__ = [
     "RateLimitExceeded",
     "BadRequestError",
     "ServerError",
+
+    # Logging
+    "setup_debug_logging",
+    "get_logger"
 ]
