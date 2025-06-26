@@ -6,6 +6,7 @@ from .client import MailerSendClient
 from .constants import __version__
 from .models.base import APIResponse
 from .logging import setup_debug_logging, get_logger
+from .builders import EmailBuilder
 
 from .exceptions import (
     MailerSendError,
@@ -35,5 +36,8 @@ __all__ = [
 
     # Logging
     "setup_debug_logging",
-    "get_logger"
+    "get_logger",
+
+    # Builders
+    "EmailBuilder"
 ]

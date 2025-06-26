@@ -101,3 +101,4 @@ class EmailRequest(BaseModel):
         current_time = int(time.time())
         if v and (v < current_time or v > current_time + 259200):
             raise ValueError("send_at must be between now and 72 hours from now")
+        return v

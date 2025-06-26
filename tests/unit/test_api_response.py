@@ -179,5 +179,7 @@ class TestAPIResponse:
         assert response["meta"]["total"] == 2
         
         # Test attribute-style access
-        assert response.items[0]["name"] == "Item 1"
+        # Note: 'items' conflicts with method name, so use data_ prefix or dict access
+        assert response.data_items[0]["name"] == "Item 1"  # Use data_ prefix for conflicts
+        assert response["items"][0]["name"] == "Item 1"    # Or use dict access
         assert response.meta["total"] == 2 

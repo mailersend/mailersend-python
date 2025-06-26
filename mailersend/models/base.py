@@ -64,6 +64,10 @@ class APIResponse:
         >>> request_id = response.headers.x_request_id           # Attribute access
         >>> request_id = response["headers"]["x-request-id"]     # Nested dict access
         
+        # Handle method name conflicts (items, keys, values, etc.)
+        >>> items = response["items"]     # Dict access (recommended)
+        >>> items = response.data_items   # data_ prefix access
+        
         # JSON conversion
         >>> json_str = response.to_json()                       # Method call
         >>> json_str = json.dumps(response)                     # Direct serialization
@@ -108,6 +112,20 @@ class APIResponse:
     
     def __getattr__(self, name):
         """Allow direct access to data fields for convenience."""
+        # Handle data_ prefix for explicit data field access (avoids method conflicts)
+        if name.startswith('data_'):
+            field_name = name[5:]  # Remove 'data_' prefix
+            if isinstance(self.data, dict) and field_name in self.data:
+                return self.data[field_name]
+            elif hasattr(self.data, field_name):
+                return getattr(self.data, field_name)
+            raise AttributeError(f"Data field '{field_name}' not found")
+        
+        # Avoid conflicts with built-in methods like 'items', 'keys', 'values'
+        # These should always refer to the APIResponse methods, not data fields
+        if name in ('items', 'keys', 'values', 'get', 'to_dict', 'to_json'):
+            raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{name}'")
+        
         if isinstance(self.data, dict) and name in self.data:
             return self.data[name]
         elif hasattr(self.data, name):
