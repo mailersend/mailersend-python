@@ -1,42 +1,60 @@
 import pytest
-import vcr
-import os
+from tests.test_helpers import vcr, email_client
 from datetime import datetime, timezone, timedelta
-
 from mailersend import MailerSendClient, AnalyticsBuilder
-from mailersend.models.analytics import (
-    AnalyticsRequest, AnalyticsDateResponse, AnalyticsCountryResponse,
-    AnalyticsUserAgentResponse, AnalyticsReadingEnvironmentResponse
-)
+from mailersend.models.analytics import AnalyticsRequest
 from mailersend.exceptions import ValidationError
 
+
+@pytest.fixture
+def base_analytics_request():
+    """Basic email parameters that are valid for most tests"""
+
+    # Use fixed recent timestamps within the 6-month analytics retention period
+    # Using June 1, 2025 as base date for consistency (within 6 months)
+    base_date = datetime(2025, 6, 1, tzinfo=timezone.utc)
+    end_date = int(base_date.timestamp())
+    start_date = int((base_date - timedelta(days=30)).timestamp())
+    return AnalyticsRequest(
+        date_from=start_date,
+        date_to=end_date,
+        event=["sent", "delivered", "opened"],
+        group_by="days"
+    )
+
+def analytics_request_factory(base: AnalyticsRequest, **overrides) -> AnalyticsRequest:
+    """Create a new AnalyticsRequest with the same fields, overridden with kwargs"""
+    data = base.model_dump()
+
+    # Remove fields explicitly set to `None` in overrides
+    for key, value in overrides.items():
+        if value is None:
+            data.pop(key, None)
+        else:
+            data[key] = value
+
+    return AnalyticsRequest(**data)
+
+@pytest.fixture(autouse=True)
+def inject_common_objects(request, email_client, base_analytics_request):
+    if hasattr(request, "cls") and request.cls is not None:
+        request.cls.email_client = email_client
+        request.cls.base_analytics_request = base_analytics_request
+        request.cls.analytics_request_factory = staticmethod(analytics_request_factory)
 
 class TestAnalyticsIntegration:
     """Integration tests for Analytics API endpoints"""
 
-    @pytest.fixture(autouse=True)
-    def setup(self):
-        """Set up test client"""
-        api_key = os.getenv("MAILERSEND_API_KEY", "test-api-key")
-        self.client = MailerSendClient(api_key=api_key)
-        
-        # Use fixed recent timestamps within the 6-month analytics retention period
-        # Using June 1, 2025 as base date for consistency (within 6 months)
-        base_date = datetime(2025, 6, 1, tzinfo=timezone.utc)
-        self.end_date = int(base_date.timestamp())
-        self.start_date = int((base_date - timedelta(days=30)).timestamp())
-
     @vcr.use_cassette("tests/fixtures/cassettes/analytics_date_basic.yaml")
     def test_get_activity_by_date_basic(self):
         """Test basic activity by date request"""
-        request = (AnalyticsBuilder()
-            .date_from_timestamp(self.start_date)
-            .date_to_timestamp(self.end_date)
-            .events("sent", "delivered", "opened")
-            .group_by("days")
-            .build())
+        request = self.analytics_request_factory(
+            self.base_analytics_request,
+            event=["sent", "delivered", "opened"],
+            group_by="days"
+        )
         
-        response = self.client.analytics.get_activity_by_date(request)
+        response = self.email_client.analytics.get_activity_by_date(request)
         
         # Verify response structure
         assert response.status_code == 200
@@ -54,15 +72,14 @@ class TestAnalyticsIntegration:
     @vcr.use_cassette("tests/fixtures/cassettes/analytics_date_with_tags.yaml")
     def test_get_activity_by_date_with_tags(self):
         """Test activity by date with tag filtering"""
-        request = (AnalyticsBuilder()
-            .date_from_timestamp(self.start_date)
-            .date_to_timestamp(self.end_date)
-            .events("sent", "delivered", "opened", "clicked")
-            .tags("newsletter", "marketing")
-            .group_by("weeks")
-            .build())
+        request = self.analytics_request_factory(
+            self.base_analytics_request,
+            event=["sent", "delivered", "opened", "clicked"],
+            tags=["newsletter", "marketing"],
+            group_by="weeks"
+        )
         
-        response = self.client.analytics.get_activity_by_date(request)
+        response = self.email_client.analytics.get_activity_by_date(request)
         
         assert response.status_code == 200
         assert "data" in response.data
@@ -73,15 +90,14 @@ class TestAnalyticsIntegration:
     @vcr.use_cassette("tests/fixtures/cassettes/analytics_date_with_domain.yaml")
     def test_get_activity_by_date_with_domain(self):
         """Test activity by date with domain filtering"""
-        request = (AnalyticsBuilder()
-            .domain("your-domain-id")
-            .date_from_timestamp(self.start_date)
-            .date_to_timestamp(self.end_date)
-            .engagement_events()
-            .group_by("months")
-            .build())
+        request = self.analytics_request_factory(
+            self.base_analytics_request,
+            domain_id="your-domain-id",
+            event=["opened", "clicked", "unsubscribed", "spam_complaints"],  # engagement events
+            group_by="months"
+        )
         
-        response = self.client.analytics.get_activity_by_date(request)
+        response = self.email_client.analytics.get_activity_by_date(request)
         
         assert response.status_code == 200
         data = response.data["data"]
@@ -90,13 +106,12 @@ class TestAnalyticsIntegration:
     @vcr.use_cassette("tests/fixtures/cassettes/analytics_date_all_events.yaml")
     def test_get_activity_by_date_all_events(self):
         """Test activity by date with all events"""
-        request = (AnalyticsBuilder()
-            .date_from_timestamp(self.start_date)
-            .date_to_timestamp(self.end_date)
-            .all_events()
-            .build())
+        request = self.analytics_request_factory(
+            self.base_analytics_request,
+            event=["sent", "delivered", "opened", "clicked", "hard_bounced", "soft_bounced", "unsubscribed", "spam_complaints"]  # all events (removed rejected as it's invalid)
+        )
         
-        response = self.client.analytics.get_activity_by_date(request)
+        response = self.email_client.analytics.get_activity_by_date(request)
         
         assert response.status_code == 200
         
@@ -114,12 +129,12 @@ class TestAnalyticsIntegration:
     @vcr.use_cassette("tests/fixtures/cassettes/analytics_country_basic.yaml")
     def test_get_opens_by_country_basic(self):
         """Test basic opens by country request"""
-        request = (AnalyticsBuilder()
-            .date_from_timestamp(self.start_date)
-            .date_to_timestamp(self.end_date)
-            .build())
+        request = self.analytics_request_factory(
+            self.base_analytics_request,
+            event=None  # Country endpoint doesn't use events
+        )
         
-        response = self.client.analytics.get_opens_by_country(request)
+        response = self.email_client.analytics.get_opens_by_country(request)
         
         assert response.status_code == 200
         assert "data" in response.data
@@ -138,13 +153,13 @@ class TestAnalyticsIntegration:
     @vcr.use_cassette("tests/fixtures/cassettes/analytics_country_with_tags.yaml")
     def test_get_opens_by_country_with_tags(self):
         """Test opens by country with tag filtering"""
-        request = (AnalyticsBuilder()
-            .date_from_timestamp(self.start_date)
-            .date_to_timestamp(self.end_date)
-            .tags("newsletter")
-            .build())
+        request = self.analytics_request_factory(
+            self.base_analytics_request,
+            tags=["newsletter"],
+            event=None  # Country endpoint doesn't use events
+        )
         
-        response = self.client.analytics.get_opens_by_country(request)
+        response = self.email_client.analytics.get_opens_by_country(request)
         
         assert response.status_code == 200
         data = response.data["data"]
@@ -153,12 +168,12 @@ class TestAnalyticsIntegration:
     @vcr.use_cassette("tests/fixtures/cassettes/analytics_user_agent_basic.yaml")
     def test_get_opens_by_user_agent_basic(self):
         """Test basic opens by user agent request"""
-        request = (AnalyticsBuilder()
-            .date_from_timestamp(self.start_date)
-            .date_to_timestamp(self.end_date)
-            .build())
+        request = self.analytics_request_factory(
+            self.base_analytics_request,
+            event=None  # User agent endpoint doesn't use events
+        )
         
-        response = self.client.analytics.get_opens_by_user_agent(request)
+        response = self.email_client.analytics.get_opens_by_user_agent(request)
         
         assert response.status_code == 200
         assert "data" in response.data
@@ -177,13 +192,13 @@ class TestAnalyticsIntegration:
     @vcr.use_cassette("tests/fixtures/cassettes/analytics_user_agent_with_domain.yaml")
     def test_get_opens_by_user_agent_with_domain(self):
         """Test opens by user agent with domain filtering"""
-        request = (AnalyticsBuilder()
-            .domain("your-domain-id")
-            .date_from_timestamp(self.start_date)
-            .date_to_timestamp(self.end_date)
-            .build())
+        request = self.analytics_request_factory(
+            self.base_analytics_request,
+            domain_id="your-domain-id",
+            event=None  # User agent endpoint doesn't use events
+        )
         
-        response = self.client.analytics.get_opens_by_user_agent(request)
+        response = self.email_client.analytics.get_opens_by_user_agent(request)
         
         assert response.status_code == 200
         data = response.data["data"]
@@ -192,12 +207,12 @@ class TestAnalyticsIntegration:
     @vcr.use_cassette("tests/fixtures/cassettes/analytics_reading_env_basic.yaml")
     def test_get_opens_by_reading_environment_basic(self):
         """Test basic opens by reading environment request"""
-        request = (AnalyticsBuilder()
-            .date_from_timestamp(self.start_date)
-            .date_to_timestamp(self.end_date)
-            .build())
+        request = self.analytics_request_factory(
+            self.base_analytics_request,
+            event=None  # Reading environment endpoint doesn't use events
+        )
         
-        response = self.client.analytics.get_opens_by_reading_environment(request)
+        response = self.email_client.analytics.get_opens_by_reading_environment(request)
         
         assert response.status_code == 200
         assert "data" in response.data
@@ -218,13 +233,13 @@ class TestAnalyticsIntegration:
     @vcr.use_cassette("tests/fixtures/cassettes/analytics_reading_env_with_recipients.yaml")
     def test_get_opens_by_reading_environment_with_recipients(self):
         """Test opens by reading environment with recipient filtering"""
-        request = (AnalyticsBuilder()
-            .recipients("recipient-1", "recipient-2")
-            .date_from_timestamp(self.start_date)
-            .date_to_timestamp(self.end_date)
-            .build())
+        request = self.analytics_request_factory(
+            self.base_analytics_request,
+            recipient_id=["recipient-1", "recipient-2"],
+            event=None  # Reading environment endpoint doesn't use events
+        )
         
-        response = self.client.analytics.get_opens_by_reading_environment(request)
+        response = self.email_client.analytics.get_opens_by_reading_environment(request)
         
         assert response.status_code == 200
         data = response.data["data"]
@@ -235,43 +250,54 @@ class TestAnalyticsIntegration:
         """Test Analytics builder date helper methods"""
         # Test last 7 days using fixed date
         base_date = datetime(2025, 6, 1, tzinfo=timezone.utc)
-        request = (AnalyticsBuilder()
-            .date_range_days(7, base_date)
-            .events("sent", "delivered")
-            .build())
         
-        response = self.client.analytics.get_activity_by_date(request)
+        # Create request with 7 days range
+        end_date = int(base_date.timestamp())
+        start_date = int((base_date - timedelta(days=7)).timestamp())
+        request = self.analytics_request_factory(
+            self.base_analytics_request,
+            date_from=start_date,
+            date_to=end_date,
+            event=["sent", "delivered"]
+        )
+        
+        response = self.email_client.analytics.get_activity_by_date(request)
         assert response.status_code == 200
         
-        # Test with specific end date
-        request = (AnalyticsBuilder()
-            .date_range_weeks(2, base_date)
-            .events("opened", "clicked")
-            .build())
+        # Test with specific end date (2 weeks range)
+        start_date_weeks = int((base_date - timedelta(weeks=2)).timestamp())
+        request = self.analytics_request_factory(
+            self.base_analytics_request,
+            date_from=start_date_weeks,
+            date_to=end_date,
+            event=["opened", "clicked"]
+        )
         
-        response = self.client.analytics.get_activity_by_date(request)
+        response = self.email_client.analytics.get_activity_by_date(request)
         assert response.status_code == 200
 
     @vcr.use_cassette("tests/fixtures/cassettes/analytics_error_no_events.yaml")
     def test_activity_by_date_error_no_events(self):
         """Test that activity by date requires events"""
-        request = AnalyticsRequest(
-            date_from=self.start_date,
-            date_to=self.end_date
-            # No events specified
+        request = self.analytics_request_factory(
+            self.base_analytics_request,
+            event=None  # No events specified - should cause error
         )
         
         with pytest.raises(ValidationError, match="At least one event must be specified"):
-            self.client.analytics.get_activity_by_date(request)
+            self.email_client.analytics.get_activity_by_date(request)
 
     def test_invalid_date_range_error(self):
         """Test error handling for invalid date ranges"""
         from pydantic import ValidationError as PydanticValidationError
         
+        # Get the timestamps from base request and reverse them
+        base_timestamps = self.base_analytics_request
+        
         with pytest.raises(PydanticValidationError):
             AnalyticsRequest(
-                date_from=self.end_date,
-                date_to=self.start_date,  # Wrong order
+                date_from=base_timestamps.date_to,
+                date_to=base_timestamps.date_from,  # Wrong order
                 event=["sent"]
             )
 
@@ -296,34 +322,34 @@ class TestAnalyticsIntegration:
     @vcr.use_cassette("tests/fixtures/cassettes/analytics_comprehensive_test.yaml")
     def test_comprehensive_analytics_workflow(self):
         """Test a comprehensive analytics workflow using all endpoints"""
-        # Build a comprehensive request using fixed date
-        base_date = datetime(2025, 6, 1, tzinfo=timezone.utc)
-        request = (AnalyticsBuilder()
-            .date_range_days(30, base_date)
-            .tags("integration-test")
-            .delivery_events()  # Focus on delivery events for this test
-            .group_by("days")
-            .build())
+        # Build a comprehensive request for activity by date
+        request = self.analytics_request_factory(
+            self.base_analytics_request,
+            tags=["integration-test"],
+            event=["sent", "delivered"],  # delivery events
+            group_by="days"
+        )
         
         # Test activity by date
-        date_response = self.client.analytics.get_activity_by_date(request)
+        date_response = self.email_client.analytics.get_activity_by_date(request)
         assert date_response.status_code == 200
         
         # Test opens by country (doesn't need events)
-        country_request = (AnalyticsBuilder()
-            .date_range_days(30, base_date)
-            .tags("integration-test")
-            .build())
+        country_request = self.analytics_request_factory(
+            self.base_analytics_request,
+            tags=["integration-test"],
+            event=None  # Country endpoint doesn't use events
+        )
         
-        country_response = self.client.analytics.get_opens_by_country(country_request)
+        country_response = self.email_client.analytics.get_opens_by_country(country_request)
         assert country_response.status_code == 200
         
         # Test opens by user agent
-        ua_response = self.client.analytics.get_opens_by_user_agent(country_request)
+        ua_response = self.email_client.analytics.get_opens_by_user_agent(country_request)
         assert ua_response.status_code == 200
         
         # Test opens by reading environment
-        env_response = self.client.analytics.get_opens_by_reading_environment(country_request)
+        env_response = self.email_client.analytics.get_opens_by_reading_environment(country_request)
         assert env_response.status_code == 200
         
         # All should return valid data structures

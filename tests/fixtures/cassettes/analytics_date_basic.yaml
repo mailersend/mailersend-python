@@ -1,0 +1,53 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      User-Agent:
+      - mailersend-python/2.0.0 (Python/3.9.1; OS/Darwin 24.5.0; Impl/CPython)
+    method: GET
+    uri: https://api.mailersend.com/v1/analytics/date?date_from=1746144000&date_to=1748736000&group_by=days&event%5B%5D=sent&event%5B%5D=delivered&event%5B%5D=opened
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA5yUy2rEMAxF/0XrLCQ/JDm/UsqQErcU2smQuIVhyL+XJIt2ZlXuyrbM0eLIvjca
+        hzZQf9vWenqdp0/qSSyppMTM1B0XbTrK7iHEUqijt3n6upxertTTOFwX6mhpQ1uofzp6PbZZ6rlR
+        zx2N9eP9u8513E/TpZ737drdcSFyQrgo6giXOAaI86IIl00hL6oB8rKNDuE8ZshLCYJ4MWZniCsJ
+        8WLijHixoIZ4sZgj5GX/RgCXg/71Inec/HLhgVMJkBctBfJiniEvvo0B4Ep25L04p4R4cYmCePEg
+        hnjxPT4RrkC568mg3PWsUO66Jih33eJ/c/d5XX8AAAD//wMADbDxjR4HAAA=
+    headers:
+      CF-RAY:
+      - 95643621bd77f971-PRG
+      Cache-Control:
+      - no-cache, private
+      Connection:
+      - keep-alive
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/json
+      Date:
+      - Fri, 27 Jun 2025 10:20:22 GMT
+      Server:
+      - cloudflare
+      Transfer-Encoding:
+      - chunked
+      cf-cache-status:
+      - DYNAMIC
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-apiquota-remaining:
+      - '-1'
+      x-apiquota-reset:
+      - '2025-06-28T00:00:00Z'
+    status:
+      code: 200
+      message: OK
+version: 1

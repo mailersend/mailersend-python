@@ -8,10 +8,12 @@ complex email requests with intelligent defaults and validation.
 from .email import EmailBuilder
 from .activity import ActivityBuilder, SingleActivityBuilder
 from .analytics import AnalyticsBuilder
+from .domains import DomainsBuilder
 
 __all__ = [
     'EmailBuilder',
     'ActivityBuilder',
     'SingleActivityBuilder',
     'AnalyticsBuilder',
+    'DomainsBuilder',
 ] 
