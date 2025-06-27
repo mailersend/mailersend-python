@@ -78,6 +78,14 @@ from .inbound import (
     InboundForward,
     InboundMxValues,
 )
+from .messages import (
+    MessagesListRequest,
+    MessageGetRequest,
+    Email,
+    Message,
+    MessagesListResponse,
+    MessageResponse
+)
 
 __all__ = [
     "BaseModel",
@@ -144,4 +152,10 @@ __all__ = [
     "InboundFilterGroup",
     "InboundForward",
     "InboundMxValues",
+    "MessagesListRequest",
+    "MessageGetRequest",
+    "Email",
+    "Message",
+    "MessagesListResponse",
+    "MessageResponse",
 ]

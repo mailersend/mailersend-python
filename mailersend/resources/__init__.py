@@ -9,6 +9,7 @@ from .analytics import Analytics
 from .domains import Domains
 from .identities import IdentitiesResource
 from .inbound import InboundResource
+from .messages import Messages
 
 __all__ = [
     "BaseResource",
@@ -18,4 +19,5 @@ __all__ = [
     "Domains",
     "IdentitiesResource",
     "InboundResource",
+    "Messages",
 ]
