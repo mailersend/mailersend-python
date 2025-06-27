@@ -10,6 +10,7 @@ from .domains import Domains
 from .identities import IdentitiesResource
 from .inbound import InboundResource
 from .messages import Messages
+from .schedules import Schedules
 
 __all__ = [
     "BaseResource",
@@ -20,4 +21,5 @@ __all__ = [
     "IdentitiesResource",
     "InboundResource",
     "Messages",
+    "Schedules",
 ]
