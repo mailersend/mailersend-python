@@ -10,6 +10,7 @@ from .activity import ActivityBuilder, SingleActivityBuilder
 from .analytics import AnalyticsBuilder
 from .domains import DomainsBuilder
 from .identities import IdentityBuilder
+from .inbound import InboundBuilder
 
 __all__ = [
     'EmailBuilder',
@@ -18,4 +19,5 @@ __all__ = [
     'AnalyticsBuilder',
     'DomainsBuilder',
     'IdentityBuilder',
+    'InboundBuilder',
 ] 

@@ -16,6 +16,7 @@ from .resources.activity import Activity
 from .resources.analytics import Analytics
 from .resources.domains import Domains
 from .resources.identities import IdentitiesResource
+from .resources.inbound import InboundResource
 from .logging import get_logger, RequestLogger
 
 
@@ -93,6 +94,7 @@ class MailerSendClient:
         self.analytics = Analytics(self)
         self.domains = Domains(self)
         self.identities = IdentitiesResource(self)
+        self.inbound = InboundResource(self)
         
         self.logger.info("MailerSend client initialized successfully")
         if debug:
