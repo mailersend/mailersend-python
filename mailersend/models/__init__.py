@@ -64,6 +64,20 @@ from .identities import (
     IdentityListResponse,
     IdentityResponse
 )
+from .inbound import (
+    InboundListRequest,
+    InboundGetRequest,
+    InboundCreateRequest,
+    InboundUpdateRequest,
+    InboundDeleteRequest,
+    InboundListResponse,
+    InboundResponse,
+    InboundRoute,
+    InboundFilter,
+    InboundFilterGroup,
+    InboundForward,
+    InboundMxValues,
+)
 
 __all__ = [
     "BaseModel",
@@ -117,5 +131,17 @@ __all__ = [
     "IdentityDomain",
     "Identity",
     "IdentityListResponse",
-    "IdentityResponse"
+    "IdentityResponse",
+    "InboundListRequest",
+    "InboundGetRequest",
+    "InboundCreateRequest",
+    "InboundUpdateRequest",
+    "InboundDeleteRequest",
+    "InboundListResponse",
+    "InboundResponse",
+    "InboundRoute",
+    "InboundFilter",
+    "InboundFilterGroup",
+    "InboundForward",
+    "InboundMxValues",
 ]

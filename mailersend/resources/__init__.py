@@ -8,6 +8,7 @@ from .activity import Activity
 from .analytics import Analytics
 from .domains import Domains
 from .identities import IdentitiesResource
+from .inbound import InboundResource
 
 __all__ = [
     "BaseResource",
@@ -16,4 +17,5 @@ __all__ = [
     "Analytics",
     "Domains",
     "IdentitiesResource",
+    "InboundResource",
 ]
