@@ -6,15 +6,21 @@ Tests basic functionality, validation, and error handling.
 
 import pytest
 from unittest.mock import Mock
+from pydantic import ValidationError as PydanticValidationError
 
 from mailersend.resources.domains import Domains
 from mailersend.models.domains import (
     DomainListRequest,
-    DomainCreateRequest, 
+    DomainCreateRequest,
+    DomainDeleteRequest,
+    DomainGetRequest,
     DomainUpdateSettingsRequest,
-    DomainRecipientsRequest
+    DomainRecipientsRequest,
+    DomainDnsRecordsRequest,
+    DomainVerificationRequest
 )
 from mailersend.exceptions import ValidationError
+from mailersend.models.base import APIResponse
 
 
 class TestDomainsResourceInitialization:
@@ -37,71 +43,39 @@ class TestDomainsResourceValidation:
         mock_client = Mock()
         domains = Domains(mock_client)
         
-        with pytest.raises(ValidationError, match="Domain ID must be provided"):
-            domains.get_domain("")
-        
-        with pytest.raises(ValidationError, match="Domain ID must be provided"):
-            domains.get_domain("   ")
-        
-        with pytest.raises(ValidationError, match="Domain ID must be provided"):
+        with pytest.raises(ValidationError, match="DomainGetRequest must be provided"):
             domains.get_domain(None)
     
     def test_empty_domain_id_validation_delete(self):
-        """Test that empty domain IDs raise errors for delete_domain.""" 
+        """Test that empty domain IDs raise errors for delete_domain."""
         mock_client = Mock()
         domains = Domains(mock_client)
         
-        with pytest.raises(ValidationError, match="Domain ID must be provided"):
-            domains.delete_domain("")
-        
-        with pytest.raises(ValidationError, match="Domain ID must be provided"):
-            domains.delete_domain("   ")
-        
-        with pytest.raises(ValidationError, match="Domain ID must be provided"):
+        with pytest.raises(ValidationError, match="DomainDeleteRequest must be provided"):
             domains.delete_domain(None)
     
     def test_empty_domain_id_validation_recipients(self):
         """Test that empty domain IDs raise errors for get_domain_recipients."""
         mock_client = Mock()
         domains = Domains(mock_client)
-        request = DomainRecipientsRequest()
         
-        with pytest.raises(ValidationError, match="Domain ID must be provided"):
-            domains.get_domain_recipients("", request)
-        
-        with pytest.raises(ValidationError, match="Domain ID must be provided"):
-            domains.get_domain_recipients("   ", request)
-        
-        with pytest.raises(ValidationError, match="Domain ID must be provided"):
-            domains.get_domain_recipients(None, request)
+        with pytest.raises(ValidationError, match="DomainRecipientsRequest must be provided"):
+            domains.get_domain_recipients(None)
     
     def test_empty_domain_id_validation_settings(self):
         """Test that empty domain IDs raise errors for update_domain_settings."""
         mock_client = Mock()
         domains = Domains(mock_client)
-        request = DomainUpdateSettingsRequest()
         
-        with pytest.raises(ValidationError, match="Domain ID must be provided"):
-            domains.update_domain_settings("", request)
-        
-        with pytest.raises(ValidationError, match="Domain ID must be provided"):
-            domains.update_domain_settings("   ", request)
-        
-        with pytest.raises(ValidationError, match="Domain ID must be provided"):
-            domains.update_domain_settings(None, request)
+        with pytest.raises(ValidationError, match="DomainUpdateSettingsRequest must be provided"):
+            domains.update_domain_settings(None)
     
     def test_empty_domain_id_validation_dns(self):
         """Test that empty domain IDs raise errors for get_domain_dns_records."""
         mock_client = Mock()
         domains = Domains(mock_client)
         
-        with pytest.raises(ValidationError, match="Domain ID must be provided"):
-            domains.get_domain_dns_records("")
-        
-        with pytest.raises(ValidationError, match="Domain ID must be provided"):
-            domains.get_domain_dns_records("   ")
-        
-        with pytest.raises(ValidationError, match="Domain ID must be provided"):
+        with pytest.raises(ValidationError, match="DomainDnsRecordsRequest must be provided"):
             domains.get_domain_dns_records(None)
     
     def test_empty_domain_id_validation_verification(self):
@@ -109,13 +83,7 @@ class TestDomainsResourceValidation:
         mock_client = Mock()
         domains = Domains(mock_client)
         
-        with pytest.raises(ValidationError, match="Domain ID must be provided"):
-            domains.get_domain_verification_status("")
-        
-        with pytest.raises(ValidationError, match="Domain ID must be provided"):
-            domains.get_domain_verification_status("   ")
-        
-        with pytest.raises(ValidationError, match="Domain ID must be provided"):
+        with pytest.raises(ValidationError, match="DomainVerificationRequest must be provided"):
             domains.get_domain_verification_status(None)
     
     def test_missing_create_request_validation(self):
@@ -132,7 +100,15 @@ class TestDomainsResourceValidation:
         domains = Domains(mock_client)
         
         with pytest.raises(ValidationError, match="DomainUpdateSettingsRequest must be provided"):
-            domains.update_domain_settings("domain123", None)
+            domains.update_domain_settings(None)
+    
+    def test_missing_delete_request_validation(self):
+        """Test that missing delete request raises error."""
+        mock_client = Mock()
+        domains = Domains(mock_client)
+        
+        with pytest.raises(ValidationError, match="DomainDeleteRequest must be provided"):
+            domains.delete_domain(None)
 
 
 class TestDomainsResourceParameterBuilding:
@@ -143,53 +119,58 @@ class TestDomainsResourceParameterBuilding:
         mock_client = Mock()
         domains = Domains(mock_client)
         
-        request = DomainListRequest(page=1, limit=10, verified=True)
+        request = DomainRecipientsRequest(domain_id="test-domain", page=2, limit=50)
         params = domains._build_query_params(request)
         
-        assert params == {"page": 1, "limit": 10, "verified": True}
-    
+        # domain_id should not be in query params (it's in the URL path)
+        assert "domain_id" not in params
+        assert params["page"] == 2
+        assert params["limit"] == 50
+
     def test_build_query_params_excludes_none(self):
         """Test that None values are excluded from query parameters."""
         mock_client = Mock()
         domains = Domains(mock_client)
         
-        request = DomainListRequest(page=1, verified=None)
+        request = DomainRecipientsRequest(domain_id="test-domain", page=None, limit=25)
         params = domains._build_query_params(request)
         
-        assert "page" in params
-        assert "verified" not in params
-        assert params["page"] == 1
-    
+        assert "domain_id" not in params
+        assert "page" not in params
+        assert params["limit"] == 25
+
     def test_build_request_body_with_request(self):
         """Test building request body from request object."""
         mock_client = Mock()
         domains = Domains(mock_client)
         
-        request = DomainCreateRequest(
-            name="test.com",
-            return_path_subdomain="mail"
+        request = DomainUpdateSettingsRequest(
+            domain_id="test-domain",
+            track_opens=True,
+            send_paused=False
         )
         body = domains._build_request_body(request)
         
-        assert body == {"name": "test.com", "return_path_subdomain": "mail"}
-    
+        # domain_id should not be in request body (it's in the URL path)
+        assert "domain_id" not in body
+        assert body["track_opens"] is True
+        assert body["send_paused"] is False
+
     def test_build_request_body_excludes_none(self):
         """Test that None values are excluded from request body."""
         mock_client = Mock()
         domains = Domains(mock_client)
         
-        request = DomainCreateRequest(
-            name="test.com",
-            return_path_subdomain="mail",
-            custom_tracking_subdomain=None
+        request = DomainUpdateSettingsRequest(
+            domain_id="test-domain",
+            track_opens=None,
+            send_paused=False
         )
         body = domains._build_request_body(request)
         
-        assert "name" in body
-        assert "return_path_subdomain" in body
-        assert "custom_tracking_subdomain" not in body
-        assert body["name"] == "test.com"
-        assert body["return_path_subdomain"] == "mail"
+        assert "domain_id" not in body
+        assert "track_opens" not in body
+        assert body["send_paused"] is False
 
 
 class TestDomainsResourceMethodSignatures:

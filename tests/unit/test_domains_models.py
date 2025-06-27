@@ -10,6 +10,7 @@ from pydantic import ValidationError
 from mailersend.models.domains import (
     DomainListRequest,
     DomainCreateRequest,
+    DomainDeleteRequest,
     DomainUpdateSettingsRequest,
     DomainSettings,
     Domain,
@@ -17,7 +18,10 @@ from mailersend.models.domains import (
     DomainRecipientsRequest,
     DomainDnsRecord,
     DomainDnsRecords,
-    DomainVerificationData
+    DomainVerificationData,
+    DomainGetRequest,
+    DomainDnsRecordsRequest,
+    DomainVerificationRequest
 )
 
 
@@ -176,14 +180,155 @@ class TestDomainCreateRequest:
             DomainCreateRequest(name="example .com")
 
 
+class TestDomainDeleteRequest:
+    """Test DomainDeleteRequest model."""
+    
+    def test_basic_domain_delete_request(self):
+        """Test basic domain delete request."""
+        request = DomainDeleteRequest(domain_id="test-domain-id")
+        
+        assert request.domain_id == "test-domain-id"
+    
+    def test_domain_id_validation(self):
+        """Test domain ID validation."""
+        # Valid domain ID
+        DomainDeleteRequest(domain_id="valid-domain-id")
+        
+        # Empty domain ID
+        with pytest.raises(ValidationError):
+            DomainDeleteRequest(domain_id="")
+        
+        # Whitespace only domain ID
+        with pytest.raises(ValidationError):
+            DomainDeleteRequest(domain_id="   ")
+    
+    def test_domain_id_trimming(self):
+        """Test domain ID trimming."""
+        request = DomainDeleteRequest(domain_id="  test-domain-id  ")
+        assert request.domain_id == "test-domain-id"
+    
+    def test_model_dump(self):
+        """Test model serialization."""
+        request = DomainDeleteRequest(domain_id="test-domain-id")
+        data = request.model_dump()
+        
+        assert data == {"domain_id": "test-domain-id"}
+
+
+class TestDomainGetRequest:
+    """Test DomainGetRequest model."""
+    
+    def test_basic_domain_get_request(self):
+        """Test basic domain get request."""
+        request = DomainGetRequest(domain_id="test-domain-id")
+        
+        assert request.domain_id == "test-domain-id"
+    
+    def test_domain_id_validation(self):
+        """Test domain ID validation."""
+        # Valid domain ID
+        DomainGetRequest(domain_id="valid-domain-id")
+        
+        # Empty domain ID
+        with pytest.raises(ValidationError):
+            DomainGetRequest(domain_id="")
+        
+        # Whitespace only domain ID
+        with pytest.raises(ValidationError):
+            DomainGetRequest(domain_id="   ")
+    
+    def test_domain_id_trimming(self):
+        """Test domain ID trimming."""
+        request = DomainGetRequest(domain_id="  test-domain-id  ")
+        assert request.domain_id == "test-domain-id"
+    
+    def test_model_dump(self):
+        """Test model serialization."""
+        request = DomainGetRequest(domain_id="test-domain-id")
+        data = request.model_dump()
+        
+        assert data == {"domain_id": "test-domain-id"}
+
+
+class TestDomainDnsRecordsRequest:
+    """Test DomainDnsRecordsRequest model."""
+    
+    def test_basic_dns_records_request(self):
+        """Test basic DNS records request."""
+        request = DomainDnsRecordsRequest(domain_id="test-domain-id")
+        
+        assert request.domain_id == "test-domain-id"
+    
+    def test_domain_id_validation(self):
+        """Test domain ID validation."""
+        # Valid domain ID
+        DomainDnsRecordsRequest(domain_id="valid-domain-id")
+        
+        # Empty domain ID
+        with pytest.raises(ValidationError):
+            DomainDnsRecordsRequest(domain_id="")
+        
+        # Whitespace only domain ID
+        with pytest.raises(ValidationError):
+            DomainDnsRecordsRequest(domain_id="   ")
+    
+    def test_domain_id_trimming(self):
+        """Test domain ID trimming."""
+        request = DomainDnsRecordsRequest(domain_id="  test-domain-id  ")
+        assert request.domain_id == "test-domain-id"
+    
+    def test_model_dump(self):
+        """Test model serialization."""
+        request = DomainDnsRecordsRequest(domain_id="test-domain-id")
+        data = request.model_dump()
+        
+        assert data == {"domain_id": "test-domain-id"}
+
+
+class TestDomainVerificationRequest:
+    """Test DomainVerificationRequest model."""
+    
+    def test_basic_verification_request(self):
+        """Test basic verification request."""
+        request = DomainVerificationRequest(domain_id="test-domain-id")
+        
+        assert request.domain_id == "test-domain-id"
+    
+    def test_domain_id_validation(self):
+        """Test domain ID validation."""
+        # Valid domain ID
+        DomainVerificationRequest(domain_id="valid-domain-id")
+        
+        # Empty domain ID
+        with pytest.raises(ValidationError):
+            DomainVerificationRequest(domain_id="")
+        
+        # Whitespace only domain ID
+        with pytest.raises(ValidationError):
+            DomainVerificationRequest(domain_id="   ")
+    
+    def test_domain_id_trimming(self):
+        """Test domain ID trimming."""
+        request = DomainVerificationRequest(domain_id="  test-domain-id  ")
+        assert request.domain_id == "test-domain-id"
+    
+    def test_model_dump(self):
+        """Test model serialization."""
+        request = DomainVerificationRequest(domain_id="test-domain-id")
+        data = request.model_dump()
+        
+        assert data == {"domain_id": "test-domain-id"}
+
+
 class TestDomainUpdateSettingsRequest:
     """Test DomainUpdateSettingsRequest model."""
     
     def test_empty_settings_request(self):
         """Test settings request with no fields set."""
-        request = DomainUpdateSettingsRequest()
+        request = DomainUpdateSettingsRequest(domain_id="test-domain-id")
         
-        # All fields should be None by default
+        # All optional fields should be None
+        assert request.domain_id == "test-domain-id"
         assert request.send_paused is None
         assert request.track_clicks is None
         assert request.track_opens is None
@@ -199,21 +344,24 @@ class TestDomainUpdateSettingsRequest:
     def test_partial_settings_request(self):
         """Test settings request with some fields set."""
         request = DomainUpdateSettingsRequest(
+            domain_id="test-domain-id",
             send_paused=True,
             track_opens=False,
             custom_tracking_enabled=True
         )
         
+        assert request.domain_id == "test-domain-id"
         assert request.send_paused is True
         assert request.track_opens is False
         assert request.custom_tracking_enabled is True
-        # Other fields should remain None
+        # Other fields should be None
         assert request.track_clicks is None
-        assert request.track_content is None
+        assert request.track_unsubscribe is None
     
     def test_all_settings_fields(self):
         """Test settings request with all fields."""
         request = DomainUpdateSettingsRequest(
+            domain_id="test-domain-id",
             send_paused=False,
             track_clicks=True,
             track_opens=True,
@@ -227,6 +375,7 @@ class TestDomainUpdateSettingsRequest:
             ignore_duplicated_recipients=True
         )
         
+        assert request.domain_id == "test-domain-id"
         assert request.send_paused is False
         assert request.track_clicks is True
         assert request.track_opens is True
@@ -242,14 +391,11 @@ class TestDomainUpdateSettingsRequest:
     def test_custom_tracking_subdomain_validation(self):
         """Test custom tracking subdomain validation."""
         # Valid alphanumeric subdomain
-        DomainUpdateSettingsRequest(custom_tracking_subdomain="links123")
+        DomainUpdateSettingsRequest(domain_id="test-domain-id", custom_tracking_subdomain="links123")
         
-        # Invalid: non-alphanumeric
-        with pytest.raises(ValidationError, match="Custom tracking subdomain must be alphanumeric"):
-            DomainUpdateSettingsRequest(custom_tracking_subdomain="links-invalid")
-        
-        with pytest.raises(ValidationError, match="Custom tracking subdomain must be alphanumeric"):
-            DomainUpdateSettingsRequest(custom_tracking_subdomain="links.invalid")
+        # Invalid subdomain with special characters
+        with pytest.raises(ValidationError):
+            DomainUpdateSettingsRequest(domain_id="test-domain-id", custom_tracking_subdomain="links-123")
 
 
 class TestDomainSettings:
@@ -380,23 +526,32 @@ class TestDomainRecipientsRequest:
     
     def test_basic_recipients_request(self):
         """Test basic recipients request."""
-        request = DomainRecipientsRequest()
+        request = DomainRecipientsRequest(domain_id="test-domain-id")
+        
+        assert request.domain_id == "test-domain-id"
         assert request.page is None
-        assert request.limit == 25  # Default
-    
+        assert request.limit == 25  # Default value
+
     def test_recipients_request_validation(self):
         """Test recipients request validation."""
         # Valid values
-        DomainRecipientsRequest(page=1, limit=10)
-        DomainRecipientsRequest(page=5, limit=100)
+        DomainRecipientsRequest(domain_id="test-domain-id", page=1, limit=10)
         
-        # Invalid limit
-        with pytest.raises(ValidationError, match="Limit must be between 10 and 100"):
-            DomainRecipientsRequest(limit=5)
+        # Invalid limit (too low)
+        with pytest.raises(ValidationError):
+            DomainRecipientsRequest(domain_id="test-domain-id", limit=5)
         
-        # Invalid page
-        with pytest.raises(ValidationError, match="Page must be greater than 0"):
-            DomainRecipientsRequest(page=0)
+        # Invalid limit (too high)  
+        with pytest.raises(ValidationError):
+            DomainRecipientsRequest(domain_id="test-domain-id", limit=150)
+        
+        # Invalid page (zero)
+        with pytest.raises(ValidationError):
+            DomainRecipientsRequest(domain_id="test-domain-id", page=0)
+        
+        # Invalid page (negative)
+        with pytest.raises(ValidationError):
+            DomainRecipientsRequest(domain_id="test-domain-id", page=-1)
 
 
 class TestDomainDnsRecord:
@@ -551,10 +706,12 @@ class TestDomainsModelIntegration:
         
         # Update settings request
         settings_req = DomainUpdateSettingsRequest(
+            domain_id="test-domain-id",
             track_opens=True,
             send_paused=False
         )
         settings_data = settings_req.model_dump(exclude_none=True)
+        assert settings_data["domain_id"] == "test-domain-id"
         assert settings_data["track_opens"] is True
         assert settings_data["send_paused"] is False
         assert "track_clicks" not in settings_data  # Should be excluded if None 
