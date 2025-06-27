@@ -14,6 +14,7 @@ from .exceptions import (
 from .resources.email import Email
 from .resources.activity import Activity
 from .resources.analytics import Analytics
+from .resources.domains import Domains
 from .logging import get_logger, RequestLogger
 
 
@@ -89,6 +90,7 @@ class MailerSendClient:
         self.emails = Email(self)
         self.activities = Activity(self)
         self.analytics = Analytics(self)
+        self.domains = Domains(self)
         
         self.logger.info("MailerSend client initialized successfully")
         if debug:

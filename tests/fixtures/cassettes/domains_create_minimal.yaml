@@ -1,0 +1,92 @@
+interactions:
+- request:
+    body: '{"name": "hrcek.info"}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '22'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - mailersend-python/2.0.0 (Python/3.9.1; OS/Darwin 24.5.0; Impl/CPython)
+    method: POST
+    uri: https://api.mailersend.com/v1/domains
+  response:
+    body:
+      string: '{"data":{"id":"r6ke4n1e029gon12","name":"hrcek.info","dkim":null,"spf":null,"mx":null,"tracking":null,"is_verified":false,"is_dns_active":false,"is_trial_domain":false,"domain_settings":{"send_paused":false,"track_clicks":true,"track_opens":true,"track_opens_pixel_on_top":false,"track_unsubscribe":false,"track_unsubscribe_html":"<p>Click
+        here to <a href=\"{{unsubscribe}}\">unsubscribe<\/a><\/p>","track_unsubscribe_html_enabled":false,"track_unsubscribe_plain":"Click
+        here to unsubscribe: {{unsubscribe}}","track_unsubscribe_plain_enabled":false,"track_content":false,"custom_tracking_enabled":false,"custom_tracking_subdomain":"email","return_path_subdomain":"mta","inbound_routing_enabled":false,"inbound_routing_subdomain":"inbound","precedence_bulk":false,"ignore_duplicated_recipients":false,"show_dmarc":false},"can":{"manage":true},"totals":[],"is_dkim_txt":null,"show_dkim_info":false,"is_being_verified":false}}'
+    headers:
+      CF-RAY:
+      - 9564c7b21db436f5-PRG
+      Cache-Control:
+      - no-cache, private
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Date:
+      - Fri, 27 Jun 2025 11:59:55 GMT
+      Server:
+      - cloudflare
+      Transfer-Encoding:
+      - chunked
+      cf-cache-status:
+      - DYNAMIC
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-apiquota-remaining:
+      - '-1'
+      x-apiquota-reset:
+      - '2025-06-28T00:00:00Z'
+    status:
+      code: 201
+      message: Created
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - mailersend-python/2.0.0 (Python/3.9.1; OS/Darwin 24.5.0; Impl/CPython)
+    method: DELETE
+    uri: https://api.mailersend.com/v1/domains/r6ke4n1e029gon12
+  response:
+    body:
+      string: ''
+    headers:
+      CF-RAY:
+      - 9564c7f6ef3a36f5-PRG
+      Cache-Control:
+      - no-cache, private
+      Connection:
+      - keep-alive
+      Date:
+      - Fri, 27 Jun 2025 11:59:56 GMT
+      Server:
+      - cloudflare
+      cf-cache-status:
+      - DYNAMIC
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-apiquota-remaining:
+      - '-1'
+      x-apiquota-reset:
+      - '2025-06-28T00:00:00Z'
+    status:
+      code: 204
+      message: No Content
+version: 1

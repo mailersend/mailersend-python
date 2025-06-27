@@ -1,0 +1,62 @@
+interactions:
+- request:
+    body: '{"send_paused": false, "track_clicks": true, "track_opens": true, "track_unsubscribe":
+      true, "track_content": true, "track_unsubscribe_html": "<p>Custom unsubscribe
+      {{unsubscribe}}</p>", "track_unsubscribe_plain": "Custom unsubscribe {{unsubscribe}}",
+      "custom_tracking_enabled": true, "custom_tracking_subdomain": "track"}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '322'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - mailersend-python/2.0.0 (Python/3.9.1; OS/Darwin 24.5.0; Impl/CPython)
+    method: PUT
+    uri: https://api.mailersend.com/v1/domains/65qngkdovk8lwr12/settings
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA4RTwW7bMAz9lYJnpbPdJF2Fopf9Qk/DAEGRGEezLKkSlQwI/O+DHbtx0gT1SeJ7
+        fI+0yCNoSRL4EYwGDuvVh6sb7ffNT3uIZQUMnGwROJjax8etNBYY6Ma0wClmZJDCdjpSlKoxrga+
+        lTYhA5PEHqPZGtQTxyShesVbgHZJSEVmj1/YU/gsPJkJaa0/9Dojpn0rjROJJKW+L/IkLfDlC4OP
+        jLlnFgwSOhoOEf+ioj5aMdBozR5jf1s+dwx2MgnnSZwSRYspyRrTp9cNTCifR+mpEiQyrh6KSei0
+        CDKnWcFDJ0JZo5p08SuFD+huhUQw/9AK7wT5cKWTXcqbpKLZ4GXmDBA7ai1weA1vv3Ii3z7MwIfj
+        cXbrutc/P8Ib3FMR6OTGfulmTgtWGgccvreCu+l3bJR3NDzkqVE1OJxH4zPpNpzy5vREwE960I8D
+        5ehEkLS7wFuSwMC4jc9Oi+gzXRhMc3mFzxVGDBiEiAo1OoVik21zzq6djyh0DtYoSahFRGWCQUfn
+        kUs7fxC6lVGNoY6BijjQJQGHqqhWi2K5KMr3suJPT3xZPhbD9xsY5KCvqetF9fxelnz1wlfrGXVY
+        nGlqx4me70e/HlGLvis17k/yWzoHiq7r/gMAAP//AwDopgJFYAQAAA==
+    headers:
+      CF-RAY:
+      - 9564c7f8c9696e94-PRG
+      Cache-Control:
+      - no-cache, private
+      Connection:
+      - keep-alive
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/json
+      Date:
+      - Fri, 27 Jun 2025 11:59:56 GMT
+      Server:
+      - cloudflare
+      Transfer-Encoding:
+      - chunked
+      cf-cache-status:
+      - DYNAMIC
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-apiquota-remaining:
+      - '-1'
+      x-apiquota-reset:
+      - '2025-06-28T00:00:00Z'
+    status:
+      code: 200
+      message: OK
+version: 1

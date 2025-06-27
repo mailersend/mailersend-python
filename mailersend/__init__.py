@@ -8,9 +8,11 @@ from .client import MailerSendClient
 from .builders.email import EmailBuilder
 from .builders.activity import ActivityBuilder, SingleActivityBuilder
 from .builders.analytics import AnalyticsBuilder
+from .builders.domains import DomainsBuilder
 from .resources.email import Email
 from .resources.activity import Activity
 from .resources.analytics import Analytics
+from .resources.domains import Domains
 from .models.email import (
     EmailContact, 
     EmailAttachment,
@@ -58,11 +60,13 @@ __all__ = [
     "ActivityBuilder",
     "SingleActivityBuilder",
     "AnalyticsBuilder",
+    "DomainsBuilder",
     
     # Resources
     "Email",
     "Activity",
     "Analytics",
+    "Domains",
     
     # Email models
     "EmailContact",

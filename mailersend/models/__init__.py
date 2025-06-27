@@ -29,6 +29,23 @@ from .analytics import (
     AnalyticsReadingEnvironmentStats,
     AnalyticsReadingEnvironmentResponse
 )
+from .domains import (
+    DomainListRequest,
+    DomainCreateRequest,
+    DomainUpdateSettingsRequest,
+    DomainSettings,
+    Domain,
+    DomainListResponse,
+    DomainResponse,
+    DomainRecipient,
+    DomainRecipientsRequest,
+    DomainRecipientsResponse,
+    DomainDnsRecord,
+    DomainDnsRecords,
+    DomainDnsRecordsResponse,
+    DomainVerificationData,
+    DomainVerificationResponse
+)
 
 __all__ = [
     "BaseModel",
@@ -51,5 +68,20 @@ __all__ = [
     "AnalyticsUserAgentStats",
     "AnalyticsUserAgentResponse",
     "AnalyticsReadingEnvironmentStats",
-    "AnalyticsReadingEnvironmentResponse"
+    "AnalyticsReadingEnvironmentResponse",
+    "DomainListRequest",
+    "DomainCreateRequest",
+    "DomainUpdateSettingsRequest",
+    "DomainSettings",
+    "Domain",
+    "DomainListResponse",
+    "DomainResponse",
+    "DomainRecipient",
+    "DomainRecipientsRequest",
+    "DomainRecipientsResponse",
+    "DomainDnsRecord",
+    "DomainDnsRecords",
+    "DomainDnsRecordsResponse",
+    "DomainVerificationData",
+    "DomainVerificationResponse"
 ]
