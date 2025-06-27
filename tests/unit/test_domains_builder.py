@@ -11,8 +11,12 @@ from mailersend.builders.domains import DomainsBuilder
 from mailersend.models.domains import (
     DomainListRequest,
     DomainCreateRequest,
+    DomainDeleteRequest,
     DomainUpdateSettingsRequest,
-    DomainRecipientsRequest
+    DomainRecipientsRequest,
+    DomainGetRequest,
+    DomainDnsRecordsRequest,
+    DomainVerificationRequest
 )
 from mailersend.exceptions import ValidationError as MailerSendValidationError
 
@@ -32,6 +36,7 @@ class TestDomainsBuilderBasicOperations:
         assert builder._return_path_subdomain is None
         assert builder._custom_tracking_subdomain is None
         assert builder._inbound_routing_subdomain is None
+        assert builder._domain_id is None
         
         # Check settings state is empty
         assert builder._send_paused is None
@@ -78,7 +83,7 @@ class TestDomainsBuilderBasicOperations:
     def test_copy_method(self):
         """Test copy method creates independent instance."""
         original = DomainsBuilder()
-        original.page(1).limit(25).verified(True).domain_name("test.com")
+        original.page(1).limit(25).verified(True).domain_name("test.com").domain_id("domain-123")
         
         # Create copy
         copy_builder = original.copy()
@@ -88,16 +93,19 @@ class TestDomainsBuilderBasicOperations:
         assert copy_builder._limit == 25
         assert copy_builder._verified is True
         assert copy_builder._name == "test.com"
+        assert copy_builder._domain_id == "domain-123"
         
         # Modify copy and verify original unchanged
-        copy_builder.page(2).limit(50).unverified_only()
+        copy_builder.page(2).limit(50).unverified_only().domain_id("domain-456")
         
         assert original._page == 1  # Original unchanged
         assert original._limit == 25  # Original unchanged
         assert original._verified is True  # Original unchanged
+        assert original._domain_id == "domain-123"  # Original unchanged
         assert copy_builder._page == 2  # Copy changed
         assert copy_builder._limit == 50  # Copy changed
         assert copy_builder._verified is False  # Copy changed
+        assert copy_builder._domain_id == "domain-456"  # Copy changed
 
 
 class TestDomainsBuilderPagination:
@@ -209,6 +217,20 @@ class TestDomainsBuilderDomainCreation:
         
         builder.inbound_routing_subdomain("inbound123")
         assert builder._inbound_routing_subdomain == "inbound123"
+
+
+class TestDomainsBuilderDomainDeletion:
+    """Test domain deletion methods."""
+    
+    def test_domain_id_method(self):
+        """Test domain_id method."""
+        builder = DomainsBuilder()
+        
+        builder.domain_id("domain-123")
+        assert builder._domain_id == "domain-123"
+        
+        builder.domain_id("abc-456-def")
+        assert builder._domain_id == "abc-456-def"
 
 
 class TestDomainsBuilderSettings:
@@ -349,35 +371,54 @@ class TestDomainsBuilderBuildMethods:
         with pytest.raises(MailerSendValidationError, match="Domain name is required"):
             builder.build_create_request()
     
+    def test_build_delete_request_basic(self):
+        """Test building basic delete request."""
+        builder = DomainsBuilder()
+        builder.domain_id("domain-123")
+        
+        request = builder.build_delete_request()
+        
+        assert isinstance(request, DomainDeleteRequest)
+        assert request.domain_id == "domain-123"
+    
+    def test_build_delete_request_missing_domain_id(self):
+        """Test building delete request without domain ID raises error."""
+        builder = DomainsBuilder()
+        
+        with pytest.raises(MailerSendValidationError, match="Domain ID is required"):
+            builder.build_delete_request()
+    
     def test_build_update_settings_request_empty(self):
         """Test building settings request with no updates."""
         builder = DomainsBuilder()
+        builder.domain_id("test-domain-id")
+        
         request = builder.build_update_settings_request()
         
         assert isinstance(request, DomainUpdateSettingsRequest)
-        # All fields should be None
+        assert request.domain_id == "test-domain-id"
         assert request.send_paused is None
-        assert request.track_opens is None
         assert request.track_clicks is None
+        assert request.track_opens is None
     
     def test_build_update_settings_request_partial(self):
         """Test building settings request with partial updates."""
         builder = DomainsBuilder()
-        builder.track_opens(True).send_paused(False)
+        builder.domain_id("test-domain-id").track_opens(True).send_paused(False)
         
         request = builder.build_update_settings_request()
         
         assert isinstance(request, DomainUpdateSettingsRequest)
+        assert request.domain_id == "test-domain-id"
         assert request.track_opens is True
         assert request.send_paused is False
-        # Other fields should be None
-        assert request.track_clicks is None
-        assert request.track_content is None
+        assert request.track_clicks is None  # Not set
     
     def test_build_update_settings_request_complete(self):
         """Test building complete settings request."""
         builder = DomainsBuilder()
-        builder.track_opens(True) \
+        builder.domain_id("test-domain-id") \
+            .track_opens(True) \
             .track_clicks(False) \
             .track_content(True) \
             .send_paused(False) \
@@ -388,6 +429,7 @@ class TestDomainsBuilderBuildMethods:
         request = builder.build_update_settings_request()
         
         assert isinstance(request, DomainUpdateSettingsRequest)
+        assert request.domain_id == "test-domain-id"
         assert request.track_opens is True
         assert request.track_clicks is False
         assert request.track_content is True
@@ -399,22 +441,91 @@ class TestDomainsBuilderBuildMethods:
     def test_build_recipients_request_basic(self):
         """Test building basic recipients request."""
         builder = DomainsBuilder()
+        builder.domain_id("test-domain-id")
+        
         request = builder.build_recipients_request()
         
         assert isinstance(request, DomainRecipientsRequest)
+        assert request.domain_id == "test-domain-id"
         assert request.page is None
         assert request.limit is None  # Builder passes None which overrides model default
-    
+
     def test_build_recipients_request_with_pagination(self):
         """Test building recipients request with pagination."""
         builder = DomainsBuilder()
-        builder.page(3).limit(75)
+        builder.domain_id("test-domain-id").page(3).limit(75)
         
         request = builder.build_recipients_request()
         
         assert isinstance(request, DomainRecipientsRequest)
+        assert request.domain_id == "test-domain-id"
         assert request.page == 3
         assert request.limit == 75
+
+    def test_build_get_request_basic(self):
+        """Test building basic get request."""
+        builder = DomainsBuilder()
+        builder.domain_id("test-domain-id")
+        
+        request = builder.build_get_request()
+        
+        assert isinstance(request, DomainGetRequest)
+        assert request.domain_id == "test-domain-id"
+
+    def test_build_get_request_missing_domain_id(self):
+        """Test building get request without domain ID."""
+        builder = DomainsBuilder()
+        
+        with pytest.raises(MailerSendValidationError, match="Domain ID is required for getting domain"):
+            builder.build_get_request()
+
+    def test_build_dns_records_request_basic(self):
+        """Test building basic DNS records request."""
+        builder = DomainsBuilder()
+        builder.domain_id("test-domain-id")
+        
+        request = builder.build_dns_records_request()
+        
+        assert isinstance(request, DomainDnsRecordsRequest)
+        assert request.domain_id == "test-domain-id"
+
+    def test_build_dns_records_request_missing_domain_id(self):
+        """Test building DNS records request without domain ID."""
+        builder = DomainsBuilder()
+        
+        with pytest.raises(MailerSendValidationError, match="Domain ID is required for getting DNS records"):
+            builder.build_dns_records_request()
+
+    def test_build_verification_request_basic(self):
+        """Test building basic verification request."""
+        builder = DomainsBuilder()
+        builder.domain_id("test-domain-id")
+        
+        request = builder.build_verification_request()
+        
+        assert isinstance(request, DomainVerificationRequest)
+        assert request.domain_id == "test-domain-id"
+
+    def test_build_verification_request_missing_domain_id(self):
+        """Test building verification request without domain ID."""
+        builder = DomainsBuilder()
+        
+        with pytest.raises(MailerSendValidationError, match="Domain ID is required for getting verification status"):
+            builder.build_verification_request()
+
+    def test_build_update_settings_request_missing_domain_id(self):
+        """Test building update settings request without domain ID."""
+        builder = DomainsBuilder()
+        
+        with pytest.raises(MailerSendValidationError, match="Domain ID is required for updating settings"):
+            builder.build_update_settings_request()
+
+    def test_build_recipients_request_missing_domain_id(self):
+        """Test building recipients request without domain ID."""
+        builder = DomainsBuilder()
+        
+        with pytest.raises(MailerSendValidationError, match="Domain ID is required for getting recipients"):
+            builder.build_recipients_request()
 
 
 class TestDomainsBuilderComplexScenarios:

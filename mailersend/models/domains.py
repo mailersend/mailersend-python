@@ -59,6 +59,32 @@ class DomainCreateRequest(MailerSendBaseModel):
         return v
 
 
+class DomainDeleteRequest(MailerSendBaseModel):
+    """Request model for deleting a domain."""
+    
+    domain_id: str
+    
+    @field_validator('domain_id')
+    def validate_domain_id(cls, v):
+        """Validate domain ID is provided and not empty."""
+        if not v or not v.strip():
+            raise ValueError("Domain ID is required")
+        return v.strip()
+
+
+class DomainGetRequest(MailerSendBaseModel):
+    """Request model for getting a single domain."""
+    
+    domain_id: str
+    
+    @field_validator('domain_id')
+    def validate_domain_id(cls, v):
+        """Validate domain ID is provided and not empty."""
+        if not v or not v.strip():
+            raise ValueError("Domain ID is required")
+        return v.strip()
+
+
 class DomainSettings(MailerSendBaseModel):
     """Model for domain settings."""
     
@@ -83,6 +109,7 @@ class DomainSettings(MailerSendBaseModel):
 class DomainUpdateSettingsRequest(MailerSendBaseModel):
     """Request model for updating domain settings."""
     
+    domain_id: str
     send_paused: Optional[bool] = None
     track_clicks: Optional[bool] = None
     track_opens: Optional[bool] = None
@@ -94,6 +121,13 @@ class DomainUpdateSettingsRequest(MailerSendBaseModel):
     custom_tracking_subdomain: Optional[str] = None
     precedence_bulk: Optional[bool] = None
     ignore_duplicated_recipients: Optional[bool] = None
+    
+    @field_validator('domain_id')
+    def validate_domain_id(cls, v):
+        """Validate domain ID is provided and not empty."""
+        if not v or not v.strip():
+            raise ValueError("Domain ID is required")
+        return v.strip()
     
     @field_validator('custom_tracking_subdomain')
     def validate_custom_tracking_subdomain(cls, v):
@@ -153,8 +187,16 @@ class DomainRecipient(MailerSendBaseModel):
 class DomainRecipientsRequest(MailerSendBaseModel):
     """Request model for getting domain recipients."""
     
+    domain_id: str
     page: Optional[int] = None
     limit: Optional[int] = 25
+    
+    @field_validator('domain_id')
+    def validate_domain_id(cls, v):
+        """Validate domain ID is provided and not empty."""
+        if not v or not v.strip():
+            raise ValueError("Domain ID is required")
+        return v.strip()
     
     @field_validator('limit')
     def validate_limit(cls, v):
@@ -205,6 +247,19 @@ class DomainDnsRecordsResponse(MailerSendBaseModel):
     data: DomainDnsRecords
 
 
+class DomainDnsRecordsRequest(MailerSendBaseModel):
+    """Request model for getting domain DNS records."""
+    
+    domain_id: str
+    
+    @field_validator('domain_id')
+    def validate_domain_id(cls, v):
+        """Validate domain ID is provided and not empty."""
+        if not v or not v.strip():
+            raise ValueError("Domain ID is required")
+        return v.strip()
+
+
 class DomainVerificationData(MailerSendBaseModel):
     """Model for domain verification status data."""
     
@@ -220,4 +275,17 @@ class DomainVerificationResponse(MailerSendBaseModel):
     """Response model for domain verification status."""
     
     message: str
-    data: DomainVerificationData 
+    data: DomainVerificationData
+
+
+class DomainVerificationRequest(MailerSendBaseModel):
+    """Request model for getting domain verification status."""
+    
+    domain_id: str
+    
+    @field_validator('domain_id')
+    def validate_domain_id(cls, v):
+        """Validate domain ID is provided and not empty."""
+        if not v or not v.strip():
+            raise ValueError("Domain ID is required")
+        return v.strip() 

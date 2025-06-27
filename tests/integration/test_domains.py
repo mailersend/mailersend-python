@@ -8,8 +8,12 @@ from mailersend.builders.domains import DomainsBuilder
 from mailersend.models.domains import (
     DomainListRequest,
     DomainCreateRequest,
+    DomainDeleteRequest,
+    DomainGetRequest,
     DomainUpdateSettingsRequest,
-    DomainRecipientsRequest
+    DomainRecipientsRequest,
+    DomainDnsRecordsRequest,
+    DomainVerificationRequest
 )
 from mailersend.models.base import APIResponse
 
@@ -163,7 +167,8 @@ class TestDomainsIntegrationGetDomain:
     @vcr.use_cassette("domains_get_success.yaml")
     def test_get_domain_success(self):
         """Test getting a single domain."""
-        response = self.email_client.domains.get_domain(self.test_domain_id)
+        request = DomainGetRequest(domain_id=self.test_domain_id)
+        response = self.email_client.domains.get_domain(request)
         
         # Verify response structure
         assert isinstance(response, APIResponse)
@@ -195,7 +200,8 @@ class TestDomainsIntegrationGetDomain:
         from mailersend.exceptions import ResourceNotFoundError
         
         with pytest.raises(ResourceNotFoundError):
-            response = self.email_client.domains.get_domain(domain_id)
+            request = DomainGetRequest(domain_id=domain_id)
+            response = self.email_client.domains.get_domain(request)
 
 
 class TestDomainsIntegrationCreateDomain:
@@ -224,7 +230,8 @@ class TestDomainsIntegrationCreateDomain:
         assert "domain_settings" in domain
 
         # Cleanup
-        self.email_client.domains.delete_domain(response["data"]["id"])
+        delete_request = DomainDeleteRequest(domain_id=response["data"]["id"])
+        self.email_client.domains.delete_domain(delete_request)
     
 
 class TestDomainsIntegrationUpdateSettings:
@@ -234,6 +241,7 @@ class TestDomainsIntegrationUpdateSettings:
     def test_update_domain_settings_tracking(self):
         """Test updating domain tracking settings using request object."""
         request = DomainUpdateSettingsRequest(
+            domain_id=self.test_domain_id,
             send_paused=False,
             track_clicks=True,
             track_opens=True,
@@ -245,7 +253,7 @@ class TestDomainsIntegrationUpdateSettings:
             custom_tracking_subdomain="track"
         )
         
-        response = self.email_client.domains.update_domain_settings(self.test_domain_id, request)
+        response = self.email_client.domains.update_domain_settings(request)
         
         # Verify response structure
         assert isinstance(response, APIResponse)
@@ -263,10 +271,11 @@ class TestDomainsIntegrationUpdateSettings:
     def test_update_domain_settings_pause_sending(self):
         """Test pausing domain sending using request object."""
         request = DomainUpdateSettingsRequest(
+            domain_id=self.test_domain_id,
             send_paused=True
         )
         
-        response = self.email_client.domains.update_domain_settings(self.test_domain_id, request)
+        response = self.email_client.domains.update_domain_settings(request)
         
         # Verify response structure
         assert isinstance(response, APIResponse)
@@ -284,12 +293,13 @@ class TestDomainsIntegrationUpdateSettings:
         """Test updating domain settings using builder pattern."""
         builder = DomainsBuilder()
         request = (builder
+                  .domain_id(self.test_domain_id)
                   .enable_all_tracking()
                   .resume_sending()
                   .custom_tracking_subdomain_setting("track")
                   .build_update_settings_request())
         
-        response = self.email_client.domains.update_domain_settings(self.test_domain_id, request)
+        response = self.email_client.domains.update_domain_settings(request)
         
         # Verify response structure
         assert isinstance(response, APIResponse)
@@ -309,7 +319,8 @@ class TestDomainsIntegrationDnsRecords:
     @vcr.use_cassette("domains_dns_records_success.yaml")
     def test_get_domain_dns_records(self):
         """Test getting DNS records for a domain."""
-        response = self.email_client.domains.get_domain_dns_records(self.test_domain_id)
+        request = DomainDnsRecordsRequest(domain_id=self.test_domain_id)
+        response = self.email_client.domains.get_domain_dns_records(request)
         
         # Verify response structure
         assert isinstance(response, APIResponse)
@@ -342,7 +353,8 @@ class TestDomainsIntegrationDnsRecords:
         from mailersend.exceptions import ResourceNotFoundError
         
         with pytest.raises(ResourceNotFoundError):
-            response = self.email_client.domains.get_domain_dns_records(domain_id)
+            request = DomainDnsRecordsRequest(domain_id=domain_id)
+            response = self.email_client.domains.get_domain_dns_records(request)
 
 
 class TestDomainsIntegrationVerification:
@@ -351,7 +363,8 @@ class TestDomainsIntegrationVerification:
     @vcr.use_cassette("domains_verification_status.yaml")
     def test_get_domain_verification_status(self):
         """Test getting domain verification status."""
-        response = self.email_client.domains.get_domain_verification_status(self.test_domain_id)
+        request = DomainVerificationRequest(domain_id=self.test_domain_id)
+        response = self.email_client.domains.get_domain_verification_status(request)
         
         # Verify response structure
         assert isinstance(response, APIResponse)
@@ -386,8 +399,9 @@ class TestDomainsIntegrationVerification:
         from mailersend.exceptions import ResourceNotFoundError
  
         with pytest.raises(ResourceNotFoundError):
-            response = self.email_client.domains.get_domain_verification_status(domain_id)
-          
+            request = DomainVerificationRequest(domain_id=domain_id)
+            response = self.email_client.domains.get_domain_verification_status(request)
+
 
 class TestDomainsIntegrationRecipients:
     """Integration tests for domain recipients endpoint."""
@@ -396,11 +410,12 @@ class TestDomainsIntegrationRecipients:
     def test_get_domain_recipients_basic(self):
         """Test getting domain recipients using request object."""
         request = DomainRecipientsRequest(
+            domain_id=self.test_domain_id,
             page=1,
             limit=25
         )
         
-        response = self.email_client.domains.get_domain_recipients(self.test_domain_id, request)
+        response = self.email_client.domains.get_domain_recipients(request)
         
         # Verify response structure
         assert isinstance(response, APIResponse)
@@ -423,11 +438,12 @@ class TestDomainsIntegrationRecipients:
     def test_get_domain_recipients_pagination(self):
         """Test getting domain recipients with pagination using request object."""
         request = DomainRecipientsRequest(
+            domain_id=self.test_domain_id,
             page=2,
             limit=10
         )
         
-        response = self.email_client.domains.get_domain_recipients(self.test_domain_id, request)
+        response = self.email_client.domains.get_domain_recipients(request)
         
         # Verify response structure
         assert isinstance(response, APIResponse)
@@ -445,11 +461,12 @@ class TestDomainsIntegrationRecipients:
         """Test getting domain recipients using builder pattern."""
         builder = DomainsBuilder()
         request = (builder
+                  .domain_id(self.test_domain_id)
                   .page(1)
                   .limit(20)
                   .build_recipients_request())
         
-        response = self.email_client.domains.get_domain_recipients(self.test_domain_id, request)
+        response = self.email_client.domains.get_domain_recipients(request)
         
         # Verify response structure
         assert isinstance(response, APIResponse)
@@ -463,28 +480,33 @@ class TestDomainsIntegrationDeleteDomain:
     @vcr.use_cassette("domains_delete_success.yaml")
     def test_delete_domain_success(self):
         """Test deleting a domain."""
-        request = DomainCreateRequest(
+        create_request = DomainCreateRequest(
             name="somerandomdomain.com"
         )
-        response = self.email_client.domains.create_domain(request)
+        create_response = self.email_client.domains.create_domain(create_request)
 
-        # Delete the domain
-        request = self.email_client.domains.delete_domain(response["data"]["id"])
+        # Delete the domain using request model
+        delete_request = DomainDeleteRequest(
+            domain_id=create_response["data"]["id"]
+        )
+        delete_response = self.email_client.domains.delete_domain(delete_request)
         
         # Verify response structure
-        assert isinstance(request, APIResponse)
-        assert request.success is True
-        assert request.status_code == 204  # No content for successful deletion
+        assert isinstance(delete_response, APIResponse)
+        assert delete_response.success is True
+        assert delete_response.status_code == 204  # No content for successful deletion
     
     @vcr.use_cassette("domains_delete_not_found.yaml")
     def test_delete_domain_not_found(self):
         """Test deleting a non-existent domain."""
-        domain_id = "non-existent-domain-id"
+        delete_request = DomainDeleteRequest(
+            domain_id="non-existent-domain-id"
+        )
         
         from mailersend.exceptions import ResourceNotFoundError
         
         with pytest.raises(ResourceNotFoundError):
-            response = self.email_client.domains.delete_domain(domain_id)
+            response = self.email_client.domains.delete_domain(delete_request)
 
 
     @vcr.use_cassette("domains_settings_workflow.yaml")
@@ -492,6 +514,7 @@ class TestDomainsIntegrationDeleteDomain:
         """Test comprehensive domain settings management using both request objects and builder."""
         # Enable all tracking using request object
         enable_request = DomainUpdateSettingsRequest(
+            domain_id=self.test_domain_id,
             track_clicks=True,
             track_opens=True,
             track_unsubscribe=True,
@@ -500,11 +523,12 @@ class TestDomainsIntegrationDeleteDomain:
             send_paused=False
         )
         
-        enable_response = self.email_client.domains.update_domain_settings(self.test_domain_id, enable_request)
+        enable_response = self.email_client.domains.update_domain_settings(enable_request)
         assert enable_response.success is True
         
         # Verify settings were applied
-        get_response = self.email_client.domains.get_domain(self.test_domain_id)
+        get_request = DomainGetRequest(domain_id=self.test_domain_id)
+        get_response = self.email_client.domains.get_domain(get_request)
         assert get_response.success is True
         
         settings = get_response["data"]["domain_settings"]
@@ -515,15 +539,17 @@ class TestDomainsIntegrationDeleteDomain:
         # Disable tracking and pause sending using builder
         builder = DomainsBuilder()
         disable_request = (builder
+                          .domain_id(self.test_domain_id)
                           .disable_all_tracking()
                           .pause_sending()
                           .build_update_settings_request())
         
-        disable_response = self.email_client.domains.update_domain_settings(self.test_domain_id, disable_request)
+        disable_response = self.email_client.domains.update_domain_settings(disable_request)
         assert disable_response.success is True
         
         # Verify new settings
-        final_response = self.email_client.domains.get_domain(self.test_domain_id)
+        final_request = DomainGetRequest(domain_id=self.test_domain_id)
+        final_response = self.email_client.domains.get_domain(final_request)
         assert final_response.success is True
         
         final_settings = final_response["data"]["domain_settings"]

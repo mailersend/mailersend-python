@@ -2,8 +2,9 @@ from typing import Dict, Any, Optional
 
 from .base import BaseResource
 from ..models.domains import (
-    DomainListRequest, DomainCreateRequest, DomainUpdateSettingsRequest,
-    DomainRecipientsRequest
+    DomainListRequest, DomainCreateRequest, DomainDeleteRequest, DomainGetRequest,
+    DomainUpdateSettingsRequest, DomainRecipientsRequest, DomainDnsRecordsRequest,
+    DomainVerificationRequest
 )
 from ..models.base import APIResponse
 from ..exceptions import ValidationError
@@ -45,29 +46,28 @@ class Domains(BaseResource):
         
         return self._create_response(response)
 
-    def get_domain(self, domain_id: str) -> APIResponse:
+    def get_domain(self, request: DomainGetRequest) -> APIResponse:
         """
         Retrieve information about a single domain.
         
         Args:
-            domain_id: The domain ID
+            request: DomainGetRequest with domain ID
             
         Returns:
             APIResponse with domain information
             
         Raises:
-            ValidationError: If domain_id is invalid
+            ValidationError: If the request is invalid
             MailerSendError: If the API returns an error
         """
-        self.logger.debug(f"Retrieving domain: {domain_id}")
+        if not request:
+            self.logger.error("No DomainGetRequest object provided")
+            raise ValidationError("DomainGetRequest must be provided")
         
-        if not domain_id or not domain_id.strip():
-            self.logger.error("No domain ID provided")
-            raise ValidationError("Domain ID must be provided")
+        self.logger.debug(f"Retrieving domain: {request.domain_id}")
+        self.logger.info(f"Requesting domain information for: {request.domain_id}")
         
-        self.logger.info(f"Requesting domain information for: {domain_id}")
-        
-        response = self.client.request("GET", f"domains/{domain_id}")
+        response = self.client.request("GET", f"domains/{request.domain_id}")
         
         return self._create_response(response)
 
@@ -101,149 +101,138 @@ class Domains(BaseResource):
         
         return self._create_response(response)
 
-    def delete_domain(self, domain_id: str) -> APIResponse:
+    def delete_domain(self, request: DomainDeleteRequest) -> APIResponse:
         """
         Delete a domain.
         
         Args:
-            domain_id: The domain ID to delete
+            request: DomainDeleteRequest with domain ID to delete
             
         Returns:
             APIResponse (204 No Content on success)
             
         Raises:
-            ValidationError: If domain_id is invalid
+            ValidationError: If the request is invalid
             MailerSendError: If the API returns an error
         """
-        self.logger.debug(f"Deleting domain: {domain_id}")
+        if not request:
+            self.logger.error("No DomainDeleteRequest object provided")
+            raise ValidationError("DomainDeleteRequest must be provided")
         
-        if not domain_id or not domain_id.strip():
-            self.logger.error("No domain ID provided")
-            raise ValidationError("Domain ID must be provided")
+        self.logger.debug(f"Deleting domain: {request.domain_id}")
+        self.logger.info(f"Deleting domain: {request.domain_id}")
         
-        self.logger.info(f"Deleting domain: {domain_id}")
-        
-        response = self.client.request("DELETE", f"domains/{domain_id}")
+        response = self.client.request("DELETE", f"domains/{request.domain_id}")
         
         return self._create_response(response)
 
-    def get_domain_recipients(self, domain_id: str, request: Optional[DomainRecipientsRequest] = None) -> APIResponse:
+    def get_domain_recipients(self, request: DomainRecipientsRequest) -> APIResponse:
         """
         Retrieve recipients for a domain.
         
         Args:
-            domain_id: The domain ID
-            request: Optional DomainRecipientsRequest with pagination options
+            request: DomainRecipientsRequest with domain ID and pagination options
             
         Returns:
             APIResponse with list of domain recipients
             
         Raises:
-            ValidationError: If domain_id is invalid
+            ValidationError: If the request is invalid
             MailerSendError: If the API returns an error
         """
-        self.logger.debug(f"Retrieving recipients for domain: {domain_id}")
+        if not request:
+            self.logger.error("No DomainRecipientsRequest object provided")
+            raise ValidationError("DomainRecipientsRequest must be provided")
         
-        if not domain_id or not domain_id.strip():
-            self.logger.error("No domain ID provided")
-            raise ValidationError("Domain ID must be provided")
+        self.logger.debug(f"Retrieving recipients for domain: {request.domain_id}")
         
         # Convert to query parameters
-        params = {}
-        if request:
-            params = self._build_query_params(request)
+        params = self._build_query_params(request)
         
-        self.logger.info(f"Requesting recipients for domain: {domain_id}")
+        self.logger.info(f"Requesting recipients for domain: {request.domain_id}")
         self.logger.debug(f"Query params: {params}")
         
-        response = self.client.request("GET", f"domains/{domain_id}/recipients", params=params)
+        response = self.client.request("GET", f"domains/{request.domain_id}/recipients", params=params)
         
         return self._create_response(response)
 
-    def update_domain_settings(self, domain_id: str, request: DomainUpdateSettingsRequest) -> APIResponse:
+    def update_domain_settings(self, request: DomainUpdateSettingsRequest) -> APIResponse:
         """
         Update domain settings.
         
         Args:
-            domain_id: The domain ID
-            request: DomainUpdateSettingsRequest with settings to update
+            request: DomainUpdateSettingsRequest with domain ID and settings to update
             
         Returns:
             APIResponse with updated domain information
             
         Raises:
-            ValidationError: If domain_id or request is invalid
+            ValidationError: If the request is invalid
             MailerSendError: If the API returns an error
         """
-        self.logger.debug(f"Updating settings for domain: {domain_id}")
-        
-        if not domain_id or not domain_id.strip():
-            self.logger.error("No domain ID provided")
-            raise ValidationError("Domain ID must be provided")
-        
         if not request:
             self.logger.error("No DomainUpdateSettingsRequest object provided")
             raise ValidationError("DomainUpdateSettingsRequest must be provided")
         
+        self.logger.debug(f"Updating settings for domain: {request.domain_id}")
+        
         # Convert to request body
         body = self._build_request_body(request)
         
-        self.logger.info(f"Updating settings for domain: {domain_id}")
+        self.logger.info(f"Updating settings for domain: {request.domain_id}")
         self.logger.debug(f"Request body: {body}")
         
-        response = self.client.request("PUT", f"domains/{domain_id}/settings", body=body)
+        response = self.client.request("PUT", f"domains/{request.domain_id}/settings", body=body)
         
         return self._create_response(response)
 
-    def get_domain_dns_records(self, domain_id: str) -> APIResponse:
+    def get_domain_dns_records(self, request: DomainDnsRecordsRequest) -> APIResponse:
         """
         Retrieve DNS records for a domain.
         
         Args:
-            domain_id: The domain ID
+            request: DomainDnsRecordsRequest with domain ID
             
         Returns:
             APIResponse with domain DNS records
             
         Raises:
-            ValidationError: If domain_id is invalid
+            ValidationError: If the request is invalid
             MailerSendError: If the API returns an error
         """
-        self.logger.debug(f"Retrieving DNS records for domain: {domain_id}")
+        if not request:
+            self.logger.error("No DomainDnsRecordsRequest object provided")
+            raise ValidationError("DomainDnsRecordsRequest must be provided")
         
-        if not domain_id or not domain_id.strip():
-            self.logger.error("No domain ID provided")
-            raise ValidationError("Domain ID must be provided")
+        self.logger.debug(f"Retrieving DNS records for domain: {request.domain_id}")
+        self.logger.info(f"Requesting DNS records for domain: {request.domain_id}")
         
-        self.logger.info(f"Requesting DNS records for domain: {domain_id}")
-        
-        response = self.client.request("GET", f"domains/{domain_id}/dns-records")
+        response = self.client.request("GET", f"domains/{request.domain_id}/dns-records")
         
         return self._create_response(response)
 
-    def get_domain_verification_status(self, domain_id: str) -> APIResponse:
+    def get_domain_verification_status(self, request: DomainVerificationRequest) -> APIResponse:
         """
         Retrieve verification status for a domain.
         
         Args:
-            domain_id: The domain ID
+            request: DomainVerificationRequest with domain ID
             
         Returns:
             APIResponse with domain verification status
             
         Raises:
-            ValidationError: If domain_id is invalid
+            ValidationError: If the request is invalid
             MailerSendError: If the API returns an error
         """
-        self.logger.debug(f"Retrieving verification status for domain: {domain_id}")
+        if not request:
+            self.logger.error("No DomainVerificationRequest object provided")
+            raise ValidationError("DomainVerificationRequest must be provided")
         
-        if not domain_id or not domain_id.strip():
-            self.logger.error("No domain ID provided")
-            raise ValidationError("Domain ID must be provided")
+        self.logger.debug(f"Retrieving verification status for domain: {request.domain_id}")
+        self.logger.info(f"Requesting verification status for domain: {request.domain_id}")
         
-        self.logger.info(f"Requesting verification status for domain: {domain_id}")
-        
-        response = self.client.request("GET", f"domains/{domain_id}/verify")
+        response = self.client.request("GET", f"domains/{request.domain_id}/verify")
         
         return self._create_response(response)
 
@@ -257,8 +246,8 @@ class Domains(BaseResource):
         Returns:
             Dictionary of query parameters
         """
-        # Convert model to dict, excluding None values
-        params = request.model_dump(exclude_none=True)
+        # Convert model to dict, excluding None values and domain_id (goes in URL path)
+        params = request.model_dump(exclude_none=True, exclude={'domain_id'})
         
         return params
 
@@ -272,7 +261,7 @@ class Domains(BaseResource):
         Returns:
             Dictionary for request body
         """
-        # Convert model to dict, excluding None values
-        body = request.model_dump(exclude_none=True)
+        # Convert model to dict, excluding None values and domain_id (goes in URL path)
+        body = request.model_dump(exclude_none=True, exclude={'domain_id'})
         
         return body 

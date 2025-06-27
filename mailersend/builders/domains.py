@@ -2,8 +2,9 @@ from typing import Optional, Union
 from copy import deepcopy
 
 from ..models.domains import (
-    DomainListRequest, DomainCreateRequest, DomainUpdateSettingsRequest,
-    DomainRecipientsRequest
+    DomainListRequest, DomainCreateRequest, DomainDeleteRequest, DomainGetRequest,
+    DomainUpdateSettingsRequest, DomainRecipientsRequest, DomainDnsRecordsRequest,
+    DomainVerificationRequest
 )
 from ..exceptions import ValidationError
 
@@ -15,8 +16,12 @@ class DomainsBuilder:
     Supports building requests for:
     - Listing domains
     - Creating domains
+    - Getting single domain
+    - Deleting domains
     - Updating domain settings
     - Getting domain recipients
+    - Getting domain DNS records
+    - Getting domain verification status
     """
     
     def __init__(self):
@@ -35,6 +40,9 @@ class DomainsBuilder:
         self._return_path_subdomain: Optional[str] = None
         self._custom_tracking_subdomain: Optional[str] = None
         self._inbound_routing_subdomain: Optional[str] = None
+        
+        # Delete domain parameters
+        self._domain_id: Optional[str] = None
         
         # Update domain settings parameters
         self._send_paused: Optional[bool] = None
@@ -163,6 +171,20 @@ class DomainsBuilder:
             Self for method chaining
         """
         self._inbound_routing_subdomain = subdomain
+        return self
+    
+    # Domain deletion methods
+    def domain_id(self, domain_id: str) -> 'DomainsBuilder':
+        """
+        Set the domain ID for deletion.
+        
+        Args:
+            domain_id: Domain ID to delete
+            
+        Returns:
+            Self for method chaining
+        """
+        self._domain_id = domain_id
         return self
     
     # Domain settings update methods
@@ -387,14 +409,38 @@ class DomainsBuilder:
             inbound_routing_subdomain=self._inbound_routing_subdomain
         )
     
+    def build_delete_request(self) -> DomainDeleteRequest:
+        """
+        Build a domain deletion request.
+        
+        Returns:
+            DomainDeleteRequest object
+            
+        Raises:
+            ValidationError: If domain ID is not provided
+        """
+        if not self._domain_id:
+            raise ValidationError("Domain ID is required for deletion")
+        
+        return DomainDeleteRequest(
+            domain_id=self._domain_id
+        )
+    
     def build_update_settings_request(self) -> DomainUpdateSettingsRequest:
         """
         Build a domain settings update request.
         
         Returns:
             DomainUpdateSettingsRequest object
+            
+        Raises:
+            ValidationError: If domain ID is not provided
         """
+        if not self._domain_id:
+            raise ValidationError("Domain ID is required for updating settings")
+        
         return DomainUpdateSettingsRequest(
+            domain_id=self._domain_id,
             send_paused=self._send_paused,
             track_clicks=self._track_clicks,
             track_opens=self._track_opens,
@@ -414,10 +460,68 @@ class DomainsBuilder:
         
         Returns:
             DomainRecipientsRequest object
+            
+        Raises:
+            ValidationError: If domain ID is not provided
         """
+        if not self._domain_id:
+            raise ValidationError("Domain ID is required for getting recipients")
+        
         return DomainRecipientsRequest(
+            domain_id=self._domain_id,
             page=self._page,
             limit=self._limit
+        )
+    
+    def build_get_request(self) -> DomainGetRequest:
+        """
+        Build a domain get request.
+        
+        Returns:
+            DomainGetRequest object
+            
+        Raises:
+            ValidationError: If domain ID is not provided
+        """
+        if not self._domain_id:
+            raise ValidationError("Domain ID is required for getting domain")
+        
+        return DomainGetRequest(
+            domain_id=self._domain_id
+        )
+    
+    def build_dns_records_request(self) -> DomainDnsRecordsRequest:
+        """
+        Build a domain DNS records request.
+        
+        Returns:
+            DomainDnsRecordsRequest object
+            
+        Raises:
+            ValidationError: If domain ID is not provided
+        """
+        if not self._domain_id:
+            raise ValidationError("Domain ID is required for getting DNS records")
+        
+        return DomainDnsRecordsRequest(
+            domain_id=self._domain_id
+        )
+    
+    def build_verification_request(self) -> DomainVerificationRequest:
+        """
+        Build a domain verification request.
+        
+        Returns:
+            DomainVerificationRequest object
+            
+        Raises:
+            ValidationError: If domain ID is not provided
+        """
+        if not self._domain_id:
+            raise ValidationError("Domain ID is required for getting verification status")
+        
+        return DomainVerificationRequest(
+            domain_id=self._domain_id
         )
     
     # State management methods
@@ -446,6 +550,7 @@ class DomainsBuilder:
         new_builder._return_path_subdomain = self._return_path_subdomain
         new_builder._custom_tracking_subdomain = self._custom_tracking_subdomain
         new_builder._inbound_routing_subdomain = self._inbound_routing_subdomain
+        new_builder._domain_id = self._domain_id
         new_builder._send_paused = self._send_paused
         new_builder._track_clicks = self._track_clicks
         new_builder._track_opens = self._track_opens
