@@ -12,6 +12,7 @@ from .inbound import InboundResource
 from .messages import Messages
 from .schedules import Schedules
 from .recipients import Recipients
+from .templates import Templates
 
 __all__ = [
     "BaseResource",
@@ -24,4 +25,5 @@ __all__ = [
     "Messages",
     "Schedules",
     "Recipients",
+    "Templates",
 ]

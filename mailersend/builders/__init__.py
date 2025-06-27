@@ -14,6 +14,7 @@ from .inbound import InboundBuilder
 from .messages import MessagesBuilder
 from .schedules import SchedulesBuilder
 from .recipients import RecipientsBuilder
+from .templates import TemplatesBuilder
 
 __all__ = [
     'EmailBuilder',
@@ -26,4 +27,5 @@ __all__ = [
     'MessagesBuilder',
     'SchedulesBuilder',
     'RecipientsBuilder',
-  ] 
+    'TemplatesBuilder',
+] 
