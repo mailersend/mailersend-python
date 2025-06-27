@@ -18,6 +18,7 @@ from .resources.domains import Domains
 from .resources.identities import IdentitiesResource
 from .resources.inbound import InboundResource
 from .resources.templates import Templates
+from .resources.webhooks import Webhooks
 from .logging import get_logger, RequestLogger
 
 
@@ -97,6 +98,7 @@ class MailerSendClient:
         self.identities = IdentitiesResource(self)
         self.inbound = InboundResource(self)
         self.templates = Templates(self)
+        self.webhooks = Webhooks(self)
         
         self.logger.info("MailerSend client initialized successfully")
         if debug:
