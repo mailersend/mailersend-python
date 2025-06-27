@@ -11,6 +11,7 @@ from .identities import IdentitiesResource
 from .inbound import InboundResource
 from .messages import Messages
 from .schedules import Schedules
+from .recipients import Recipients
 
 __all__ = [
     "BaseResource",
@@ -22,4 +23,5 @@ __all__ = [
     "InboundResource",
     "Messages",
     "Schedules",
+    "Recipients",
 ]

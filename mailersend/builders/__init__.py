@@ -13,6 +13,7 @@ from .identities import IdentityBuilder
 from .inbound import InboundBuilder
 from .messages import MessagesBuilder
 from .schedules import SchedulesBuilder
+from .recipients import RecipientsBuilder
 
 __all__ = [
     'EmailBuilder',
@@ -24,4 +25,5 @@ __all__ = [
     'InboundBuilder',
     'MessagesBuilder',
     'SchedulesBuilder',
-] 
+    'RecipientsBuilder',
+  ] 
