@@ -131,6 +131,16 @@ from .templates import (
     TemplatesListResponse,
     TemplateResponse
 )
+from .webhooks import (
+    WebhooksListRequest,
+    WebhookGetRequest,
+    WebhookCreateRequest,
+    WebhookUpdateRequest,
+    WebhookDeleteRequest,
+    Webhook,
+    WebhooksListResponse,
+    WebhookResponse,
+)
 
 __all__ = [
     "BaseModel",
@@ -242,4 +252,12 @@ __all__ = [
     "Template",
     "TemplatesListResponse",
     "TemplateResponse",
+    "WebhooksListRequest",
+    "WebhookGetRequest",
+    "WebhookCreateRequest",
+    "WebhookUpdateRequest",
+    "WebhookDeleteRequest",
+    "Webhook",
+    "WebhooksListResponse",
+    "WebhookResponse",
 ]

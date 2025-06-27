@@ -13,6 +13,7 @@ from .messages import Messages
 from .schedules import Schedules
 from .recipients import Recipients
 from .templates import Templates
+from .webhooks import Webhooks
 
 __all__ = [
     "BaseResource",
@@ -26,4 +27,5 @@ __all__ = [
     "Schedules",
     "Recipients",
     "Templates",
+    "Webhooks",
 ]
