@@ -50,6 +50,20 @@ from .domains import (
     DomainVerificationData,
     DomainVerificationResponse
 )
+from .identities import (
+    IdentityListRequest,
+    IdentityCreateRequest,
+    IdentityGetRequest,
+    IdentityGetByEmailRequest,
+    IdentityUpdateRequest,
+    IdentityUpdateByEmailRequest,
+    IdentityDeleteRequest,
+    IdentityDeleteByEmailRequest,
+    IdentityDomain,
+    Identity,
+    IdentityListResponse,
+    IdentityResponse
+)
 
 __all__ = [
     "BaseModel",
@@ -91,5 +105,17 @@ __all__ = [
     "DomainDnsRecords",
     "DomainDnsRecordsResponse",
     "DomainVerificationData",
-    "DomainVerificationResponse"
+    "DomainVerificationResponse",
+    "IdentityListRequest",
+    "IdentityCreateRequest",
+    "IdentityGetRequest",
+    "IdentityGetByEmailRequest",
+    "IdentityUpdateRequest",
+    "IdentityUpdateByEmailRequest",
+    "IdentityDeleteRequest",
+    "IdentityDeleteByEmailRequest",
+    "IdentityDomain",
+    "Identity",
+    "IdentityListResponse",
+    "IdentityResponse"
 ]

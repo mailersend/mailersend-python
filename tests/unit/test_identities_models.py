@@ -1,0 +1,880 @@
+import pytest
+from pydantic import ValidationError
+
+from mailersend.models.identities import (
+    IdentityListRequest,
+    IdentityCreateRequest,
+    IdentityGetRequest,
+    IdentityGetByEmailRequest,
+    IdentityUpdateRequest,
+    IdentityUpdateByEmailRequest,
+    IdentityDeleteRequest,
+    IdentityDeleteByEmailRequest,
+    IdentityDomain,
+    Identity,
+    IdentityListResponse,
+    IdentityResponse
+)
+
+
+class TestIdentityListRequest:
+    """Test IdentityListRequest model."""
+
+    def test_default_values(self):
+        """Test default values are set correctly."""
+        request = IdentityListRequest()
+        assert request.domain_id is None
+        assert request.page is None
+        assert request.limit == 25
+
+    def test_with_all_parameters(self):
+        """Test with all parameters provided."""
+        request = IdentityListRequest(
+            domain_id="domain123",
+            page=2,
+            limit=50
+        )
+        assert request.domain_id == "domain123"
+        assert request.page == 2
+        assert request.limit == 50
+
+    def test_limit_validation_valid_range(self):
+        """Test limit validation with valid values."""
+        # Minimum valid limit
+        request = IdentityListRequest(limit=10)
+        assert request.limit == 10
+        
+        # Maximum valid limit
+        request = IdentityListRequest(limit=100)
+        assert request.limit == 100
+        
+        # Mid-range valid limit
+        request = IdentityListRequest(limit=50)
+        assert request.limit == 50
+
+    def test_limit_validation_invalid_range(self):
+        """Test limit validation with invalid values."""
+        # Below minimum
+        with pytest.raises(ValidationError, match="Limit must be between 10 and 100"):
+            IdentityListRequest(limit=9)
+        
+        # Above maximum
+        with pytest.raises(ValidationError, match="Limit must be between 10 and 100"):
+            IdentityListRequest(limit=101)
+
+    def test_page_validation_valid(self):
+        """Test page validation with valid values."""
+        request = IdentityListRequest(page=1)
+        assert request.page == 1
+        
+        request = IdentityListRequest(page=100)
+        assert request.page == 100
+
+    def test_page_validation_invalid(self):
+        """Test page validation with invalid values."""
+        with pytest.raises(ValidationError, match="Page must be greater than 0"):
+            IdentityListRequest(page=0)
+        
+        with pytest.raises(ValidationError, match="Page must be greater than 0"):
+            IdentityListRequest(page=-1)
+
+    def test_serialization(self):
+        """Test model serialization."""
+        request = IdentityListRequest(
+            domain_id="domain123",
+            page=2,
+            limit=50
+        )
+        data = request.model_dump()
+        assert data == {
+            "domain_id": "domain123",
+            "page": 2,
+            "limit": 50
+        }
+
+
+class TestIdentityCreateRequest:
+    """Test IdentityCreateRequest model."""
+
+    def test_required_fields(self):
+        """Test with all required fields."""
+        request = IdentityCreateRequest(
+            domain_id="domain123",
+            name="John Doe",
+            email="john@example.com"
+        )
+        assert request.domain_id == "domain123"
+        assert request.name == "John Doe"
+        assert request.email == "john@example.com"
+        assert request.reply_to_email is None
+        assert request.reply_to_name is None
+        assert request.add_note is None
+        assert request.personal_note is None
+
+    def test_with_all_fields(self):
+        """Test with all fields provided."""
+        request = IdentityCreateRequest(
+            domain_id="domain123",
+            name="John Doe",
+            email="john@example.com",
+            reply_to_email="reply@example.com",
+            reply_to_name="Reply Name",
+            add_note=True,
+            personal_note="Personal note content"
+        )
+        assert request.domain_id == "domain123"
+        assert request.name == "John Doe"
+        assert request.email == "john@example.com"
+        assert request.reply_to_email == "reply@example.com"
+        assert request.reply_to_name == "Reply Name"
+        assert request.add_note is True
+        assert request.personal_note == "Personal note content"
+
+    def test_domain_id_validation(self):
+        """Test domain ID validation."""
+        # Valid domain ID
+        request = IdentityCreateRequest(
+            domain_id="domain123",
+            name="John Doe",
+            email="john@example.com"
+        )
+        assert request.domain_id == "domain123"
+        
+        # Empty domain ID
+        with pytest.raises(ValidationError, match="Domain ID is required"):
+            IdentityCreateRequest(
+                domain_id="",
+                name="John Doe",
+                email="john@example.com"
+            )
+        
+        # Whitespace domain ID
+        with pytest.raises(ValidationError, match="Domain ID is required"):
+            IdentityCreateRequest(
+                domain_id="   ",
+                name="John Doe",
+                email="john@example.com"
+            )
+
+    def test_domain_id_trimming(self):
+        """Test domain ID is trimmed."""
+        request = IdentityCreateRequest(
+            domain_id="  domain123  ",
+            name="John Doe",
+            email="john@example.com"
+        )
+        assert request.domain_id == "domain123"
+
+    def test_name_validation(self):
+        """Test name validation."""
+        # Valid name
+        request = IdentityCreateRequest(
+            domain_id="domain123",
+            name="John Doe",
+            email="john@example.com"
+        )
+        assert request.name == "John Doe"
+        
+        # Empty name
+        with pytest.raises(ValidationError, match="Name is required"):
+            IdentityCreateRequest(
+                domain_id="domain123",
+                name="",
+                email="john@example.com"
+            )
+        
+        # Whitespace name
+        with pytest.raises(ValidationError, match="Name is required"):
+            IdentityCreateRequest(
+                domain_id="domain123",
+                name="   ",
+                email="john@example.com"
+            )
+        
+        # Name too long
+        long_name = "a" * 192
+        with pytest.raises(ValidationError, match="Name must be 191 characters or less"):
+            IdentityCreateRequest(
+                domain_id="domain123",
+                name=long_name,
+                email="john@example.com"
+            )
+
+    def test_name_trimming(self):
+        """Test name is trimmed."""
+        request = IdentityCreateRequest(
+            domain_id="domain123",
+            name="  John Doe  ",
+            email="john@example.com"
+        )
+        assert request.name == "John Doe"
+
+    def test_email_validation(self):
+        """Test email validation."""
+        # Valid email
+        request = IdentityCreateRequest(
+            domain_id="domain123",
+            name="John Doe",
+            email="john@example.com"
+        )
+        assert request.email == "john@example.com"
+        
+        # Empty email
+        with pytest.raises(ValidationError, match="Email is required"):
+            IdentityCreateRequest(
+                domain_id="domain123",
+                name="John Doe",
+                email=""
+            )
+        
+        # Whitespace email
+        with pytest.raises(ValidationError, match="Email is required"):
+            IdentityCreateRequest(
+                domain_id="domain123",
+                name="John Doe",
+                email="   "
+            )
+        
+        # Invalid email format
+        with pytest.raises(ValidationError, match="Invalid email format"):
+            IdentityCreateRequest(
+                domain_id="domain123",
+                name="John Doe",
+                email="invalid-email"
+            )
+        
+        # Email too long
+        long_email = "a" * 180 + "@example.com"
+        with pytest.raises(ValidationError, match="Email must be 191 characters or less"):
+            IdentityCreateRequest(
+                domain_id="domain123",
+                name="John Doe",
+                email=long_email
+            )
+
+    def test_email_trimming(self):
+        """Test email is trimmed."""
+        request = IdentityCreateRequest(
+            domain_id="domain123",
+            name="John Doe",
+            email="  john@example.com  "
+        )
+        assert request.email == "john@example.com"
+
+    def test_reply_to_email_validation(self):
+        """Test reply-to email validation."""
+        # Valid reply-to email
+        request = IdentityCreateRequest(
+            domain_id="domain123",
+            name="John Doe",
+            email="john@example.com",
+            reply_to_email="reply@example.com"
+        )
+        assert request.reply_to_email == "reply@example.com"
+        
+        # Invalid reply-to email format
+        with pytest.raises(ValidationError, match="Invalid reply-to email format"):
+            IdentityCreateRequest(
+                domain_id="domain123",
+                name="John Doe",
+                email="john@example.com",
+                reply_to_email="invalid-email"
+            )
+        
+        # Reply-to email too long
+        long_email = "a" * 180 + "@example.com"
+        with pytest.raises(ValidationError, match="Reply-to email must be 191 characters or less"):
+            IdentityCreateRequest(
+                domain_id="domain123",
+                name="John Doe",
+                email="john@example.com",
+                reply_to_email=long_email
+            )
+
+    def test_reply_to_email_trimming(self):
+        """Test reply-to email is trimmed."""
+        request = IdentityCreateRequest(
+            domain_id="domain123",
+            name="John Doe",
+            email="john@example.com",
+            reply_to_email="  reply@example.com  "
+        )
+        assert request.reply_to_email == "reply@example.com"
+
+    def test_personal_note_validation(self):
+        """Test personal note validation."""
+        # Valid personal note
+        request = IdentityCreateRequest(
+            domain_id="domain123",
+            name="John Doe",
+            email="john@example.com",
+            personal_note="This is a personal note"
+        )
+        assert request.personal_note == "This is a personal note"
+        
+        # Personal note too long
+        long_note = "a" * 251
+        with pytest.raises(ValidationError, match="Personal note must be 250 characters or less"):
+            IdentityCreateRequest(
+                domain_id="domain123",
+                name="John Doe",
+                email="john@example.com",
+                personal_note=long_note
+            )
+
+    def test_serialization(self):
+        """Test model serialization."""
+        request = IdentityCreateRequest(
+            domain_id="domain123",
+            name="John Doe",
+            email="john@example.com",
+            reply_to_email="reply@example.com",
+            reply_to_name="Reply Name",
+            add_note=True,
+            personal_note="Personal note"
+        )
+        data = request.model_dump()
+        assert data == {
+            "domain_id": "domain123",
+            "name": "John Doe",
+            "email": "john@example.com",
+            "reply_to_email": "reply@example.com",
+            "reply_to_name": "Reply Name",
+            "add_note": True,
+            "personal_note": "Personal note"
+        }
+
+
+class TestIdentityGetRequest:
+    """Test IdentityGetRequest model."""
+
+    def test_valid_identity_id(self):
+        """Test with valid identity ID."""
+        request = IdentityGetRequest(identity_id="identity123")
+        assert request.identity_id == "identity123"
+
+    def test_identity_id_validation(self):
+        """Test identity ID validation."""
+        # Empty identity ID
+        with pytest.raises(ValidationError, match="Identity ID is required"):
+            IdentityGetRequest(identity_id="")
+        
+        # Whitespace identity ID
+        with pytest.raises(ValidationError, match="Identity ID is required"):
+            IdentityGetRequest(identity_id="   ")
+
+    def test_identity_id_trimming(self):
+        """Test identity ID is trimmed."""
+        request = IdentityGetRequest(identity_id="  identity123  ")
+        assert request.identity_id == "identity123"
+
+    def test_serialization(self):
+        """Test model serialization."""
+        request = IdentityGetRequest(identity_id="identity123")
+        data = request.model_dump()
+        assert data == {"identity_id": "identity123"}
+
+
+class TestIdentityGetByEmailRequest:
+    """Test IdentityGetByEmailRequest model."""
+
+    def test_valid_email(self):
+        """Test with valid email."""
+        request = IdentityGetByEmailRequest(email="john@example.com")
+        assert request.email == "john@example.com"
+
+    def test_email_validation(self):
+        """Test email validation."""
+        # Empty email
+        with pytest.raises(ValidationError, match="Email is required"):
+            IdentityGetByEmailRequest(email="")
+        
+        # Whitespace email
+        with pytest.raises(ValidationError, match="Email is required"):
+            IdentityGetByEmailRequest(email="   ")
+        
+        # Invalid email format
+        with pytest.raises(ValidationError, match="Invalid email format"):
+            IdentityGetByEmailRequest(email="invalid-email")
+
+    def test_email_trimming(self):
+        """Test email is trimmed."""
+        request = IdentityGetByEmailRequest(email="  john@example.com  ")
+        assert request.email == "john@example.com"
+
+    def test_serialization(self):
+        """Test model serialization."""
+        request = IdentityGetByEmailRequest(email="john@example.com")
+        data = request.model_dump()
+        assert data == {"email": "john@example.com"}
+
+
+class TestIdentityUpdateRequest:
+    """Test IdentityUpdateRequest model."""
+
+    def test_required_identity_id_only(self):
+        """Test with only required identity ID."""
+        request = IdentityUpdateRequest(identity_id="identity123")
+        assert request.identity_id == "identity123"
+        assert request.name is None
+        assert request.reply_to_email is None
+        assert request.reply_to_name is None
+        assert request.add_note is None
+        assert request.personal_note is None
+
+    def test_with_all_fields(self):
+        """Test with all fields provided."""
+        request = IdentityUpdateRequest(
+            identity_id="identity123",
+            name="Updated Name",
+            reply_to_email="updated@example.com",
+            reply_to_name="Updated Reply Name",
+            add_note=False,
+            personal_note="Updated note"
+        )
+        assert request.identity_id == "identity123"
+        assert request.name == "Updated Name"
+        assert request.reply_to_email == "updated@example.com"
+        assert request.reply_to_name == "Updated Reply Name"
+        assert request.add_note is False
+        assert request.personal_note == "Updated note"
+
+    def test_identity_id_validation(self):
+        """Test identity ID validation."""
+        # Empty identity ID
+        with pytest.raises(ValidationError, match="Identity ID is required"):
+            IdentityUpdateRequest(identity_id="")
+        
+        # Whitespace identity ID
+        with pytest.raises(ValidationError, match="Identity ID is required"):
+            IdentityUpdateRequest(identity_id="   ")
+
+    def test_name_validation(self):
+        """Test name validation."""
+        # Valid name
+        request = IdentityUpdateRequest(
+            identity_id="identity123",
+            name="Updated Name"
+        )
+        assert request.name == "Updated Name"
+        
+        # Empty name after trimming
+        with pytest.raises(ValidationError, match="Name cannot be empty"):
+            IdentityUpdateRequest(
+                identity_id="identity123",
+                name="   "
+            )
+        
+        # Name too long
+        long_name = "a" * 192
+        with pytest.raises(ValidationError, match="Name must be 191 characters or less"):
+            IdentityUpdateRequest(
+                identity_id="identity123",
+                name=long_name
+            )
+
+    def test_reply_to_email_validation(self):
+        """Test reply-to email validation."""
+        # Valid reply-to email
+        request = IdentityUpdateRequest(
+            identity_id="identity123",
+            reply_to_email="reply@example.com"
+        )
+        assert request.reply_to_email == "reply@example.com"
+        
+        # Invalid reply-to email format
+        with pytest.raises(ValidationError, match="Invalid reply-to email format"):
+            IdentityUpdateRequest(
+                identity_id="identity123",
+                reply_to_email="invalid-email"
+            )
+
+    def test_personal_note_validation(self):
+        """Test personal note validation."""
+        # Valid personal note
+        request = IdentityUpdateRequest(
+            identity_id="identity123",
+            personal_note="Updated personal note"
+        )
+        assert request.personal_note == "Updated personal note"
+        
+        # Personal note too long
+        long_note = "a" * 251
+        with pytest.raises(ValidationError, match="Personal note must be 250 characters or less"):
+            IdentityUpdateRequest(
+                identity_id="identity123",
+                personal_note=long_note
+            )
+
+    def test_serialization(self):
+        """Test model serialization."""
+        request = IdentityUpdateRequest(
+            identity_id="identity123",
+            name="Updated Name",
+            reply_to_email="updated@example.com",
+            add_note=True
+        )
+        data = request.model_dump()
+        assert data == {
+            "identity_id": "identity123",
+            "name": "Updated Name",
+            "reply_to_email": "updated@example.com",
+            "reply_to_name": None,
+            "add_note": True,
+            "personal_note": None
+        }
+
+
+class TestIdentityUpdateByEmailRequest:
+    """Test IdentityUpdateByEmailRequest model."""
+
+    def test_required_email_only(self):
+        """Test with only required email."""
+        request = IdentityUpdateByEmailRequest(email="john@example.com")
+        assert request.email == "john@example.com"
+        assert request.name is None
+        assert request.reply_to_email is None
+        assert request.reply_to_name is None
+        assert request.add_note is None
+        assert request.personal_note is None
+
+    def test_with_all_fields(self):
+        """Test with all fields provided."""
+        request = IdentityUpdateByEmailRequest(
+            email="john@example.com",
+            name="Updated Name",
+            reply_to_email="updated@example.com",
+            reply_to_name="Updated Reply Name",
+            add_note=False,
+            personal_note="Updated note"
+        )
+        assert request.email == "john@example.com"
+        assert request.name == "Updated Name"
+        assert request.reply_to_email == "updated@example.com"
+        assert request.reply_to_name == "Updated Reply Name"
+        assert request.add_note is False
+        assert request.personal_note == "Updated note"
+
+    def test_email_validation(self):
+        """Test email validation."""
+        # Empty email
+        with pytest.raises(ValidationError, match="Email is required"):
+            IdentityUpdateByEmailRequest(email="")
+        
+        # Invalid email format
+        with pytest.raises(ValidationError, match="Invalid email format"):
+            IdentityUpdateByEmailRequest(email="invalid-email")
+
+    def test_name_validation(self):
+        """Test name validation."""
+        # Empty name after trimming
+        with pytest.raises(ValidationError, match="Name cannot be empty"):
+            IdentityUpdateByEmailRequest(
+                email="john@example.com",
+                name="   "
+            )
+        
+        # Name too long
+        long_name = "a" * 192
+        with pytest.raises(ValidationError, match="Name must be 191 characters or less"):
+            IdentityUpdateByEmailRequest(
+                email="john@example.com",
+                name=long_name
+            )
+
+    def test_serialization(self):
+        """Test model serialization."""
+        request = IdentityUpdateByEmailRequest(
+            email="john@example.com",
+            name="Updated Name",
+            add_note=True
+        )
+        data = request.model_dump()
+        assert data == {
+            "email": "john@example.com",
+            "name": "Updated Name",
+            "reply_to_email": None,
+            "reply_to_name": None,
+            "add_note": True,
+            "personal_note": None
+        }
+
+
+class TestIdentityDeleteRequest:
+    """Test IdentityDeleteRequest model."""
+
+    def test_valid_identity_id(self):
+        """Test with valid identity ID."""
+        request = IdentityDeleteRequest(identity_id="identity123")
+        assert request.identity_id == "identity123"
+
+    def test_identity_id_validation(self):
+        """Test identity ID validation."""
+        # Empty identity ID
+        with pytest.raises(ValidationError, match="Identity ID is required"):
+            IdentityDeleteRequest(identity_id="")
+        
+        # Whitespace identity ID
+        with pytest.raises(ValidationError, match="Identity ID is required"):
+            IdentityDeleteRequest(identity_id="   ")
+
+    def test_identity_id_trimming(self):
+        """Test identity ID is trimmed."""
+        request = IdentityDeleteRequest(identity_id="  identity123  ")
+        assert request.identity_id == "identity123"
+
+    def test_serialization(self):
+        """Test model serialization."""
+        request = IdentityDeleteRequest(identity_id="identity123")
+        data = request.model_dump()
+        assert data == {"identity_id": "identity123"}
+
+
+class TestIdentityDeleteByEmailRequest:
+    """Test IdentityDeleteByEmailRequest model."""
+
+    def test_valid_email(self):
+        """Test with valid email."""
+        request = IdentityDeleteByEmailRequest(email="john@example.com")
+        assert request.email == "john@example.com"
+
+    def test_email_validation(self):
+        """Test email validation."""
+        # Empty email
+        with pytest.raises(ValidationError, match="Email is required"):
+            IdentityDeleteByEmailRequest(email="")
+        
+        # Invalid email format
+        with pytest.raises(ValidationError, match="Invalid email format"):
+            IdentityDeleteByEmailRequest(email="invalid-email")
+
+    def test_email_trimming(self):
+        """Test email is trimmed."""
+        request = IdentityDeleteByEmailRequest(email="  john@example.com  ")
+        assert request.email == "john@example.com"
+
+    def test_serialization(self):
+        """Test model serialization."""
+        request = IdentityDeleteByEmailRequest(email="john@example.com")
+        data = request.model_dump()
+        assert data == {"email": "john@example.com"}
+
+
+class TestIdentityDomain:
+    """Test IdentityDomain model."""
+
+    def test_required_fields(self):
+        """Test with all required fields."""
+        domain = IdentityDomain(
+            id="domain123",
+            name="example.com",
+            created_at="2023-01-01T00:00:00Z",
+            updated_at="2023-01-01T00:00:00Z"
+        )
+        assert domain.id == "domain123"
+        assert domain.name == "example.com"
+        assert domain.created_at == "2023-01-01T00:00:00Z"
+        assert domain.updated_at == "2023-01-01T00:00:00Z"
+
+    def test_serialization(self):
+        """Test model serialization."""
+        domain = IdentityDomain(
+            id="domain123",
+            name="example.com",
+            created_at="2023-01-01T00:00:00Z",
+            updated_at="2023-01-01T00:00:00Z"
+        )
+        data = domain.model_dump()
+        assert data == {
+            "id": "domain123",
+            "name": "example.com",
+            "created_at": "2023-01-01T00:00:00Z",
+            "updated_at": "2023-01-01T00:00:00Z"
+        }
+
+
+class TestIdentity:
+    """Test Identity model."""
+
+    def test_required_fields(self):
+        """Test with all required fields."""
+        domain = IdentityDomain(
+            id="domain123",
+            name="example.com",
+            created_at="2023-01-01T00:00:00Z",
+            updated_at="2023-01-01T00:00:00Z"
+        )
+        identity = Identity(
+            id="identity123",
+            email="john@example.com",
+            name="John Doe",
+            domain=domain
+        )
+        assert identity.id == "identity123"
+        assert identity.email == "john@example.com"
+        assert identity.name == "John Doe"
+        assert identity.reply_to_email is None
+        assert identity.reply_to_name is None
+        assert identity.is_verified is False
+        assert identity.resends == 0
+        assert identity.add_note is False
+        assert identity.personal_note is None
+        assert identity.domain == domain
+
+    def test_with_all_fields(self):
+        """Test with all fields provided."""
+        domain = IdentityDomain(
+            id="domain123",
+            name="example.com",
+            created_at="2023-01-01T00:00:00Z",
+            updated_at="2023-01-01T00:00:00Z"
+        )
+        identity = Identity(
+            id="identity123",
+            email="john@example.com",
+            name="John Doe",
+            reply_to_email="reply@example.com",
+            reply_to_name="Reply Name",
+            is_verified=True,
+            resends=3,
+            add_note=True,
+            personal_note="Personal note",
+            domain=domain
+        )
+        assert identity.id == "identity123"
+        assert identity.email == "john@example.com"
+        assert identity.name == "John Doe"
+        assert identity.reply_to_email == "reply@example.com"
+        assert identity.reply_to_name == "Reply Name"
+        assert identity.is_verified is True
+        assert identity.resends == 3
+        assert identity.add_note is True
+        assert identity.personal_note == "Personal note"
+        assert identity.domain == domain
+
+    def test_serialization(self):
+        """Test model serialization."""
+        domain = IdentityDomain(
+            id="domain123",
+            name="example.com",
+            created_at="2023-01-01T00:00:00Z",
+            updated_at="2023-01-01T00:00:00Z"
+        )
+        identity = Identity(
+            id="identity123",
+            email="john@example.com",
+            name="John Doe",
+            reply_to_email="reply@example.com",
+            is_verified=True,
+            domain=domain
+        )
+        data = identity.model_dump()
+        assert data == {
+            "id": "identity123",
+            "email": "john@example.com",
+            "name": "John Doe",
+            "reply_to_email": "reply@example.com",
+            "reply_to_name": None,
+            "is_verified": True,
+            "resends": 0,
+            "add_note": False,
+            "personal_note": None,
+            "domain": {
+                "id": "domain123",
+                "name": "example.com",
+                "created_at": "2023-01-01T00:00:00Z",
+                "updated_at": "2023-01-01T00:00:00Z"
+            }
+        }
+
+
+class TestIdentityListResponse:
+    """Test IdentityListResponse model."""
+
+    def test_with_data_only(self):
+        """Test with data only."""
+        domain = IdentityDomain(
+            id="domain123",
+            name="example.com",
+            created_at="2023-01-01T00:00:00Z",
+            updated_at="2023-01-01T00:00:00Z"
+        )
+        identity = Identity(
+            id="identity123",
+            email="john@example.com",
+            name="John Doe",
+            domain=domain
+        )
+        response = IdentityListResponse(data=[identity])
+        assert len(response.data) == 1
+        assert response.data[0] == identity
+        assert response.links is None
+        assert response.meta is None
+
+    def test_with_all_fields(self):
+        """Test with all fields provided."""
+        domain = IdentityDomain(
+            id="domain123",
+            name="example.com",
+            created_at="2023-01-01T00:00:00Z",
+            updated_at="2023-01-01T00:00:00Z"
+        )
+        identity = Identity(
+            id="identity123",
+            email="john@example.com",
+            name="John Doe",
+            domain=domain
+        )
+        links = {"next": "https://api.mailersend.com/v1/identities?page=2"}
+        meta = {"total": 100, "page": 1}
+        
+        response = IdentityListResponse(
+            data=[identity],
+            links=links,
+            meta=meta
+        )
+        assert len(response.data) == 1
+        assert response.data[0] == identity
+        assert response.links == links
+        assert response.meta == meta
+
+
+class TestIdentityResponse:
+    """Test IdentityResponse model."""
+
+    def test_single_identity(self):
+        """Test with single identity."""
+        domain = IdentityDomain(
+            id="domain123",
+            name="example.com",
+            created_at="2023-01-01T00:00:00Z",
+            updated_at="2023-01-01T00:00:00Z"
+        )
+        identity = Identity(
+            id="identity123",
+            email="john@example.com",
+            name="John Doe",
+            domain=domain
+        )
+        response = IdentityResponse(data=identity)
+        assert response.data == identity
+
+    def test_serialization(self):
+        """Test model serialization."""
+        domain = IdentityDomain(
+            id="domain123",
+            name="example.com",
+            created_at="2023-01-01T00:00:00Z",
+            updated_at="2023-01-01T00:00:00Z"
+        )
+        identity = Identity(
+            id="identity123",
+            email="john@example.com",
+            name="John Doe",
+            domain=domain
+        )
+        response = IdentityResponse(data=identity)
+        data = response.model_dump()
+        assert "data" in data
+        assert data["data"]["id"] == "identity123"
+        assert data["data"]["email"] == "john@example.com" 

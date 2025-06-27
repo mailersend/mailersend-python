@@ -7,6 +7,7 @@ from .email import Email
 from .activity import Activity
 from .analytics import Analytics
 from .domains import Domains
+from .identities import IdentitiesResource
 
 __all__ = [
     "BaseResource",
@@ -14,4 +15,5 @@ __all__ = [
     "Activity",
     "Analytics",
     "Domains",
+    "IdentitiesResource",
 ]
