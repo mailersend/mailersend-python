@@ -119,6 +119,18 @@ from .recipients import (
     OnHoldResponse,
     SuppressionAddResponse,
 )
+from .templates import (
+    TemplatesListRequest,
+    TemplateGetRequest,
+    TemplateDeleteRequest,
+    TemplateCategory,
+    TemplateDomain,
+    TemplatePersonalization,
+    TemplateStats,
+    Template,
+    TemplatesListResponse,
+    TemplateResponse
+)
 
 __all__ = [
     "BaseModel",
@@ -220,4 +232,14 @@ __all__ = [
     "UnsubscribesResponse",
     "OnHoldResponse",
     "SuppressionAddResponse",
+    "TemplatesListRequest",
+    "TemplateGetRequest",
+    "TemplateDeleteRequest",
+    "TemplateCategory",
+    "TemplateDomain",
+    "TemplatePersonalization",
+    "TemplateStats",
+    "Template",
+    "TemplatesListResponse",
+    "TemplateResponse",
 ]
