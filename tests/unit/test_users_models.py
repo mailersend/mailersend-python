@@ -10,7 +10,8 @@ from mailersend.models.users import (
     UserDeleteRequest, InvitesListRequest, InviteGetRequest,
     InviteResendRequest, InviteCancelRequest, UsersListResponse,
     UserResponse, UserInviteResponse, UserUpdateResponse,
-    InvitesListResponse, InviteResponse, InviteResendResponse
+    InvitesListResponse, InviteResponse, InviteResendResponse,
+    UsersListQueryParams, InvitesListQueryParams
 )
 
 
@@ -293,10 +294,105 @@ class TestUserUpdateRequest:
 
     def test_user_update_request_role_validation(self):
         """Test role validation in UserUpdateRequest."""
-        # Empty role
         with pytest.raises(ValidationError) as exc_info:
             UserUpdateRequest(user_id="user123", role="")
         assert "Role cannot be empty" in str(exc_info.value)
+
+
+class TestUsersListQueryParams:
+    """Test UsersListQueryParams model."""
+
+    def test_users_list_query_params_defaults(self):
+        """Test UsersListQueryParams with default values."""
+        params = UsersListQueryParams()
+        assert params.page == 1
+        assert params.limit == 25
+
+    def test_users_list_query_params_custom_values(self):
+        """Test UsersListQueryParams with custom values."""
+        params = UsersListQueryParams(page=2, limit=50)
+        assert params.page == 2
+        assert params.limit == 50
+
+    def test_users_list_query_params_validation(self):
+        """Test UsersListQueryParams validation."""
+        # Valid values
+        params = UsersListQueryParams(page=1, limit=10)
+        assert params.page == 1
+        assert params.limit == 10
+
+        # Invalid page (< 1)
+        with pytest.raises(ValidationError):
+            UsersListQueryParams(page=0)
+
+        # Invalid limit (< 10)
+        with pytest.raises(ValidationError):
+            UsersListQueryParams(limit=9)
+
+        # Invalid limit (> 100)
+        with pytest.raises(ValidationError):
+            UsersListQueryParams(limit=101)
+
+    def test_users_list_query_params_to_query_params_defaults(self):
+        """Test to_query_params with default values."""
+        params = UsersListQueryParams()
+        query_params = params.to_query_params()
+        # Should return empty dict when values are defaults
+        assert query_params == {}
+
+    def test_users_list_query_params_to_query_params_custom(self):
+        """Test to_query_params with custom values."""
+        params = UsersListQueryParams(page=2, limit=50)
+        query_params = params.to_query_params()
+        assert query_params == {"page": 2, "limit": 50}
+
+
+class TestInvitesListQueryParams:
+    """Test InvitesListQueryParams model."""
+
+    def test_invites_list_query_params_defaults(self):
+        """Test InvitesListQueryParams with default values."""
+        params = InvitesListQueryParams()
+        assert params.page == 1
+        assert params.limit == 25
+
+    def test_invites_list_query_params_custom_values(self):
+        """Test InvitesListQueryParams with custom values."""
+        params = InvitesListQueryParams(page=3, limit=15)
+        assert params.page == 3
+        assert params.limit == 15
+
+    def test_invites_list_query_params_validation(self):
+        """Test InvitesListQueryParams validation."""
+        # Valid values
+        params = InvitesListQueryParams(page=1, limit=10)
+        assert params.page == 1
+        assert params.limit == 10
+
+        # Invalid page (< 1)
+        with pytest.raises(ValidationError):
+            InvitesListQueryParams(page=0)
+
+        # Invalid limit (< 10)
+        with pytest.raises(ValidationError):
+            InvitesListQueryParams(limit=9)
+
+        # Invalid limit (> 100)
+        with pytest.raises(ValidationError):
+            InvitesListQueryParams(limit=101)
+
+    def test_invites_list_query_params_to_query_params_defaults(self):
+        """Test to_query_params with default values."""
+        params = InvitesListQueryParams()
+        query_params = params.to_query_params()
+        # Should return empty dict when values are defaults
+        assert query_params == {}
+
+    def test_invites_list_query_params_to_query_params_custom(self):
+        """Test to_query_params with custom values."""
+        params = InvitesListQueryParams(page=4, limit=75)
+        query_params = params.to_query_params()
+        assert query_params == {"page": 4, "limit": 75}
 
 
 class TestRequestModels:
@@ -306,6 +402,22 @@ class TestRequestModels:
         """Test UsersListRequest model."""
         request = UsersListRequest()
         assert request is not None
+        assert hasattr(request, 'query_params')
+        assert isinstance(request.query_params, UsersListQueryParams)
+
+    def test_users_list_request_with_custom_params(self):
+        """Test UsersListRequest with custom query params."""
+        query_params = UsersListQueryParams(page=2, limit=50)
+        request = UsersListRequest(query_params=query_params)
+        assert request.query_params.page == 2
+        assert request.query_params.limit == 50
+
+    def test_users_list_request_to_query_params(self):
+        """Test UsersListRequest to_query_params method."""
+        query_params = UsersListQueryParams(page=3, limit=20)
+        request = UsersListRequest(query_params=query_params)
+        result = request.to_query_params()
+        assert result == {"page": 3, "limit": 20}
 
     def test_user_get_request(self):
         """Test UserGetRequest model."""
@@ -321,6 +433,22 @@ class TestRequestModels:
         """Test InvitesListRequest model."""
         request = InvitesListRequest()
         assert request is not None
+        assert hasattr(request, 'query_params')
+        assert isinstance(request.query_params, InvitesListQueryParams)
+
+    def test_invites_list_request_with_custom_params(self):
+        """Test InvitesListRequest with custom query params."""
+        query_params = InvitesListQueryParams(page=5, limit=10)
+        request = InvitesListRequest(query_params=query_params)
+        assert request.query_params.page == 5
+        assert request.query_params.limit == 10
+
+    def test_invites_list_request_to_query_params(self):
+        """Test InvitesListRequest to_query_params method."""
+        query_params = InvitesListQueryParams(page=2, limit=30)
+        request = InvitesListRequest(query_params=query_params)
+        result = request.to_query_params()
+        assert result == {"page": 2, "limit": 30}
 
     def test_invite_get_request(self):
         """Test InviteGetRequest model."""

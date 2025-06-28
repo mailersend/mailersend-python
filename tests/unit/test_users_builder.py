@@ -24,6 +24,8 @@ class TestUsersBuilder:
         assert builder._templates == []
         assert builder._domains == []
         assert builder._requires_periodic_password_change is None
+        assert builder._page is None
+        assert builder._limit is None
 
     def test_user_id_method(self):
         """Test user_id method."""
@@ -120,6 +122,20 @@ class TestUsersBuilder:
         assert result is builder  # method chaining
         assert builder._requires_periodic_password_change is True
 
+    def test_page_method(self):
+        """Test page method."""
+        builder = UsersBuilder()
+        result = builder.page(2)
+        assert result is builder  # method chaining
+        assert builder._page == 2
+
+    def test_limit_method(self):
+        """Test limit method."""
+        builder = UsersBuilder()
+        result = builder.limit(50)
+        assert result is builder  # method chaining
+        assert builder._limit == 50
+
     def test_role_helper_methods(self):
         """Test role helper methods."""
         builder = UsersBuilder()
@@ -192,6 +208,7 @@ class TestUsersBuilder:
         builder.user_id("user123").email("user@example.com").role("Admin")
         builder.permissions(["read-templates"]).templates(["template1"])
         builder.requires_periodic_password_change(True)
+        builder.page(2).limit(50)
         
         result = builder.reset()
         assert result is builder  # method chaining
@@ -202,6 +219,8 @@ class TestUsersBuilder:
         assert builder._templates == []
         assert builder._domains == []
         assert builder._requires_periodic_password_change is None
+        assert builder._page is None
+        assert builder._limit is None
 
     def test_copy_method(self):
         """Test copy method."""
@@ -209,19 +228,24 @@ class TestUsersBuilder:
         builder.user_id("user123").email("user@example.com").role("Admin")
         builder.permissions(["read-templates"]).templates(["template1"])
         builder.domains(["domain1"]).requires_periodic_password_change(True)
+        builder.page(3).limit(25)
         
-        copied = builder.copy()
-        assert copied is not builder
-        assert copied._user_id == builder._user_id
-        assert copied._email == builder._email
-        assert copied._role == builder._role
-        assert copied._permissions == builder._permissions
-        assert copied._permissions is not builder._permissions  # different list
-        assert copied._templates == builder._templates
-        assert copied._templates is not builder._templates  # different list
-        assert copied._domains == builder._domains
-        assert copied._domains is not builder._domains  # different list
-        assert copied._requires_periodic_password_change == builder._requires_periodic_password_change
+        copy_builder = builder.copy()
+        
+        # Test independence
+        assert copy_builder is not builder
+        assert copy_builder._user_id == builder._user_id
+        assert copy_builder._email == builder._email
+        assert copy_builder._role == builder._role
+        assert copy_builder._permissions == builder._permissions
+        assert copy_builder._permissions is not builder._permissions  # should be separate lists
+        assert copy_builder._templates == builder._templates
+        assert copy_builder._templates is not builder._templates
+        assert copy_builder._domains == builder._domains
+        assert copy_builder._domains is not builder._domains
+        assert copy_builder._requires_periodic_password_change == builder._requires_periodic_password_change
+        assert copy_builder._page == builder._page
+        assert copy_builder._limit == builder._limit
 
     def test_method_chaining(self):
         """Test method chaining works correctly."""
@@ -253,16 +277,26 @@ class TestUsersBuilderBuildMethods:
         builder = UsersBuilder()
         request = builder.build_users_list()
         assert isinstance(request, UsersListRequest)
+        assert request.query_params.page == 1  # default
+        assert request.query_params.limit == 25  # default
+
+    def test_build_users_list_with_pagination(self):
+        """Test build_users_list method with pagination."""
+        builder = UsersBuilder()
+        request = builder.page(2).limit(50).build_users_list()
+        assert isinstance(request, UsersListRequest)
+        assert request.query_params.page == 2
+        assert request.query_params.limit == 50
 
     def test_build_user_get_success(self):
-        """Test build_user_get method with valid data."""
+        """Test build_user_get method success."""
         builder = UsersBuilder()
         request = builder.user_id("user123").build_user_get()
         assert isinstance(request, UserGetRequest)
         assert request.user_id == "user123"
 
     def test_build_user_get_missing_user_id(self):
-        """Test build_user_get method without user_id."""
+        """Test build_user_get method with missing user_id."""
         builder = UsersBuilder()
         with pytest.raises(ValueError, match="user_id is required for getting a user"):
             builder.build_user_get()
@@ -349,6 +383,16 @@ class TestUsersBuilderBuildMethods:
         builder = UsersBuilder()
         request = builder.build_invites_list()
         assert isinstance(request, InvitesListRequest)
+        assert request.query_params.page == 1  # default
+        assert request.query_params.limit == 25  # default
+
+    def test_build_invites_list_with_pagination(self):
+        """Test build_invites_list method with pagination."""
+        builder = UsersBuilder()
+        request = builder.page(3).limit(15).build_invites_list()
+        assert isinstance(request, InvitesListRequest)
+        assert request.query_params.page == 3
+        assert request.query_params.limit == 15
 
     def test_build_invite_get_success(self):
         """Test build_invite_get method with valid data."""
