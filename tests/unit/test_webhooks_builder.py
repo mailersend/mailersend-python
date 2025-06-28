@@ -1,14 +1,14 @@
-"""Unit tests for webhooks builder."""
+"""Tests for Webhooks builder."""
 
 import pytest
 
 from mailersend.builders.webhooks import WebhooksBuilder
 from mailersend.models.webhooks import (
-    WebhookCreateRequest,
-    WebhookDeleteRequest,
-    WebhookGetRequest,
-    WebhookUpdateRequest,
     WebhooksListRequest,
+    WebhookGetRequest,
+    WebhookCreateRequest,
+    WebhookUpdateRequest,
+    WebhookDeleteRequest,
 )
 
 
@@ -188,7 +188,7 @@ class TestWebhooksBuilderRequests:
         
         request = builder.build_webhooks_list_request()
         assert isinstance(request, WebhooksListRequest)
-        assert request.domain_id == "test_domain"
+        assert request.query_params.domain_id == "test_domain"
     
     def test_build_webhooks_list_request_missing_domain_id(self):
         """Test building WebhooksListRequest without domain_id."""
@@ -413,7 +413,7 @@ class TestWebhooksBuilderStateManagement:
         
         # Build list request
         list_request = builder.build_webhooks_list_request()
-        assert list_request.domain_id == "test_domain"
+        assert list_request.query_params.domain_id == "test_domain"
         
         # Add webhook_id and build get request
         builder.webhook_id("webhook_123")

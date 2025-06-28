@@ -1,19 +1,22 @@
-"""Unit tests for webhooks resource."""
+"""Tests for Webhooks resource."""
 
 from unittest.mock import Mock, patch
 
 import pytest
-from pydantic import ValidationError
 
 from mailersend.models.base import APIResponse
 from mailersend.models.webhooks import (
-    WebhookCreateRequest,
-    WebhookDeleteRequest,
-    WebhookGetRequest,
-    WebhookUpdateRequest,
+    WebhooksListQueryParams,
     WebhooksListRequest,
+    WebhookGetRequest,
+    WebhookCreateRequest,
+    WebhookUpdateRequest,
+    WebhookDeleteRequest,
+    WebhooksListResponse,
+    WebhookResponse,
 )
 from mailersend.resources.webhooks import Webhooks
+from mailersend.exceptions import ValidationError
 
 
 class TestWebhooks:
@@ -24,9 +27,16 @@ class TestWebhooks:
         self.client = Mock()
         self.webhooks = Webhooks(self.client)
     
-    def test_init(self):
-        """Test Webhooks resource initialization."""
-        assert self.webhooks.client is self.client
+    def _create_mock_response(self, json_data, status_code=200, headers=None):
+        """Helper to create mock response objects."""
+        mock_response = Mock()
+        mock_response.json.return_value = json_data
+        mock_response.status_code = status_code
+        mock_response.headers = headers or {}
+        mock_response.request = Mock()
+        mock_response.request.url = "https://api.mailersend.com/v1/webhooks"
+        mock_response.request.method = "GET"
+        return mock_response
 
 
 class TestWebhooksListWebhooks:
@@ -36,26 +46,70 @@ class TestWebhooksListWebhooks:
         """Set up test fixtures."""
         self.client = Mock()
         self.webhooks = Webhooks(self.client)
-        self.mock_response = Mock(spec=APIResponse)
-        self.client.request.return_value = self.mock_response
+    
+    def _create_mock_response(self, json_data, status_code=200, headers=None):
+        """Helper to create mock response objects."""
+        mock_response = Mock()
+        mock_response.json.return_value = json_data
+        mock_response.status_code = status_code
+        mock_response.headers = headers or {}
+        mock_response.request = Mock()
+        mock_response.request.url = "https://api.mailersend.com/v1/webhooks"
+        mock_response.request.method = "GET"
+        return mock_response
     
     def test_list_webhooks_success(self):
         """Test successful webhook listing."""
-        request = WebhooksListRequest(domain_id="test_domain")
+        # Setup
+        json_data = {
+            "data": [
+                {
+                    "id": "webhook_123",
+                    "url": "https://example.com/webhook",
+                    "name": "Test Webhook",
+                    "events": ["activity.sent"],
+                    "enabled": True,
+                    "domain_id": "domain_123",
+                    "created_at": "2023-01-01T12:00:00Z",
+                    "updated_at": "2023-01-02T12:00:00Z"
+                }
+            ]
+        }
+        mock_response = self._create_mock_response(json_data)
+        self.client.request.return_value = mock_response
         
+        query_params = WebhooksListQueryParams(domain_id="test_domain")
+        request = WebhooksListRequest(query_params=query_params)
+        
+        # Test
         result = self.webhooks.list_webhooks(request)
         
-        assert result is self.mock_response
+        # Assertions
         self.client.request.assert_called_once_with(
-            method="GET",
-            endpoint="webhooks",
+            "GET",
+            "webhooks",
             params={"domain_id": "test_domain"}
         )
+        assert isinstance(result, APIResponse)
+        assert isinstance(result.data, WebhooksListResponse)
+        assert len(result.data.data) == 1
+        assert result.data.data[0].id == "webhook_123"
     
-    def test_list_webhooks_validation_error(self):
-        """Test handling of validation errors."""
-        with pytest.raises(ValidationError):
-            WebhooksListRequest(domain_id="")  # Invalid empty domain_id
+    def test_list_webhooks_requires_request(self):
+        """Test that list_webhooks requires a request object."""
+        with pytest.raises(ValidationError) as exc_info:
+            self.webhooks.list_webhooks(None)
+        
+        assert "WebhooksListRequest must be provided" in str(exc_info.value)
+        self.client.request.assert_not_called()
+    
+    def test_list_webhooks_validates_request_type(self):
+        """Test that list_webhooks validates request type."""
+        with pytest.raises(ValidationError) as exc_info:
+            self.webhooks.list_webhooks("invalid-request")
+        
+        assert "request must be a WebhooksListRequest instance" in str(exc_info.value)
+        self.client.request.assert_not_called()
 
 
 class TestWebhooksGetWebhook:
@@ -65,25 +119,63 @@ class TestWebhooksGetWebhook:
         """Set up test fixtures."""
         self.client = Mock()
         self.webhooks = Webhooks(self.client)
-        self.mock_response = Mock(spec=APIResponse)
-        self.client.request.return_value = self.mock_response
+    
+    def _create_mock_response(self, json_data, status_code=200, headers=None):
+        """Helper to create mock response objects."""
+        mock_response = Mock()
+        mock_response.json.return_value = json_data
+        mock_response.status_code = status_code
+        mock_response.headers = headers or {}
+        mock_response.request = Mock()
+        mock_response.request.url = "https://api.mailersend.com/v1/webhooks/webhook_123"
+        mock_response.request.method = "GET"
+        return mock_response
     
     def test_get_webhook_success(self):
         """Test successful webhook retrieval."""
+        # Setup
+        json_data = {
+            "data": {
+                "id": "webhook_123",
+                "url": "https://example.com/webhook",
+                "name": "Test Webhook",
+                "events": ["activity.sent"],
+                "enabled": True,
+                "domain_id": "domain_123",
+                "created_at": "2023-01-01T12:00:00Z",
+                "updated_at": "2023-01-02T12:00:00Z"
+            }
+        }
+        mock_response = self._create_mock_response(json_data)
+        self.client.request.return_value = mock_response
+        
         request = WebhookGetRequest(webhook_id="webhook_123")
         
+        # Test
         result = self.webhooks.get_webhook(request)
         
-        assert result is self.mock_response
-        self.client.request.assert_called_once_with(
-            method="GET",
-            endpoint="webhooks/webhook_123"
-        )
+        # Assertions
+        self.client.request.assert_called_once_with("GET", "webhooks/webhook_123")
+        assert isinstance(result, APIResponse)
+        assert isinstance(result.data, WebhookResponse)
+        assert result.data.data.id == "webhook_123"
+        assert result.data.data.name == "Test Webhook"
     
-    def test_get_webhook_validation_error(self):
-        """Test handling of validation errors."""
-        with pytest.raises(ValidationError):
-            WebhookGetRequest(webhook_id="")  # Invalid empty webhook_id
+    def test_get_webhook_requires_request(self):
+        """Test that get_webhook requires a request object."""
+        with pytest.raises(ValidationError) as exc_info:
+            self.webhooks.get_webhook(None)
+        
+        assert "WebhookGetRequest must be provided" in str(exc_info.value)
+        self.client.request.assert_not_called()
+    
+    def test_get_webhook_validates_request_type(self):
+        """Test that get_webhook validates request type."""
+        with pytest.raises(ValidationError) as exc_info:
+            self.webhooks.get_webhook("invalid-request")
+        
+        assert "request must be a WebhookGetRequest instance" in str(exc_info.value)
+        self.client.request.assert_not_called()
 
 
 class TestWebhooksCreateWebhook:
@@ -93,11 +185,36 @@ class TestWebhooksCreateWebhook:
         """Set up test fixtures."""
         self.client = Mock()
         self.webhooks = Webhooks(self.client)
-        self.mock_response = Mock(spec=APIResponse)
-        self.client.request.return_value = self.mock_response
+    
+    def _create_mock_response(self, json_data, status_code=201, headers=None):
+        """Helper to create mock response objects."""
+        mock_response = Mock()
+        mock_response.json.return_value = json_data
+        mock_response.status_code = status_code
+        mock_response.headers = headers or {}
+        mock_response.request = Mock()
+        mock_response.request.url = "https://api.mailersend.com/v1/webhooks"
+        mock_response.request.method = "POST"
+        return mock_response
     
     def test_create_webhook_success(self):
         """Test successful webhook creation."""
+        # Setup
+        json_data = {
+            "data": {
+                "id": "webhook_123",
+                "url": "https://example.com/webhook",
+                "name": "Test Webhook",
+                "events": ["activity.sent", "activity.delivered"],
+                "enabled": True,
+                "domain_id": "test_domain",
+                "created_at": "2023-01-01T12:00:00Z",
+                "updated_at": "2023-01-01T12:00:00Z"
+            }
+        }
+        mock_response = self._create_mock_response(json_data)
+        self.client.request.return_value = mock_response
+        
         request = WebhookCreateRequest(
             url="https://example.com/webhook",
             name="Test Webhook",
@@ -106,9 +223,10 @@ class TestWebhooksCreateWebhook:
             enabled=True
         )
         
+        # Test
         result = self.webhooks.create_webhook(request)
         
-        assert result is self.mock_response
+        # Assertions
         expected_data = {
             "url": "https://example.com/webhook",
             "name": "Test Webhook",
@@ -116,14 +234,30 @@ class TestWebhooksCreateWebhook:
             "domain_id": "test_domain",
             "enabled": True
         }
-        self.client.request.assert_called_once_with(
-            method="POST",
-            endpoint="webhooks",
-            json=expected_data
-        )
+        self.client.request.assert_called_once_with("POST", "webhooks", json=expected_data)
+        assert isinstance(result, APIResponse)
+        assert isinstance(result.data, WebhookResponse)
+        assert result.data.data.id == "webhook_123"
+        assert result.data.data.name == "Test Webhook"
     
     def test_create_webhook_without_enabled(self):
         """Test webhook creation without enabled field."""
+        # Setup
+        json_data = {
+            "data": {
+                "id": "webhook_123",
+                "url": "https://example.com/webhook",
+                "name": "Test Webhook",
+                "events": ["activity.sent"],
+                "enabled": False,
+                "domain_id": "test_domain",
+                "created_at": "2023-01-01T12:00:00Z",
+                "updated_at": "2023-01-01T12:00:00Z"
+            }
+        }
+        mock_response = self._create_mock_response(json_data)
+        self.client.request.return_value = mock_response
+        
         request = WebhookCreateRequest(
             url="https://example.com/webhook",
             name="Test Webhook",
@@ -131,30 +265,35 @@ class TestWebhooksCreateWebhook:
             domain_id="test_domain"
         )
         
+        # Test
         result = self.webhooks.create_webhook(request)
         
-        assert result is self.mock_response
+        # Assertions
         expected_data = {
             "url": "https://example.com/webhook",
             "name": "Test Webhook",
             "events": ["activity.sent"],
             "domain_id": "test_domain"
         }
-        self.client.request.assert_called_once_with(
-            method="POST",
-            endpoint="webhooks",
-            json=expected_data
-        )
+        self.client.request.assert_called_once_with("POST", "webhooks", json=expected_data)
+        assert isinstance(result, APIResponse)
+        assert isinstance(result.data, WebhookResponse)
     
-    def test_create_webhook_validation_error(self):
-        """Test handling of validation errors."""
-        with pytest.raises(ValidationError):
-            WebhookCreateRequest(
-                url="",  # Invalid empty url
-                name="Test",
-                events=["activity.sent"],
-                domain_id="domain_123"
-            )
+    def test_create_webhook_requires_request(self):
+        """Test that create_webhook requires a request object."""
+        with pytest.raises(ValidationError) as exc_info:
+            self.webhooks.create_webhook(None)
+        
+        assert "WebhookCreateRequest must be provided" in str(exc_info.value)
+        self.client.request.assert_not_called()
+    
+    def test_create_webhook_validates_request_type(self):
+        """Test that create_webhook validates request type."""
+        with pytest.raises(ValidationError) as exc_info:
+            self.webhooks.create_webhook("invalid-request")
+        
+        assert "request must be a WebhookCreateRequest instance" in str(exc_info.value)
+        self.client.request.assert_not_called()
 
 
 class TestWebhooksUpdateWebhook:
@@ -164,11 +303,36 @@ class TestWebhooksUpdateWebhook:
         """Set up test fixtures."""
         self.client = Mock()
         self.webhooks = Webhooks(self.client)
-        self.mock_response = Mock(spec=APIResponse)
-        self.client.request.return_value = self.mock_response
+    
+    def _create_mock_response(self, json_data, status_code=200, headers=None):
+        """Helper to create mock response objects."""
+        mock_response = Mock()
+        mock_response.json.return_value = json_data
+        mock_response.status_code = status_code
+        mock_response.headers = headers or {}
+        mock_response.request = Mock()
+        mock_response.request.url = "https://api.mailersend.com/v1/webhooks/webhook_123"
+        mock_response.request.method = "PUT"
+        return mock_response
     
     def test_update_webhook_success(self):
         """Test successful webhook update."""
+        # Setup
+        json_data = {
+            "data": {
+                "id": "webhook_123",
+                "url": "https://example.com/webhook",
+                "name": "Updated Webhook",
+                "events": ["activity.sent"],
+                "enabled": False,
+                "domain_id": "test_domain",
+                "created_at": "2023-01-01T12:00:00Z",
+                "updated_at": "2023-01-02T12:00:00Z"
+            }
+        }
+        mock_response = self._create_mock_response(json_data)
+        self.client.request.return_value = mock_response
+        
         request = WebhookUpdateRequest(
             webhook_id="webhook_123",
             url="https://example.com/webhook",
@@ -177,57 +341,97 @@ class TestWebhooksUpdateWebhook:
             enabled=False
         )
         
+        # Test
         result = self.webhooks.update_webhook(request)
         
-        assert result is self.mock_response
+        # Assertions
         expected_data = {
             "url": "https://example.com/webhook",
             "name": "Updated Webhook",
             "events": ["activity.sent"],
             "enabled": False
         }
-        self.client.request.assert_called_once_with(
-            method="PUT",
-            endpoint="webhooks/webhook_123",
-            json=expected_data
-        )
+        self.client.request.assert_called_once_with("PUT", "webhooks/webhook_123", json=expected_data)
+        assert isinstance(result, APIResponse)
+        assert isinstance(result.data, WebhookResponse)
+        assert result.data.data.id == "webhook_123"
+        assert result.data.data.name == "Updated Webhook"
     
     def test_update_webhook_partial(self):
         """Test partial webhook update."""
+        # Setup
+        json_data = {
+            "data": {
+                "id": "webhook_123",
+                "url": "https://example.com/webhook",
+                "name": "Updated Name",
+                "events": ["activity.sent"],
+                "enabled": True,
+                "domain_id": "test_domain",
+                "created_at": "2023-01-01T12:00:00Z",
+                "updated_at": "2023-01-02T12:00:00Z"
+            }
+        }
+        mock_response = self._create_mock_response(json_data)
+        self.client.request.return_value = mock_response
+        
         request = WebhookUpdateRequest(
             webhook_id="webhook_123",
             name="Updated Name"
         )
         
+        # Test
         result = self.webhooks.update_webhook(request)
         
-        assert result is self.mock_response
-        expected_data = {
-            "name": "Updated Name"
-        }
-        self.client.request.assert_called_once_with(
-            method="PUT",
-            endpoint="webhooks/webhook_123",
-            json=expected_data
-        )
+        # Assertions
+        expected_data = {"name": "Updated Name"}
+        self.client.request.assert_called_once_with("PUT", "webhooks/webhook_123", json=expected_data)
+        assert isinstance(result, APIResponse)
+        assert isinstance(result.data, WebhookResponse)
     
     def test_update_webhook_minimal(self):
         """Test minimal webhook update (only webhook_id)."""
+        # Setup
+        json_data = {
+            "data": {
+                "id": "webhook_123",
+                "url": "https://example.com/webhook",
+                "name": "Test Webhook",
+                "events": ["activity.sent"],
+                "enabled": True,
+                "domain_id": "test_domain",
+                "created_at": "2023-01-01T12:00:00Z",
+                "updated_at": "2023-01-02T12:00:00Z"
+            }
+        }
+        mock_response = self._create_mock_response(json_data)
+        self.client.request.return_value = mock_response
+        
         request = WebhookUpdateRequest(webhook_id="webhook_123")
         
+        # Test
         result = self.webhooks.update_webhook(request)
         
-        assert result is self.mock_response
-        self.client.request.assert_called_once_with(
-            method="PUT",
-            endpoint="webhooks/webhook_123",
-            json={}
-        )
+        # Assertions
+        self.client.request.assert_called_once_with("PUT", "webhooks/webhook_123", json={})
+        assert isinstance(result, APIResponse)
+        assert isinstance(result.data, WebhookResponse)
     
-    def test_update_webhook_validation_error(self):
-        """Test handling of validation errors."""
-        with pytest.raises(ValidationError):
-            WebhookUpdateRequest(webhook_id="")  # Invalid empty webhook_id
+    def test_update_webhook_requires_request(self):
+        """Test that update_webhook requires a request object."""
+        with pytest.raises(ValidationError) as exc_info:
+            self.webhooks.update_webhook(None)
+        
+        assert "WebhookUpdateRequest must be provided" in str(exc_info.value)
+        self.client.request.assert_not_called()
+    
+    def test_update_webhook_validates_request_type(self):
+        """Test that update_webhook validates request type."""
+        with pytest.raises(ValidationError) as exc_info:
+            self.webhooks.update_webhook("invalid-request")
+        
+        assert "request must be a WebhookUpdateRequest instance" in str(exc_info.value)
+        self.client.request.assert_not_called()
 
 
 class TestWebhooksDeleteWebhook:
@@ -237,59 +441,86 @@ class TestWebhooksDeleteWebhook:
         """Set up test fixtures."""
         self.client = Mock()
         self.webhooks = Webhooks(self.client)
-        self.mock_response = Mock(spec=APIResponse)
-        self.client.request.return_value = self.mock_response
+    
+    def _create_mock_response(self, json_data, status_code=204, headers=None):
+        """Helper to create mock response objects."""
+        mock_response = Mock()
+        mock_response.json.return_value = json_data
+        mock_response.status_code = status_code
+        mock_response.headers = headers or {}
+        mock_response.request = Mock()
+        mock_response.request.url = "https://api.mailersend.com/v1/webhooks/webhook_123"
+        mock_response.request.method = "DELETE"
+        return mock_response
     
     def test_delete_webhook_success(self):
         """Test successful webhook deletion."""
+        # Setup
+        mock_response = self._create_mock_response({})
+        self.client.request.return_value = mock_response
+        
         request = WebhookDeleteRequest(webhook_id="webhook_123")
         
+        # Test
         result = self.webhooks.delete_webhook(request)
         
-        assert result is self.mock_response
-        self.client.request.assert_called_once_with(
-            method="DELETE",
-            endpoint="webhooks/webhook_123"
-        )
+        # Assertions
+        self.client.request.assert_called_once_with("DELETE", "webhooks/webhook_123")
+        assert isinstance(result, APIResponse)
+        assert result.status_code == 204
     
-    def test_delete_webhook_validation_error(self):
-        """Test handling of validation errors."""
-        with pytest.raises(ValidationError):
-            WebhookDeleteRequest(webhook_id="")  # Invalid empty webhook_id
+    def test_delete_webhook_requires_request(self):
+        """Test that delete_webhook requires a request object."""
+        with pytest.raises(ValidationError) as exc_info:
+            self.webhooks.delete_webhook(None)
+        
+        assert "WebhookDeleteRequest must be provided" in str(exc_info.value)
+        self.client.request.assert_not_called()
+    
+    def test_delete_webhook_validates_request_type(self):
+        """Test that delete_webhook validates request type."""
+        with pytest.raises(ValidationError) as exc_info:
+            self.webhooks.delete_webhook("invalid-request")
+        
+        assert "request must be a WebhookDeleteRequest instance" in str(exc_info.value)
+        self.client.request.assert_not_called()
 
 
-class TestWebhooksLogging:
-    """Test logging behavior."""
+class TestWebhooksApiErrors:
+    """Test API error handling."""
     
     def setup_method(self):
         """Set up test fixtures."""
         self.client = Mock()
         self.webhooks = Webhooks(self.client)
-        self.mock_response = Mock(spec=APIResponse)
-        self.client.request.return_value = self.mock_response
     
-    def test_list_webhooks_logs_info(self):
-        """Test that list_webhooks logs info message."""
-        request = WebhooksListRequest(domain_id="test_domain")
+    def test_list_webhooks_api_error(self):
+        """Test list_webhooks handles API errors."""
+        self.client.request.side_effect = Exception("API Error")
         
-        with patch("mailersend.resources.webhooks.logger") as mock_logger:
+        query_params = WebhooksListQueryParams(domain_id="test_domain")
+        request = WebhooksListRequest(query_params=query_params)
+        
+        with pytest.raises(Exception) as exc_info:
             self.webhooks.list_webhooks(request)
-            mock_logger.info.assert_called_once_with(
-                "Listing webhooks for domain: %s", "test_domain"
-            )
+        
+        assert "API Error" in str(exc_info.value)
     
-    def test_get_webhook_logs_info(self):
-        """Test that get_webhook logs info message."""
+    def test_get_webhook_api_error(self):
+        """Test get_webhook handles API errors."""
+        self.client.request.side_effect = Exception("API Error")
+        
         request = WebhookGetRequest(webhook_id="webhook_123")
         
-        with patch("mailersend.resources.webhooks.logger") as mock_logger:
+        with pytest.raises(Exception) as exc_info:
             self.webhooks.get_webhook(request)
-            mock_logger.info.assert_called_once_with(
-                "Getting webhook: %s", "webhook_123"
-            )
+        
+        assert "API Error" in str(exc_info.value)
     
-    def test_create_webhook_logs_info(self):
-        """Test that create_webhook logs info message."""
+    def test_create_webhook_api_error(self):
+        """Test create_webhook handles API errors."""
+        self.client.request.side_effect = Exception("API Error")
+        
         request = WebhookCreateRequest(
             url="https://example.com/webhook",
             name="Test Webhook",
@@ -297,33 +528,29 @@ class TestWebhooksLogging:
             domain_id="test_domain"
         )
         
-        with patch("mailersend.resources.webhooks.logger") as mock_logger:
+        with pytest.raises(Exception) as exc_info:
             self.webhooks.create_webhook(request)
-            mock_logger.info.assert_called_once_with(
-                "Creating webhook: %s", "Test Webhook"
-            )
-    
-    def test_update_webhook_logs_info(self):
-        """Test that update_webhook logs info message."""
-        request = WebhookUpdateRequest(webhook_id="webhook_123")
         
-        with patch("mailersend.resources.webhooks.logger") as mock_logger:
-            self.webhooks.update_webhook(request)
-            mock_logger.info.assert_called_once_with(
-                "Updating webhook: %s", "webhook_123"
-            )
+        assert "API Error" in str(exc_info.value)
     
-    def test_delete_webhook_logs_info(self):
-        """Test that delete_webhook logs info message."""
+    def test_update_webhook_api_error(self):
+        """Test update_webhook handles API errors."""
+        self.client.request.side_effect = Exception("API Error")
+        
+        request = WebhookUpdateRequest(webhook_id="webhook_123", name="Updated")
+        
+        with pytest.raises(Exception) as exc_info:
+            self.webhooks.update_webhook(request)
+        
+        assert "API Error" in str(exc_info.value)
+    
+    def test_delete_webhook_api_error(self):
+        """Test delete_webhook handles API errors."""
+        self.client.request.side_effect = Exception("API Error")
+        
         request = WebhookDeleteRequest(webhook_id="webhook_123")
         
-        with patch("mailersend.resources.webhooks.logger") as mock_logger:
+        with pytest.raises(Exception) as exc_info:
             self.webhooks.delete_webhook(request)
-            mock_logger.info.assert_called_once_with(
-                "Deleting webhook: %s", "webhook_123"
-            )
-    
-    def test_validation_error_logs_error(self):
-        """Test that validation errors are raised for invalid requests."""
-        with pytest.raises(ValidationError):
-            WebhooksListRequest(domain_id="")  # Invalid empty domain_id 
+        
+        assert "API Error" in str(exc_info.value) 

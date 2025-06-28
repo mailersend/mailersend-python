@@ -1,13 +1,14 @@
 """Webhooks API models for MailerSend SDK."""
 
 from datetime import datetime
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 
 from pydantic import BaseModel, Field, field_validator
 
 
-class WebhooksListRequest(BaseModel):
-    """Request model for listing webhooks."""
+# Query Parameters Models
+class WebhooksListQueryParams(BaseModel):
+    """Query parameters for listing webhooks."""
     
     domain_id: str = Field(..., description="Domain ID to filter webhooks")
     
@@ -18,6 +19,21 @@ class WebhooksListRequest(BaseModel):
         if not v or not v.strip():
             raise ValueError("domain_id cannot be empty")
         return v.strip()
+    
+    def to_query_params(self) -> Dict[str, Any]:
+        """Convert to query parameters dictionary."""
+        return {"domain_id": self.domain_id}
+
+
+# Request Models
+class WebhooksListRequest(BaseModel):
+    """Request model for listing webhooks."""
+    
+    query_params: WebhooksListQueryParams
+    
+    def to_query_params(self) -> Dict[str, Any]:
+        """Convert to query parameters dictionary."""
+        return self.query_params.to_query_params()
 
 
 class WebhookGetRequest(BaseModel):
@@ -144,6 +160,7 @@ class WebhookDeleteRequest(BaseModel):
         return v.strip()
 
 
+# Response Models
 class Webhook(BaseModel):
     """Webhook response model."""
     
