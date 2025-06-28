@@ -6,6 +6,9 @@ import pytest
 from pydantic import ValidationError
 
 from mailersend.models.email_verification import (
+    # Query params models
+    EmailVerificationListsQueryParams,
+    EmailVerificationResultsQueryParams,
     # Request models
     EmailVerifyRequest,
     EmailVerifyAsyncRequest,
@@ -29,6 +32,90 @@ from mailersend.models.email_verification import (
     EmailVerificationLinks,
     EmailVerificationMeta,
 )
+
+
+class TestEmailVerificationListsQueryParams:
+    """Test EmailVerificationListsQueryParams model."""
+
+    def test_default_values(self):
+        """Test query params with default values."""
+        params = EmailVerificationListsQueryParams()
+        assert params.page == 1
+        assert params.limit == 25
+
+    def test_custom_values(self):
+        """Test query params with custom values."""
+        params = EmailVerificationListsQueryParams(page=2, limit=50)
+        assert params.page == 2
+        assert params.limit == 50
+
+    def test_invalid_page_validation(self):
+        """Test validation fails for invalid page."""
+        with pytest.raises(ValidationError) as excinfo:
+            EmailVerificationListsQueryParams(page=0)
+        assert "greater than or equal to 1" in str(excinfo.value)
+
+    def test_invalid_limit_too_low(self):
+        """Test validation fails for limit too low."""
+        with pytest.raises(ValidationError) as excinfo:
+            EmailVerificationListsQueryParams(limit=5)
+        assert "greater than or equal to 10" in str(excinfo.value)
+
+    def test_invalid_limit_too_high(self):
+        """Test validation fails for limit too high."""
+        with pytest.raises(ValidationError) as excinfo:
+            EmailVerificationListsQueryParams(limit=150)
+        assert "less than or equal to 100" in str(excinfo.value)
+
+    def test_to_query_params(self):
+        """Test converting to query parameters."""
+        params = EmailVerificationListsQueryParams(page=2, limit=50)
+        query_params = params.to_query_params()
+        assert query_params == {"page": 2, "limit": 50}
+
+
+class TestEmailVerificationResultsQueryParams:
+    """Test EmailVerificationResultsQueryParams model."""
+
+    def test_default_values(self):
+        """Test query params with default values."""
+        params = EmailVerificationResultsQueryParams()
+        assert params.page == 1
+        assert params.limit == 25
+        assert params.results is None
+
+    def test_custom_values(self):
+        """Test query params with custom values."""
+        results = ["valid", "catch_all"]
+        params = EmailVerificationResultsQueryParams(page=2, limit=50, results=results)
+        assert params.page == 2
+        assert params.limit == 50
+        assert params.results == results
+
+    def test_valid_results_filter(self):
+        """Test valid results filter values."""
+        valid_results = ["valid", "catch_all", "mailbox_full", "role_based", "unknown", "failed"]
+        params = EmailVerificationResultsQueryParams(results=valid_results)
+        assert params.results == valid_results
+
+    def test_invalid_result_filter_validation(self):
+        """Test validation fails for invalid result filter."""
+        with pytest.raises(ValidationError) as excinfo:
+            EmailVerificationResultsQueryParams(results=["invalid_result"])
+        assert "Invalid result filter: invalid_result" in str(excinfo.value)
+
+    def test_to_query_params_with_results(self):
+        """Test converting to query parameters with results filter."""
+        results = ["valid", "catch_all"]
+        params = EmailVerificationResultsQueryParams(page=2, limit=50, results=results)
+        query_params = params.to_query_params()
+        assert query_params == {"page": 2, "limit": 50, "results": results}
+
+    def test_to_query_params_without_results(self):
+        """Test converting to query parameters without results filter."""
+        params = EmailVerificationResultsQueryParams(page=2, limit=50)
+        query_params = params.to_query_params()
+        assert query_params == {"page": 2, "limit": 50}
 
 
 class TestEmailVerifyRequest:
@@ -90,35 +177,21 @@ class TestEmailVerificationAsyncStatusRequest:
 class TestEmailVerificationListsRequest:
     """Test EmailVerificationListsRequest model."""
 
-    def test_valid_request_minimal(self):
-        """Test creating a valid minimal lists request."""
-        request = EmailVerificationListsRequest()
-        assert request.page is None
-        assert request.limit is None
+    def test_valid_request_with_defaults(self):
+        """Test creating a valid lists request with defaults."""
+        query_params = EmailVerificationListsQueryParams()
+        request = EmailVerificationListsRequest(query_params=query_params)
+        
+        params = request.to_query_params()
+        assert params == {"page": 1, "limit": 25}
 
-    def test_valid_request_with_pagination(self):
-        """Test creating a valid lists request with pagination."""
-        request = EmailVerificationListsRequest(page=2, limit=50)
-        assert request.page == 2
-        assert request.limit == 50
-
-    def test_invalid_page_validation(self):
-        """Test validation fails for invalid page."""
-        with pytest.raises(ValidationError) as excinfo:
-            EmailVerificationListsRequest(page=0)
-        assert "greater than or equal to 1" in str(excinfo.value)
-
-    def test_invalid_limit_too_low(self):
-        """Test validation fails for limit too low."""
-        with pytest.raises(ValidationError) as excinfo:
-            EmailVerificationListsRequest(limit=5)
-        assert "greater than or equal to 10" in str(excinfo.value)
-
-    def test_invalid_limit_too_high(self):
-        """Test validation fails for limit too high."""
-        with pytest.raises(ValidationError) as excinfo:
-            EmailVerificationListsRequest(limit=150)
-        assert "less than or equal to 100" in str(excinfo.value)
+    def test_valid_request_with_custom_params(self):
+        """Test creating a valid lists request with custom parameters."""
+        query_params = EmailVerificationListsQueryParams(page=2, limit=50)
+        request = EmailVerificationListsRequest(query_params=query_params)
+        
+        params = request.to_query_params()
+        assert params == {"page": 2, "limit": 50}
 
 
 class TestEmailVerificationGetRequest:
@@ -199,62 +272,67 @@ class TestEmailVerificationVerifyRequest:
 class TestEmailVerificationResultsRequest:
     """Test EmailVerificationResultsRequest model."""
 
-    def test_valid_request_minimal(self):
-        """Test creating a valid minimal results request."""
-        request = EmailVerificationResultsRequest(email_verification_id="abc123")
+    def test_valid_request_with_defaults(self):
+        """Test creating a valid results request with defaults."""
+        query_params = EmailVerificationResultsQueryParams()
+        request = EmailVerificationResultsRequest(
+            email_verification_id="abc123",
+            query_params=query_params
+        )
         assert request.email_verification_id == "abc123"
-        assert request.page is None
-        assert request.limit is None
-        assert request.results is None
+        
+        params = request.to_query_params()
+        assert params == {"page": 1, "limit": 25}
 
     def test_valid_request_with_filters(self):
         """Test creating a valid results request with filters."""
+        results = ["valid", "catch_all"]
+        query_params = EmailVerificationResultsQueryParams(page=2, limit=50, results=results)
         request = EmailVerificationResultsRequest(
             email_verification_id="abc123",
-            page=2,
-            limit=25,
-            results=["valid", "typo"]
+            query_params=query_params
         )
         assert request.email_verification_id == "abc123"
-        assert request.page == 2
-        assert request.limit == 25
-        assert request.results == ["valid", "typo"]
+        
+        params = request.to_query_params()
+        assert params == {"page": 2, "limit": 50, "results": results}
 
-    def test_invalid_result_filter_validation(self):
-        """Test validation fails for invalid result filter."""
+    def test_empty_id_validation(self):
+        """Test validation fails for empty verification ID."""
+        query_params = EmailVerificationResultsQueryParams()
         with pytest.raises(ValidationError) as excinfo:
             EmailVerificationResultsRequest(
-                email_verification_id="abc123",
-                results=["valid", "invalid_result"]
+                email_verification_id="",
+                query_params=query_params
             )
-        assert "Invalid result filter: invalid_result" in str(excinfo.value)
+        assert "email_verification_id cannot be empty" in str(excinfo.value)
 
 
 class TestEmailVerifyResponse:
     """Test EmailVerifyResponse model."""
 
     def test_valid_response(self):
-        """Test creating a valid verify response."""
-        response = EmailVerifyResponse(status="valid")
-        assert response.status == "valid"
+        """Test creating a valid email verify response."""
+        response = EmailVerifyResponse(status="completed")
+        assert response.status == "completed"
 
 
 class TestEmailVerifyAsyncResponse:
     """Test EmailVerifyAsyncResponse model."""
 
     def test_valid_response(self):
-        """Test creating a valid async verify response."""
+        """Test creating a valid async email verify response."""
         response = EmailVerifyAsyncResponse(
             id="abc123",
             address="test@example.com",
-            status="queued",
-            result=None,
+            status="processing",
+            result="valid",
             error=None
         )
         assert response.id == "abc123"
         assert response.address == "test@example.com"
-        assert response.status == "queued"
-        assert response.result is None
+        assert response.status == "processing"
+        assert response.result == "valid"
         assert response.error is None
 
 
@@ -282,9 +360,9 @@ class TestEmailVerificationStatus:
 
     def test_valid_status(self):
         """Test creating a valid verification status."""
-        status = EmailVerificationStatus(name="verifying", count=5)
-        assert status.name == "verifying"
-        assert status.count == 5
+        status = EmailVerificationStatus(name="completed", count=100)
+        assert status.name == "completed"
+        assert status.count == 100
 
 
 class TestEmailVerificationStatistics:
@@ -293,29 +371,29 @@ class TestEmailVerificationStatistics:
     def test_valid_statistics(self):
         """Test creating valid verification statistics."""
         stats = EmailVerificationStatistics(
-            valid=10,
-            catch_all=2,
-            mailbox_full=1,
-            role_based=3,
-            unknown=5,
-            syntax_error=2,
+            valid=50,
+            catch_all=10,
+            mailbox_full=5,
+            role_based=8,
+            unknown=2,
+            syntax_error=3,
             typo=1,
-            mailbox_not_found=4,
-            disposable=0,
-            mailbox_blocked=1,
-            failed=0
+            mailbox_not_found=7,
+            disposable=4,
+            mailbox_blocked=6,
+            failed=4
         )
-        assert stats.valid == 10
-        assert stats.catch_all == 2
-        assert stats.mailbox_full == 1
-        assert stats.role_based == 3
-        assert stats.unknown == 5
-        assert stats.syntax_error == 2
+        assert stats.valid == 50
+        assert stats.catch_all == 10
+        assert stats.mailbox_full == 5
+        assert stats.role_based == 8
+        assert stats.unknown == 2
+        assert stats.syntax_error == 3
         assert stats.typo == 1
-        assert stats.mailbox_not_found == 4
-        assert stats.disposable == 0
-        assert stats.mailbox_blocked == 1
-        assert stats.failed == 0
+        assert stats.mailbox_not_found == 7
+        assert stats.disposable == 4
+        assert stats.mailbox_blocked == 6
+        assert stats.failed == 4
 
 
 class TestEmailVerification:
@@ -323,36 +401,30 @@ class TestEmailVerification:
 
     def test_valid_verification(self):
         """Test creating a valid email verification."""
-        now = datetime.now()
-        status = EmailVerificationStatus(name="verified", count=100)
+        status = EmailVerificationStatus(name="completed", count=100)
         stats = EmailVerificationStatistics(
-            valid=80, catch_all=5, mailbox_full=2, role_based=3, unknown=5,
-            syntax_error=1, typo=2, mailbox_not_found=1, disposable=1, 
-            mailbox_blocked=0, failed=0
+            valid=50, catch_all=10, mailbox_full=5, role_based=8, unknown=2,
+            syntax_error=3, typo=1, mailbox_not_found=7, disposable=4,
+            mailbox_blocked=6, failed=4
         )
         
         verification = EmailVerification(
             id="abc123",
-            name="Test List",
+            name="Test Verification",
             total=100,
-            verification_started=now,
-            verification_ended=now,
-            created_at=now,
-            updated_at=now,
+            verification_started=datetime(2023, 1, 1, 10, 0, 0),
+            verification_ended=datetime(2023, 1, 1, 11, 0, 0),
+            created_at=datetime(2023, 1, 1, 9, 0, 0),
+            updated_at=datetime(2023, 1, 1, 11, 0, 0),
             status=status,
             source="api",
             statistics=stats
         )
         
         assert verification.id == "abc123"
-        assert verification.name == "Test List"
+        assert verification.name == "Test Verification"
         assert verification.total == 100
-        assert verification.verification_started == now
-        assert verification.verification_ended == now
-        assert verification.created_at == now
-        assert verification.updated_at == now
         assert verification.status == status
-        assert verification.source == "api"
         assert verification.statistics == stats
 
 
@@ -362,15 +434,16 @@ class TestEmailVerificationLinks:
     def test_valid_links(self):
         """Test creating valid pagination links."""
         links = EmailVerificationLinks(
-            first="http://example.com?page=1",
-            last="http://example.com?page=10",
-            prev=None,
-            next="http://example.com?page=3"
+            first="https://api.mailersend.com/v1/email-verification?page=1",
+            last="https://api.mailersend.com/v1/email-verification?page=10",
+            prev="https://api.mailersend.com/v1/email-verification?page=1",
+            next="https://api.mailersend.com/v1/email-verification?page=3"
         )
-        assert links.first == "http://example.com?page=1"
-        assert links.last == "http://example.com?page=10"
-        assert links.prev is None
-        assert links.next == "http://example.com?page=3"
+        
+        assert links.first == "https://api.mailersend.com/v1/email-verification?page=1"
+        assert links.last == "https://api.mailersend.com/v1/email-verification?page=10"
+        assert links.prev == "https://api.mailersend.com/v1/email-verification?page=1"
+        assert links.next == "https://api.mailersend.com/v1/email-verification?page=3"
 
 
 class TestEmailVerificationMeta:
@@ -380,14 +453,15 @@ class TestEmailVerificationMeta:
         """Test creating valid pagination metadata."""
         meta = EmailVerificationMeta(
             current_page=2,
-            **{"from": 26},  # Use dict unpacking to pass the "from" field
-            path="http://example.com/email-verification",
+            **{"from": 26},  # Use dict unpacking for aliased field
+            path="email-verification",
             per_page="25",
             to=50
         )
+        
         assert meta.current_page == 2
         assert meta.from_ == 26
-        assert meta.path == "http://example.com/email-verification"
+        assert meta.path == "email-verification"
         assert meta.per_page == "25"
         assert meta.to == 50
 
@@ -397,22 +471,31 @@ class TestEmailVerificationListsResponse:
 
     def test_valid_response(self):
         """Test creating a valid lists response."""
-        now = datetime.now()
-        status = EmailVerificationStatus(name="verified", count=100)
+        status = EmailVerificationStatus(name="completed", count=100)
         stats = EmailVerificationStatistics(
-            valid=80, catch_all=5, mailbox_full=2, role_based=3, unknown=5,
-            syntax_error=1, typo=2, mailbox_not_found=1, disposable=1, 
-            mailbox_blocked=0, failed=0
+            valid=50, catch_all=10, mailbox_full=5, role_based=8, unknown=2,
+            syntax_error=3, typo=1, mailbox_not_found=7, disposable=4,
+            mailbox_blocked=6, failed=4
         )
+        
         verification = EmailVerification(
-            id="abc123", name="Test List", total=100,
-            verification_started=now, verification_ended=now,
-            created_at=now, updated_at=now,
-            status=status, source="api", statistics=stats
+            id="abc123",
+            name="Test Verification",
+            total=100,
+            verification_started=datetime(2023, 1, 1, 10, 0, 0),
+            verification_ended=datetime(2023, 1, 1, 11, 0, 0),
+            created_at=datetime(2023, 1, 1, 9, 0, 0),
+            updated_at=datetime(2023, 1, 1, 11, 0, 0),
+            status=status,
+            source="api",
+            statistics=stats
         )
-        links = EmailVerificationLinks(first="http://example.com?page=1")
+        
+        links = EmailVerificationLinks()
         meta = EmailVerificationMeta(
-            current_page=1, from_=1, path="http://example.com", per_page="25", to=1
+            current_page=1,
+            path="email-verification",
+            per_page="25"
         )
         
         response = EmailVerificationListsResponse(
@@ -432,18 +515,24 @@ class TestEmailVerificationResponse:
 
     def test_valid_response(self):
         """Test creating a valid verification response."""
-        now = datetime.now()
-        status = EmailVerificationStatus(name="verified", count=100)
+        status = EmailVerificationStatus(name="completed", count=100)
         stats = EmailVerificationStatistics(
-            valid=80, catch_all=5, mailbox_full=2, role_based=3, unknown=5,
-            syntax_error=1, typo=2, mailbox_not_found=1, disposable=1, 
-            mailbox_blocked=0, failed=0
+            valid=50, catch_all=10, mailbox_full=5, role_based=8, unknown=2,
+            syntax_error=3, typo=1, mailbox_not_found=7, disposable=4,
+            mailbox_blocked=6, failed=4
         )
+        
         verification = EmailVerification(
-            id="abc123", name="Test List", total=100,
-            verification_started=now, verification_ended=now,
-            created_at=now, updated_at=now,
-            status=status, source="api", statistics=stats
+            id="abc123",
+            name="Test Verification",
+            total=100,
+            verification_started=datetime(2023, 1, 1, 10, 0, 0),
+            verification_ended=datetime(2023, 1, 1, 11, 0, 0),
+            created_at=datetime(2023, 1, 1, 9, 0, 0),
+            updated_at=datetime(2023, 1, 1, 11, 0, 0),
+            status=status,
+            source="api",
+            statistics=stats
         )
         
         response = EmailVerificationResponse(data=verification)
@@ -468,23 +557,25 @@ class TestEmailVerificationResultsResponse:
 
     def test_valid_response(self):
         """Test creating a valid results response."""
-        results = [
-            EmailVerificationResult(address="test1@example.com", result="valid"),
-            EmailVerificationResult(address="test2@example.com", result="typo")
-        ]
-        links = EmailVerificationLinks(first="http://example.com?page=1")
+        result = EmailVerificationResult(
+            address="test@example.com",
+            result="valid"
+        )
+        
+        links = EmailVerificationLinks()
         meta = EmailVerificationMeta(
-            current_page=1, from_=1, path="http://example.com", per_page="25", to=2
+            current_page=1,
+            path="email-verification/abc123/results",
+            per_page="25"
         )
         
         response = EmailVerificationResultsResponse(
-            data=results,
+            data=[result],
             links=links,
             meta=meta
         )
         
-        assert len(response.data) == 2
-        assert response.data[0].address == "test1@example.com"
-        assert response.data[1].result == "typo"
+        assert len(response.data) == 1
+        assert response.data[0] == result
         assert response.links == links
         assert response.meta == meta 

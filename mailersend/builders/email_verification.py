@@ -2,7 +2,9 @@
 
 from typing import List, Optional
 
-from mailersend.models.email_verification import (
+from ..models.email_verification import (
+    EmailVerificationListsQueryParams,
+    EmailVerificationResultsQueryParams,
     EmailVerifyRequest,
     EmailVerifyAsyncRequest,
     EmailVerificationAsyncStatusRequest,
@@ -173,7 +175,8 @@ class EmailVerificationBuilder:
         """
         if self._results is None:
             self._results = []
-        self._results.append("valid")
+        if "valid" not in self._results:
+            self._results.append("valid")
         return self
 
     def risky_results(self) -> "EmailVerificationBuilder":
@@ -198,104 +201,109 @@ class EmailVerificationBuilder:
         """
         if self._results is None:
             self._results = []
-        do_not_send_results = ["syntax_error", "typo", "mailbox_not_found", "disposable", "mailbox_blocked"]
+        do_not_send_results = ["syntax_error", "typo", "mailbox_not_found", "disposable", "mailbox_blocked", "failed"]
         for result in do_not_send_results:
             if result not in self._results:
                 self._results.append(result)
         return self
 
     def all_results(self) -> "EmailVerificationBuilder":
-        """Add all email verification result filters.
+        """Add all email result filters.
         
         Returns:
             EmailVerificationBuilder: The builder instance for method chaining.
         """
-        self._results = [
-            "valid", "catch_all", "mailbox_full", "role_based", "unknown", "failed",
-            "syntax_error", "typo", "mailbox_not_found", "disposable", "mailbox_blocked"
-        ]
+        self.valid_results()
+        self.risky_results()
+        self.do_not_send_results()
         return self
 
     def build_verify_email(self) -> EmailVerifyRequest:
-        """Build a request for single email verification.
+        """Build EmailVerifyRequest from current builder state.
         
         Returns:
-            EmailVerifyRequest: The constructed request model.
+            EmailVerifyRequest: Constructed request object
             
         Raises:
-            ValueError: If email is not set.
+            ValueError: If required fields are missing
         """
         if not self._email:
-            raise ValueError("email is required for email verification")
+            raise ValueError("email is required for email verification request")
         
         return EmailVerifyRequest(email=self._email)
 
     def build_verify_email_async(self) -> EmailVerifyAsyncRequest:
-        """Build a request for async single email verification.
+        """Build EmailVerifyAsyncRequest from current builder state.
         
         Returns:
-            EmailVerifyAsyncRequest: The constructed request model.
+            EmailVerifyAsyncRequest: Constructed request object
             
         Raises:
-            ValueError: If email is not set.
+            ValueError: If required fields are missing
         """
         if not self._email:
-            raise ValueError("email is required for async email verification")
+            raise ValueError("email is required for async email verification request")
         
         return EmailVerifyAsyncRequest(email=self._email)
 
     def build_async_status(self) -> EmailVerificationAsyncStatusRequest:
-        """Build a request for getting async email verification status.
+        """Build EmailVerificationAsyncStatusRequest from current builder state.
         
         Returns:
-            EmailVerificationAsyncStatusRequest: The constructed request model.
+            EmailVerificationAsyncStatusRequest: Constructed request object
             
         Raises:
-            ValueError: If email_verification_id is not set.
+            ValueError: If required fields are missing
         """
         if not self._email_verification_id:
-            raise ValueError("email_verification_id is required for async status check")
+            raise ValueError("email_verification_id is required for async status request")
         
         return EmailVerificationAsyncStatusRequest(email_verification_id=self._email_verification_id)
 
     def build_lists(self) -> EmailVerificationListsRequest:
-        """Build a request for listing email verification lists.
+        """Build EmailVerificationListsRequest from current builder state.
         
         Returns:
-            EmailVerificationListsRequest: The constructed request model.
+            EmailVerificationListsRequest: Constructed request object
         """
-        return EmailVerificationListsRequest(
-            page=self._page,
-            limit=self._limit
-        )
+        # Create query params with defaults and builder values
+        query_params_data = {}
+        if self._page is not None:
+            query_params_data["page"] = self._page
+        if self._limit is not None:
+            query_params_data["limit"] = self._limit
+        
+        query_params = EmailVerificationListsQueryParams(**query_params_data)
+        
+        return EmailVerificationListsRequest(query_params=query_params)
 
     def build_get(self) -> EmailVerificationGetRequest:
-        """Build a request for getting a single email verification list.
+        """Build EmailVerificationGetRequest from current builder state.
         
         Returns:
-            EmailVerificationGetRequest: The constructed request model.
+            EmailVerificationGetRequest: Constructed request object
             
         Raises:
-            ValueError: If email_verification_id is not set.
+            ValueError: If required fields are missing
         """
         if not self._email_verification_id:
-            raise ValueError("email_verification_id is required for getting verification list")
+            raise ValueError("email_verification_id is required for get verification request")
         
         return EmailVerificationGetRequest(email_verification_id=self._email_verification_id)
 
     def build_create(self) -> EmailVerificationCreateRequest:
-        """Build a request for creating an email verification list.
+        """Build EmailVerificationCreateRequest from current builder state.
         
         Returns:
-            EmailVerificationCreateRequest: The constructed request model.
+            EmailVerificationCreateRequest: Constructed request object
             
         Raises:
-            ValueError: If name or emails are not set.
+            ValueError: If required fields are missing
         """
         if not self._name:
-            raise ValueError("name is required for creating verification list")
+            raise ValueError("name is required for create verification request")
         if not self._emails:
-            raise ValueError("emails list is required for creating verification list")
+            raise ValueError("emails are required for create verification request")
         
         return EmailVerificationCreateRequest(
             name=self._name,
@@ -303,34 +311,43 @@ class EmailVerificationBuilder:
         )
 
     def build_verify_list(self) -> EmailVerificationVerifyRequest:
-        """Build a request for verifying an email verification list.
+        """Build EmailVerificationVerifyRequest from current builder state.
         
         Returns:
-            EmailVerificationVerifyRequest: The constructed request model.
+            EmailVerificationVerifyRequest: Constructed request object
             
         Raises:
-            ValueError: If email_verification_id is not set.
+            ValueError: If required fields are missing
         """
         if not self._email_verification_id:
-            raise ValueError("email_verification_id is required for verifying list")
+            raise ValueError("email_verification_id is required for verify list request")
         
         return EmailVerificationVerifyRequest(email_verification_id=self._email_verification_id)
 
     def build_results(self) -> EmailVerificationResultsRequest:
-        """Build a request for getting email verification results.
+        """Build EmailVerificationResultsRequest from current builder state.
         
         Returns:
-            EmailVerificationResultsRequest: The constructed request model.
+            EmailVerificationResultsRequest: Constructed request object
             
         Raises:
-            ValueError: If email_verification_id is not set.
+            ValueError: If required fields are missing
         """
         if not self._email_verification_id:
-            raise ValueError("email_verification_id is required for getting verification results")
+            raise ValueError("email_verification_id is required for results request")
+        
+        # Create query params with defaults and builder values
+        query_params_data = {}
+        if self._page is not None:
+            query_params_data["page"] = self._page
+        if self._limit is not None:
+            query_params_data["limit"] = self._limit
+        if self._results is not None:
+            query_params_data["results"] = self._results
+        
+        query_params = EmailVerificationResultsQueryParams(**query_params_data)
         
         return EmailVerificationResultsRequest(
             email_verification_id=self._email_verification_id,
-            page=self._page,
-            limit=self._limit,
-            results=self._results
+            query_params=query_params
         ) 
