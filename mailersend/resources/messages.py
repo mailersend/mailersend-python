@@ -1,9 +1,14 @@
-from typing import Dict, Any, Optional
+from typing import Union
 
 from .base import BaseResource
-from ..models.messages import MessagesListRequest, MessageGetRequest
+from ..models.messages import (
+    MessagesListRequest,
+    MessageGetRequest,
+    MessagesListResponse,
+    MessageResponse
+)
 from ..models.base import APIResponse
-from ..exceptions import ValidationError
+from ..exceptions import ValidationError as MailerSendValidationError
 
 
 class Messages(BaseResource):
@@ -13,33 +18,38 @@ class Messages(BaseResource):
     Provides methods for retrieving message information.
     """
 
-    def list_messages(self, request: Optional[MessagesListRequest] = None) -> APIResponse:
+    def list_messages(self, request: MessagesListRequest) -> APIResponse:
         """
         Retrieve a list of messages.
         
         Args:
-            request: Optional MessagesListRequest with pagination options
+            request: MessagesListRequest with pagination options
             
         Returns:
-            APIResponse with list of messages
+            APIResponse containing the messages list response
             
         Raises:
-            ValidationError: If the request is invalid
-            MailerSendError: If the API returns an error
+            MailerSendValidationError: If the request is invalid or has wrong type
         """
-        self.logger.debug("Retrieving messages list")
+        # Validation
+        if not isinstance(request, MessagesListRequest):
+            raise MailerSendValidationError("Request must be an instance of MessagesListRequest")
         
-        # Convert to query parameters
-        params = {}
-        if request:
-            params = self._build_query_params(request)
+        self.logger.debug("Preparing to list messages with query parameters")
         
-        self.logger.info("Requesting messages list")
-        self.logger.debug(f"Query params: {params}")
+        # Extract query parameters
+        params = request.to_query_params()
         
-        response = self.client.request("GET", "messages", params=params)
+        self.logger.debug(f"Making API request to list messages with params: {params}")
         
-        return self._create_response(response)
+        # Make API request
+        response = self.client.request(
+            method='GET',
+            endpoint='messages',
+            params=params if params else None
+        )
+        
+        return self._create_response(response, MessagesListResponse)
 
     def get_message(self, request: MessageGetRequest) -> APIResponse:
         """
@@ -49,39 +59,21 @@ class Messages(BaseResource):
             request: MessageGetRequest with message ID
             
         Returns:
-            APIResponse with message information
+            APIResponse containing the message response
             
         Raises:
-            ValidationError: If the request is invalid
-            MailerSendError: If the API returns an error
+            MailerSendValidationError: If the request is invalid or has wrong type
         """
-        if not request:
-            self.logger.error("No MessageGetRequest object provided")
-            raise ValidationError("MessageGetRequest must be provided")
+        # Validation
+        if not isinstance(request, MessageGetRequest):
+            raise MailerSendValidationError("Request must be an instance of MessageGetRequest")
         
-        self.logger.debug(f"Retrieving message: {request.message_id}")
-        self.logger.info(f"Requesting message information for: {request.message_id}")
+        self.logger.debug(f"Preparing to get message with ID: {request.message_id}")
         
-        response = self.client.request("GET", f"messages/{request.message_id}")
+        # Make API request
+        response = self.client.request(
+            method='GET',
+            endpoint=f'messages/{request.message_id}'
+        )
         
-        return self._create_response(response)
-
-    def _build_query_params(self, request) -> Dict[str, Any]:
-        """
-        Convert request model to query parameters dictionary.
-        
-        Args:
-            request: Request model to convert
-            
-        Returns:
-            Dictionary of query parameters
-        """
-        params = {}
-        
-        # Handle pagination parameters
-        if hasattr(request, 'page') and request.page is not None:
-            params['page'] = request.page
-        if hasattr(request, 'limit') and request.limit is not None:
-            params['limit'] = request.limit
-            
-        return params 
+        return self._create_response(response, MessageResponse) 

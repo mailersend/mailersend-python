@@ -3,6 +3,7 @@ from pydantic import ValidationError
 
 from mailersend.models.messages import (
     MessagesListRequest,
+    MessagesListQueryParams,
     MessageGetRequest,
     Email,
     Message,
@@ -12,46 +13,106 @@ from mailersend.models.messages import (
 from mailersend.models.domains import Domain, DomainSettings
 
 
+class TestMessagesListQueryParams:
+    """Test MessagesListQueryParams model."""
+
+    def test_default_values(self):
+        """Test default values are set correctly."""
+        query_params = MessagesListQueryParams()
+        assert query_params.page == 1
+        assert query_params.limit == 25
+
+    def test_custom_values(self):
+        """Test setting custom values."""
+        query_params = MessagesListQueryParams(page=2, limit=50)
+        assert query_params.page == 2
+        assert query_params.limit == 50
+
+    def test_page_validation(self):
+        """Test page validation (must be >= 1)."""
+        with pytest.raises(ValidationError):
+            MessagesListQueryParams(page=0)
+        
+        with pytest.raises(ValidationError):
+            MessagesListQueryParams(page=-1)
+
+    def test_limit_validation(self):
+        """Test limit validation (10-100)."""
+        with pytest.raises(ValidationError):
+            MessagesListQueryParams(limit=9)
+        
+        with pytest.raises(ValidationError):
+            MessagesListQueryParams(limit=101)
+
+    def test_to_query_params_with_defaults(self):
+        """Test to_query_params with default values."""
+        query_params = MessagesListQueryParams()
+        result = query_params.to_query_params()
+        expected = {
+            'page': 1,
+            'limit': 25
+        }
+        assert result == expected
+
+    def test_to_query_params_with_custom_values(self):
+        """Test to_query_params with custom values."""
+        query_params = MessagesListQueryParams(page=3, limit=50)
+        result = query_params.to_query_params()
+        expected = {
+            'page': 3,
+            'limit': 50
+        }
+        assert result == expected
+
+    def test_to_query_params_excludes_none(self):
+        """Test to_query_params excludes None values."""
+        query_params = MessagesListQueryParams(page=2, limit=30)
+        result = query_params.to_query_params()
+        expected = {
+            'page': 2,
+            'limit': 30
+        }
+        assert result == expected
+        # No None values in this case but testing the method works correctly
+
+
 class TestMessagesListRequest:
     """Test MessagesListRequest model."""
     
-    def test_valid_request(self):
-        """Test creating a valid messages list request."""
-        request = MessagesListRequest(page=1, limit=50)
-        assert request.page == 1
-        assert request.limit == 50
-    
-    def test_default_values(self):
-        """Test default values."""
-        request = MessagesListRequest()
-        assert request.page is None
-        assert request.limit == 25
-    
-    def test_limit_validation_min(self):
-        """Test limit validation - minimum value."""
-        with pytest.raises(ValidationError) as exc_info:
-            MessagesListRequest(limit=5)
-        assert "Limit must be between 10 and 100" in str(exc_info.value)
-    
-    def test_limit_validation_max(self):
-        """Test limit validation - maximum value."""
-        with pytest.raises(ValidationError) as exc_info:
-            MessagesListRequest(limit=150)
-        assert "Limit must be between 10 and 100" in str(exc_info.value)
-    
-    def test_page_validation(self):
-        """Test page validation."""
-        with pytest.raises(ValidationError) as exc_info:
-            MessagesListRequest(page=0)
-        assert "Page must be greater than 0" in str(exc_info.value)
-    
-    def test_valid_limits(self):
-        """Test valid limit values."""
-        request_min = MessagesListRequest(limit=10)
-        assert request_min.limit == 10
-        
-        request_max = MessagesListRequest(limit=100)
-        assert request_max.limit == 100
+    def test_create_request_with_query_params(self):
+        """Test creating request with query params object."""
+        query_params = MessagesListQueryParams(page=2, limit=50)
+        request = MessagesListRequest(query_params=query_params)
+        assert request.query_params == query_params
+
+    def test_create_request_with_defaults(self):
+        """Test creating request with default query params."""
+        query_params = MessagesListQueryParams()
+        request = MessagesListRequest(query_params=query_params)
+        assert request.query_params.page == 1
+        assert request.query_params.limit == 25
+
+    def test_to_query_params_delegation(self):
+        """Test that to_query_params delegates to query_params object."""
+        query_params = MessagesListQueryParams(page=3, limit=75)
+        request = MessagesListRequest(query_params=query_params)
+        result = request.to_query_params()
+        expected = {
+            'page': 3,
+            'limit': 75
+        }
+        assert result == expected
+
+    def test_to_query_params_with_defaults(self):
+        """Test to_query_params with default values."""
+        query_params = MessagesListQueryParams()
+        request = MessagesListRequest(query_params=query_params)
+        result = request.to_query_params()
+        expected = {
+            'page': 1,
+            'limit': 25
+        }
+        assert result == expected
 
 
 class TestMessageGetRequest:

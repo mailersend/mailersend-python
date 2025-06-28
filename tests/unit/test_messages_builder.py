@@ -1,7 +1,11 @@
 import pytest
 
 from mailersend.builders.messages import MessagesBuilder
-from mailersend.models.messages import MessagesListRequest, MessageGetRequest
+from mailersend.models.messages import (
+    MessagesListRequest,
+    MessagesListQueryParams,
+    MessageGetRequest
+)
 from mailersend.exceptions import ValidationError
 
 
@@ -102,18 +106,52 @@ class TestMessagesBuilder:
         builder = MessagesBuilder()
         request = builder.build_list_request()
         
+        # Verify request structure
         assert isinstance(request, MessagesListRequest)
-        assert request.page is None
-        assert request.limit == 25  # Default value
+        assert isinstance(request.query_params, MessagesListQueryParams)
+        
+        # Verify default values are used
+        assert request.query_params.page == 1  # Default value
+        assert request.query_params.limit == 25  # Default value
     
     def test_build_list_request_with_parameters(self):
         """Test building list request with custom parameters."""
         builder = MessagesBuilder()
         request = builder.page(2).limit(50).build_list_request()
         
+        # Verify request structure
         assert isinstance(request, MessagesListRequest)
-        assert request.page == 2
-        assert request.limit == 50
+        assert isinstance(request.query_params, MessagesListQueryParams)
+        
+        # Verify custom values
+        assert request.query_params.page == 2
+        assert request.query_params.limit == 50
+    
+    def test_build_list_request_partial_params(self):
+        """Test building list request with partial parameters."""
+        builder = MessagesBuilder()
+        request = builder.page(3).build_list_request()
+        
+        # Verify request structure
+        assert isinstance(request, MessagesListRequest)
+        assert isinstance(request.query_params, MessagesListQueryParams)
+        
+        # Verify mixed values (custom page, default limit)
+        assert request.query_params.page == 3
+        assert request.query_params.limit == 25  # Default
+    
+    def test_build_list_request_only_limit(self):
+        """Test building list request with only limit set."""
+        builder = MessagesBuilder()
+        request = builder.limit(75).build_list_request()
+        
+        # Verify request structure
+        assert isinstance(request, MessagesListRequest)
+        assert isinstance(request.query_params, MessagesListQueryParams)
+        
+        # Verify mixed values (default page, custom limit)
+        assert request.query_params.page == 1  # Default
+        assert request.query_params.limit == 75
     
     def test_build_get_request(self):
         """Test building get request."""
@@ -177,9 +215,18 @@ class TestMessagesBuilder:
         
         # Test list request workflow
         list_request = builder.page(1).limit(10).build_list_request()
-        assert list_request.page == 1
-        assert list_request.limit == 10
+        assert list_request.query_params.page == 1
+        assert list_request.query_params.limit == 10
         
         # Test get request workflow (after reset)
         get_request = builder.reset().message_id("abc123").build_get_request()
-        assert get_request.message_id == "abc123" 
+        assert get_request.message_id == "abc123"
+    
+    def test_query_params_to_dict(self):
+        """Test that built query params can be converted to dict."""
+        builder = MessagesBuilder()
+        request = builder.page(2).limit(50).build_list_request()
+        
+        params = request.to_query_params()
+        expected = {'page': 2, 'limit': 50}
+        assert params == expected 

@@ -1,288 +1,172 @@
 import pytest
-from unittest.mock import Mock, MagicMock
+from unittest.mock import Mock
 
 from mailersend.resources.schedules import Schedules
-from mailersend.models.schedules import SchedulesListRequest, ScheduleGetRequest, ScheduleDeleteRequest
+from mailersend.models.schedules import (
+    SchedulesListRequest,
+    SchedulesListQueryParams,
+    ScheduleGetRequest,
+    ScheduleDeleteRequest,
+    SchedulesListResponse,
+    ScheduleResponse
+)
 from mailersend.models.base import APIResponse
-from mailersend.exceptions import ValidationError
+from mailersend.exceptions import ValidationError as MailerSendValidationError
 
 
 class TestSchedules:
     """Test Schedules resource class."""
     
-    def setup_method(self):
-        """Set up test fixtures."""
-        self.mock_client = Mock()
-        self.mock_logger = Mock()
-        self.schedules = Schedules(self.mock_client, self.mock_logger)
+    @pytest.fixture
+    def mock_client(self):
+        """Create a mock client."""
+        client = Mock()
+        client.request = Mock()
+        return client
+
+    @pytest.fixture
+    def resource(self, mock_client):
+        """Create Schedules resource with mock client."""
+        resource = Schedules(mock_client)
+        resource._create_response = Mock(return_value=APIResponse(data={}, headers={}, status_code=200))
+        return resource
     
-    def test_initialization(self):
-        """Test Schedules resource initialization."""
-        assert self.schedules.client == self.mock_client
-        assert self.schedules.logger == self.mock_logger
-    
-    def test_list_schedules_without_request(self):
-        """Test listing schedules without request parameters."""
-        # Mock the client response
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
+    def test_list_schedules_returns_api_response(self, resource):
+        """Test list_schedules method returns APIResponse."""
+        query_params = SchedulesListQueryParams()
+        request = SchedulesListRequest(query_params=query_params)
         
-        # Mock the _create_response method
-        mock_api_response = Mock(spec=APIResponse)
-        self.schedules._create_response = Mock(return_value=mock_api_response)
-        
-        result = self.schedules.list_schedules()
-        
-        # Verify client was called correctly
-        self.mock_client.request.assert_called_once_with("GET", "message-schedules", params={})
-        
-        # Verify response creation
-        self.schedules._create_response.assert_called_once_with(mock_response)
-        
-        # Verify logging
-        self.mock_logger.debug.assert_called()
-        self.mock_logger.info.assert_called()
-        
-        assert result == mock_api_response
-    
-    def test_list_schedules_with_request(self):
-        """Test listing schedules with request parameters."""
-        # Create request
-        request = SchedulesListRequest(
+        result = resource.list_schedules(request)
+        assert isinstance(result, APIResponse)
+
+    def test_list_schedules_validation_wrong_type(self, resource):
+        """Test list_schedules method with wrong request type raises error."""
+        with pytest.raises(MailerSendValidationError) as exc_info:
+            resource.list_schedules("invalid_request")
+        assert "Request must be an instance of SchedulesListRequest" in str(exc_info.value)
+
+    def test_list_schedules_with_query_params(self, resource):
+        """Test list_schedules method uses query params correctly."""
+        query_params = SchedulesListQueryParams(
             domain_id="test-domain",
             status="scheduled",
             page=2,
             limit=50
         )
+        request = SchedulesListRequest(query_params=query_params)
         
-        # Mock the client response
         mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
+        resource.client.request.return_value = mock_response
         
-        # Mock the _create_response method
-        mock_api_response = Mock(spec=APIResponse)
-        self.schedules._create_response = Mock(return_value=mock_api_response)
-        
-        # Mock the _build_query_params method
-        expected_params = {"domain_id": "test-domain", "status": "scheduled", "page": 2, "limit": 50}
-        self.schedules._build_query_params = Mock(return_value=expected_params)
-        
-        result = self.schedules.list_schedules(request)
-        
-        # Verify query params were built
-        self.schedules._build_query_params.assert_called_once_with(request)
+        resource.list_schedules(request)
         
         # Verify client was called correctly
-        self.mock_client.request.assert_called_once_with("GET", "message-schedules", params=expected_params)
+        resource.client.request.assert_called_once_with(
+            method='GET',
+            endpoint='message-schedules',
+            params={
+                'domain_id': 'test-domain',
+                'status': 'scheduled',
+                'page': 2,
+                'limit': 50
+            }
+        )
         
-        # Verify response creation
-        self.schedules._create_response.assert_called_once_with(mock_response)
+        # Verify _create_response was called with correct params
+        resource._create_response.assert_called_once_with(mock_response, SchedulesListResponse)
+
+    def test_list_schedules_with_default_query_params(self, resource):
+        """Test list_schedules with default query params."""
+        query_params = SchedulesListQueryParams()  # Uses defaults
+        request = SchedulesListRequest(query_params=query_params)
         
-        assert result == mock_api_response
-    
-    def test_get_schedule_success(self):
-        """Test getting a single schedule successfully."""
-        # Create request
-        request = ScheduleGetRequest(message_id="61e01f471053b349a5478a52")
-        
-        # Mock the client response
         mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
+        resource.client.request.return_value = mock_response
         
-        # Mock the _create_response method
-        mock_api_response = Mock(spec=APIResponse)
-        self.schedules._create_response = Mock(return_value=mock_api_response)
+        resource.list_schedules(request)
         
-        result = self.schedules.get_schedule(request)
+        # Verify client was called with defaults
+        resource.client.request.assert_called_once_with(
+            method='GET',
+            endpoint='message-schedules',
+            params={'page': 1, 'limit': 25}
+        )
+
+    def test_list_schedules_with_partial_params(self, resource):
+        """Test list_schedules with partial query params."""
+        query_params = SchedulesListQueryParams(domain_id="test-domain", page=3)
+        request = SchedulesListRequest(query_params=query_params)
         
-        # Verify client was called correctly
-        self.mock_client.request.assert_called_once_with("GET", "message-schedules/61e01f471053b349a5478a52")
-        
-        # Verify response creation
-        self.schedules._create_response.assert_called_once_with(mock_response)
-        
-        # Verify logging
-        self.mock_logger.debug.assert_called()
-        self.mock_logger.info.assert_called()
-        
-        assert result == mock_api_response
-    
-    def test_get_schedule_without_request(self):
-        """Test getting a schedule without request object."""
-        with pytest.raises(ValidationError) as exc_info:
-            self.schedules.get_schedule(None)
-        
-        assert "ScheduleGetRequest must be provided" in str(exc_info.value)
-        self.mock_logger.error.assert_called_once()
-        
-        # Verify client was not called
-        self.mock_client.request.assert_not_called()
-    
-    def test_delete_schedule_success(self):
-        """Test deleting a schedule successfully."""
-        # Create request
-        request = ScheduleDeleteRequest(message_id="61e01f471053b349a5478a52")
-        
-        # Mock the client response
         mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
+        resource.client.request.return_value = mock_response
         
-        # Mock the _create_response method
-        mock_api_response = Mock(spec=APIResponse)
-        self.schedules._create_response = Mock(return_value=mock_api_response)
+        resource.list_schedules(request)
         
-        result = self.schedules.delete_schedule(request)
-        
-        # Verify client was called correctly
-        self.mock_client.request.assert_called_once_with("DELETE", "message-schedules/61e01f471053b349a5478a52")
-        
-        # Verify response creation
-        self.schedules._create_response.assert_called_once_with(mock_response)
-        
-        # Verify logging
-        self.mock_logger.debug.assert_called()
-        self.mock_logger.info.assert_called()
-        
-        assert result == mock_api_response
-    
-    def test_delete_schedule_without_request(self):
-        """Test deleting a schedule without request object."""
-        with pytest.raises(ValidationError) as exc_info:
-            self.schedules.delete_schedule(None)
-        
-        assert "ScheduleDeleteRequest must be provided" in str(exc_info.value)
-        self.mock_logger.error.assert_called_once()
-        
-        # Verify client was not called
-        self.mock_client.request.assert_not_called()
-    
-    def test_build_query_params_all_parameters(self):
-        """Test building query parameters with all parameters."""
-        request = Mock()
-        request.domain_id = "test-domain"
-        request.status = "scheduled"
-        request.page = 3
-        request.limit = 75
-        
-        result = self.schedules._build_query_params(request)
-        
-        expected = {
-            "domain_id": "test-domain",
-            "status": "scheduled",
-            "page": 3,
-            "limit": 75
-        }
-        assert result == expected
-    
-    def test_build_query_params_with_none_values(self):
-        """Test building query parameters with None values."""
-        request = Mock()
-        request.domain_id = None
-        request.status = None
-        request.page = None
-        request.limit = None
-        
-        result = self.schedules._build_query_params(request)
-        
-        assert result == {}
-    
-    def test_build_query_params_with_partial_values(self):
-        """Test building query parameters with partial values."""
-        request = Mock()
-        request.domain_id = "test-domain"
-        request.status = None
-        request.page = 2
-        request.limit = None
-        
-        result = self.schedules._build_query_params(request)
-        
-        expected = {"domain_id": "test-domain", "page": 2}
-        assert result == expected
-    
-    def test_build_query_params_without_attributes(self):
-        """Test building query parameters with object missing attributes."""
-        request = Mock(spec=[])  # Mock without any attributes
-        
-        result = self.schedules._build_query_params(request)
-        
-        assert result == {}
-    
-    def test_list_schedules_logging(self):
-        """Test that list_schedules produces correct log messages."""
-        # Mock the client response
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
-        
-        # Mock the _create_response method
-        mock_api_response = Mock(spec=APIResponse)
-        self.schedules._create_response = Mock(return_value=mock_api_response)
-        
-        self.schedules.list_schedules()
-        
-        # Check debug and info calls
-        debug_calls = [call[0][0] for call in self.mock_logger.debug.call_args_list]
-        info_calls = [call[0][0] for call in self.mock_logger.info.call_args_list]
-        
-        assert "Retrieving scheduled messages list" in debug_calls
-        assert "Requesting scheduled messages list" in info_calls
-        assert any("Query params:" in call for call in debug_calls)
-    
-    def test_get_schedule_logging(self):
-        """Test that get_schedule produces correct log messages."""
+        # Verify client was called with partial params
+        resource.client.request.assert_called_once_with(
+            method='GET',
+            endpoint='message-schedules',
+            params={'domain_id': 'test-domain', 'page': 3, 'limit': 25}
+        )
+
+    def test_get_schedule_returns_api_response(self, resource):
+        """Test get_schedule method returns APIResponse."""
         request = ScheduleGetRequest(message_id="test-message-id")
         
-        # Mock the client response
+        result = resource.get_schedule(request)
+        assert isinstance(result, APIResponse)
+
+    def test_get_schedule_validation_wrong_type(self, resource):
+        """Test get_schedule method with wrong request type raises error."""
+        with pytest.raises(MailerSendValidationError) as exc_info:
+            resource.get_schedule("invalid_request")
+        assert "Request must be an instance of ScheduleGetRequest" in str(exc_info.value)
+
+    def test_get_schedule_with_valid_request(self, resource):
+        """Test get_schedule with valid request."""
+        request = ScheduleGetRequest(message_id="61e01f471053b349a5478a52")
+        
         mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
+        resource.client.request.return_value = mock_response
         
-        # Mock the _create_response method
-        mock_api_response = Mock(spec=APIResponse)
-        self.schedules._create_response = Mock(return_value=mock_api_response)
+        resource.get_schedule(request)
         
-        self.schedules.get_schedule(request)
+        # Verify client was called correctly
+        resource.client.request.assert_called_once_with(
+            method='GET',
+            endpoint='message-schedules/61e01f471053b349a5478a52'
+        )
         
-        # Check debug and info calls
-        debug_calls = [call[0][0] for call in self.mock_logger.debug.call_args_list]
-        info_calls = [call[0][0] for call in self.mock_logger.info.call_args_list]
-        
-        assert any("Retrieving scheduled message: test-message-id" in call for call in debug_calls)
-        assert any("Requesting scheduled message information for: test-message-id" in call for call in info_calls)
-    
-    def test_delete_schedule_logging(self):
-        """Test that delete_schedule produces correct log messages."""
+        # Verify _create_response was called
+        resource._create_response.assert_called_once_with(mock_response, ScheduleResponse)
+
+    def test_delete_schedule_returns_api_response(self, resource):
+        """Test delete_schedule method returns APIResponse."""
         request = ScheduleDeleteRequest(message_id="test-message-id")
         
-        # Mock the client response
+        result = resource.delete_schedule(request)
+        assert isinstance(result, APIResponse)
+
+    def test_delete_schedule_validation_wrong_type(self, resource):
+        """Test delete_schedule method with wrong request type raises error."""
+        with pytest.raises(MailerSendValidationError) as exc_info:
+            resource.delete_schedule("invalid_request")
+        assert "Request must be an instance of ScheduleDeleteRequest" in str(exc_info.value)
+
+    def test_delete_schedule_with_valid_request(self, resource):
+        """Test delete_schedule with valid request."""
+        request = ScheduleDeleteRequest(message_id="61e01f471053b349a5478a52")
+        
         mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
+        resource.client.request.return_value = mock_response
         
-        # Mock the _create_response method
-        mock_api_response = Mock(spec=APIResponse)
-        self.schedules._create_response = Mock(return_value=mock_api_response)
+        resource.delete_schedule(request)
         
-        self.schedules.delete_schedule(request)
+        # Verify client was called correctly
+        resource.client.request.assert_called_once_with(
+            method='DELETE',
+            endpoint='message-schedules/61e01f471053b349a5478a52'
+        )
         
-        # Check debug and info calls
-        debug_calls = [call[0][0] for call in self.mock_logger.debug.call_args_list]
-        info_calls = [call[0][0] for call in self.mock_logger.info.call_args_list]
-        
-        assert any("Deleting scheduled message: test-message-id" in call for call in debug_calls)
-        assert any("Deleting scheduled message: test-message-id" in call for call in info_calls)
-    
-    def test_get_schedule_error_logging(self):
-        """Test error logging when get_schedule is called without request."""
-        with pytest.raises(ValidationError):
-            self.schedules.get_schedule(None)
-        
-        # Check error logging
-        error_calls = [call[0][0] for call in self.mock_logger.error.call_args_list]
-        assert "No ScheduleGetRequest object provided" in error_calls
-    
-    def test_delete_schedule_error_logging(self):
-        """Test error logging when delete_schedule is called without request."""
-        with pytest.raises(ValidationError):
-            self.schedules.delete_schedule(None)
-        
-        # Check error logging
-        error_calls = [call[0][0] for call in self.mock_logger.error.call_args_list]
-        assert "No ScheduleDeleteRequest object provided" in error_calls 
+        # Verify _create_response was called (no response model for delete)
+        resource._create_response.assert_called_once_with(mock_response) 
