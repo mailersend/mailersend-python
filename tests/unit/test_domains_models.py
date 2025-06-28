@@ -9,6 +9,7 @@ from pydantic import ValidationError
 
 from mailersend.models.domains import (
     DomainListRequest,
+    DomainListQueryParams,
     DomainCreateRequest,
     DomainDeleteRequest,
     DomainUpdateSettingsRequest,
@@ -16,6 +17,7 @@ from mailersend.models.domains import (
     Domain,
     DomainRecipient,
     DomainRecipientsRequest,
+    DomainRecipientsQueryParams,
     DomainDnsRecord,
     DomainDnsRecords,
     DomainVerificationData,
@@ -25,73 +27,229 @@ from mailersend.models.domains import (
 )
 
 
+class TestDomainListQueryParams:
+    """Test DomainListQueryParams model."""
+    
+    def test_default_query_params(self):
+        """Test default query parameters."""
+        params = DomainListQueryParams()
+        assert params.page == 1  # Default value
+        assert params.limit == 25  # Default value
+        assert params.verified is None
+    
+    def test_query_params_with_all_fields(self):
+        """Test query parameters with all fields."""
+        params = DomainListQueryParams(
+            page=2,
+            limit=50,
+            verified=True
+        )
+        assert params.page == 2
+        assert params.limit == 50
+        assert params.verified is True
+    
+    def test_limit_validation(self):
+        """Test limit validation."""
+        # Valid limits
+        DomainListQueryParams(limit=10)  # Min
+        DomainListQueryParams(limit=100)  # Max
+        DomainListQueryParams(limit=25)  # Middle
+        
+        # Invalid limits
+        with pytest.raises(ValidationError):
+            DomainListQueryParams(limit=5)
+        
+        with pytest.raises(ValidationError):
+            DomainListQueryParams(limit=150)
+    
+    def test_page_validation(self):
+        """Test page validation."""
+        # Valid pages
+        DomainListQueryParams(page=1)
+        DomainListQueryParams(page=100)
+        
+        # Invalid pages
+        with pytest.raises(ValidationError):
+            DomainListQueryParams(page=0)
+        
+        with pytest.raises(ValidationError):
+            DomainListQueryParams(page=-1)
+    
+    def test_to_query_params(self):
+        """Test query parameter conversion."""
+        params = DomainListQueryParams(page=2, limit=10, verified=True)
+        query_params = params.to_query_params()
+        
+        assert query_params == {
+            "page": 2,
+            "limit": 10,
+            "verified": True
+        }
+    
+    def test_to_query_params_exclude_none(self):
+        """Test query parameter conversion excluding None values."""
+        params = DomainListQueryParams(page=1, limit=15)  # verified is None
+        query_params = params.to_query_params()
+        
+        assert query_params == {
+            "page": 1,
+            "limit": 15
+        }
+        assert "verified" not in query_params
+
+
 class TestDomainListRequest:
     """Test DomainListRequest model."""
     
     def test_basic_domain_list_request(self):
         """Test basic domain list request creation."""
-        request = DomainListRequest()
-        assert request.page is None
-        assert request.limit == 25  # Default value
-        assert request.verified is None
+        query_params = DomainListQueryParams()
+        request = DomainListRequest(query_params=query_params)
+        
+        assert request.query_params.page == 1
+        assert request.query_params.limit == 25
+        assert request.query_params.verified is None
     
     def test_domain_list_request_with_all_fields(self):
         """Test domain list request with all fields."""
-        request = DomainListRequest(
+        query_params = DomainListQueryParams(
             page=2,
             limit=50,
             verified=True
         )
-        assert request.page == 2
-        assert request.limit == 50
-        assert request.verified is True
+        request = DomainListRequest(query_params=query_params)
+        
+        assert request.query_params.page == 2
+        assert request.query_params.limit == 50
+        assert request.query_params.verified is True
+    
+    def test_to_query_params_delegation(self):
+        """Test that request delegates to_query_params to query_params object."""
+        query_params = DomainListQueryParams(page=3, limit=20, verified=False)
+        request = DomainListRequest(query_params=query_params)
+        
+        result = request.to_query_params()
+        expected = query_params.to_query_params()
+        
+        assert result == expected
+        assert result == {
+            "page": 3,
+            "limit": 20,
+            "verified": False
+        }
+
+
+class TestDomainRecipientsQueryParams:
+    """Test DomainRecipientsQueryParams model."""
+    
+    def test_default_query_params(self):
+        """Test default query parameters."""
+        params = DomainRecipientsQueryParams()
+        assert params.page == 1  # Default value
+        assert params.limit == 25  # Default value
+    
+    def test_query_params_with_all_fields(self):
+        """Test query parameters with all fields."""
+        params = DomainRecipientsQueryParams(page=3, limit=50)
+        assert params.page == 3
+        assert params.limit == 50
     
     def test_limit_validation(self):
         """Test limit validation."""
         # Valid limits
-        DomainListRequest(limit=10)  # Min
-        DomainListRequest(limit=100)  # Max
-        DomainListRequest(limit=25)  # Middle
+        DomainRecipientsQueryParams(limit=10)  # Min
+        DomainRecipientsQueryParams(limit=100)  # Max
+        DomainRecipientsQueryParams(limit=25)  # Middle
         
         # Invalid limits
-        with pytest.raises(ValidationError, match="Limit must be between 10 and 100"):
-            DomainListRequest(limit=5)
+        with pytest.raises(ValidationError):
+            DomainRecipientsQueryParams(limit=5)
         
-        with pytest.raises(ValidationError, match="Limit must be between 10 and 100"):
-            DomainListRequest(limit=150)
+        with pytest.raises(ValidationError):
+            DomainRecipientsQueryParams(limit=150)
     
     def test_page_validation(self):
         """Test page validation."""
         # Valid pages
-        DomainListRequest(page=1)
-        DomainListRequest(page=100)
+        DomainRecipientsQueryParams(page=1)
+        DomainRecipientsQueryParams(page=100)
         
         # Invalid pages
-        with pytest.raises(ValidationError, match="Page must be greater than 0"):
-            DomainListRequest(page=0)
+        with pytest.raises(ValidationError):
+            DomainRecipientsQueryParams(page=0)
         
-        with pytest.raises(ValidationError, match="Page must be greater than 0"):
-            DomainListRequest(page=-1)
+        with pytest.raises(ValidationError):
+            DomainRecipientsQueryParams(page=-1)
     
-    def test_model_dump(self):
-        """Test model serialization."""
-        request = DomainListRequest(page=1, limit=10, verified=True)
-        data = request.model_dump(exclude_none=True)
+    def test_to_query_params(self):
+        """Test query parameter conversion."""
+        params = DomainRecipientsQueryParams(page=2, limit=10)
+        query_params = params.to_query_params()
         
-        assert data == {
-            "page": 1,
-            "limit": 10,
-            "verified": True
+        assert query_params == {
+            "page": 2,
+            "limit": 10
         }
+
+
+class TestDomainRecipientsRequest:
+    """Test DomainRecipientsRequest model."""
     
-    def test_model_dump_exclude_none(self):
-        """Test model serialization excluding None values."""
-        request = DomainListRequest(limit=15)  # Only limit set
-        data = request.model_dump(exclude_none=True)
+    def test_basic_recipients_request(self):
+        """Test basic recipients request."""
+        query_params = DomainRecipientsQueryParams()
+        request = DomainRecipientsRequest(
+            domain_id="test-domain-id",
+            query_params=query_params
+        )
         
-        assert data == {"limit": 15}
-        assert "page" not in data
-        assert "verified" not in data
+        assert request.domain_id == "test-domain-id"
+        assert request.query_params.page == 1
+        assert request.query_params.limit == 25
+
+    def test_recipients_request_with_custom_params(self):
+        """Test recipients request with custom parameters."""
+        query_params = DomainRecipientsQueryParams(page=2, limit=50)
+        request = DomainRecipientsRequest(
+            domain_id="test-domain-id",
+            query_params=query_params
+        )
+        
+        assert request.domain_id == "test-domain-id"
+        assert request.query_params.page == 2
+        assert request.query_params.limit == 50
+    
+    def test_domain_id_validation(self):
+        """Test domain ID validation."""
+        query_params = DomainRecipientsQueryParams()
+        
+        # Valid domain ID
+        DomainRecipientsRequest(domain_id="valid-domain-id", query_params=query_params)
+        
+        # Empty domain ID
+        with pytest.raises(ValidationError):
+            DomainRecipientsRequest(domain_id="", query_params=query_params)
+        
+        # Whitespace only domain ID
+        with pytest.raises(ValidationError):
+            DomainRecipientsRequest(domain_id="   ", query_params=query_params)
+    
+    def test_to_query_params_delegation(self):
+        """Test that request delegates to_query_params to query_params object."""
+        query_params = DomainRecipientsQueryParams(page=3, limit=20)
+        request = DomainRecipientsRequest(
+            domain_id="test-domain-id",
+            query_params=query_params
+        )
+        
+        result = request.to_query_params()
+        expected = query_params.to_query_params()
+        
+        assert result == expected
+        assert result == {
+            "page": 3,
+            "limit": 20
+        }
 
 
 class TestDomainCreateRequest:
@@ -203,7 +361,7 @@ class TestDomainDeleteRequest:
             DomainDeleteRequest(domain_id="   ")
     
     def test_domain_id_trimming(self):
-        """Test domain ID trimming."""
+        """Test that domain ID is trimmed."""
         request = DomainDeleteRequest(domain_id="  test-domain-id  ")
         assert request.domain_id == "test-domain-id"
     
@@ -238,7 +396,7 @@ class TestDomainGetRequest:
             DomainGetRequest(domain_id="   ")
     
     def test_domain_id_trimming(self):
-        """Test domain ID trimming."""
+        """Test that domain ID is trimmed."""
         request = DomainGetRequest(domain_id="  test-domain-id  ")
         assert request.domain_id == "test-domain-id"
     
@@ -273,7 +431,7 @@ class TestDomainDnsRecordsRequest:
             DomainDnsRecordsRequest(domain_id="   ")
     
     def test_domain_id_trimming(self):
-        """Test domain ID trimming."""
+        """Test that domain ID is trimmed."""
         request = DomainDnsRecordsRequest(domain_id="  test-domain-id  ")
         assert request.domain_id == "test-domain-id"
     
@@ -308,7 +466,7 @@ class TestDomainVerificationRequest:
             DomainVerificationRequest(domain_id="   ")
     
     def test_domain_id_trimming(self):
-        """Test domain ID trimming."""
+        """Test that domain ID is trimmed."""
         request = DomainVerificationRequest(domain_id="  test-domain-id  ")
         assert request.domain_id == "test-domain-id"
     
@@ -521,39 +679,6 @@ class TestDomainRecipient:
         assert recipient.deleted_at == "2023-01-02 00:00:00"
 
 
-class TestDomainRecipientsRequest:
-    """Test DomainRecipientsRequest model."""
-    
-    def test_basic_recipients_request(self):
-        """Test basic recipients request."""
-        request = DomainRecipientsRequest(domain_id="test-domain-id")
-        
-        assert request.domain_id == "test-domain-id"
-        assert request.page is None
-        assert request.limit == 25  # Default value
-
-    def test_recipients_request_validation(self):
-        """Test recipients request validation."""
-        # Valid values
-        DomainRecipientsRequest(domain_id="test-domain-id", page=1, limit=10)
-        
-        # Invalid limit (too low)
-        with pytest.raises(ValidationError):
-            DomainRecipientsRequest(domain_id="test-domain-id", limit=5)
-        
-        # Invalid limit (too high)  
-        with pytest.raises(ValidationError):
-            DomainRecipientsRequest(domain_id="test-domain-id", limit=150)
-        
-        # Invalid page (zero)
-        with pytest.raises(ValidationError):
-            DomainRecipientsRequest(domain_id="test-domain-id", page=0)
-        
-        # Invalid page (negative)
-        with pytest.raises(ValidationError):
-            DomainRecipientsRequest(domain_id="test-domain-id", page=-1)
-
-
 class TestDomainDnsRecord:
     """Test DomainDnsRecord model."""
     
@@ -687,12 +812,15 @@ class TestDomainsModelIntegration:
     
     def test_model_serialization_compatibility(self):
         """Test that models serialize correctly for API requests."""
-        # List request
-        list_req = DomainListRequest(page=1, limit=10, verified=True)
-        list_data = list_req.model_dump(exclude_none=True)
-        assert "page" in list_data
-        assert "limit" in list_data
-        assert "verified" in list_data
+        # List request with query params
+        query_params = DomainListQueryParams(page=1, limit=10, verified=True)
+        list_req = DomainListRequest(query_params=query_params)
+        
+        # Test query params serialization
+        query_data = list_req.to_query_params()
+        assert query_data["page"] == 1
+        assert query_data["limit"] == 10
+        assert query_data["verified"] is True
         
         # Create request
         create_req = DomainCreateRequest(
@@ -714,4 +842,16 @@ class TestDomainsModelIntegration:
         assert settings_data["domain_id"] == "test-domain-id"
         assert settings_data["track_opens"] is True
         assert settings_data["send_paused"] is False
-        assert "track_clicks" not in settings_data  # Should be excluded if None 
+        assert "track_clicks" not in settings_data  # Should be excluded if None
+        
+        # Recipients request with query params
+        recipients_query_params = DomainRecipientsQueryParams(page=2, limit=50)
+        recipients_req = DomainRecipientsRequest(
+            domain_id="test-domain-id",
+            query_params=recipients_query_params
+        )
+        
+        # Test recipients query params serialization
+        recipients_query_data = recipients_req.to_query_params()
+        assert recipients_query_data["page"] == 2
+        assert recipients_query_data["limit"] == 50 

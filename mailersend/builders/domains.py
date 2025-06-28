@@ -2,8 +2,8 @@ from typing import Optional, Union
 from copy import deepcopy
 
 from ..models.domains import (
-    DomainListRequest, DomainCreateRequest, DomainDeleteRequest, DomainGetRequest,
-    DomainUpdateSettingsRequest, DomainRecipientsRequest, DomainDnsRecordsRequest,
+    DomainListRequest, DomainListQueryParams, DomainCreateRequest, DomainDeleteRequest, DomainGetRequest,
+    DomainUpdateSettingsRequest, DomainRecipientsRequest, DomainRecipientsQueryParams, DomainDnsRecordsRequest,
     DomainVerificationRequest
 )
 from ..exceptions import ValidationError
@@ -203,7 +203,7 @@ class DomainsBuilder:
     
     def pause_sending(self) -> 'DomainsBuilder':
         """
-        Pause sending for this domain.
+        Pause email sending for the domain.
         
         Returns:
             Self for method chaining
@@ -212,7 +212,7 @@ class DomainsBuilder:
     
     def resume_sending(self) -> 'DomainsBuilder':
         """
-        Resume sending for this domain.
+        Resume email sending for the domain.
         
         Returns:
             Self for method chaining
@@ -221,10 +221,10 @@ class DomainsBuilder:
     
     def track_clicks(self, enabled: bool) -> 'DomainsBuilder':
         """
-        Enable or disable click tracking.
+        Set click tracking status.
         
         Args:
-            enabled: True to enable click tracking
+            enabled: True to enable click tracking, False to disable
             
         Returns:
             Self for method chaining
@@ -234,10 +234,10 @@ class DomainsBuilder:
     
     def track_opens(self, enabled: bool) -> 'DomainsBuilder':
         """
-        Enable or disable open tracking.
+        Set open tracking status.
         
         Args:
-            enabled: True to enable open tracking
+            enabled: True to enable open tracking, False to disable
             
         Returns:
             Self for method chaining
@@ -247,10 +247,10 @@ class DomainsBuilder:
     
     def track_unsubscribe(self, enabled: bool) -> 'DomainsBuilder':
         """
-        Enable or disable unsubscribe tracking.
+        Set unsubscribe tracking status.
         
         Args:
-            enabled: True to enable unsubscribe tracking
+            enabled: True to enable unsubscribe tracking, False to disable
             
         Returns:
             Self for method chaining
@@ -260,10 +260,10 @@ class DomainsBuilder:
     
     def track_content(self, enabled: bool) -> 'DomainsBuilder':
         """
-        Enable or disable content tracking.
+        Set content tracking status.
         
         Args:
-            enabled: True to enable content tracking
+            enabled: True to enable content tracking, False to disable
             
         Returns:
             Self for method chaining
@@ -273,10 +273,10 @@ class DomainsBuilder:
     
     def track_unsubscribe_html(self, html: str) -> 'DomainsBuilder':
         """
-        Set the HTML unsubscribe template.
+        Set HTML unsubscribe tracking content.
         
         Args:
-            html: HTML template for unsubscribe link
+            html: HTML content for unsubscribe tracking
             
         Returns:
             Self for method chaining
@@ -286,10 +286,10 @@ class DomainsBuilder:
     
     def track_unsubscribe_plain(self, text: str) -> 'DomainsBuilder':
         """
-        Set the plain text unsubscribe template.
+        Set plain text unsubscribe tracking content.
         
         Args:
-            text: Plain text template for unsubscribe link
+            text: Plain text content for unsubscribe tracking
             
         Returns:
             Self for method chaining
@@ -299,10 +299,10 @@ class DomainsBuilder:
     
     def custom_tracking_enabled(self, enabled: bool) -> 'DomainsBuilder':
         """
-        Enable or disable custom tracking.
+        Set custom tracking status.
         
         Args:
-            enabled: True to enable custom tracking
+            enabled: True to enable custom tracking, False to disable
             
         Returns:
             Self for method chaining
@@ -312,7 +312,7 @@ class DomainsBuilder:
     
     def custom_tracking_subdomain_setting(self, subdomain: str) -> 'DomainsBuilder':
         """
-        Set the custom tracking subdomain in settings.
+        Set custom tracking subdomain.
         
         Args:
             subdomain: Custom tracking subdomain
@@ -325,10 +325,10 @@ class DomainsBuilder:
     
     def precedence_bulk(self, enabled: bool) -> 'DomainsBuilder':
         """
-        Enable or disable bulk precedence.
+        Set bulk precedence status.
         
         Args:
-            enabled: True to enable bulk precedence
+            enabled: True to enable bulk precedence, False to disable
             
         Returns:
             Self for method chaining
@@ -338,10 +338,10 @@ class DomainsBuilder:
     
     def ignore_duplicated_recipients(self, enabled: bool) -> 'DomainsBuilder':
         """
-        Enable or disable ignoring duplicated recipients.
+        Set ignore duplicated recipients status.
         
         Args:
-            enabled: True to ignore duplicated recipients
+            enabled: True to ignore duplicated recipients, False to include
             
         Returns:
             Self for method chaining
@@ -383,11 +383,17 @@ class DomainsBuilder:
         Returns:
             DomainListRequest object
         """
-        return DomainListRequest(
-            page=self._page,
-            limit=self._limit,
-            verified=self._verified
-        )
+        # Create query params with proper defaults, using builder values only if set
+        query_params_data = {}
+        if self._page is not None:
+            query_params_data['page'] = self._page
+        if self._limit is not None:
+            query_params_data['limit'] = self._limit
+        if self._verified is not None:
+            query_params_data['verified'] = self._verified
+        
+        query_params = DomainListQueryParams(**query_params_data)
+        return DomainListRequest(query_params=query_params)
     
     def build_create_request(self) -> DomainCreateRequest:
         """
@@ -467,10 +473,17 @@ class DomainsBuilder:
         if not self._domain_id:
             raise ValidationError("Domain ID is required for getting recipients")
         
+        # Create query params with proper defaults, using builder values only if set
+        query_params_data = {}
+        if self._page is not None:
+            query_params_data['page'] = self._page
+        if self._limit is not None:
+            query_params_data['limit'] = self._limit
+        
+        query_params = DomainRecipientsQueryParams(**query_params_data)
         return DomainRecipientsRequest(
             domain_id=self._domain_id,
-            page=self._page,
-            limit=self._limit
+            query_params=query_params
         )
     
     def build_get_request(self) -> DomainGetRequest:

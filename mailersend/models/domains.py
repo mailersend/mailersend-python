@@ -4,26 +4,62 @@ from pydantic import Field, field_validator
 from .base import BaseModel as MailerSendBaseModel
 
 
+class DomainListQueryParams(MailerSendBaseModel):
+    """Model for domain list query parameters with validation."""
+    page: Optional[int] = Field(default=1, ge=1)
+    limit: Optional[int] = Field(default=25, ge=10, le=100)
+    verified: Optional[bool] = None
+
+    def to_query_params(self) -> dict:
+        """Convert to query parameters for API request."""
+        params = {
+            'page': self.page,
+            'limit': self.limit,
+            'verified': self.verified
+        }
+        
+        return {k: v for k, v in params.items() if v is not None}
+
+
 class DomainListRequest(MailerSendBaseModel):
     """Request model for listing domains."""
-    
-    page: Optional[int] = None
-    limit: Optional[int] = 25
-    verified: Optional[bool] = None
-    
-    @field_validator('limit')
-    def validate_limit(cls, v):
-        """Validate limit is within acceptable range."""
-        if v is not None and (v < 10 or v > 100):
-            raise ValueError("Limit must be between 10 and 100")
-        return v
-    
-    @field_validator('page')
-    def validate_page(cls, v):
-        """Validate page is positive."""
-        if v is not None and v < 1:
-            raise ValueError("Page must be greater than 0")
-        return v
+    query_params: DomainListQueryParams
+
+    def to_query_params(self) -> dict:
+        """Convert query parameters for API request."""
+        return self.query_params.to_query_params()
+
+
+class DomainRecipientsQueryParams(MailerSendBaseModel):
+    """Model for domain recipients query parameters with validation."""
+    page: Optional[int] = Field(default=1, ge=1)
+    limit: Optional[int] = Field(default=25, ge=10, le=100)
+
+    def to_query_params(self) -> dict:
+        """Convert to query parameters for API request."""
+        params = {
+            'page': self.page,
+            'limit': self.limit
+        }
+        
+        return {k: v for k, v in params.items() if v is not None}
+
+
+class DomainRecipientsRequest(MailerSendBaseModel):
+    """Request model for getting domain recipients."""
+    domain_id: str  # Path parameter
+    query_params: DomainRecipientsQueryParams  # Query parameters
+
+    @field_validator('domain_id')
+    def validate_domain_id(cls, v):
+        """Validate domain ID is provided and not empty."""
+        if not v or not v.strip():
+            raise ValueError("Domain ID is required")
+        return v.strip()
+
+    def to_query_params(self) -> dict:
+        """Convert query parameters for API request."""
+        return self.query_params.to_query_params()
 
 
 class DomainCreateRequest(MailerSendBaseModel):
@@ -182,35 +218,6 @@ class DomainRecipient(MailerSendBaseModel):
     created_at: str
     updated_at: str
     deleted_at: Optional[str] = None
-
-
-class DomainRecipientsRequest(MailerSendBaseModel):
-    """Request model for getting domain recipients."""
-    
-    domain_id: str
-    page: Optional[int] = None
-    limit: Optional[int] = 25
-    
-    @field_validator('domain_id')
-    def validate_domain_id(cls, v):
-        """Validate domain ID is provided and not empty."""
-        if not v or not v.strip():
-            raise ValueError("Domain ID is required")
-        return v.strip()
-    
-    @field_validator('limit')
-    def validate_limit(cls, v):
-        """Validate limit is within acceptable range."""
-        if v is not None and (v < 10 or v > 100):
-            raise ValueError("Limit must be between 10 and 100")
-        return v
-    
-    @field_validator('page')
-    def validate_page(cls, v):
-        """Validate page is positive."""
-        if v is not None and v < 1:
-            raise ValueError("Page must be greater than 0")
-        return v
 
 
 class DomainRecipientsResponse(MailerSendBaseModel):
