@@ -1,9 +1,15 @@
-from typing import Dict, Any, Optional
+from typing import Union
 
 from .base import BaseResource
-from ..models.schedules import SchedulesListRequest, ScheduleGetRequest, ScheduleDeleteRequest
+from ..models.schedules import (
+    SchedulesListRequest,
+    ScheduleGetRequest,
+    ScheduleDeleteRequest,
+    SchedulesListResponse,
+    ScheduleResponse
+)
 from ..models.base import APIResponse
-from ..exceptions import ValidationError
+from ..exceptions import ValidationError as MailerSendValidationError
 
 
 class Schedules(BaseResource):
@@ -13,33 +19,38 @@ class Schedules(BaseResource):
     Provides methods for managing scheduled messages.
     """
 
-    def list_schedules(self, request: Optional[SchedulesListRequest] = None) -> APIResponse:
+    def list_schedules(self, request: SchedulesListRequest) -> APIResponse:
         """
         Retrieve a list of scheduled messages.
         
         Args:
-            request: Optional SchedulesListRequest with filtering and pagination options
+            request: SchedulesListRequest with filtering and pagination options
             
         Returns:
-            APIResponse with list of scheduled messages
+            APIResponse containing the schedules list response
             
         Raises:
-            ValidationError: If the request is invalid
-            MailerSendError: If the API returns an error
+            MailerSendValidationError: If the request is invalid or has wrong type
         """
-        self.logger.debug("Retrieving scheduled messages list")
+        # Validation
+        if not isinstance(request, SchedulesListRequest):
+            raise MailerSendValidationError("Request must be an instance of SchedulesListRequest")
         
-        # Convert to query parameters
-        params = {}
-        if request:
-            params = self._build_query_params(request)
+        self.logger.debug("Preparing to list scheduled messages with query parameters")
         
-        self.logger.info("Requesting scheduled messages list")
-        self.logger.debug(f"Query params: {params}")
+        # Extract query parameters
+        params = request.to_query_params()
         
-        response = self.client.request("GET", "message-schedules", params=params)
+        self.logger.debug(f"Making API request to list scheduled messages with params: {params}")
         
-        return self._create_response(response)
+        # Make API request
+        response = self.client.request(
+            method='GET',
+            endpoint='message-schedules',
+            params=params if params else None
+        )
+        
+        return self._create_response(response, SchedulesListResponse)
 
     def get_schedule(self, request: ScheduleGetRequest) -> APIResponse:
         """
@@ -49,22 +60,24 @@ class Schedules(BaseResource):
             request: ScheduleGetRequest with message ID
             
         Returns:
-            APIResponse with scheduled message information
+            APIResponse containing the schedule response
             
         Raises:
-            ValidationError: If the request is invalid
-            MailerSendError: If the API returns an error
+            MailerSendValidationError: If the request is invalid or has wrong type
         """
-        if not request:
-            self.logger.error("No ScheduleGetRequest object provided")
-            raise ValidationError("ScheduleGetRequest must be provided")
+        # Validation
+        if not isinstance(request, ScheduleGetRequest):
+            raise MailerSendValidationError("Request must be an instance of ScheduleGetRequest")
         
-        self.logger.debug(f"Retrieving scheduled message: {request.message_id}")
-        self.logger.info(f"Requesting scheduled message information for: {request.message_id}")
+        self.logger.debug(f"Preparing to get scheduled message with ID: {request.message_id}")
         
-        response = self.client.request("GET", f"message-schedules/{request.message_id}")
+        # Make API request
+        response = self.client.request(
+            method='GET',
+            endpoint=f'message-schedules/{request.message_id}'
+        )
         
-        return self._create_response(response)
+        return self._create_response(response, ScheduleResponse)
 
     def delete_schedule(self, request: ScheduleDeleteRequest) -> APIResponse:
         """
@@ -77,42 +90,18 @@ class Schedules(BaseResource):
             APIResponse (204 No Content on success)
             
         Raises:
-            ValidationError: If the request is invalid
-            MailerSendError: If the API returns an error
+            MailerSendValidationError: If the request is invalid or has wrong type
         """
-        if not request:
-            self.logger.error("No ScheduleDeleteRequest object provided")
-            raise ValidationError("ScheduleDeleteRequest must be provided")
+        # Validation
+        if not isinstance(request, ScheduleDeleteRequest):
+            raise MailerSendValidationError("Request must be an instance of ScheduleDeleteRequest")
         
-        self.logger.debug(f"Deleting scheduled message: {request.message_id}")
-        self.logger.info(f"Deleting scheduled message: {request.message_id}")
+        self.logger.debug(f"Preparing to delete scheduled message with ID: {request.message_id}")
         
-        response = self.client.request("DELETE", f"message-schedules/{request.message_id}")
+        # Make API request
+        response = self.client.request(
+            method='DELETE',
+            endpoint=f'message-schedules/{request.message_id}'
+        )
         
-        return self._create_response(response)
-
-    def _build_query_params(self, request) -> Dict[str, Any]:
-        """
-        Convert request model to query parameters dictionary.
-        
-        Args:
-            request: Request model to convert
-            
-        Returns:
-            Dictionary of query parameters
-        """
-        params = {}
-        
-        # Handle filtering parameters
-        if hasattr(request, 'domain_id') and request.domain_id is not None:
-            params['domain_id'] = request.domain_id
-        if hasattr(request, 'status') and request.status is not None:
-            params['status'] = request.status
-            
-        # Handle pagination parameters
-        if hasattr(request, 'page') and request.page is not None:
-            params['page'] = request.page
-        if hasattr(request, 'limit') and request.limit is not None:
-            params['limit'] = request.limit
-            
-        return params 
+        return self._create_response(response) 

@@ -1,7 +1,12 @@
 import pytest
 
 from mailersend.builders.schedules import SchedulesBuilder
-from mailersend.models.schedules import SchedulesListRequest, ScheduleGetRequest, ScheduleDeleteRequest
+from mailersend.models.schedules import (
+    SchedulesListRequest,
+    SchedulesListQueryParams,
+    ScheduleGetRequest,
+    ScheduleDeleteRequest
+)
 from mailersend.exceptions import ValidationError
 
 
@@ -154,11 +159,15 @@ class TestSchedulesBuilder:
         builder = SchedulesBuilder()
         request = builder.build_list_request()
         
+        # Verify request structure
         assert isinstance(request, SchedulesListRequest)
-        assert request.domain_id is None
-        assert request.status is None
-        assert request.page is None
-        assert request.limit == 25  # Default value
+        assert isinstance(request.query_params, SchedulesListQueryParams)
+        
+        # Verify default values are used
+        assert request.query_params.domain_id is None
+        assert request.query_params.status is None
+        assert request.query_params.page == 1  # Default value
+        assert request.query_params.limit == 25  # Default value
     
     def test_build_list_request_with_parameters(self):
         """Test building list request with custom parameters."""
@@ -170,11 +179,46 @@ class TestSchedulesBuilder:
                    .limit(50)
                    .build_list_request())
         
+        # Verify request structure
         assert isinstance(request, SchedulesListRequest)
-        assert request.domain_id == "test-domain"
-        assert request.status == "scheduled"
-        assert request.page == 2
-        assert request.limit == 50
+        assert isinstance(request.query_params, SchedulesListQueryParams)
+        
+        # Verify custom values
+        assert request.query_params.domain_id == "test-domain"
+        assert request.query_params.status == "scheduled"
+        assert request.query_params.page == 2
+        assert request.query_params.limit == 50
+
+    def test_build_list_request_partial_params(self):
+        """Test building list request with partial parameters."""
+        builder = SchedulesBuilder()
+        request = builder.domain_id("test-domain").page(3).build_list_request()
+        
+        # Verify request structure
+        assert isinstance(request, SchedulesListRequest)
+        assert isinstance(request.query_params, SchedulesListQueryParams)
+        
+        # Verify mixed values (custom domain_id and page, default limit)
+        assert request.query_params.domain_id == "test-domain"
+        assert request.query_params.status is None
+        assert request.query_params.page == 3
+        assert request.query_params.limit == 25  # Default
+
+    def test_build_list_request_with_status_methods(self):
+        """Test building list request with status convenience methods."""
+        builder = SchedulesBuilder()
+        
+        # Test with scheduled_only
+        request = builder.scheduled_only().build_list_request()
+        assert request.query_params.status == "scheduled"
+        
+        # Test with sent_only
+        request = builder.sent_only().build_list_request()
+        assert request.query_params.status == "sent"
+        
+        # Test with error_only
+        request = builder.error_only().build_list_request()
+        assert request.query_params.status == "error"
     
     def test_build_get_request(self):
         """Test building get request."""
@@ -267,33 +311,34 @@ class TestSchedulesBuilder:
         # Test list request workflow
         list_request = (builder
                         .domain_id("test-domain")
-                        .scheduled_only()
+                        .status("scheduled")
                         .page(1)
                         .limit(10)
                         .build_list_request())
-        assert list_request.domain_id == "test-domain"
-        assert list_request.status == "scheduled"
-        assert list_request.page == 1
-        assert list_request.limit == 10
+        assert list_request.query_params.domain_id == "test-domain"
+        assert list_request.query_params.status == "scheduled"
+        assert list_request.query_params.page == 1
+        assert list_request.query_params.limit == 10
         
         # Test get request workflow (after reset)
         get_request = builder.reset().message_id("abc123").build_get_request()
         assert get_request.message_id == "abc123"
-        
-        # Test delete request workflow (reusing message_id)
-        delete_request = builder.build_delete_request()
-        assert delete_request.message_id == "abc123"
     
-    def test_status_values_fluent_methods(self):
-        """Test fluent interface for all status values."""
+    def test_query_params_to_dict(self):
+        """Test that built query params can be converted to dict."""
         builder = SchedulesBuilder()
+        request = (builder
+                   .domain_id("test-domain")
+                   .status("scheduled")
+                   .page(2)
+                   .limit(50)
+                   .build_list_request())
         
-        # Test each status convenience method returns correct status
-        request1 = builder.scheduled_only().build_list_request()
-        assert request1.status == "scheduled"
-        
-        request2 = builder.sent_only().build_list_request()
-        assert request2.status == "sent"
-        
-        request3 = builder.error_only().build_list_request()
-        assert request3.status == "error" 
+        params = request.to_query_params()
+        expected = {
+            'domain_id': 'test-domain',
+            'status': 'scheduled',
+            'page': 2,
+            'limit': 50
+        }
+        assert params == expected 

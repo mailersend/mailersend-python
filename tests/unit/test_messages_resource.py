@@ -1,204 +1,113 @@
 import pytest
-from unittest.mock import Mock, MagicMock
+from unittest.mock import Mock
 
 from mailersend.resources.messages import Messages
-from mailersend.models.messages import MessagesListRequest, MessageGetRequest
+from mailersend.models.messages import (
+    MessagesListRequest,
+    MessagesListQueryParams,
+    MessageGetRequest,
+    MessagesListResponse,
+    MessageResponse
+)
 from mailersend.models.base import APIResponse
-from mailersend.exceptions import ValidationError
+from mailersend.exceptions import ValidationError as MailerSendValidationError
 
 
 class TestMessages:
     """Test Messages resource class."""
     
-    def setup_method(self):
-        """Set up test fixtures."""
-        self.mock_client = Mock()
-        self.mock_logger = Mock()
-        self.messages = Messages(self.mock_client, self.mock_logger)
+    @pytest.fixture
+    def mock_client(self):
+        """Create a mock client."""
+        client = Mock()
+        client.request = Mock()
+        return client
+
+    @pytest.fixture
+    def resource(self, mock_client):
+        """Create Messages resource with mock client."""
+        resource = Messages(mock_client)
+        resource._create_response = Mock(return_value=APIResponse(data={}, headers={}, status_code=200))
+        return resource
     
-    def test_initialization(self):
-        """Test Messages resource initialization."""
-        assert self.messages.client == self.mock_client
-        assert self.messages.logger == self.mock_logger
-    
-    def test_list_messages_without_request(self):
-        """Test listing messages without request parameters."""
-        # Mock the client response
+    def test_list_messages_returns_api_response(self, resource):
+        """Test list_messages method returns APIResponse."""
+        query_params = MessagesListQueryParams()
+        request = MessagesListRequest(query_params=query_params)
+        
+        result = resource.list_messages(request)
+        assert isinstance(result, APIResponse)
+
+    def test_list_messages_validation_wrong_type(self, resource):
+        """Test list_messages method with wrong request type raises error."""
+        with pytest.raises(MailerSendValidationError) as exc_info:
+            resource.list_messages("invalid_request")
+        assert "Request must be an instance of MessagesListRequest" in str(exc_info.value)
+
+    def test_list_messages_with_query_params(self, resource):
+        """Test list_messages method uses query params correctly."""
+        query_params = MessagesListQueryParams(page=2, limit=50)
+        request = MessagesListRequest(query_params=query_params)
+        
         mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
+        resource.client.request.return_value = mock_response
         
-        # Mock the _create_response method
-        mock_api_response = Mock(spec=APIResponse)
-        self.messages._create_response = Mock(return_value=mock_api_response)
-        
-        result = self.messages.list_messages()
+        resource.list_messages(request)
         
         # Verify client was called correctly
-        self.mock_client.request.assert_called_once_with("GET", "messages", params={})
+        resource.client.request.assert_called_once_with(
+            method='GET',
+            endpoint='messages',
+            params={'page': 2, 'limit': 50}
+        )
         
-        # Verify response creation
-        self.messages._create_response.assert_called_once_with(mock_response)
+        # Verify _create_response was called with correct params
+        resource._create_response.assert_called_once_with(mock_response, MessagesListResponse)
+
+    def test_list_messages_with_default_query_params(self, resource):
+        """Test list_messages with default query params."""
+        query_params = MessagesListQueryParams()  # Uses defaults
+        request = MessagesListRequest(query_params=query_params)
         
-        # Verify logging
-        self.mock_logger.debug.assert_called()
-        self.mock_logger.info.assert_called()
-        
-        assert result == mock_api_response
-    
-    def test_list_messages_with_request(self):
-        """Test listing messages with request parameters."""
-        # Create request
-        request = MessagesListRequest(page=2, limit=50)
-        
-        # Mock the client response
         mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
+        resource.client.request.return_value = mock_response
         
-        # Mock the _create_response method
-        mock_api_response = Mock(spec=APIResponse)
-        self.messages._create_response = Mock(return_value=mock_api_response)
+        resource.list_messages(request)
         
-        # Mock the _build_query_params method
-        expected_params = {"page": 2, "limit": 50}
-        self.messages._build_query_params = Mock(return_value=expected_params)
-        
-        result = self.messages.list_messages(request)
-        
-        # Verify query params were built
-        self.messages._build_query_params.assert_called_once_with(request)
-        
-        # Verify client was called correctly
-        self.mock_client.request.assert_called_once_with("GET", "messages", params=expected_params)
-        
-        # Verify response creation
-        self.messages._create_response.assert_called_once_with(mock_response)
-        
-        assert result == mock_api_response
-    
-    def test_get_message_success(self):
-        """Test getting a single message successfully."""
-        # Create request
-        request = MessageGetRequest(message_id="5ee0b183b251345e407c936a")
-        
-        # Mock the client response
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
-        
-        # Mock the _create_response method
-        mock_api_response = Mock(spec=APIResponse)
-        self.messages._create_response = Mock(return_value=mock_api_response)
-        
-        result = self.messages.get_message(request)
-        
-        # Verify client was called correctly
-        self.mock_client.request.assert_called_once_with("GET", "messages/5ee0b183b251345e407c936a")
-        
-        # Verify response creation
-        self.messages._create_response.assert_called_once_with(mock_response)
-        
-        # Verify logging
-        self.mock_logger.debug.assert_called()
-        self.mock_logger.info.assert_called()
-        
-        assert result == mock_api_response
-    
-    def test_get_message_without_request(self):
-        """Test getting a message without request object."""
-        with pytest.raises(ValidationError) as exc_info:
-            self.messages.get_message(None)
-        
-        assert "MessageGetRequest must be provided" in str(exc_info.value)
-        self.mock_logger.error.assert_called_once()
-        
-        # Verify client was not called
-        self.mock_client.request.assert_not_called()
-    
-    def test_build_query_params_with_page_and_limit(self):
-        """Test building query parameters with page and limit."""
-        request = Mock()
-        request.page = 3
-        request.limit = 75
-        
-        result = self.messages._build_query_params(request)
-        
-        expected = {"page": 3, "limit": 75}
-        assert result == expected
-    
-    def test_build_query_params_with_none_values(self):
-        """Test building query parameters with None values."""
-        request = Mock()
-        request.page = None
-        request.limit = None
-        
-        result = self.messages._build_query_params(request)
-        
-        assert result == {}
-    
-    def test_build_query_params_with_partial_values(self):
-        """Test building query parameters with partial values."""
-        request = Mock()
-        request.page = 2
-        request.limit = None
-        
-        result = self.messages._build_query_params(request)
-        
-        expected = {"page": 2}
-        assert result == expected
-    
-    def test_build_query_params_without_attributes(self):
-        """Test building query parameters with object missing attributes."""
-        request = Mock(spec=[])  # Mock without any attributes
-        
-        result = self.messages._build_query_params(request)
-        
-        assert result == {}
-    
-    def test_list_messages_logging(self):
-        """Test that list_messages produces correct log messages."""
-        # Mock the client response
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
-        
-        # Mock the _create_response method
-        mock_api_response = Mock(spec=APIResponse)
-        self.messages._create_response = Mock(return_value=mock_api_response)
-        
-        self.messages.list_messages()
-        
-        # Check debug and info calls
-        debug_calls = [call[0][0] for call in self.mock_logger.debug.call_args_list]
-        info_calls = [call[0][0] for call in self.mock_logger.info.call_args_list]
-        
-        assert "Retrieving messages list" in debug_calls
-        assert "Requesting messages list" in info_calls
-        assert any("Query params:" in call for call in debug_calls)
-    
-    def test_get_message_logging(self):
-        """Test that get_message produces correct log messages."""
+        # Verify client was called with defaults
+        resource.client.request.assert_called_once_with(
+            method='GET',
+            endpoint='messages',
+            params={'page': 1, 'limit': 25}
+        )
+
+    def test_get_message_returns_api_response(self, resource):
+        """Test get_message method returns APIResponse."""
         request = MessageGetRequest(message_id="test-message-id")
         
-        # Mock the client response
+        result = resource.get_message(request)
+        assert isinstance(result, APIResponse)
+
+    def test_get_message_validation_wrong_type(self, resource):
+        """Test get_message method with wrong request type raises error."""
+        with pytest.raises(MailerSendValidationError) as exc_info:
+            resource.get_message("invalid_request")
+        assert "Request must be an instance of MessageGetRequest" in str(exc_info.value)
+
+    def test_get_message_with_valid_request(self, resource):
+        """Test get_message with valid request."""
+        request = MessageGetRequest(message_id="5ee0b183b251345e407c936a")
+        
         mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
+        resource.client.request.return_value = mock_response
         
-        # Mock the _create_response method
-        mock_api_response = Mock(spec=APIResponse)
-        self.messages._create_response = Mock(return_value=mock_api_response)
+        resource.get_message(request)
         
-        self.messages.get_message(request)
+        # Verify client was called correctly
+        resource.client.request.assert_called_once_with(
+            method='GET',
+            endpoint='messages/5ee0b183b251345e407c936a'
+        )
         
-        # Check debug and info calls
-        debug_calls = [call[0][0] for call in self.mock_logger.debug.call_args_list]
-        info_calls = [call[0][0] for call in self.mock_logger.info.call_args_list]
-        
-        assert any("Retrieving message: test-message-id" in call for call in debug_calls)
-        assert any("Requesting message information for: test-message-id" in call for call in info_calls)
-    
-    def test_get_message_error_logging(self):
-        """Test error logging when get_message is called without request."""
-        with pytest.raises(ValidationError):
-            self.messages.get_message(None)
-        
-        # Check error logging
-        error_calls = [call[0][0] for call in self.mock_logger.error.call_args_list]
-        assert "No MessageGetRequest object provided" in error_calls 
+        # Verify _create_response was called
+        resource._create_response.assert_called_once_with(mock_response, MessageResponse) 

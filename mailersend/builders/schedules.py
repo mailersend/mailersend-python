@@ -1,7 +1,12 @@
 from typing import Optional, Literal
 from copy import deepcopy
 
-from ..models.schedules import SchedulesListRequest, ScheduleGetRequest, ScheduleDeleteRequest
+from ..models.schedules import (
+    SchedulesListRequest,
+    SchedulesListQueryParams,
+    ScheduleGetRequest,
+    ScheduleDeleteRequest
+)
 from ..exceptions import ValidationError
 
 
@@ -152,12 +157,19 @@ class SchedulesBuilder:
         Returns:
             SchedulesListRequest object ready for API call
         """
-        return SchedulesListRequest(
-            domain_id=self._domain_id,
-            status=self._status,
-            page=self._page,
-            limit=self._limit if self._limit is not None else 25
-        )
+        query_params = SchedulesListQueryParams()
+        
+        # Only set values if they were explicitly set by the user
+        if self._domain_id is not None:
+            query_params.domain_id = self._domain_id
+        if self._status is not None:
+            query_params.status = self._status
+        if self._page is not None:
+            query_params.page = self._page
+        if self._limit is not None:
+            query_params.limit = self._limit
+        
+        return SchedulesListRequest(query_params=query_params)
     
     def build_get_request(self) -> ScheduleGetRequest:
         """

@@ -1,7 +1,11 @@
 from typing import Optional
 from copy import deepcopy
 
-from ..models.messages import MessagesListRequest, MessageGetRequest
+from ..models.messages import (
+    MessagesListRequest,
+    MessagesListQueryParams,
+    MessageGetRequest
+)
 from ..exceptions import ValidationError
 
 
@@ -90,10 +94,15 @@ class MessagesBuilder:
         Returns:
             MessagesListRequest object ready for API call
         """
-        return MessagesListRequest(
-            page=self._page,
-            limit=self._limit if self._limit is not None else 25
-        )
+        query_params = MessagesListQueryParams()
+        
+        # Only set values if they were explicitly set by the user
+        if self._page is not None:
+            query_params.page = self._page
+        if self._limit is not None:
+            query_params.limit = self._limit
+        
+        return MessagesListRequest(query_params=query_params)
     
     def build_get_request(self) -> MessageGetRequest:
         """
