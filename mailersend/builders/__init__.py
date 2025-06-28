@@ -17,6 +17,7 @@ from .recipients import RecipientsBuilder
 from .templates import TemplatesBuilder
 from .webhooks import WebhooksBuilder
 from .email_verification import EmailVerificationBuilder
+from .users import UsersBuilder
 
 __all__ = [
     'EmailBuilder',
@@ -32,4 +33,5 @@ __all__ = [
     'TemplatesBuilder',
     'WebhooksBuilder',
     'EmailVerificationBuilder',
+    'UsersBuilder',
 ] 

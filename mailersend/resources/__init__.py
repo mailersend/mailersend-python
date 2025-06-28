@@ -15,6 +15,7 @@ from .recipients import Recipients
 from .templates import Templates
 from .webhooks import Webhooks
 from .email_verification import EmailVerification
+from .users import Users
 
 __all__ = [
     "BaseResource",
@@ -30,4 +31,5 @@ __all__ = [
     "Templates",
     "Webhooks",
     "EmailVerification",
+    "Users",
 ]
