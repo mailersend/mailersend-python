@@ -4,6 +4,7 @@ from mailersend.builders.inbound import InboundBuilder
 from mailersend.exceptions import ValidationError as MailerSendValidationError
 from mailersend.models.inbound import (
     InboundListRequest,
+    InboundListQueryParams,
     InboundGetRequest,
     InboundCreateRequest,
     InboundUpdateRequest,
@@ -214,18 +215,33 @@ class TestInboundBuilder:
         
         request = builder.build_list_request()
         assert isinstance(request, InboundListRequest)
-        assert request.domain_id == "domain123"
-        assert request.page == 2
-        assert request.limit == 50
+        assert isinstance(request.query_params, InboundListQueryParams)
+        assert request.query_params.domain_id == "domain123"
+        assert request.query_params.page == 2
+        assert request.query_params.limit == 50
 
     def test_build_list_request_minimal(self):
-        """Test building minimal list request."""
+        """Test building minimal list request with defaults."""
         builder = InboundBuilder()
+        
         request = builder.build_list_request()
         assert isinstance(request, InboundListRequest)
-        assert request.domain_id is None
-        assert request.page is None
-        assert request.limit is None  # Builder passes None, model has default
+        assert isinstance(request.query_params, InboundListQueryParams)
+        # Uses defaults when builder values are None
+        assert request.query_params.page == 1  # Default
+        assert request.query_params.limit == 25  # Default
+        assert request.query_params.domain_id is None
+
+    def test_build_list_request_partial_params(self):
+        """Test building list request with only some parameters set."""
+        builder = InboundBuilder()
+        builder.page(3)  # Only set page, leave others as None/default
+        
+        request = builder.build_list_request()
+        assert isinstance(request, InboundListRequest)
+        assert request.query_params.page == 3
+        assert request.query_params.limit == 25  # Uses default
+        assert request.query_params.domain_id is None
 
     def test_build_get_request(self):
         """Test building get request."""
@@ -415,8 +431,8 @@ class TestInboundBuilder:
         get_request = builder.build_get_request()
         
         # Verify both requests are correct
-        assert list_request.domain_id == "domain123"
-        assert list_request.page == 1
+        assert list_request.query_params.domain_id == "domain123"
+        assert list_request.query_params.page == 1
         assert get_request.inbound_id == "inbound123"
 
     def test_builder_reuse_with_reset(self):
@@ -433,7 +449,7 @@ class TestInboundBuilder:
         second_request = builder.build_list_request()
         
         # Verify they're different
-        assert first_request.domain_id == "domain1"
-        assert first_request.page == 1
-        assert second_request.domain_id == "domain2"
-        assert second_request.page == 2 
+        assert first_request.query_params.domain_id == "domain1"
+        assert first_request.query_params.page == 1
+        assert second_request.query_params.domain_id == "domain2"
+        assert second_request.query_params.page == 2 

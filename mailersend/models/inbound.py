@@ -115,11 +115,30 @@ class InboundRoute(BaseModel):
 
 
 # Request Models
+class InboundListQueryParams(BaseModel):
+    """Model for inbound list query parameters with validation."""
+    page: Optional[int] = Field(default=1, ge=1)
+    limit: Optional[int] = Field(default=25, ge=10, le=100)
+    domain_id: Optional[str] = None
+
+    def to_query_params(self) -> dict:
+        """Convert to query parameters for API request."""
+        params = {
+            'page': self.page,
+            'limit': self.limit,
+            'domain_id': self.domain_id
+        }
+        
+        return {k: v for k, v in params.items() if v is not None}
+
+
 class InboundListRequest(BaseModel):
     """Request model for listing inbound routes."""
-    domain_id: Optional[str] = Field(None, description="Filter by domain ID")
-    page: Optional[int] = Field(None, ge=1, description="Page number")
-    limit: Optional[int] = Field(25, ge=10, le=100, description="Number of results per page")
+    query_params: InboundListQueryParams
+
+    def to_query_params(self) -> dict:
+        """Convert query parameters for API request."""
+        return self.query_params.to_query_params()
 
 
 class InboundGetRequest(BaseModel):

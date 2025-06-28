@@ -3,6 +3,7 @@ from pydantic import ValidationError
 
 from mailersend.models.identities import (
     IdentityListRequest,
+    IdentityListQueryParams,
     IdentityCreateRequest,
     IdentityGetRequest,
     IdentityGetByEmailRequest,
@@ -17,79 +18,153 @@ from mailersend.models.identities import (
 )
 
 
-class TestIdentityListRequest:
-    """Test IdentityListRequest model."""
+class TestIdentityListQueryParams:
+    """Test IdentityListQueryParams model."""
 
     def test_default_values(self):
         """Test default values are set correctly."""
-        request = IdentityListRequest()
-        assert request.domain_id is None
-        assert request.page is None
-        assert request.limit == 25
+        query_params = IdentityListQueryParams()
+        assert query_params.page == 1
+        assert query_params.limit == 25
+        assert query_params.domain_id is None
 
     def test_with_all_parameters(self):
         """Test with all parameters provided."""
-        request = IdentityListRequest(
-            domain_id="domain123",
+        query_params = IdentityListQueryParams(
             page=2,
-            limit=50
+            limit=50,
+            domain_id="domain123"
         )
-        assert request.domain_id == "domain123"
-        assert request.page == 2
-        assert request.limit == 50
-
-    def test_limit_validation_valid_range(self):
-        """Test limit validation with valid values."""
-        # Minimum valid limit
-        request = IdentityListRequest(limit=10)
-        assert request.limit == 10
-        
-        # Maximum valid limit
-        request = IdentityListRequest(limit=100)
-        assert request.limit == 100
-        
-        # Mid-range valid limit
-        request = IdentityListRequest(limit=50)
-        assert request.limit == 50
-
-    def test_limit_validation_invalid_range(self):
-        """Test limit validation with invalid values."""
-        # Below minimum
-        with pytest.raises(ValidationError, match="Limit must be between 10 and 100"):
-            IdentityListRequest(limit=9)
-        
-        # Above maximum
-        with pytest.raises(ValidationError, match="Limit must be between 10 and 100"):
-            IdentityListRequest(limit=101)
+        assert query_params.page == 2
+        assert query_params.limit == 50
+        assert query_params.domain_id == "domain123"
 
     def test_page_validation_valid(self):
         """Test page validation with valid values."""
-        request = IdentityListRequest(page=1)
-        assert request.page == 1
+        query_params = IdentityListQueryParams(page=1)
+        assert query_params.page == 1
         
-        request = IdentityListRequest(page=100)
-        assert request.page == 100
+        query_params = IdentityListQueryParams(page=100)
+        assert query_params.page == 100
 
     def test_page_validation_invalid(self):
         """Test page validation with invalid values."""
-        with pytest.raises(ValidationError, match="Page must be greater than 0"):
-            IdentityListRequest(page=0)
+        with pytest.raises(ValidationError):
+            IdentityListQueryParams(page=0)
         
-        with pytest.raises(ValidationError, match="Page must be greater than 0"):
-            IdentityListRequest(page=-1)
+        with pytest.raises(ValidationError):
+            IdentityListQueryParams(page=-1)
+
+    def test_limit_validation_valid_range(self):
+        """Test limit validation with valid values."""
+        query_params = IdentityListQueryParams(limit=10)
+        assert query_params.limit == 10
+        
+        query_params = IdentityListQueryParams(limit=100)
+        assert query_params.limit == 100
+        
+        query_params = IdentityListQueryParams(limit=50)
+        assert query_params.limit == 50
+
+    def test_limit_validation_invalid_range(self):
+        """Test limit validation with invalid values."""
+        with pytest.raises(ValidationError):
+            IdentityListQueryParams(limit=9)
+        
+        with pytest.raises(ValidationError):
+            IdentityListQueryParams(limit=101)
+
+    def test_to_query_params_with_defaults(self):
+        """Test to_query_params with default values."""
+        query_params = IdentityListQueryParams()
+        result = query_params.to_query_params()
+        expected = {
+            'page': 1,
+            'limit': 25
+        }
+        assert result == expected
+
+    def test_to_query_params_with_all_values(self):
+        """Test to_query_params with all values set."""
+        query_params = IdentityListQueryParams(
+            page=3,
+            limit=75,
+            domain_id="domain456"
+        )
+        result = query_params.to_query_params()
+        expected = {
+            'page': 3,
+            'limit': 75,
+            'domain_id': 'domain456'
+        }
+        assert result == expected
+
+    def test_to_query_params_excludes_none_values(self):
+        """Test to_query_params excludes None values."""
+        query_params = IdentityListQueryParams(
+            page=2,
+            limit=30,
+            domain_id=None
+        )
+        result = query_params.to_query_params()
+        expected = {
+            'page': 2,
+            'limit': 30
+        }
+        assert result == expected
+
+
+class TestIdentityListRequest:
+    """Test IdentityListRequest model."""
+
+    def test_with_query_params(self):
+        """Test with query params object."""
+        query_params = IdentityListQueryParams(
+            page=2,
+            limit=50,
+            domain_id="domain123"
+        )
+        request = IdentityListRequest(query_params=query_params)
+        assert request.query_params == query_params
+
+    def test_to_query_params_delegation(self):
+        """Test to_query_params delegates to query_params object."""
+        query_params = IdentityListQueryParams(
+            page=3,
+            limit=75,
+            domain_id="domain456"
+        )
+        request = IdentityListRequest(query_params=query_params)
+        result = request.to_query_params()
+        expected = query_params.to_query_params()
+        assert result == expected
+
+    def test_to_query_params_with_defaults(self):
+        """Test to_query_params with default query params."""
+        query_params = IdentityListQueryParams()
+        request = IdentityListRequest(query_params=query_params)
+        result = request.to_query_params()
+        expected = {
+            'page': 1,
+            'limit': 25
+        }
+        assert result == expected
 
     def test_serialization(self):
         """Test model serialization."""
-        request = IdentityListRequest(
-            domain_id="domain123",
+        query_params = IdentityListQueryParams(
             page=2,
-            limit=50
+            limit=50,
+            domain_id="domain123"
         )
+        request = IdentityListRequest(query_params=query_params)
         data = request.model_dump()
         assert data == {
-            "domain_id": "domain123",
-            "page": 2,
-            "limit": 50
+            "query_params": {
+                "page": 2,
+                "limit": 50,
+                "domain_id": "domain123"
+            }
         }
 
 
@@ -244,7 +319,7 @@ class TestIdentityCreateRequest:
             )
         
         # Email too long
-        long_email = "a" * 180 + "@example.com"
+        long_email = "a" * 180 + "@example.com"  # Total > 191 chars
         with pytest.raises(ValidationError, match="Email must be 191 characters or less"):
             IdentityCreateRequest(
                 domain_id="domain123",
@@ -282,7 +357,7 @@ class TestIdentityCreateRequest:
             )
         
         # Reply-to email too long
-        long_email = "a" * 180 + "@example.com"
+        long_email = "a" * 180 + "@example.com"  # Total > 191 chars
         with pytest.raises(ValidationError, match="Reply-to email must be 191 characters or less"):
             IdentityCreateRequest(
                 domain_id="domain123",
