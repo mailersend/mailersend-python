@@ -59,8 +59,8 @@ class TestTokensBuilderBuildMethods:
         request = builder.build_tokens_list()
         
         assert isinstance(request, TokensListRequest)
-        assert request.page is None
-        assert request.limit == 25  # Default from model
+        assert request.query_params.page == 1  # Default from model
+        assert request.query_params.limit == 25  # Default from model
 
     def test_build_token_get_success(self):
         """Test build_token_get method success."""

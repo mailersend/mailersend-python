@@ -20,10 +20,6 @@ logger = logging.getLogger(__name__)
 class Users(BaseResource):
     """Users API resource."""
 
-    def __init__(self, client):
-        """Initialize the Users resource."""
-        super().__init__(client)
-
     def list_users(self, request: UsersListRequest) -> APIResponse:
         """Get a list of account users.
 

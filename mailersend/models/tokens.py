@@ -1,7 +1,7 @@
 """Models for Tokens API."""
 
 from datetime import datetime
-from typing import List, Optional, Literal
+from typing import List, Optional, Literal, Dict, Any
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -57,11 +57,30 @@ class TokenCreate(BaseModel):
     created_at: datetime
 
 
+# Query parameters models
+class TokensListQueryParams(BaseModel):
+    """Query parameters for tokens list request."""
+    page: int = Field(default=1, ge=1)
+    limit: int = Field(default=25, ge=10, le=100)
+    
+    def to_query_params(self) -> Dict[str, Any]:
+        """Convert to query parameters dictionary."""
+        params = {}
+        if self.page != 1:  # Only include if not default
+            params['page'] = self.page
+        if self.limit != 25:  # Only include if not default
+            params['limit'] = self.limit
+        return params
+
+
 # Request models
 class TokensListRequest(BaseModel):
     """Request model for listing tokens."""
-    page: Optional[int] = Field(None, ge=1)
-    limit: Optional[int] = Field(25, ge=10, le=100)
+    query_params: TokensListQueryParams = Field(default_factory=TokensListQueryParams)
+    
+    def to_query_params(self) -> Dict[str, Any]:
+        """Convert to query parameters dictionary."""
+        return self.query_params.to_query_params()
 
 
 class TokenGetRequest(BaseModel):
@@ -104,11 +123,25 @@ class TokenCreateRequest(BaseModel):
         
         return v
 
+    def to_json(self) -> Dict[str, Any]:
+        """Convert request to JSON data for API call."""
+        return {
+            "name": self.name,
+            "domain_id": self.domain_id,
+            "scopes": self.scopes
+        }
+
 
 class TokenUpdateRequest(BaseModel):
     """Request model for updating a token status."""
     token_id: str
     status: TokenStatus
+
+    def to_json(self) -> Dict[str, Any]:
+        """Convert request to JSON data for API call."""
+        return {
+            "status": self.status
+        }
 
 
 class TokenUpdateNameRequest(BaseModel):
@@ -123,6 +156,12 @@ class TokenUpdateNameRequest(BaseModel):
         if not v.strip():
             raise ValueError('Token name cannot be empty')
         return v.strip()
+
+    def to_json(self) -> Dict[str, Any]:
+        """Convert request to JSON data for API call."""
+        return {
+            "name": self.name
+        }
 
 
 class TokenDeleteRequest(BaseModel):

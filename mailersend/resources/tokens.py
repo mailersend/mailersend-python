@@ -1,180 +1,144 @@
 """Tokens API resource."""
 
 import logging
-from typing import Optional, List
 
+from .base import BaseResource
 from ..models.base import APIResponse
-from ..builders.tokens import TokensBuilder
+from ..models.tokens import (
+    TokensListRequest, TokenGetRequest, TokenCreateRequest, TokenUpdateRequest,
+    TokenUpdateNameRequest, TokenDeleteRequest
+)
 
 
 logger = logging.getLogger(__name__)
 
 
-class Tokens:
+class Tokens(BaseResource):
     """Tokens API resource."""
 
-    def __init__(self, client):
-        """Initialize the Tokens resource.
-        
-        Args:
-            client: The MailerSend client instance
-        """
-        self.client = client
-
-    def list_tokens(self, page: Optional[int] = None, limit: Optional[int] = None) -> APIResponse:
+    def list_tokens(self, request: TokensListRequest) -> APIResponse:
         """List API tokens.
         
         Args:
-            page: Page number for pagination (default: None)
-            limit: Number of tokens per page (10-100, default: 25)
+            request: The list tokens request
             
         Returns:
-            APIResponse: Raw API response
+            APIResponse: API response with tokens list data
         """
-        logger.info("Listing API tokens")
+        logger.info(f"Listing tokens with pagination: page={request.query_params.page}, limit={request.query_params.limit}")
         
-        builder = TokensBuilder()
-        if page is not None:
-            builder.page(page)
-        if limit is not None:
-            builder.limit(limit)
+        # Extract query parameters
+        params = request.to_query_params()
         
-        request_data = builder.build_tokens_list()
-        
-        params = {}
-        if request_data.page is not None:
-            params['page'] = request_data.page
-        if request_data.limit is not None:
-            params['limit'] = request_data.limit
-        
-        return self.client.request(
+        # Make API call
+        response = self.client.request(
             method="GET",
             endpoint="/v1/token",
             params=params
         )
+        
+        # Create standardized response
+        return self._create_response(response)
 
-    def get_token(self, token_id: str) -> APIResponse:
+    def get_token(self, request: TokenGetRequest) -> APIResponse:
         """Get a single API token.
         
         Args:
-            token_id: The token ID
+            request: The get token request
             
         Returns:
-            APIResponse: Raw API response
+            APIResponse: API response with token data
         """
-        logger.info(f"Getting token: {token_id}")
+        logger.info(f"Getting token: {request.token_id}")
         
-        builder = TokensBuilder()
-        request_data = builder.token_id(token_id).build_token_get()
-        
-        return self.client.request(
+        # Make API call
+        response = self.client.request(
             method="GET",
-            endpoint=f"/v1/token/{request_data.token_id}"
+            endpoint=f"/v1/token/{request.token_id}"
         )
+        
+        # Create standardized response
+        return self._create_response(response)
 
-    def create_token(self, name: str, domain_id: str, scopes: List[str]) -> APIResponse:
+    def create_token(self, request: TokenCreateRequest) -> APIResponse:
         """Create an API token.
         
         Args:
-            name: The token name (max 50 characters)
-            domain_id: The domain ID
-            scopes: List of scopes for the token
+            request: The create token request
             
         Returns:
-            APIResponse: Raw API response
+            APIResponse: API response with token creation data
         """
-        logger.info(f"Creating token: {name} for domain: {domain_id}")
+        logger.info(f"Creating token: {request.name} for domain: {request.domain_id}")
         
-        builder = TokensBuilder()
-        request_data = (builder
-                       .name(name)
-                       .domain_id(domain_id)
-                       .scopes(scopes)
-                       .build_token_create())
-        
-        json_data = {
-            "name": request_data.name,
-            "domain_id": request_data.domain_id,
-            "scopes": request_data.scopes
-        }
-        
-        return self.client.request(
+        # Make API call
+        response = self.client.request(
             method="POST",
             endpoint="/v1/token",
-            json=json_data
+            json=request.to_json()
         )
+        
+        # Create standardized response
+        return self._create_response(response)
 
-    def update_token(self, token_id: str, status: str) -> APIResponse:
+    def update_token(self, request: TokenUpdateRequest) -> APIResponse:
         """Update an API token status.
         
         Args:
-            token_id: The token ID
-            status: The token status ('pause' or 'unpause')
+            request: The update token request
             
         Returns:
-            APIResponse: Raw API response
+            APIResponse: API response with update confirmation
         """
-        logger.info(f"Updating token: {token_id} to status: {status}")
+        logger.info(f"Updating token: {request.token_id} to status: {request.status}")
         
-        builder = TokensBuilder()
-        request_data = (builder
-                       .token_id(token_id)
-                       .status(status)
-                       .build_token_update())
-        
-        json_data = {
-            "status": request_data.status
-        }
-        
-        return self.client.request(
+        # Make API call
+        response = self.client.request(
             method="PUT",
-            endpoint=f"/v1/token/{request_data.token_id}/settings",
-            json=json_data
+            endpoint=f"/v1/token/{request.token_id}/settings",
+            json=request.to_json()
         )
+        
+        # Create standardized response
+        return self._create_response(response)
 
-    def update_token_name(self, token_id: str, name: str) -> APIResponse:
+    def update_token_name(self, request: TokenUpdateNameRequest) -> APIResponse:
         """Update an API token name.
         
         Args:
-            token_id: The token ID
-            name: The new token name (max 50 characters)
+            request: The update token name request
             
         Returns:
-            APIResponse: Raw API response
+            APIResponse: API response with update confirmation
         """
-        logger.info(f"Updating token name: {token_id} to: {name}")
+        logger.info(f"Updating token name: {request.token_id} to: {request.name}")
         
-        builder = TokensBuilder()
-        request_data = (builder
-                       .token_id(token_id)
-                       .name(name)
-                       .build_token_update_name())
-        
-        json_data = {
-            "name": request_data.name
-        }
-        
-        return self.client.request(
+        # Make API call
+        response = self.client.request(
             method="PUT",
-            endpoint=f"/v1/token/{request_data.token_id}",
-            json=json_data
+            endpoint=f"/v1/token/{request.token_id}",
+            json=request.to_json()
         )
+        
+        # Create standardized response
+        return self._create_response(response)
 
-    def delete_token(self, token_id: str) -> APIResponse:
+    def delete_token(self, request: TokenDeleteRequest) -> APIResponse:
         """Delete an API token.
         
         Args:
-            token_id: The token ID
+            request: The delete token request
             
         Returns:
-            APIResponse: Raw API response
+            APIResponse: API response with delete confirmation
         """
-        logger.info(f"Deleting token: {token_id}")
+        logger.info(f"Deleting token: {request.token_id}")
         
-        builder = TokensBuilder()
-        request_data = builder.token_id(token_id).build_token_delete()
-        
-        return self.client.request(
+        # Make API call
+        response = self.client.request(
             method="DELETE",
-            endpoint=f"/v1/token/{request_data.token_id}"
-        ) 
+            endpoint=f"/v1/token/{request.token_id}"
+        )
+        
+        # Create standardized response
+        return self._create_response(response) 
