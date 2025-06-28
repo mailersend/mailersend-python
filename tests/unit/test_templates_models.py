@@ -2,89 +2,146 @@ import pytest
 from pydantic import ValidationError
 
 from mailersend.models.templates import (
-    TemplatesListRequest, TemplateGetRequest, TemplateDeleteRequest,
+    TemplatesListQueryParams, TemplatesListRequest,
+    TemplateGetRequest, TemplateDeleteRequest,
     TemplateCategory, TemplateDomain, TemplatePersonalization, TemplateStats,
     Template, TemplatesListResponse, TemplateResponse
 )
 
 
-class TestTemplatesListRequest:
-    """Test TemplatesListRequest model functionality"""
+class TestTemplatesListQueryParams:
+    """Test TemplatesListQueryParams model functionality."""
     
-    def test_create_minimal_request(self):
-        """Test creating a minimal templates list request"""
-        request = TemplatesListRequest()
+    def test_create_with_defaults(self):
+        """Test creating query params with default values."""
+        params = TemplatesListQueryParams()
         
-        assert request.domain_id is None
-        assert request.page is None
-        assert request.limit == 25
+        assert params.domain_id is None
+        assert params.page == 1
+        assert params.limit == 25
     
-    def test_create_full_request(self):
-        """Test creating a full templates list request"""
-        request = TemplatesListRequest(
+    def test_create_with_values(self):
+        """Test creating query params with custom values."""
+        params = TemplatesListQueryParams(
             domain_id="domain-123",
             page=2,
             limit=50
         )
         
-        assert request.domain_id == "domain-123"
-        assert request.page == 2
-        assert request.limit == 50
+        assert params.domain_id == "domain-123"
+        assert params.page == 2
+        assert params.limit == 50
     
-    def test_validate_page_positive(self):
-        """Test page validation requires positive number"""
-        with pytest.raises(ValidationError) as exc_info:
-            TemplatesListRequest(page=0)
-        
-        assert "Page must be greater than 0" in str(exc_info.value)
-        
-        with pytest.raises(ValidationError) as exc_info:
-            TemplatesListRequest(page=-1)
-        
-        assert "Page must be greater than 0" in str(exc_info.value)
+    def test_validate_page_minimum(self):
+        """Test page validation enforces minimum value."""
+        with pytest.raises(ValidationError):
+            TemplatesListQueryParams(page=0)
     
     def test_validate_limit_range(self):
-        """Test limit validation enforces 10-100 range"""
-        with pytest.raises(ValidationError) as exc_info:
-            TemplatesListRequest(limit=5)
+        """Test limit validation enforces valid range."""
+        with pytest.raises(ValidationError):
+            TemplatesListQueryParams(limit=5)
         
-        assert "Limit must be between 10 and 100" in str(exc_info.value)
-        
-        with pytest.raises(ValidationError) as exc_info:
-            TemplatesListRequest(limit=150)
-        
-        assert "Limit must be between 10 and 100" in str(exc_info.value)
-    
-    def test_validate_domain_id_not_empty(self):
-        """Test domain_id validation rejects empty strings"""
-        with pytest.raises(ValidationError) as exc_info:
-            TemplatesListRequest(domain_id="")
-        
-        assert "Domain ID cannot be empty" in str(exc_info.value)
-        
-        with pytest.raises(ValidationError) as exc_info:
-            TemplatesListRequest(domain_id="   ")
-        
-        assert "Domain ID cannot be empty" in str(exc_info.value)
+        with pytest.raises(ValidationError):
+            TemplatesListQueryParams(limit=150)
     
     def test_domain_id_strips_whitespace(self):
-        """Test domain_id strips whitespace"""
-        request = TemplatesListRequest(domain_id="  domain-123  ")
+        """Test domain_id strips whitespace."""
+        params = TemplatesListQueryParams(domain_id="  domain-123  ")
+        assert params.domain_id == "domain-123"
+    
+    def test_to_query_params_with_defaults(self):
+        """Test query params conversion with defaults."""
+        params = TemplatesListQueryParams()
+        query_dict = params.to_query_params()
         
-        assert request.domain_id == "domain-123"
+        expected = {
+            "page": 1,
+            "limit": 25
+        }
+        assert query_dict == expected
+    
+    def test_to_query_params_with_all_values(self):
+        """Test query params conversion with all values."""
+        params = TemplatesListQueryParams(
+            domain_id="domain-123",
+            page=2,
+            limit=50
+        )
+        query_dict = params.to_query_params()
+        
+        expected = {
+            "domain_id": "domain-123",
+            "page": 2,
+            "limit": 50
+        }
+        assert query_dict == expected
+    
+    def test_to_query_params_excludes_none_domain_id(self):
+        """Test query params conversion excludes None domain_id."""
+        params = TemplatesListQueryParams(domain_id=None, page=3, limit=75)
+        query_dict = params.to_query_params()
+        
+        expected = {
+            "page": 3,
+            "limit": 75
+        }
+        assert query_dict == expected
+
+
+class TestTemplatesListRequest:
+    """Test TemplatesListRequest model functionality."""
+    
+    def test_create_with_defaults(self):
+        """Test creating request with default query params."""
+        request = TemplatesListRequest()
+        
+        assert request.query_params.domain_id is None
+        assert request.query_params.page == 1
+        assert request.query_params.limit == 25
+    
+    def test_create_with_query_params(self):
+        """Test creating request with custom query params."""
+        query_params = TemplatesListQueryParams(
+            domain_id="domain-123",
+            page=2,
+            limit=50
+        )
+        request = TemplatesListRequest(query_params=query_params)
+        
+        assert request.query_params.domain_id == "domain-123"
+        assert request.query_params.page == 2
+        assert request.query_params.limit == 50
+    
+    def test_to_query_params_delegation(self):
+        """Test that to_query_params delegates to query_params object."""
+        query_params = TemplatesListQueryParams(
+            domain_id="domain-123",
+            page=2,
+            limit=50
+        )
+        request = TemplatesListRequest(query_params=query_params)
+        
+        query_dict = request.to_query_params()
+        expected = {
+            "domain_id": "domain-123",
+            "page": 2,
+            "limit": 50
+        }
+        assert query_dict == expected
 
 
 class TestTemplateGetRequest:
-    """Test TemplateGetRequest model functionality"""
+    """Test TemplateGetRequest model functionality."""
     
     def test_create_request(self):
-        """Test creating a template get request"""
+        """Test creating a template get request."""
         request = TemplateGetRequest(template_id="template-123")
         
         assert request.template_id == "template-123"
     
     def test_validate_template_id_required(self):
-        """Test template_id validation requires non-empty value"""
+        """Test template_id validation requires non-empty value."""
         with pytest.raises(ValidationError) as exc_info:
             TemplateGetRequest(template_id="")
         
@@ -96,23 +153,23 @@ class TestTemplateGetRequest:
         assert "Template ID is required" in str(exc_info.value)
     
     def test_template_id_strips_whitespace(self):
-        """Test template_id strips whitespace"""
+        """Test template_id strips whitespace."""
         request = TemplateGetRequest(template_id="  template-123  ")
         
         assert request.template_id == "template-123"
 
 
 class TestTemplateDeleteRequest:
-    """Test TemplateDeleteRequest model functionality"""
+    """Test TemplateDeleteRequest model functionality."""
     
     def test_create_request(self):
-        """Test creating a template delete request"""
+        """Test creating a template delete request."""
         request = TemplateDeleteRequest(template_id="template-123")
         
         assert request.template_id == "template-123"
     
     def test_validate_template_id_required(self):
-        """Test template_id validation requires non-empty value"""
+        """Test template_id validation requires non-empty value."""
         with pytest.raises(ValidationError) as exc_info:
             TemplateDeleteRequest(template_id="")
         
@@ -124,7 +181,7 @@ class TestTemplateDeleteRequest:
         assert "Template ID is required" in str(exc_info.value)
     
     def test_template_id_strips_whitespace(self):
-        """Test template_id strips whitespace"""
+        """Test template_id strips whitespace."""
         request = TemplateDeleteRequest(template_id="  template-123  ")
         
         assert request.template_id == "template-123"

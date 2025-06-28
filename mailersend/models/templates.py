@@ -1,36 +1,49 @@
+"""Templates API models for MailerSend SDK."""
 from typing import List, Optional, Dict, Any
 from pydantic import Field, field_validator
 
 from .base import BaseModel as MailerSendBaseModel
 
 
+# Query Parameters Models
+class TemplatesListQueryParams(MailerSendBaseModel):
+    """Query parameters for listing templates."""
+    
+    domain_id: Optional[str] = None
+    page: int = Field(default=1, ge=1)
+    limit: int = Field(default=25, ge=10, le=100)
+    
+    @field_validator('domain_id')
+    @classmethod
+    def validate_domain_id(cls, v: Optional[str]) -> Optional[str]:
+        """Validate and clean domain_id."""
+        if v is not None:
+            return v.strip()
+        return v
+    
+    def to_query_params(self) -> Dict[str, Any]:
+        """Convert to query parameters dictionary, excluding None values."""
+        params = {}
+        
+        if self.domain_id is not None:
+            params["domain_id"] = self.domain_id
+        
+        # Always include page and limit (they have defaults)
+        params["page"] = self.page
+        params["limit"] = self.limit
+        
+        return params
+
+
+# Request Models
 class TemplatesListRequest(MailerSendBaseModel):
     """Request model for listing templates."""
     
-    domain_id: Optional[str] = None
-    page: Optional[int] = None
-    limit: Optional[int] = 25
+    query_params: TemplatesListQueryParams = Field(default_factory=TemplatesListQueryParams)
     
-    @field_validator('limit')
-    def validate_limit(cls, v):
-        """Validate limit is within acceptable range."""
-        if v is not None and (v < 10 or v > 100):
-            raise ValueError("Limit must be between 10 and 100")
-        return v
-    
-    @field_validator('page')
-    def validate_page(cls, v):
-        """Validate page is positive."""
-        if v is not None and v < 1:
-            raise ValueError("Page must be greater than 0")
-        return v
-    
-    @field_validator('domain_id')
-    def validate_domain_id(cls, v):
-        """Validate domain ID is provided and not empty."""
-        if v is not None and (not v or not v.strip()):
-            raise ValueError("Domain ID cannot be empty")
-        return v.strip() if v else v
+    def to_query_params(self) -> Dict[str, Any]:
+        """Convert to query parameters dictionary."""
+        return self.query_params.to_query_params()
 
 
 class TemplateGetRequest(MailerSendBaseModel):
@@ -39,7 +52,8 @@ class TemplateGetRequest(MailerSendBaseModel):
     template_id: str
     
     @field_validator('template_id')
-    def validate_template_id(cls, v):
+    @classmethod
+    def validate_template_id(cls, v: str) -> str:
         """Validate template ID is provided and not empty."""
         if not v or not v.strip():
             raise ValueError("Template ID is required")
@@ -52,13 +66,15 @@ class TemplateDeleteRequest(MailerSendBaseModel):
     template_id: str
     
     @field_validator('template_id')
-    def validate_template_id(cls, v):
+    @classmethod
+    def validate_template_id(cls, v: str) -> str:
         """Validate template ID is provided and not empty."""
         if not v or not v.strip():
             raise ValueError("Template ID is required")
         return v.strip()
 
 
+# Response Models
 class TemplateCategory(MailerSendBaseModel):
     """Model representing a template category."""
     
