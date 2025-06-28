@@ -58,10 +58,45 @@ class UserInvite(BaseModel):
     updated_at: datetime
 
 
+# Query parameters models
+class UsersListQueryParams(BaseModel):
+    """Query parameters for users list request."""
+    page: int = Field(default=1, ge=1)
+    limit: int = Field(default=25, ge=10, le=100)
+    
+    def to_query_params(self) -> Dict[str, Any]:
+        """Convert to query parameters dictionary."""
+        params = {}
+        if self.page != 1:  # Only include if not default
+            params['page'] = self.page
+        if self.limit != 25:  # Only include if not default
+            params['limit'] = self.limit
+        return params
+
+
+class InvitesListQueryParams(BaseModel):
+    """Query parameters for invites list request."""
+    page: int = Field(default=1, ge=1)
+    limit: int = Field(default=25, ge=10, le=100)
+    
+    def to_query_params(self) -> Dict[str, Any]:
+        """Convert to query parameters dictionary."""
+        params = {}
+        if self.page != 1:  # Only include if not default
+            params['page'] = self.page
+        if self.limit != 25:  # Only include if not default
+            params['limit'] = self.limit
+        return params
+
+
 # Request models
 class UsersListRequest(BaseModel):
     """Request model for listing users."""
-    pass  # No parameters for users list
+    query_params: UsersListQueryParams = Field(default_factory=UsersListQueryParams)
+    
+    def to_query_params(self) -> Dict[str, Any]:
+        """Convert to query parameters dictionary."""
+        return self.query_params.to_query_params()
 
 
 class UserGetRequest(BaseModel):
@@ -71,7 +106,7 @@ class UserGetRequest(BaseModel):
 
 class UserInviteRequest(BaseModel):
     """Request model for inviting a user."""
-    email: str = Field(max_length=191)
+    email: str = Field(..., max_length=191)
     role: str
     permissions: List[str] = Field(default_factory=list)
     templates: List[str] = Field(default_factory=list)
@@ -80,19 +115,39 @@ class UserInviteRequest(BaseModel):
 
     @field_validator('email')
     @classmethod
-    def validate_email(cls, v: str) -> str:
+    def validate_email(cls, v):
         """Validate email format."""
-        if '@' not in v or len(v.strip()) == 0:
-            raise ValueError('Invalid email address')
+        import re
+        if not v or not v.strip():
+            raise ValueError("Invalid email address")
+        # Basic email validation
+        pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+        if not re.match(pattern, v.strip()):
+            raise ValueError("Invalid email address")
         return v.strip()
 
     @field_validator('role')
     @classmethod
-    def validate_role(cls, v: str) -> str:
+    def validate_role(cls, v):
         """Validate role is not empty."""
-        if not v.strip():
-            raise ValueError('Role cannot be empty')
+        if not v or not v.strip():
+            raise ValueError("Role cannot be empty")
         return v.strip()
+
+    def to_json(self) -> Dict[str, Any]:
+        """Convert request to JSON data for API call."""
+        json_data = {
+            "email": self.email,
+            "role": self.role,
+            "permissions": self.permissions,
+            "templates": self.templates,
+            "domains": self.domains,
+        }
+        
+        if self.requires_periodic_password_change is not None:
+            json_data["requires_periodic_password_change"] = self.requires_periodic_password_change
+            
+        return json_data
 
 
 class UserUpdateRequest(BaseModel):
@@ -106,11 +161,25 @@ class UserUpdateRequest(BaseModel):
 
     @field_validator('role')
     @classmethod
-    def validate_role(cls, v: str) -> str:
+    def validate_role(cls, v):
         """Validate role is not empty."""
-        if not v.strip():
-            raise ValueError('Role cannot be empty')
+        if not v or not v.strip():
+            raise ValueError("Role cannot be empty")
         return v.strip()
+
+    def to_json(self) -> Dict[str, Any]:
+        """Convert request to JSON data for API call."""
+        json_data = {
+            "role": self.role,
+            "permissions": self.permissions,
+            "templates": self.templates,
+            "domains": self.domains,
+        }
+        
+        if self.requires_periodic_password_change is not None:
+            json_data["requires_periodic_password_change"] = self.requires_periodic_password_change
+            
+        return json_data
 
 
 class UserDeleteRequest(BaseModel):
@@ -120,7 +189,11 @@ class UserDeleteRequest(BaseModel):
 
 class InvitesListRequest(BaseModel):
     """Request model for listing invites."""
-    pass  # No parameters for invites list
+    query_params: InvitesListQueryParams = Field(default_factory=InvitesListQueryParams)
+    
+    def to_query_params(self) -> Dict[str, Any]:
+        """Convert to query parameters dictionary."""
+        return self.query_params.to_query_params()
 
 
 class InviteGetRequest(BaseModel):

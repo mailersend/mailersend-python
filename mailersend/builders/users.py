@@ -4,12 +4,12 @@ from typing import List, Optional, Dict, Any
 from copy import deepcopy
 
 from ..models.users import (
-    UsersListRequest,
+    UsersListRequest, UsersListQueryParams,
     UserGetRequest,
     UserInviteRequest,
     UserUpdateRequest,
     UserDeleteRequest,
-    InvitesListRequest,
+    InvitesListRequest, InvitesListQueryParams,
     InviteGetRequest,
     InviteResendRequest,
     InviteCancelRequest,
@@ -29,6 +29,8 @@ class UsersBuilder:
         self._templates: List[str] = []
         self._domains: List[str] = []
         self._requires_periodic_password_change: Optional[bool] = None
+        self._page: Optional[int] = None
+        self._limit: Optional[int] = None
 
     def user_id(self, user_id: str) -> 'UsersBuilder':
         """Set the user ID.
@@ -165,6 +167,30 @@ class UsersBuilder:
         self._requires_periodic_password_change = requires
         return self
 
+    def page(self, page: int) -> 'UsersBuilder':
+        """Set the page number for pagination.
+        
+        Args:
+            page: The page number (must be >= 1)
+            
+        Returns:
+            Self for method chaining
+        """
+        self._page = page
+        return self
+
+    def limit(self, limit: int) -> 'UsersBuilder':
+        """Set the limit for pagination.
+        
+        Args:
+            limit: The number of items per page (10-100)
+            
+        Returns:
+            Self for method chaining
+        """
+        self._limit = limit
+        return self
+
     # Helper methods for common roles
     def admin_role(self) -> 'UsersBuilder':
         """Set role to Admin.
@@ -293,6 +319,8 @@ class UsersBuilder:
         self._templates = []
         self._domains = []
         self._requires_periodic_password_change = None
+        self._page = None
+        self._limit = None
         return self
 
     def copy(self) -> 'UsersBuilder':
@@ -310,6 +338,8 @@ class UsersBuilder:
         new_builder._templates = self._templates[:]
         new_builder._domains = self._domains[:]
         new_builder._requires_periodic_password_change = self._requires_periodic_password_change
+        new_builder._page = self._page
+        new_builder._limit = self._limit
         return new_builder
 
     # Build methods for each API operation
@@ -319,7 +349,13 @@ class UsersBuilder:
         Returns:
             UsersListRequest object
         """
-        return UsersListRequest()
+        query_params = UsersListQueryParams()
+        if self._page is not None:
+            query_params.page = self._page
+        if self._limit is not None:
+            query_params.limit = self._limit
+        
+        return UsersListRequest(query_params=query_params)
 
     def build_user_get(self) -> UserGetRequest:
         """Build a request for getting a single user.
@@ -401,7 +437,13 @@ class UsersBuilder:
         Returns:
             InvitesListRequest object
         """
-        return InvitesListRequest()
+        query_params = InvitesListQueryParams()
+        if self._page is not None:
+            query_params.page = self._page
+        if self._limit is not None:
+            query_params.limit = self._limit
+        
+        return InvitesListRequest(query_params=query_params)
 
     def build_invite_get(self) -> InviteGetRequest:
         """Build a request for getting a single invite.

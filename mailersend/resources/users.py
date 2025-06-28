@@ -1,258 +1,215 @@
 """Users API resource."""
 
 import logging
-from typing import Optional
+from typing import Optional, List
 
+from .base import BaseResource
 from ..models.base import APIResponse
+from ..models.users import (
+    UsersListRequest, UserGetRequest, UserInviteRequest, UserUpdateRequest, UserDeleteRequest,
+    InvitesListRequest, InviteGetRequest, InviteResendRequest, InviteCancelRequest,
+    UsersListResponse, UserResponse, UserInviteResponse, UserUpdateResponse,
+    InvitesListResponse, InviteResponse, InviteResendResponse
+)
 from ..builders.users import UsersBuilder
 
 
 logger = logging.getLogger(__name__)
 
 
-class Users:
+class Users(BaseResource):
     """Users API resource."""
 
     def __init__(self, client):
-        """Initialize the Users resource.
-        
-        Args:
-            client: The MailerSend client instance
-        """
-        self.client = client
+        """Initialize the Users resource."""
+        super().__init__(client)
 
-    def list_users(self) -> APIResponse:
+    def list_users(self, request: UsersListRequest) -> APIResponse:
         """Get a list of account users.
-        
+
+        Args:
+            request: The list users request
+
         Returns:
-            APIResponse: Raw API response
+            APIResponse: API response with users list data
         """
-        logger.info("Listing account users")
-        
-        builder = UsersBuilder()
-        request_data = builder.build_users_list()
-        
-        return self.client.request(
+        logger.info(f"Listing users with pagination: page={request.query_params.page}, limit={request.query_params.limit}")
+
+        # Extract query parameters
+        params = request.to_query_params()
+
+        # Make API call
+        response = self.client.request(
             method="GET",
-            endpoint="/v1/users"
+            endpoint="/v1/users",
+            params=params
         )
 
-    def get_user(self, user_id: str) -> APIResponse:
+        # Create standardized response
+        return self._create_response(response, UsersListResponse(**response.json()))
+
+    def get_user(self, request: UserGetRequest) -> APIResponse:
         """Get a single account user.
-        
+
         Args:
-            user_id: The user ID
-            
+            request: The get user request
+
         Returns:
-            APIResponse: Raw API response
+            APIResponse: API response with user data
         """
-        logger.info(f"Getting user: {user_id}")
-        
-        builder = UsersBuilder()
-        request_data = builder.user_id(user_id).build_user_get()
-        
-        return self.client.request(
+        logger.info(f"Getting user: {request.user_id}")
+
+        # Make API call
+        response = self.client.request(
             method="GET",
-            endpoint=f"/v1/users/{request_data.user_id}"
+            endpoint=f"/v1/users/{request.user_id}"
         )
 
-    def invite_user(
-        self, 
-        email: str, 
-        role: str, 
-        permissions: Optional[list] = None,
-        templates: Optional[list] = None,
-        domains: Optional[list] = None,
-        requires_periodic_password_change: Optional[bool] = None
-    ) -> APIResponse:
+        # Create standardized response
+        return self._create_response(response, UserResponse(**response.json()))
+
+    def invite_user(self, request: UserInviteRequest) -> APIResponse:
         """Invite a user to account.
-        
+
         Args:
-            email: The email address
-            role: The role name
-            permissions: List of permission names (required for Custom User role)
-            templates: List of template IDs
-            domains: List of domain IDs
-            requires_periodic_password_change: Whether periodic password change is required
-            
+            request: The user invite request
+
         Returns:
-            APIResponse: Raw API response
+            APIResponse: API response with invite data
         """
-        logger.info(f"Inviting user: {email} with role: {role}")
-        
-        builder = UsersBuilder()
-        builder.email(email).role(role)
-        
-        if permissions:
-            builder.permissions(permissions)
-        if templates:
-            builder.templates(templates)
-        if domains:
-            builder.domains(domains)
-        if requires_periodic_password_change is not None:
-            builder.requires_periodic_password_change(requires_periodic_password_change)
-        
-        request_data = builder.build_user_invite()
-        
-        json_data = {
-            "email": request_data.email,
-            "role": request_data.role,
-            "permissions": request_data.permissions,
-            "templates": request_data.templates,
-            "domains": request_data.domains,
-        }
-        
-        if request_data.requires_periodic_password_change is not None:
-            json_data["requires_periodic_password_change"] = request_data.requires_periodic_password_change
-        
-        return self.client.request(
+        logger.info(f"Inviting user: {request.email} with role: {request.role}")
+
+        # Make API call
+        response = self.client.request(
             method="POST",
             endpoint="/v1/users",
-            json=json_data
+            json=request.to_json()
         )
 
-    def update_user(
-        self, 
-        user_id: str, 
-        role: str, 
-        permissions: Optional[list] = None,
-        templates: Optional[list] = None,
-        domains: Optional[list] = None,
-        requires_periodic_password_change: Optional[bool] = None
-    ) -> APIResponse:
+        # Create standardized response
+        return self._create_response(response, UserInviteResponse(**response.json()))
+
+    def update_user(self, request: UserUpdateRequest) -> APIResponse:
         """Update account user.
-        
+
         Args:
-            user_id: The user ID
-            role: The role name
-            permissions: List of permission names (required for Custom User role)
-            templates: List of template IDs
-            domains: List of domain IDs
-            requires_periodic_password_change: Whether periodic password change is required
-            
+            request: The user update request
+
         Returns:
-            APIResponse: Raw API response
+            APIResponse: API response with updated user data
         """
-        logger.info(f"Updating user: {user_id} with role: {role}")
-        
-        builder = UsersBuilder()
-        builder.user_id(user_id).role(role)
-        
-        if permissions:
-            builder.permissions(permissions)
-        if templates:
-            builder.templates(templates)
-        if domains:
-            builder.domains(domains)
-        if requires_periodic_password_change is not None:
-            builder.requires_periodic_password_change(requires_periodic_password_change)
-        
-        request_data = builder.build_user_update()
-        
-        json_data = {
-            "role": request_data.role,
-            "permissions": request_data.permissions,
-            "templates": request_data.templates,
-            "domains": request_data.domains,
-        }
-        
-        if request_data.requires_periodic_password_change is not None:
-            json_data["requires_periodic_password_change"] = request_data.requires_periodic_password_change
-        
-        return self.client.request(
+        logger.info(f"Updating user: {request.user_id} with role: {request.role}")
+
+        # Make API call
+        response = self.client.request(
             method="PUT",
-            endpoint=f"/v1/users/{request_data.user_id}",
-            json=json_data
+            endpoint=f"/v1/users/{request.user_id}",
+            json=request.to_json()
         )
 
-    def delete_user(self, user_id: str) -> APIResponse:
-        """Delete a user from account.
-        
+        # Create standardized response
+        return self._create_response(response, UserUpdateResponse(**response.json()))
+
+    def delete_user(self, request: UserDeleteRequest) -> APIResponse:
+        """Delete account user.
+
         Args:
-            user_id: The user ID
-            
+            request: The user delete request
+
         Returns:
-            APIResponse: Raw API response
+            APIResponse: API response with delete confirmation
         """
-        logger.info(f"Deleting user: {user_id}")
-        
-        builder = UsersBuilder()
-        request_data = builder.user_id(user_id).build_user_delete()
-        
-        return self.client.request(
+        logger.info(f"Deleting user: {request.user_id}")
+
+        # Make API call
+        response = self.client.request(
             method="DELETE",
-            endpoint=f"/v1/users/{request_data.user_id}"
+            endpoint=f"/v1/users/{request.user_id}"
         )
 
-    def list_invites(self) -> APIResponse:
+        # Create standardized response
+        return self._create_response(response, None)
+
+    def list_invites(self, request: InvitesListRequest) -> APIResponse:
         """Get a list of invites.
-        
+
+        Args:
+            request: The list invites request
+
         Returns:
-            APIResponse: Raw API response
+            APIResponse: API response with invites list data
         """
-        logger.info("Listing account invites")
-        
-        builder = UsersBuilder()
-        request_data = builder.build_invites_list()
-        
-        return self.client.request(
+        logger.info(f"Listing invites with pagination: page={request.query_params.page}, limit={request.query_params.limit}")
+
+        # Extract query parameters
+        params = request.to_query_params()
+
+        # Make API call
+        response = self.client.request(
             method="GET",
-            endpoint="/v1/invites"
+            endpoint="/v1/invites",
+            params=params
         )
 
-    def get_invite(self, invite_id: str) -> APIResponse:
+        # Create standardized response
+        return self._create_response(response, InvitesListResponse(**response.json()))
+
+    def get_invite(self, request: InviteGetRequest) -> APIResponse:
         """Get a single invite.
-        
+
         Args:
-            invite_id: The invite ID
-            
+            request: The get invite request
+
         Returns:
-            APIResponse: Raw API response
+            APIResponse: API response with invite data
         """
-        logger.info(f"Getting invite: {invite_id}")
-        
-        builder = UsersBuilder()
-        request_data = builder.invite_id(invite_id).build_invite_get()
-        
-        return self.client.request(
+        logger.info(f"Getting invite: {request.invite_id}")
+
+        # Make API call
+        response = self.client.request(
             method="GET",
-            endpoint=f"/v1/invites/{request_data.invite_id}"
+            endpoint=f"/v1/invites/{request.invite_id}"
         )
 
-    def resend_invite(self, invite_id: str) -> APIResponse:
+        # Create standardized response
+        return self._create_response(response, InviteResponse(**response.json()))
+
+    def resend_invite(self, request: InviteResendRequest) -> APIResponse:
         """Resend an invite.
-        
+
         Args:
-            invite_id: The invite ID
-            
+            request: The invite resend request
+
         Returns:
-            APIResponse: Raw API response
+            APIResponse: API response with resent invite data
         """
-        logger.info(f"Resending invite: {invite_id}")
-        
-        builder = UsersBuilder()
-        request_data = builder.invite_id(invite_id).build_invite_resend()
-        
-        return self.client.request(
+        logger.info(f"Resending invite: {request.invite_id}")
+
+        # Make API call
+        response = self.client.request(
             method="POST",
-            endpoint=f"/v1/invites/{request_data.invite_id}/resend"
+            endpoint=f"/v1/invites/{request.invite_id}/resend"
         )
 
-    def cancel_invite(self, invite_id: str) -> APIResponse:
+        # Create standardized response
+        return self._create_response(response, InviteResendResponse(**response.json()))
+
+    def cancel_invite(self, request: InviteCancelRequest) -> APIResponse:
         """Cancel an invite.
-        
+
         Args:
-            invite_id: The invite ID
-            
+            request: The invite cancel request
+
         Returns:
-            APIResponse: Raw API response
+            APIResponse: API response with cancel confirmation
         """
-        logger.info(f"Canceling invite: {invite_id}")
-        
-        builder = UsersBuilder()
-        request_data = builder.invite_id(invite_id).build_invite_cancel()
-        
-        return self.client.request(
+        logger.info(f"Canceling invite: {request.invite_id}")
+
+        # Make API call
+        response = self.client.request(
             method="DELETE",
-            endpoint=f"/v1/invites/{request_data.invite_id}"
-        ) 
+            endpoint=f"/v1/invites/{request.invite_id}"
+        )
+
+        # Create standardized response
+        return self._create_response(response, None) 
