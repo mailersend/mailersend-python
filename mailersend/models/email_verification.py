@@ -1,11 +1,62 @@
 """Email Verification API models for MailerSend SDK."""
 
 from datetime import datetime
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 
 from pydantic import BaseModel, Field, field_validator
 
 
+# Query Parameters Models
+class EmailVerificationListsQueryParams(BaseModel):
+    """Query parameters for listing email verification lists."""
+    
+    page: int = Field(default=1, ge=1, description="Page number")
+    limit: int = Field(default=25, ge=10, le=100, description="Items per page")
+    
+    def to_query_params(self) -> Dict[str, Any]:
+        """Convert to query parameters dictionary."""
+        params = {}
+        if self.page is not None:
+            params["page"] = self.page
+        if self.limit is not None:
+            params["limit"] = self.limit
+        return params
+
+
+class EmailVerificationResultsQueryParams(BaseModel):
+    """Query parameters for getting email verification results."""
+    
+    page: int = Field(default=1, ge=1, description="Page number")
+    limit: int = Field(default=25, ge=10, le=100, description="Items per page")
+    results: Optional[List[str]] = Field(None, description="Filter by specific verification results")
+    
+    @field_validator("results")
+    @classmethod
+    def validate_results(cls, v: Optional[List[str]]) -> Optional[List[str]]:
+        """Validate results filter values."""
+        if v is not None:
+            valid_results = {
+                "valid", "catch_all", "mailbox_full", "role_based", "unknown", "failed",
+                "syntax_error", "typo", "mailbox_not_found", "disposable", "mailbox_blocked"
+            }
+            for result in v:
+                if result not in valid_results:
+                    raise ValueError(f"Invalid result filter: {result}")
+        return v
+    
+    def to_query_params(self) -> Dict[str, Any]:
+        """Convert to query parameters dictionary."""
+        params = {}
+        if self.page is not None:
+            params["page"] = self.page
+        if self.limit is not None:
+            params["limit"] = self.limit
+        if self.results is not None and self.results:
+            params["results"] = self.results
+        return params
+
+
+# Request Models
 class EmailVerifyRequest(BaseModel):
     """Request model for single email verification."""
     
@@ -51,27 +102,11 @@ class EmailVerificationAsyncStatusRequest(BaseModel):
 class EmailVerificationListsRequest(BaseModel):
     """Request model for listing email verification lists."""
     
-    page: Optional[int] = Field(None, ge=1, description="Page number")
-    limit: Optional[int] = Field(None, ge=10, le=100, description="Items per page")
+    query_params: EmailVerificationListsQueryParams
     
-    @field_validator("page")
-    @classmethod
-    def validate_page(cls, v: Optional[int]) -> Optional[int]:
-        """Validate page is positive."""
-        if v is not None and v < 1:
-            raise ValueError("page must be greater than 0")
-        return v
-    
-    @field_validator("limit")
-    @classmethod
-    def validate_limit(cls, v: Optional[int]) -> Optional[int]:
-        """Validate limit is within range."""
-        if v is not None:
-            if v < 10:
-                raise ValueError("limit must be at least 10")
-            if v > 100:
-                raise ValueError("limit cannot exceed 100")
-        return v
+    def to_query_params(self) -> Dict[str, Any]:
+        """Convert to query parameters dictionary."""
+        return self.query_params.to_query_params()
 
 
 class EmailVerificationGetRequest(BaseModel):
@@ -138,9 +173,7 @@ class EmailVerificationResultsRequest(BaseModel):
     """Request model for getting email verification results."""
     
     email_verification_id: str = Field(..., description="Email verification ID")
-    page: Optional[int] = Field(None, ge=1, description="Page number")
-    limit: Optional[int] = Field(None, ge=10, le=100, description="Items per page")
-    results: Optional[List[str]] = Field(None, description="Filter by specific verification results")
+    query_params: EmailVerificationResultsQueryParams
     
     @field_validator("email_verification_id")
     @classmethod
@@ -150,40 +183,12 @@ class EmailVerificationResultsRequest(BaseModel):
             raise ValueError("email_verification_id cannot be empty")
         return v.strip()
     
-    @field_validator("page")
-    @classmethod
-    def validate_page(cls, v: Optional[int]) -> Optional[int]:
-        """Validate page is positive."""
-        if v is not None and v < 1:
-            raise ValueError("page must be greater than 0")
-        return v
-    
-    @field_validator("limit")
-    @classmethod
-    def validate_limit(cls, v: Optional[int]) -> Optional[int]:
-        """Validate limit is within range."""
-        if v is not None:
-            if v < 10:
-                raise ValueError("limit must be at least 10")
-            if v > 100:
-                raise ValueError("limit cannot exceed 100")
-        return v
-    
-    @field_validator("results")
-    @classmethod
-    def validate_results(cls, v: Optional[List[str]]) -> Optional[List[str]]:
-        """Validate results filter values."""
-        if v is not None:
-            valid_results = {
-                "valid", "catch_all", "mailbox_full", "role_based", "unknown", "failed",
-                "syntax_error", "typo", "mailbox_not_found", "disposable", "mailbox_blocked"
-            }
-            for result in v:
-                if result not in valid_results:
-                    raise ValueError(f"Invalid result filter: {result}")
-        return v
+    def to_query_params(self) -> Dict[str, Any]:
+        """Convert to query parameters dictionary."""
+        return self.query_params.to_query_params()
 
 
+# Response Models
 class EmailVerifyResponse(BaseModel):
     """Response model for single email verification."""
     
