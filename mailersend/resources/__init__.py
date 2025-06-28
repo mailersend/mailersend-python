@@ -13,6 +13,7 @@ from .messages import Messages
 from .schedules import Schedules
 from .recipients import Recipients
 from .templates import Templates
+from .tokens import Tokens
 from .webhooks import Webhooks
 from .email_verification import EmailVerification
 from .users import Users
@@ -29,6 +30,7 @@ __all__ = [
     "Schedules",
     "Recipients",
     "Templates",
+    "Tokens",
     "Webhooks",
     "EmailVerification",
     "Users",

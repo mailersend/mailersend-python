@@ -18,6 +18,7 @@ from .resources.domains import Domains
 from .resources.identities import IdentitiesResource
 from .resources.inbound import InboundResource
 from .resources.templates import Templates
+from .resources.tokens import Tokens
 from .resources.webhooks import Webhooks
 from .resources.email_verification import EmailVerification
 from .resources.users import Users
@@ -100,6 +101,7 @@ class MailerSendClient:
         self.identities = IdentitiesResource(self)
         self.inbound = InboundResource(self)
         self.templates = Templates(self)
+        self.tokens = Tokens(self)
         self.webhooks = Webhooks(self)
         self.email_verification = EmailVerification(self)
         self.users = Users(self)

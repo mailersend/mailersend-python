@@ -15,6 +15,7 @@ from .messages import MessagesBuilder
 from .schedules import SchedulesBuilder
 from .recipients import RecipientsBuilder
 from .templates import TemplatesBuilder
+from .tokens import TokensBuilder
 from .webhooks import WebhooksBuilder
 from .email_verification import EmailVerificationBuilder
 from .users import UsersBuilder
@@ -31,6 +32,7 @@ __all__ = [
     'SchedulesBuilder',
     'RecipientsBuilder',
     'TemplatesBuilder',
+    'TokensBuilder',
     'WebhooksBuilder',
     'EmailVerificationBuilder',
     'UsersBuilder',
