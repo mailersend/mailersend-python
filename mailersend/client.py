@@ -20,6 +20,7 @@ from .resources.inbound import InboundResource
 from .resources.templates import Templates
 from .resources.webhooks import Webhooks
 from .resources.email_verification import EmailVerification
+from .resources.users import Users
 from .logging import get_logger, RequestLogger
 
 
@@ -101,6 +102,7 @@ class MailerSendClient:
         self.templates = Templates(self)
         self.webhooks = Webhooks(self)
         self.email_verification = EmailVerification(self)
+        self.users = Users(self)
         
         self.logger.info("MailerSend client initialized successfully")
         if debug:
