@@ -5,6 +5,7 @@ from mailersend.builders.identities import IdentityBuilder
 from mailersend.exceptions import ValidationError as MailerSendValidationError
 from mailersend.models.identities import (
     IdentityListRequest,
+    IdentityListQueryParams,
     IdentityCreateRequest,
     IdentityGetRequest,
     IdentityGetByEmailRequest,
@@ -204,20 +205,47 @@ class TestIdentityBuilder:
         """Test building list request."""
         builder = IdentityBuilder()
         
-        # Test with no parameters
+        # Test with no parameters - should use defaults
         request = builder.build_list_request()
         assert isinstance(request, IdentityListRequest)
-        assert request.domain_id is None
-        assert request.page is None
-        assert request.limit is None  # Builder passes None, model will use default
+        assert isinstance(request.query_params, IdentityListQueryParams)
+        assert request.query_params.page == 1  # Default value
+        assert request.query_params.limit == 25  # Default value
+        assert request.query_params.domain_id is None
         
         # Test with all parameters
         builder.domain_id("domain123").page(2).limit(50)
         request = builder.build_list_request()
         assert isinstance(request, IdentityListRequest)
-        assert request.domain_id == "domain123"
-        assert request.page == 2
-        assert request.limit == 50
+        assert isinstance(request.query_params, IdentityListQueryParams)
+        assert request.query_params.page == 2
+        assert request.query_params.limit == 50
+        assert request.query_params.domain_id == "domain123"
+        
+        # Test with partial parameters
+        builder.reset().domain_id("domain456").page(3)
+        request = builder.build_list_request()
+        assert isinstance(request, IdentityListRequest)
+        assert isinstance(request.query_params, IdentityListQueryParams)
+        assert request.query_params.page == 3
+        assert request.query_params.limit == 25  # Default value
+        assert request.query_params.domain_id == "domain456"
+
+    def test_build_list_request_query_params_delegation(self):
+        """Test that build_list_request properly delegates to query params."""
+        builder = IdentityBuilder()
+        builder.domain_id("domain789").page(4).limit(75)
+        
+        request = builder.build_list_request()
+        
+        # Test that to_query_params works correctly
+        query_params = request.to_query_params()
+        expected = {
+            'page': 4,
+            'limit': 75,
+            'domain_id': 'domain789'
+        }
+        assert query_params == expected
 
     def test_build_create_request(self):
         """Test building create request."""
@@ -395,7 +423,7 @@ class TestIdentityBuilder:
         delete_by_email_request = builder.build_delete_by_email_request()
         
         # Verify each request has appropriate fields
-        assert list_request.domain_id == "domain123"
+        assert list_request.query_params.domain_id == "domain123"
         assert get_request.identity_id == "identity123"
         assert get_by_email_request.email == "john@example.com"
         assert create_request.domain_id == "domain123"
@@ -453,9 +481,9 @@ class TestIdentityBuilder:
                        .limit(25)
                        .build_list_request())
         
-        assert list_request.domain_id == "domain456"
-        assert list_request.page == 3
-        assert list_request.limit == 25
+        assert list_request.query_params.domain_id == "domain456"
+        assert list_request.query_params.page == 3
+        assert list_request.query_params.limit == 25
 
     def test_edge_cases(self):
         """Test edge cases and boundary conditions."""

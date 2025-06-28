@@ -4,6 +4,7 @@ from copy import deepcopy
 from ..exceptions import ValidationError as MailerSendValidationError
 from ..models.identities import (
     IdentityListRequest,
+    IdentityListQueryParams,
     IdentityCreateRequest,
     IdentityGetRequest,
     IdentityGetByEmailRequest,
@@ -137,11 +138,17 @@ class IdentityBuilder:
     # Build methods
     def build_list_request(self) -> IdentityListRequest:
         """Build a request for listing identities."""
-        return IdentityListRequest(
-            domain_id=self._domain_id,
-            page=self._page,
-            limit=self._limit
-        )
+        query_params = IdentityListQueryParams()
+        
+        # Only set values if they were explicitly set by the user
+        if self._page is not None:
+            query_params.page = self._page
+        if self._limit is not None:
+            query_params.limit = self._limit
+        if self._domain_id is not None:
+            query_params.domain_id = self._domain_id
+        
+        return IdentityListRequest(query_params=query_params)
 
     def build_create_request(self) -> IdentityCreateRequest:
         """Build a request for creating an identity."""

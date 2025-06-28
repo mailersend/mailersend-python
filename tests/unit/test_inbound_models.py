@@ -3,6 +3,7 @@ from pydantic import ValidationError
 
 from mailersend.models.inbound import (
     InboundListRequest,
+    InboundListQueryParams,
     InboundGetRequest,
     InboundCreateRequest,
     InboundUpdateRequest,
@@ -227,42 +228,119 @@ class TestInboundRoute:
         assert route.mxValues == mx_values
 
 
+class TestInboundListQueryParams:
+    """Test InboundListQueryParams model."""
+
+    def test_default_values(self):
+        """Test default values are set correctly."""
+        query_params = InboundListQueryParams()
+        assert query_params.page == 1
+        assert query_params.limit == 25
+        assert query_params.domain_id is None
+
+    def test_custom_values(self):
+        """Test setting custom values."""
+        query_params = InboundListQueryParams(
+            page=2,
+            limit=50,
+            domain_id="domain123"
+        )
+        assert query_params.page == 2
+        assert query_params.limit == 50
+        assert query_params.domain_id == "domain123"
+
+    def test_page_validation(self):
+        """Test page validation (must be >= 1)."""
+        with pytest.raises(ValidationError):
+            InboundListQueryParams(page=0)
+        
+        with pytest.raises(ValidationError):
+            InboundListQueryParams(page=-1)
+
+    def test_limit_validation(self):
+        """Test limit validation (10-100)."""
+        with pytest.raises(ValidationError):
+            InboundListQueryParams(limit=9)
+        
+        with pytest.raises(ValidationError):
+            InboundListQueryParams(limit=101)
+
+    def test_to_query_params_with_defaults(self):
+        """Test to_query_params with default values."""
+        query_params = InboundListQueryParams()
+        result = query_params.to_query_params()
+        expected = {
+            'page': 1,
+            'limit': 25
+        }
+        assert result == expected
+
+    def test_to_query_params_with_all_values(self):
+        """Test to_query_params with all values set."""
+        query_params = InboundListQueryParams(
+            page=3,
+            limit=50,
+            domain_id="domain456"
+        )
+        result = query_params.to_query_params()
+        expected = {
+            'page': 3,
+            'limit': 50,
+            'domain_id': 'domain456'
+        }
+        assert result == expected
+
+    def test_to_query_params_excludes_none(self):
+        """Test to_query_params excludes None values."""
+        query_params = InboundListQueryParams(page=2, limit=30)  # domain_id is None
+        result = query_params.to_query_params()
+        expected = {
+            'page': 2,
+            'limit': 30
+        }
+        assert result == expected
+        assert 'domain_id' not in result
+
+
 class TestInboundListRequest:
     """Test InboundListRequest model."""
 
-    def test_create_minimal_request(self):
-        """Test creating a minimal list request."""
-        request = InboundListRequest()
-        assert request.domain_id is None
-        assert request.page is None
-        assert request.limit == 25  # Default value
+    def test_create_request_with_query_params(self):
+        """Test creating request with query params object."""
+        query_params = InboundListQueryParams(page=2, limit=50, domain_id="domain123")
+        request = InboundListRequest(query_params=query_params)
+        assert request.query_params == query_params
 
-    def test_create_request_with_all_params(self):
-        """Test creating a request with all parameters."""
-        request = InboundListRequest(
-            domain_id="domain123",
-            page=2,
-            limit=50
-        )
-        assert request.domain_id == "domain123"
-        assert request.page == 2
-        assert request.limit == 50
+    def test_create_request_with_defaults(self):
+        """Test creating request with default query params."""
+        query_params = InboundListQueryParams()
+        request = InboundListRequest(query_params=query_params)
+        assert request.query_params.page == 1
+        assert request.query_params.limit == 25
+        assert request.query_params.domain_id is None
 
-    def test_page_validation(self):
-        """Test page number validation."""
-        with pytest.raises(ValidationError) as exc_info:
-            InboundListRequest(page=0)
-        assert "Input should be greater than or equal to 1" in str(exc_info.value)
+    def test_to_query_params_delegation(self):
+        """Test that to_query_params delegates to query_params object."""
+        query_params = InboundListQueryParams(page=3, limit=75, domain_id="domain789")
+        request = InboundListRequest(query_params=query_params)
+        result = request.to_query_params()
+        expected = {
+            'page': 3,
+            'limit': 75,
+            'domain_id': 'domain789'
+        }
+        assert result == expected
 
-    def test_limit_validation(self):
-        """Test limit validation."""
-        with pytest.raises(ValidationError) as exc_info:
-            InboundListRequest(limit=5)  # Below minimum
-        assert "Input should be greater than or equal to 10" in str(exc_info.value)
-
-        with pytest.raises(ValidationError) as exc_info:
-            InboundListRequest(limit=150)  # Above maximum
-        assert "Input should be less than or equal to 100" in str(exc_info.value)
+    def test_to_query_params_with_defaults(self):
+        """Test to_query_params with default values."""
+        query_params = InboundListQueryParams()
+        request = InboundListRequest(query_params=query_params)
+        result = request.to_query_params()
+        expected = {
+            'page': 1,
+            'limit': 25
+        }
+        assert result == expected
 
 
 class TestInboundGetRequest:

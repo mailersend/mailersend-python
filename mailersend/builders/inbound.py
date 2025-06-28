@@ -4,6 +4,7 @@ from pydantic import ValidationError as PydanticValidationError
 from mailersend.exceptions import ValidationError as MailerSendValidationError
 from mailersend.models.inbound import (
     InboundListRequest,
+    InboundListQueryParams,
     InboundGetRequest,
     InboundCreateRequest,
     InboundUpdateRequest,
@@ -204,11 +205,17 @@ class InboundBuilder:
     def build_list_request(self) -> InboundListRequest:
         """Build an InboundListRequest."""
         try:
-            return InboundListRequest(
-                domain_id=self._domain_id,
-                page=self._page,
-                limit=self._limit
-            )
+            query_params = InboundListQueryParams()
+            
+            # Only set values if they were explicitly set by the user
+            if self._page is not None:
+                query_params.page = self._page
+            if self._limit is not None:
+                query_params.limit = self._limit
+            if self._domain_id is not None:
+                query_params.domain_id = self._domain_id
+            
+            return InboundListRequest(query_params=query_params)
         except PydanticValidationError as e:
             raise MailerSendValidationError(f"Invalid inbound list request: {e}")
 
