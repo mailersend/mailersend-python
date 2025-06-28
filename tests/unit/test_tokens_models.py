@@ -8,6 +8,7 @@ from mailersend.models.tokens import (
     TOKEN_SCOPES,
     Token,
     TokenCreate,
+    TokensListQueryParams,
     TokensListRequest,
     TokenGetRequest,
     TokenCreateRequest,
@@ -20,48 +21,90 @@ from mailersend.models.tokens import (
 )
 
 
+class TestTokensListQueryParams:
+    """Test TokensListQueryParams model."""
+
+    def test_tokens_list_query_params_defaults(self):
+        """Test TokensListQueryParams with default values."""
+        params = TokensListQueryParams()
+        assert params.page == 1
+        assert params.limit == 25
+
+    def test_tokens_list_query_params_custom_values(self):
+        """Test TokensListQueryParams with custom values."""
+        params = TokensListQueryParams(page=2, limit=50)
+        assert params.page == 2
+        assert params.limit == 50
+
+    def test_tokens_list_query_params_validation(self):
+        """Test TokensListQueryParams validation."""
+        # Valid values
+        params = TokensListQueryParams(page=1, limit=10)
+        assert params.page == 1
+        assert params.limit == 10
+
+        # Invalid page (< 1)
+        with pytest.raises(ValidationError):
+            TokensListQueryParams(page=0)
+
+        # Invalid limit (< 10)
+        with pytest.raises(ValidationError):
+            TokensListQueryParams(limit=9)
+
+        # Invalid limit (> 100)
+        with pytest.raises(ValidationError):
+            TokensListQueryParams(limit=101)
+
+    def test_tokens_list_query_params_to_query_params_defaults(self):
+        """Test to_query_params with default values."""
+        params = TokensListQueryParams()
+        query_params = params.to_query_params()
+        # Should return empty dict when values are defaults
+        assert query_params == {}
+
+    def test_tokens_list_query_params_to_query_params_custom(self):
+        """Test to_query_params with custom values."""
+        params = TokensListQueryParams(page=2, limit=50)
+        query_params = params.to_query_params()
+        assert query_params == {'page': 2, 'limit': 50}
+
+    def test_tokens_list_query_params_to_query_params_partial(self):
+        """Test to_query_params with partially custom values."""
+        # Only page is custom
+        params = TokensListQueryParams(page=3)
+        query_params = params.to_query_params()
+        assert query_params == {'page': 3}
+
+        # Only limit is custom
+        params = TokensListQueryParams(limit=50)
+        query_params = params.to_query_params()
+        assert query_params == {'limit': 50}
+
+
 class TestTokensListRequest:
     """Test TokensListRequest model."""
 
-    def test_basic_creation(self):
-        """Test basic request creation."""
+    def test_tokens_list_request_defaults(self):
+        """Test TokensListRequest with default values."""
         request = TokensListRequest()
-        assert request.page is None
-        assert request.limit == 25  # Default value
+        assert request.query_params.page == 1
+        assert request.query_params.limit == 25
 
-    def test_with_pagination(self):
-        """Test request with pagination parameters."""
-        request = TokensListRequest(page=2, limit=50)
-        assert request.page == 2
-        assert request.limit == 50
+    def test_tokens_list_request_with_custom_params(self):
+        """Test TokensListRequest with custom query params."""
+        from mailersend.models.tokens import TokensListQueryParams
+        params = TokensListQueryParams(page=2, limit=50)
+        request = TokensListRequest(query_params=params)
+        assert request.query_params.page == 2
+        assert request.query_params.limit == 50
 
-    def test_page_validation(self):
-        """Test page validation."""
-        with pytest.raises(ValidationError) as exc_info:
-            TokensListRequest(page=0)
-        assert "Input should be greater than or equal to 1" in str(exc_info.value)
-
-    def test_limit_validation_minimum(self):
-        """Test limit minimum validation."""
-        with pytest.raises(ValidationError) as exc_info:
-            TokensListRequest(limit=5)
-        assert "Input should be greater than or equal to 10" in str(exc_info.value)
-
-    def test_limit_validation_maximum(self):
-        """Test limit maximum validation."""
-        with pytest.raises(ValidationError) as exc_info:
-            TokensListRequest(limit=150)
-        assert "Input should be less than or equal to 100" in str(exc_info.value)
-
-    def test_limit_boundaries(self):
-        """Test limit boundary values."""
-        # Minimum allowed
-        request = TokensListRequest(limit=10)
-        assert request.limit == 10
-        
-        # Maximum allowed
-        request = TokensListRequest(limit=100)
-        assert request.limit == 100
+    def test_tokens_list_request_to_query_params(self):
+        """Test TokensListRequest to_query_params method."""
+        from mailersend.models.tokens import TokensListQueryParams
+        params = TokensListQueryParams(page=3, limit=75)
+        request = TokensListRequest(query_params=params)
+        query_params = request.to_query_params()
+        assert query_params == {'page': 3, 'limit': 75}
 
 
 class TestTokenGetRequest:
@@ -203,6 +246,22 @@ class TestTokenCreateRequest:
         )
         assert set(request.scopes) == set(TOKEN_SCOPES)
 
+    def test_token_create_request_to_json(self):
+        """Test to_json method."""
+        request = TokenCreateRequest(
+            name="Test Token",
+            domain_id="domain123",
+            scopes=["email_full", "tokens_full"]
+        )
+        json_data = request.to_json()
+        
+        expected = {
+            "name": "Test Token",
+            "domain_id": "domain123",
+            "scopes": ["email_full", "tokens_full"]
+        }
+        assert json_data == expected
+
 
 class TestTokenUpdateRequest:
     """Test TokenUpdateRequest model."""
@@ -233,6 +292,17 @@ class TestTokenUpdateRequest:
                 status="invalid"
             )
         assert "Input should be 'pause' or 'unpause'" in str(exc_info.value)
+
+    def test_token_update_request_to_json(self):
+        """Test to_json method."""
+        request = TokenUpdateRequest(
+            token_id="token123",
+            status="pause"
+        )
+        json_data = request.to_json()
+        
+        expected = {"status": "pause"}
+        assert json_data == expected
 
 
 class TestTokenUpdateNameRequest:
@@ -281,6 +351,17 @@ class TestTokenUpdateNameRequest:
                 name=""
             )
         assert "Token name cannot be empty" in str(exc_info.value)
+
+    def test_token_update_name_request_to_json(self):
+        """Test to_json method."""
+        request = TokenUpdateNameRequest(
+            token_id="token123",
+            name="Updated Token Name"
+        )
+        json_data = request.to_json()
+        
+        expected = {"name": "Updated Token Name"}
+        assert json_data == expected
 
 
 class TestTokenDeleteRequest:

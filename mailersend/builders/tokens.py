@@ -364,13 +364,18 @@ class TokensBuilder:
         Returns:
             TokensListRequest object
         """
-        kwargs = {}
-        if self._page is not None:
-            kwargs['page'] = self._page
-        if self._limit is not None:
-            kwargs['limit'] = self._limit
+        from ..models.tokens import TokensListQueryParams
         
-        return TokensListRequest(**kwargs)
+        # Build query params with defaults
+        query_params_kwargs = {}
+        if self._page is not None:
+            query_params_kwargs['page'] = self._page
+        if self._limit is not None:
+            query_params_kwargs['limit'] = self._limit
+        
+        query_params = TokensListQueryParams(**query_params_kwargs)
+        
+        return TokensListRequest(query_params=query_params)
 
     def build_token_get(self) -> TokenGetRequest:
         """Build a request for getting a single token.
