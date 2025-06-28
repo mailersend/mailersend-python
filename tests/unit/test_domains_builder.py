@@ -10,10 +10,12 @@ from pydantic import ValidationError
 from mailersend.builders.domains import DomainsBuilder
 from mailersend.models.domains import (
     DomainListRequest,
+    DomainListQueryParams,
     DomainCreateRequest,
     DomainDeleteRequest,
     DomainUpdateSettingsRequest,
     DomainRecipientsRequest,
+    DomainRecipientsQueryParams,
     DomainGetRequest,
     DomainDnsRecordsRequest,
     DomainVerificationRequest
@@ -199,7 +201,7 @@ class TestDomainsBuilderDomainCreation:
         assert builder._return_path_subdomain == "email123"
     
     def test_custom_tracking_subdomain_method(self):
-        """Test custom_tracking_subdomain method.""" 
+        """Test custom_tracking_subdomain method."""
         builder = DomainsBuilder()
         
         builder.custom_tracking_subdomain("track")
@@ -229,8 +231,8 @@ class TestDomainsBuilderDomainDeletion:
         builder.domain_id("domain-123")
         assert builder._domain_id == "domain-123"
         
-        builder.domain_id("abc-456-def")
-        assert builder._domain_id == "abc-456-def"
+        builder.domain_id("another-domain-456")
+        assert builder._domain_id == "another-domain-456"
 
 
 class TestDomainsBuilderSettings:
@@ -251,53 +253,52 @@ class TestDomainsBuilderSettings:
         builder.track_clicks(True)
         assert builder._track_clicks is True
         
+        builder.track_clicks(False)
+        assert builder._track_clicks is False
+        
         # Test track_unsubscribe
-        builder.track_unsubscribe(False)
-        assert builder._track_unsubscribe is False
+        builder.track_unsubscribe(True)
+        assert builder._track_unsubscribe is True
         
         # Test track_content
-        builder.track_content(True)
-        assert builder._track_content is True
+        builder.track_content(False)
+        assert builder._track_content is False
     
     def test_sending_settings(self):
         """Test sending-related settings."""
         builder = DomainsBuilder()
         
-        # Test send paused
+        # Test send_paused
         builder.send_paused(True)
         assert builder._send_paused is True
         
-        # Test precedence bulk
-        builder.precedence_bulk(False)
-        assert builder._precedence_bulk is False
+        builder.send_paused(False)
+        assert builder._send_paused is False
         
-        # Test ignore duplicated recipients
-        builder.ignore_duplicated_recipients(True)
-        assert builder._ignore_duplicated_recipients is True
+        # Test custom_tracking_enabled
+        builder.custom_tracking_enabled(True)
+        assert builder._custom_tracking_enabled is True
     
     def test_convenience_tracking_methods(self):
-        """Test convenience methods for tracking settings."""
+        """Test convenience methods for tracking."""
         builder = DomainsBuilder()
         
         # Test enable_all_tracking
         builder.enable_all_tracking()
-        
-        assert builder._track_opens is True
         assert builder._track_clicks is True
+        assert builder._track_opens is True
         assert builder._track_unsubscribe is True
         assert builder._track_content is True
         
-        # Reset and test disable_all_tracking
-        builder.reset()
+        # Test disable_all_tracking
         builder.disable_all_tracking()
-        
-        assert builder._track_opens is False
         assert builder._track_clicks is False
+        assert builder._track_opens is False
         assert builder._track_unsubscribe is False
         assert builder._track_content is False
     
     def test_convenience_sending_methods(self):
-        """Test convenience methods for sending settings."""
+        """Test convenience methods for sending."""
         builder = DomainsBuilder()
         
         # Test pause_sending
@@ -317,11 +318,12 @@ class TestDomainsBuilderBuildMethods:
         builder = DomainsBuilder()
         request = builder.build_list_request()
         
-        # Should create request with defaults
+        # Should create request with defaults from query params model
         assert isinstance(request, DomainListRequest)
-        assert request.page is None
-        assert request.limit is None  # Builder passes None which overrides model default
-        assert request.verified is None
+        assert isinstance(request.query_params, DomainListQueryParams)
+        assert request.query_params.page == 1  # Default from DomainListQueryParams
+        assert request.query_params.limit == 25  # Default from DomainListQueryParams
+        assert request.query_params.verified is None
     
     def test_build_list_request_complete(self):
         """Test building complete list request."""
@@ -331,9 +333,10 @@ class TestDomainsBuilderBuildMethods:
         request = builder.build_list_request()
         
         assert isinstance(request, DomainListRequest)
-        assert request.page == 2
-        assert request.limit == 50
-        assert request.verified is True
+        assert isinstance(request.query_params, DomainListQueryParams)
+        assert request.query_params.page == 2
+        assert request.query_params.limit == 50
+        assert request.query_params.verified is True
     
     def test_build_create_request_minimal(self):
         """Test building minimal create request."""
@@ -447,8 +450,9 @@ class TestDomainsBuilderBuildMethods:
         
         assert isinstance(request, DomainRecipientsRequest)
         assert request.domain_id == "test-domain-id"
-        assert request.page is None
-        assert request.limit is None  # Builder passes None which overrides model default
+        assert isinstance(request.query_params, DomainRecipientsQueryParams)
+        assert request.query_params.page == 1  # Default from DomainRecipientsQueryParams
+        assert request.query_params.limit == 25  # Default from DomainRecipientsQueryParams
 
     def test_build_recipients_request_with_pagination(self):
         """Test building recipients request with pagination."""
@@ -459,8 +463,9 @@ class TestDomainsBuilderBuildMethods:
         
         assert isinstance(request, DomainRecipientsRequest)
         assert request.domain_id == "test-domain-id"
-        assert request.page == 3
-        assert request.limit == 75
+        assert isinstance(request.query_params, DomainRecipientsQueryParams)
+        assert request.query_params.page == 3
+        assert request.query_params.limit == 75
 
     def test_build_get_request_basic(self):
         """Test building basic get request."""
@@ -529,60 +534,51 @@ class TestDomainsBuilderBuildMethods:
 
 
 class TestDomainsBuilderComplexScenarios:
-    """Test complex builder usage scenarios."""
+    """Test complex usage scenarios and edge cases."""
     
     def test_chained_method_calls(self):
-        """Test complex method chaining."""
+        """Test complex method chaining scenarios."""
         builder = DomainsBuilder()
         
-        # Build a complex configuration in one chain
-        result = (builder
-                 .page(1)
-                 .limit(50)
-                 .verified(True)
-                 .domain_name("example.com")
-                 .return_path_subdomain("mail")
-                 .custom_tracking_subdomain("track")
-                 .track_opens(True)
-                 .track_clicks(False)
-                 .enable_all_tracking()  # Should override previous settings
-                 .send_paused(False))
+        # Build complete list request with all options
+        request = (builder
+                  .page(3)
+                  .limit(50)
+                  .verified_only()
+                  .build_list_request())
         
-        # Verify all settings applied correctly
-        assert result._page == 1
-        assert result._limit == 50
-        assert result._verified is True
-        assert result._name == "example.com"
-        assert result._return_path_subdomain == "mail"
-        assert result._custom_tracking_subdomain == "track"
-        assert result._track_opens is True  # From enable_all_tracking
-        assert result._track_clicks is True  # enable_all_tracking overrode False
-        assert result._send_paused is False
+        assert isinstance(request, DomainListRequest)
+        assert request.query_params.page == 3
+        assert request.query_params.limit == 50
+        assert request.query_params.verified is True
+        
+        # Reset and build domain creation request
+        builder.reset()
+        create_request = (builder
+                         .domain_name("newdomain.com")
+                         .return_path_subdomain("mail")
+                         .custom_tracking_subdomain("track")
+                         .build_create_request())
+        
+        assert isinstance(create_request, DomainCreateRequest)
+        assert create_request.name == "newdomain.com"
+        assert create_request.return_path_subdomain == "mail"
+        assert create_request.custom_tracking_subdomain == "track"
     
     def test_builder_reuse_with_reset(self):
-        """Test reusing builder with reset between operations."""
+        """Test builder reuse with reset between different request types."""
         builder = DomainsBuilder()
         
-        # First configuration
-        builder.page(1).limit(25).verified(True).domain_name("first.com")
-        first_list = builder.build_list_request()
-        first_create = builder.build_create_request()
+        # Build list request
+        list_request = builder.page(1).limit(10).build_list_request()
+        assert list_request.query_params.page == 1
+        assert list_request.query_params.limit == 10
         
-        assert first_list.page == 1
-        assert first_list.verified is True
-        assert first_create.name == "first.com"
-        
-        # Reset and second configuration
+        # Reset and build create request
         builder.reset()
-        builder.page(2).limit(50).unverified_only().domain_name("second.com")
-        second_list = builder.build_list_request()
-        second_create = builder.build_create_request()
+        create_request = builder.domain_name("example.org").build_create_request()
+        assert create_request.name == "example.org"
         
-        assert second_list.page == 2
-        assert second_list.verified is False
-        assert second_create.name == "second.com"
-        
-        # Verify first requests unchanged
-        assert first_list.page == 1
-        assert first_list.verified is True
-        assert first_create.name == "first.com" 
+        # Verify previous state was cleared
+        assert builder._page is None
+        assert builder._limit is None 

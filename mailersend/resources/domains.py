@@ -4,7 +4,7 @@ from .base import BaseResource
 from ..models.domains import (
     DomainListRequest, DomainCreateRequest, DomainDeleteRequest, DomainGetRequest,
     DomainUpdateSettingsRequest, DomainRecipientsRequest, DomainDnsRecordsRequest,
-    DomainVerificationRequest
+    DomainVerificationRequest, DomainListQueryParams
 )
 from ..models.base import APIResponse
 from ..exceptions import ValidationError
@@ -34,10 +34,15 @@ class Domains(BaseResource):
         """
         self.logger.debug("Retrieving domains list")
         
-        # Convert to query parameters
-        params = {}
-        if request:
-            params = self._build_query_params(request)
+        # Use default query params if no request provided
+        if not request:
+            query_params = DomainListQueryParams()
+            params = query_params.to_query_params()
+        else:
+            if not isinstance(request, DomainListRequest):
+                self.logger.error("Invalid DomainListRequest object provided")
+                raise ValidationError("DomainListRequest must be provided")
+            params = request.to_query_params()
         
         self.logger.info("Requesting domains list")
         self.logger.debug(f"Query params: {params}")
@@ -60,8 +65,14 @@ class Domains(BaseResource):
             ValidationError: If the request is invalid
             MailerSendError: If the API returns an error
         """
+        self.logger.debug("Preparing to get domain")
+
         if not request:
             self.logger.error("No DomainGetRequest object provided")
+            raise ValidationError("DomainGetRequest must be provided")
+
+        if not isinstance(request, DomainGetRequest):
+            self.logger.error("Invalid DomainGetRequest object provided")
             raise ValidationError("DomainGetRequest must be provided")
         
         self.logger.debug(f"Retrieving domain: {request.domain_id}")
@@ -85,14 +96,18 @@ class Domains(BaseResource):
             ValidationError: If the request is invalid
             MailerSendError: If the API returns an error
         """
-        self.logger.debug("Creating new domain")
+        self.logger.debug("Preparing to create domain")
         
         if not request:
             self.logger.error("No DomainCreateRequest object provided")
             raise ValidationError("DomainCreateRequest must be provided")
+
+        if not isinstance(request, DomainCreateRequest):
+            self.logger.error("Invalid DomainCreateRequest object provided")
+            raise ValidationError("DomainCreateRequest must be provided")
         
         # Convert to request body
-        body = self._build_request_body(request)
+        body = request.model_dump(by_alias=True, exclude_none=True)
         
         self.logger.info(f"Creating domain: {request.name}")
         self.logger.debug(f"Request body: {body}")
@@ -115,8 +130,14 @@ class Domains(BaseResource):
             ValidationError: If the request is invalid
             MailerSendError: If the API returns an error
         """
+        self.logger.debug("Preparing to delete domain")
+
         if not request:
             self.logger.error("No DomainDeleteRequest object provided")
+            raise ValidationError("DomainDeleteRequest must be provided")
+
+        if not isinstance(request, DomainDeleteRequest):
+            self.logger.error("Invalid DomainDeleteRequest object provided")
             raise ValidationError("DomainDeleteRequest must be provided")
         
         self.logger.debug(f"Deleting domain: {request.domain_id}")
@@ -140,14 +161,20 @@ class Domains(BaseResource):
             ValidationError: If the request is invalid
             MailerSendError: If the API returns an error
         """
+        self.logger.debug("Preparing to get domain recipients")
+
         if not request:
             self.logger.error("No DomainRecipientsRequest object provided")
+            raise ValidationError("DomainRecipientsRequest must be provided")
+
+        if not isinstance(request, DomainRecipientsRequest):
+            self.logger.error("Invalid DomainRecipientsRequest object provided")
             raise ValidationError("DomainRecipientsRequest must be provided")
         
         self.logger.debug(f"Retrieving recipients for domain: {request.domain_id}")
         
         # Convert to query parameters
-        params = self._build_query_params(request)
+        params = request.to_query_params()
         
         self.logger.info(f"Requesting recipients for domain: {request.domain_id}")
         self.logger.debug(f"Query params: {params}")
@@ -170,14 +197,20 @@ class Domains(BaseResource):
             ValidationError: If the request is invalid
             MailerSendError: If the API returns an error
         """
+        self.logger.debug("Preparing to update domain settings")
+
         if not request:
             self.logger.error("No DomainUpdateSettingsRequest object provided")
+            raise ValidationError("DomainUpdateSettingsRequest must be provided")
+
+        if not isinstance(request, DomainUpdateSettingsRequest):
+            self.logger.error("Invalid DomainUpdateSettingsRequest object provided")
             raise ValidationError("DomainUpdateSettingsRequest must be provided")
         
         self.logger.debug(f"Updating settings for domain: {request.domain_id}")
         
-        # Convert to request body
-        body = self._build_request_body(request)
+        # Convert to request body, excluding domain_id which goes in URL path
+        body = request.model_dump(by_alias=True, exclude_none=True, exclude={'domain_id'})
         
         self.logger.info(f"Updating settings for domain: {request.domain_id}")
         self.logger.debug(f"Request body: {body}")
@@ -200,8 +233,14 @@ class Domains(BaseResource):
             ValidationError: If the request is invalid
             MailerSendError: If the API returns an error
         """
+        self.logger.debug("Preparing to get domain DNS records")
+
         if not request:
             self.logger.error("No DomainDnsRecordsRequest object provided")
+            raise ValidationError("DomainDnsRecordsRequest must be provided")
+
+        if not isinstance(request, DomainDnsRecordsRequest):
+            self.logger.error("Invalid DomainDnsRecordsRequest object provided")
             raise ValidationError("DomainDnsRecordsRequest must be provided")
         
         self.logger.debug(f"Retrieving DNS records for domain: {request.domain_id}")
@@ -225,8 +264,14 @@ class Domains(BaseResource):
             ValidationError: If the request is invalid
             MailerSendError: If the API returns an error
         """
+        self.logger.debug("Preparing to get domain verification status")
+
         if not request:
             self.logger.error("No DomainVerificationRequest object provided")
+            raise ValidationError("DomainVerificationRequest must be provided")
+
+        if not isinstance(request, DomainVerificationRequest):
+            self.logger.error("Invalid DomainVerificationRequest object provided")
             raise ValidationError("DomainVerificationRequest must be provided")
         
         self.logger.debug(f"Retrieving verification status for domain: {request.domain_id}")
@@ -234,34 +279,4 @@ class Domains(BaseResource):
         
         response = self.client.request("GET", f"domains/{request.domain_id}/verify")
         
-        return self._create_response(response)
-
-    def _build_query_params(self, request) -> Dict[str, Any]:
-        """
-        Build query parameters from request object.
-        
-        Args:
-            request: Request object with query parameters
-            
-        Returns:
-            Dictionary of query parameters
-        """
-        # Convert model to dict, excluding None values and domain_id (goes in URL path)
-        params = request.model_dump(exclude_none=True, exclude={'domain_id'})
-        
-        return params
-
-    def _build_request_body(self, request) -> Dict[str, Any]:
-        """
-        Build request body from request object.
-        
-        Args:
-            request: Request object
-            
-        Returns:
-            Dictionary for request body
-        """
-        # Convert model to dict, excluding None values and domain_id (goes in URL path)
-        body = request.model_dump(exclude_none=True, exclude={'domain_id'})
-        
-        return body 
+        return self._create_response(response) 

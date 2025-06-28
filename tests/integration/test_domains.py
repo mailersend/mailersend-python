@@ -7,11 +7,13 @@ from datetime import datetime, timezone
 from mailersend.builders.domains import DomainsBuilder
 from mailersend.models.domains import (
     DomainListRequest,
+    DomainListQueryParams,
     DomainCreateRequest,
     DomainDeleteRequest,
     DomainGetRequest,
     DomainUpdateSettingsRequest,
     DomainRecipientsRequest,
+    DomainRecipientsQueryParams,
     DomainDnsRecordsRequest,
     DomainVerificationRequest
 )
@@ -35,18 +37,24 @@ def create_domain_name():
 
 
 @pytest.fixture
-def base_domains_request():
-    """Basic domain request parameters that are valid for most tests"""
-    return DomainListRequest(
+def base_domains_query_params():
+    """Basic domain query parameters that are valid for most tests"""
+    return DomainListQueryParams(
         page=1,
         limit=25,
         verified=None
     )
 
 
-def domains_request_factory(base: DomainListRequest, **overrides) -> DomainListRequest:
-    """Create a new DomainListRequest with the same fields, overridden with kwargs"""
-    data = base.model_dump()
+@pytest.fixture
+def base_domains_request(base_domains_query_params):
+    """Basic domain request with query parameters"""
+    return DomainListRequest(query_params=base_domains_query_params)
+
+
+def domains_request_factory(base_query_params: DomainListQueryParams, **overrides) -> DomainListRequest:
+    """Create a new DomainListRequest with query params, overridden with kwargs"""
+    data = base_query_params.model_dump()
 
     # Remove fields explicitly set to `None` in overrides
     for key, value in overrides.items():
@@ -55,14 +63,16 @@ def domains_request_factory(base: DomainListRequest, **overrides) -> DomainListR
         else:
             data[key] = value
 
-    return DomainListRequest(**data)
+    new_query_params = DomainListQueryParams(**data)
+    return DomainListRequest(query_params=new_query_params)
 
 
 @pytest.fixture(autouse=True)
-def inject_common_objects(request, email_client, base_domains_request, test_domain_id, create_domain_name, test_domain_name):
+def inject_common_objects(request, email_client, base_domains_request, base_domains_query_params, test_domain_id, create_domain_name, test_domain_name):
     if hasattr(request, "cls") and request.cls is not None:
         request.cls.email_client = email_client
         request.cls.base_domains_request = base_domains_request
+        request.cls.base_domains_query_params = base_domains_query_params
         request.cls.test_domain_id = test_domain_id
         request.cls.create_domain_name = create_domain_name
         request.cls.test_domain_name = test_domain_name
@@ -76,7 +86,7 @@ class TestDomainsIntegrationListDomains:
     def test_list_domains_basic(self):
         """Test basic domain listing using request factory pattern."""
         request = self.domains_request_factory(
-            self.base_domains_request,
+            self.base_domains_query_params,
             page=1,
             limit=10
         )
@@ -103,7 +113,7 @@ class TestDomainsIntegrationListDomains:
     def test_list_domains_with_pagination(self):
         """Test domain listing with pagination using request factory pattern."""
         request = self.domains_request_factory(
-            self.base_domains_request,
+            self.base_domains_query_params,
             page=2,
             limit=10
         )
@@ -126,7 +136,7 @@ class TestDomainsIntegrationListDomains:
         """Test listing only verified domains using request factory pattern."""
         # Create request without verified filter to avoid API issues
         request = self.domains_request_factory(
-            self.base_domains_request,
+            self.base_domains_query_params,
             limit=10
         )
         
@@ -409,10 +419,10 @@ class TestDomainsIntegrationRecipients:
     @vcr.use_cassette("domains_recipients_basic.yaml")
     def test_get_domain_recipients_basic(self):
         """Test getting domain recipients using request object."""
+        query_params = DomainRecipientsQueryParams(page=1, limit=25)
         request = DomainRecipientsRequest(
             domain_id=self.test_domain_id,
-            page=1,
-            limit=25
+            query_params=query_params
         )
         
         response = self.email_client.domains.get_domain_recipients(request)
@@ -437,10 +447,10 @@ class TestDomainsIntegrationRecipients:
     @vcr.use_cassette("domains_recipients_pagination.yaml")
     def test_get_domain_recipients_pagination(self):
         """Test getting domain recipients with pagination using request object."""
+        query_params = DomainRecipientsQueryParams(page=2, limit=10)
         request = DomainRecipientsRequest(
             domain_id=self.test_domain_id,
-            page=2,
-            limit=10
+            query_params=query_params
         )
         
         response = self.email_client.domains.get_domain_recipients(request)
