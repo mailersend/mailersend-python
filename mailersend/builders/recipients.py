@@ -3,9 +3,11 @@ from typing import Optional, List, TYPE_CHECKING
 
 from mailersend.models.recipients import (
     RecipientsListRequest,
+    RecipientsListQueryParams,
     RecipientGetRequest,
     RecipientDeleteRequest,
     SuppressionListRequest,
+    SuppressionListQueryParams,
     SuppressionAddRequest,
     SuppressionDeleteRequest,
 )
@@ -21,7 +23,7 @@ class RecipientsBuilder:
         """Initialize the RecipientsBuilder."""
         self._domain_id: Optional[str] = None
         self._page: Optional[int] = None
-        self._limit: Optional[int] = 25
+        self._limit: Optional[int] = None
         self._recipient_id: Optional[str] = None
         self._recipients: Optional[List[str]] = None
         self._patterns: Optional[List[str]] = None
@@ -182,11 +184,17 @@ class RecipientsBuilder:
         Returns:
             RecipientsListRequest: The built request object
         """
-        return RecipientsListRequest(
-            domain_id=self._domain_id,
-            page=self._page,
-            limit=self._limit,
-        )
+        # Create query params object with only set values
+        query_params_data = {}
+        if self._domain_id is not None:
+            query_params_data["domain_id"] = self._domain_id
+        if self._page is not None:
+            query_params_data["page"] = self._page
+        if self._limit is not None:
+            query_params_data["limit"] = self._limit
+        
+        query_params = RecipientsListQueryParams(**query_params_data)
+        return RecipientsListRequest(query_params=query_params)
 
     def build_recipient_get_request(self) -> RecipientGetRequest:
         """Build a request for getting a single recipient.
@@ -198,7 +206,7 @@ class RecipientsBuilder:
             ValueError: If recipient_id is not set
         """
         if not self._recipient_id:
-            raise ValueError("recipient_id must be set for get request")
+            raise ValueError("recipient_id is required for get_recipient operations")
         
         return RecipientGetRequest(recipient_id=self._recipient_id)
 
@@ -212,7 +220,7 @@ class RecipientsBuilder:
             ValueError: If recipient_id is not set
         """
         if not self._recipient_id:
-            raise ValueError("recipient_id must be set for delete request")
+            raise ValueError("recipient_id is required for delete_recipient operations")
         
         return RecipientDeleteRequest(recipient_id=self._recipient_id)
 
@@ -222,11 +230,17 @@ class RecipientsBuilder:
         Returns:
             SuppressionListRequest: The built request object
         """
-        return SuppressionListRequest(
-            domain_id=self._domain_id,
-            page=self._page,
-            limit=self._limit,
-        )
+        # Create query params object with only set values
+        query_params_data = {}
+        if self._domain_id is not None:
+            query_params_data["domain_id"] = self._domain_id
+        if self._page is not None:
+            query_params_data["page"] = self._page
+        if self._limit is not None:
+            query_params_data["limit"] = self._limit
+        
+        query_params = SuppressionListQueryParams(**query_params_data)
+        return SuppressionListRequest(query_params=query_params)
 
     def build_suppression_add_request(self) -> SuppressionAddRequest:
         """Build a request for adding to suppression lists.
@@ -235,13 +249,13 @@ class RecipientsBuilder:
             SuppressionAddRequest: The built request object
             
         Raises:
-            ValueError: If domain_id is not set or both recipients and patterns are None
+            ValueError: If domain_id is not set or neither recipients nor patterns are provided
         """
         if not self._domain_id:
-            raise ValueError("domain_id must be set for suppression add request")
+            raise ValueError("domain_id is required for suppression add operations")
         
-        if self._recipients is None and self._patterns is None:
-            raise ValueError("Either recipients or patterns must be provided")
+        if not self._recipients and not self._patterns:
+            raise ValueError("Either recipients or patterns must be provided for suppression add operations")
         
         return SuppressionAddRequest(
             domain_id=self._domain_id,
@@ -256,10 +270,10 @@ class RecipientsBuilder:
             SuppressionDeleteRequest: The built request object
             
         Raises:
-            ValueError: If both ids and all are None
+            ValueError: If neither ids nor all flag are set
         """
-        if self._ids is None and self._all is None:
-            raise ValueError("Either ids or all flag must be provided")
+        if not self._ids and not self._all:
+            raise ValueError("Either ids or all flag must be provided for suppression delete operations")
         
         return SuppressionDeleteRequest(
             domain_id=self._domain_id,
@@ -268,14 +282,14 @@ class RecipientsBuilder:
         )
 
     def reset(self) -> "RecipientsBuilder":
-        """Reset the builder to its initial state.
+        """Reset all builder parameters.
         
         Returns:
             RecipientsBuilder: The builder instance for method chaining
         """
         self._domain_id = None
         self._page = None
-        self._limit = 25
+        self._limit = None
         self._recipient_id = None
         self._recipients = None
         self._patterns = None
@@ -284,10 +298,10 @@ class RecipientsBuilder:
         return self
 
     def copy(self) -> "RecipientsBuilder":
-        """Create a copy of the current builder state.
+        """Create a copy of the current builder.
         
         Returns:
-            RecipientsBuilder: A new builder instance with the same state
+            RecipientsBuilder: A new builder instance with the same parameters
         """
         new_builder = RecipientsBuilder()
         new_builder._domain_id = self._domain_id

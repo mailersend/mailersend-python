@@ -4,13 +4,13 @@ from typing import Optional, List, Union, Dict, Any
 from pydantic import BaseModel, Field, field_validator
 
 
-# Request Models
-class RecipientsListRequest(BaseModel):
-    """Request model for listing recipients."""
+# Query Parameters Models
+class RecipientsListQueryParams(BaseModel):
+    """Query parameters for listing recipients."""
     
     domain_id: Optional[str] = None
-    page: Optional[int] = Field(default=None, ge=1)
-    limit: Optional[int] = Field(default=25, ge=10, le=100)
+    page: int = Field(default=1, ge=1)
+    limit: int = Field(default=25, ge=10, le=100)
     
     @field_validator('domain_id')
     @classmethod
@@ -19,6 +19,51 @@ class RecipientsListRequest(BaseModel):
         if v is not None:
             return v.strip()
         return v
+    
+    def to_query_params(self) -> Dict[str, Any]:
+        """Convert to query parameters dictionary, excluding None values."""
+        params = {}
+        if self.domain_id is not None:
+            params["domain_id"] = self.domain_id
+        params["page"] = self.page
+        params["limit"] = self.limit
+        return params
+
+
+class SuppressionListQueryParams(BaseModel):
+    """Query parameters for listing suppression entries."""
+    
+    domain_id: Optional[str] = None
+    page: int = Field(default=1, ge=1)
+    limit: int = Field(default=25, ge=10, le=100)
+    
+    @field_validator('domain_id')
+    @classmethod
+    def validate_domain_id(cls, v: Optional[str]) -> Optional[str]:
+        """Validate and clean domain_id."""
+        if v is not None:
+            return v.strip()
+        return v
+    
+    def to_query_params(self) -> Dict[str, Any]:
+        """Convert to query parameters dictionary, excluding None values."""
+        params = {}
+        if self.domain_id is not None:
+            params["domain_id"] = self.domain_id
+        params["page"] = self.page
+        params["limit"] = self.limit
+        return params
+
+
+# Request Models
+class RecipientsListRequest(BaseModel):
+    """Request model for listing recipients."""
+    
+    query_params: RecipientsListQueryParams = Field(default_factory=RecipientsListQueryParams)
+    
+    def to_query_params(self) -> Dict[str, Any]:
+        """Convert to query parameters dictionary."""
+        return self.query_params.to_query_params()
 
 
 class RecipientGetRequest(BaseModel):
@@ -52,17 +97,11 @@ class RecipientDeleteRequest(BaseModel):
 class SuppressionListRequest(BaseModel):
     """Request model for listing suppression entries."""
     
-    domain_id: Optional[str] = None
-    page: Optional[int] = Field(default=None, ge=1)
-    limit: Optional[int] = Field(default=25, ge=10, le=100)
+    query_params: SuppressionListQueryParams = Field(default_factory=SuppressionListQueryParams)
     
-    @field_validator('domain_id')
-    @classmethod
-    def validate_domain_id(cls, v: Optional[str]) -> Optional[str]:
-        """Validate and clean domain_id."""
-        if v is not None:
-            return v.strip()
-        return v
+    def to_query_params(self) -> Dict[str, Any]:
+        """Convert to query parameters dictionary."""
+        return self.query_params.to_query_params()
 
 
 class SuppressionAddRequest(BaseModel):

@@ -4,12 +4,17 @@ from datetime import datetime
 from pydantic import ValidationError
 
 from mailersend.models.recipients import (
+    # Query Parameters Models
+    RecipientsListQueryParams,
+    SuppressionListQueryParams,
+    # Request Models
     RecipientsListRequest,
     RecipientGetRequest,
     RecipientDeleteRequest,
     SuppressionListRequest,
     SuppressionAddRequest,
     SuppressionDeleteRequest,
+    # Response Models
     RecipientDomain,
     Recipient,
     BlocklistEntry,
@@ -28,6 +33,135 @@ from mailersend.models.recipients import (
 )
 
 
+class TestRecipientsListQueryParams:
+    """Test RecipientsListQueryParams model."""
+    
+    def test_create_with_defaults(self):
+        """Test creating query params with default values."""
+        params = RecipientsListQueryParams()
+        
+        assert params.domain_id is None
+        assert params.page == 1
+        assert params.limit == 25
+    
+    def test_create_with_all_params(self):
+        """Test creating query params with all parameters."""
+        params = RecipientsListQueryParams(
+            domain_id="domain123",
+            page=2,
+            limit=50,
+        )
+        
+        assert params.domain_id == "domain123"
+        assert params.page == 2
+        assert params.limit == 50
+    
+    def test_domain_id_validation(self):
+        """Test domain_id validation and cleaning."""
+        params = RecipientsListQueryParams(domain_id="  domain123  ")
+        assert params.domain_id == "domain123"
+        
+        params = RecipientsListQueryParams(domain_id=None)
+        assert params.domain_id is None
+    
+    def test_page_validation(self):
+        """Test page validation."""
+        # Valid page
+        params = RecipientsListQueryParams(page=1)
+        assert params.page == 1
+        
+        # Invalid page
+        with pytest.raises(ValidationError) as exc_info:
+            RecipientsListQueryParams(page=0)
+        assert "greater than or equal to 1" in str(exc_info.value)
+    
+    def test_limit_validation(self):
+        """Test limit validation."""
+        # Valid limits
+        params = RecipientsListQueryParams(limit=10)
+        assert params.limit == 10
+        
+        params = RecipientsListQueryParams(limit=100)
+        assert params.limit == 100
+        
+        # Invalid limits
+        with pytest.raises(ValidationError) as exc_info:
+            RecipientsListQueryParams(limit=9)
+        assert "greater than or equal to 10" in str(exc_info.value)
+        
+        with pytest.raises(ValidationError) as exc_info:
+            RecipientsListQueryParams(limit=101)
+        assert "less than or equal to 100" in str(exc_info.value)
+    
+    def test_to_query_params(self):
+        """Test converting to query parameters."""
+        # With all params
+        params = RecipientsListQueryParams(
+            domain_id="domain123",
+            page=2,
+            limit=50,
+        )
+        result = params.to_query_params()
+        
+        expected = {
+            "domain_id": "domain123",
+            "page": 2,
+            "limit": 50,
+        }
+        assert result == expected
+        
+        # With defaults (no domain_id)
+        params = RecipientsListQueryParams()
+        result = params.to_query_params()
+        
+        expected = {
+            "page": 1,
+            "limit": 25,
+        }
+        assert result == expected
+
+
+class TestSuppressionListQueryParams:
+    """Test SuppressionListQueryParams model."""
+    
+    def test_create_with_defaults(self):
+        """Test creating query params with default values."""
+        params = SuppressionListQueryParams()
+        
+        assert params.domain_id is None
+        assert params.page == 1
+        assert params.limit == 25
+    
+    def test_create_with_all_params(self):
+        """Test creating query params with all parameters."""
+        params = SuppressionListQueryParams(
+            domain_id="domain123",
+            page=3,
+            limit=75,
+        )
+        
+        assert params.domain_id == "domain123"
+        assert params.page == 3
+        assert params.limit == 75
+    
+    def test_to_query_params(self):
+        """Test converting to query parameters."""
+        # With all params
+        params = SuppressionListQueryParams(
+            domain_id="domain123",
+            page=3,
+            limit=75,
+        )
+        result = params.to_query_params()
+        
+        expected = {
+            "domain_id": "domain123",
+            "page": 3,
+            "limit": 75,
+        }
+        assert result == expected
+
+
 class TestRecipientsListRequest:
     """Test RecipientsListRequest model."""
     
@@ -35,58 +169,39 @@ class TestRecipientsListRequest:
         """Test creating request with default values."""
         request = RecipientsListRequest()
         
-        assert request.domain_id is None
-        assert request.page is None
-        assert request.limit == 25
+        assert request.query_params.domain_id is None
+        assert request.query_params.page == 1
+        assert request.query_params.limit == 25
     
-    def test_create_with_all_params(self):
-        """Test creating request with all parameters."""
-        request = RecipientsListRequest(
+    def test_create_with_query_params(self):
+        """Test creating request with query params."""
+        query_params = RecipientsListQueryParams(
             domain_id="domain123",
             page=2,
             limit=50,
         )
+        request = RecipientsListRequest(query_params=query_params)
         
-        assert request.domain_id == "domain123"
-        assert request.page == 2
-        assert request.limit == 50
+        assert request.query_params.domain_id == "domain123"
+        assert request.query_params.page == 2
+        assert request.query_params.limit == 50
     
-    def test_domain_id_validation(self):
-        """Test domain_id validation and cleaning."""
-        request = RecipientsListRequest(domain_id="  domain123  ")
-        assert request.domain_id == "domain123"
+    def test_to_query_params(self):
+        """Test converting to query parameters."""
+        query_params = RecipientsListQueryParams(
+            domain_id="domain123",
+            page=2,
+            limit=50,
+        )
+        request = RecipientsListRequest(query_params=query_params)
+        result = request.to_query_params()
         
-        request = RecipientsListRequest(domain_id=None)
-        assert request.domain_id is None
-    
-    def test_page_validation(self):
-        """Test page validation."""
-        # Valid page
-        request = RecipientsListRequest(page=1)
-        assert request.page == 1
-        
-        # Invalid page
-        with pytest.raises(ValidationError) as exc_info:
-            RecipientsListRequest(page=0)
-        assert "greater than or equal to 1" in str(exc_info.value)
-    
-    def test_limit_validation(self):
-        """Test limit validation."""
-        # Valid limits
-        request = RecipientsListRequest(limit=10)
-        assert request.limit == 10
-        
-        request = RecipientsListRequest(limit=100)
-        assert request.limit == 100
-        
-        # Invalid limits
-        with pytest.raises(ValidationError) as exc_info:
-            RecipientsListRequest(limit=9)
-        assert "greater than or equal to 10" in str(exc_info.value)
-        
-        with pytest.raises(ValidationError) as exc_info:
-            RecipientsListRequest(limit=101)
-        assert "less than or equal to 100" in str(exc_info.value)
+        expected = {
+            "domain_id": "domain123",
+            "page": 2,
+            "limit": 50,
+        }
+        assert result == expected
 
 
 class TestRecipientGetRequest:
@@ -138,21 +253,39 @@ class TestSuppressionListRequest:
         """Test creating request with default values."""
         request = SuppressionListRequest()
         
-        assert request.domain_id is None
-        assert request.page is None
-        assert request.limit == 25
+        assert request.query_params.domain_id is None
+        assert request.query_params.page == 1
+        assert request.query_params.limit == 25
     
-    def test_create_with_all_params(self):
-        """Test creating request with all parameters."""
-        request = SuppressionListRequest(
+    def test_create_with_query_params(self):
+        """Test creating request with query params."""
+        query_params = SuppressionListQueryParams(
             domain_id="domain123",
             page=3,
             limit=75,
         )
+        request = SuppressionListRequest(query_params=query_params)
         
-        assert request.domain_id == "domain123"
-        assert request.page == 3
-        assert request.limit == 75
+        assert request.query_params.domain_id == "domain123"
+        assert request.query_params.page == 3
+        assert request.query_params.limit == 75
+    
+    def test_to_query_params(self):
+        """Test converting to query parameters."""
+        query_params = SuppressionListQueryParams(
+            domain_id="domain123",
+            page=3,
+            limit=75,
+        )
+        request = SuppressionListRequest(query_params=query_params)
+        result = request.to_query_params()
+        
+        expected = {
+            "domain_id": "domain123",
+            "page": 3,
+            "limit": 75,
+        }
+        assert result == expected
 
 
 class TestSuppressionAddRequest:
