@@ -1,13 +1,14 @@
-"""Webhooks API builder for MailerSend SDK."""
+"""Webhooks builder for MailerSend SDK."""
 
 from typing import List, Optional
 
 from ..models.webhooks import (
-    WebhookCreateRequest,
-    WebhookDeleteRequest,
-    WebhookGetRequest,
-    WebhookUpdateRequest,
+    WebhooksListQueryParams,
     WebhooksListRequest,
+    WebhookGetRequest,
+    WebhookCreateRequest,
+    WebhookUpdateRequest,
+    WebhookDeleteRequest,
 )
 
 
@@ -175,7 +176,10 @@ class WebhooksBuilder:
         if not self._domain_id:
             raise ValueError("domain_id is required for webhooks list request")
         
-        return WebhooksListRequest(domain_id=self._domain_id)
+        # Create query params
+        query_params = WebhooksListQueryParams(domain_id=self._domain_id)
+        
+        return WebhooksListRequest(query_params=query_params)
     
     def build_webhook_get_request(self) -> WebhookGetRequest:
         """Build WebhookGetRequest from current builder state.

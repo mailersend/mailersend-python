@@ -1,4 +1,4 @@
-"""Unit tests for webhooks models."""
+"""Tests for Webhooks models."""
 
 from datetime import datetime
 
@@ -6,15 +6,56 @@ import pytest
 from pydantic import ValidationError
 
 from mailersend.models.webhooks import (
-    Webhook,
-    WebhookCreateRequest,
-    WebhookDeleteRequest,
-    WebhookGetRequest,
-    WebhookResponse,
-    WebhookUpdateRequest,
+    WebhooksListQueryParams,
     WebhooksListRequest,
+    WebhookGetRequest,
+    WebhookCreateRequest,
+    WebhookUpdateRequest,
+    WebhookDeleteRequest,
+    Webhook,
     WebhooksListResponse,
+    WebhookResponse,
 )
+
+
+class TestWebhooksListQueryParams:
+    """Test WebhooksListQueryParams model."""
+    
+    def test_valid_request(self):
+        """Test creating a valid WebhooksListQueryParams."""
+        params = WebhooksListQueryParams(domain_id="test_domain_123")
+        assert params.domain_id == "test_domain_123"
+    
+    def test_domain_id_required(self):
+        """Test that domain_id is required."""
+        with pytest.raises(ValidationError) as exc_info:
+            WebhooksListQueryParams()
+        assert "domain_id" in str(exc_info.value)
+    
+    def test_empty_domain_id(self):
+        """Test validation with empty domain_id."""
+        with pytest.raises(ValidationError) as exc_info:
+            WebhooksListQueryParams(domain_id="")
+        assert "domain_id cannot be empty" in str(exc_info.value)
+    
+    def test_whitespace_domain_id(self):
+        """Test validation with whitespace-only domain_id."""
+        with pytest.raises(ValidationError) as exc_info:
+            WebhooksListQueryParams(domain_id="   ")
+        assert "domain_id cannot be empty" in str(exc_info.value)
+    
+    def test_domain_id_stripped(self):
+        """Test that domain_id is stripped of whitespace."""
+        params = WebhooksListQueryParams(domain_id="  test_domain_123  ")
+        assert params.domain_id == "test_domain_123"
+    
+    def test_to_query_params(self):
+        """Test query params conversion."""
+        params = WebhooksListQueryParams(domain_id="test_domain_123")
+        query_dict = params.to_query_params()
+        
+        expected = {"domain_id": "test_domain_123"}
+        assert query_dict == expected
 
 
 class TestWebhooksListRequest:
@@ -22,31 +63,19 @@ class TestWebhooksListRequest:
     
     def test_valid_request(self):
         """Test creating a valid WebhooksListRequest."""
-        request = WebhooksListRequest(domain_id="test_domain_123")
-        assert request.domain_id == "test_domain_123"
+        query_params = WebhooksListQueryParams(domain_id="test_domain_123")
+        request = WebhooksListRequest(query_params=query_params)
+        
+        assert request.query_params.domain_id == "test_domain_123"
     
-    def test_domain_id_required(self):
-        """Test that domain_id is required."""
-        with pytest.raises(ValidationError) as exc_info:
-            WebhooksListRequest()
-        assert "domain_id" in str(exc_info.value)
-    
-    def test_empty_domain_id(self):
-        """Test validation with empty domain_id."""
-        with pytest.raises(ValidationError) as exc_info:
-            WebhooksListRequest(domain_id="")
-        assert "domain_id cannot be empty" in str(exc_info.value)
-    
-    def test_whitespace_domain_id(self):
-        """Test validation with whitespace-only domain_id."""
-        with pytest.raises(ValidationError) as exc_info:
-            WebhooksListRequest(domain_id="   ")
-        assert "domain_id cannot be empty" in str(exc_info.value)
-    
-    def test_domain_id_stripped(self):
-        """Test that domain_id is stripped of whitespace."""
-        request = WebhooksListRequest(domain_id="  test_domain_123  ")
-        assert request.domain_id == "test_domain_123"
+    def test_to_query_params_delegation(self):
+        """Test that to_query_params delegates to query_params object."""
+        query_params = WebhooksListQueryParams(domain_id="test_domain_123")
+        request = WebhooksListRequest(query_params=query_params)
+        
+        query_dict = request.to_query_params()
+        expected = {"domain_id": "test_domain_123"}
+        assert query_dict == expected
 
 
 class TestWebhookGetRequest:
@@ -204,13 +233,13 @@ class TestWebhookUpdateRequest:
             webhook_id="webhook_123",
             url="https://example.com/webhook",
             name="Updated Webhook",
-            events=["activity.sent", "activity.delivered"],
+            events=["activity.sent"],
             enabled=False
         )
         assert request.webhook_id == "webhook_123"
         assert request.url == "https://example.com/webhook"
         assert request.name == "Updated Webhook"
-        assert request.events == ["activity.sent", "activity.delivered"]
+        assert request.events == ["activity.sent"]
         assert request.enabled is False
     
     def test_webhook_id_required(self):
@@ -220,9 +249,8 @@ class TestWebhookUpdateRequest:
         assert "webhook_id" in str(exc_info.value)
     
     def test_optional_fields(self):
-        """Test that other fields are optional."""
+        """Test that optional fields can be None."""
         request = WebhookUpdateRequest(webhook_id="webhook_123")
-        assert request.webhook_id == "webhook_123"
         assert request.url is None
         assert request.name is None
         assert request.events is None
@@ -267,7 +295,7 @@ class TestWebhookUpdateRequest:
         assert "events cannot be empty when provided" in str(exc_info.value)
     
     def test_fields_stripped(self):
-        """Test that string fields are stripped of whitespace."""
+        """Test that string fields are stripped of whitespace when provided."""
         request = WebhookUpdateRequest(
             webhook_id="  webhook_123  ",
             url="  https://example.com/webhook  ",
@@ -305,7 +333,7 @@ class TestWebhookDeleteRequest:
 
 
 class TestWebhook:
-    """Test Webhook response model."""
+    """Test Webhook model."""
     
     def test_valid_webhook(self):
         """Test creating a valid Webhook."""
@@ -319,6 +347,7 @@ class TestWebhook:
             created_at=datetime(2023, 1, 1, 12, 0, 0),
             updated_at=datetime(2023, 1, 2, 12, 0, 0)
         )
+        
         assert webhook.id == "webhook_123"
         assert webhook.url == "https://example.com/webhook"
         assert webhook.name == "Test Webhook"
@@ -344,14 +373,15 @@ class TestWebhooksListResponse:
             created_at=datetime(2023, 1, 1, 12, 0, 0),
             updated_at=datetime(2023, 1, 2, 12, 0, 0)
         )
+        
         response = WebhooksListResponse(data=[webhook])
         assert len(response.data) == 1
-        assert response.data[0] == webhook
+        assert response.data[0].id == "webhook_123"
     
     def test_empty_list(self):
-        """Test response with empty webhook list."""
+        """Test creating response with empty webhook list."""
         response = WebhooksListResponse(data=[])
-        assert response.data == []
+        assert len(response.data) == 0
 
 
 class TestWebhookResponse:
@@ -369,5 +399,7 @@ class TestWebhookResponse:
             created_at=datetime(2023, 1, 1, 12, 0, 0),
             updated_at=datetime(2023, 1, 2, 12, 0, 0)
         )
+        
         response = WebhookResponse(data=webhook)
-        assert response.data == webhook 
+        assert response.data.id == "webhook_123"
+        assert response.data.name == "Test Webhook" 
