@@ -1,8 +1,10 @@
+"""Templates builder for MailerSend SDK."""
 from typing import Optional
 from copy import deepcopy
 
 from ..models.templates import (
-    TemplatesListRequest, TemplateGetRequest, TemplateDeleteRequest
+    TemplatesListRequest, TemplatesListQueryParams,
+    TemplateGetRequest, TemplateDeleteRequest
 )
 from ..exceptions import ValidationError
 
@@ -142,11 +144,19 @@ class TemplatesBuilder:
         Returns:
             Validated TemplatesListRequest instance
         """
-        return TemplatesListRequest(
-            domain_id=self._domain_id,
-            page=self._page,
-            limit=self._limit
-        )
+        # Create query params - only set values that were explicitly provided
+        query_params_dict = {}
+        
+        if self._domain_id is not None:
+            query_params_dict["domain_id"] = self._domain_id
+        if self._page is not None:
+            query_params_dict["page"] = self._page
+        if self._limit is not None:
+            query_params_dict["limit"] = self._limit
+        
+        query_params = TemplatesListQueryParams(**query_params_dict)
+        
+        return TemplatesListRequest(query_params=query_params)
     
     def build_template_get_request(self) -> TemplateGetRequest:
         """
