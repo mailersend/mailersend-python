@@ -29,6 +29,7 @@ from .resources.sms_messages import SmsMessages
 from .resources.smtp_users import SmtpUsers
 from .resources.sms_sending import SmsSending
 from .resources.sms_numbers import SmsNumbers
+from .resources.sms_activity import SmsActivity
 from .logging import get_logger, RequestLogger
 
 
@@ -119,6 +120,7 @@ class MailerSendClient:
         self.smtp_users = SmtpUsers(self)
         self.sms_sending = SmsSending(self)
         self.sms_numbers = SmsNumbers(self)
+        self.sms_activity = SmsActivity(self)
         
         self.logger.info("MailerSend client initialized successfully")
         if debug:

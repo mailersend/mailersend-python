@@ -213,6 +213,14 @@ from .sms_numbers import (
     SmsNumbersListResponse,
     SmsNumberResponse
 )
+from .sms_activity import (
+    SmsActivity,
+    SmsActivityListRequest,
+    SmsMessageGetRequest,
+    SmsActivityListResponse,
+    SmsMessage,
+    SmsMessageResponse
+)
 
 __all__ = [
     "BaseModel",
@@ -399,4 +407,11 @@ __all__ = [
     "SmsNumberDeleteRequest",
     "SmsNumbersListResponse",
     "SmsNumberResponse",
+    # SMS Activity models
+    "SmsActivity",
+    "SmsActivityListRequest",
+    "SmsMessageGetRequest",
+    "SmsActivityListResponse",
+    "SmsMessage",
+    "SmsMessageResponse",
 ]

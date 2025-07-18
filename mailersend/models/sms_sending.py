@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field, field_validator, model_validator
 from .base import BaseModel as MailerSendBaseModel
 
 
-class SmsPersonalization(BaseModel):
+class SmsPersonalization(MailerSendBaseModel):
     """Model for SMS personalization data."""
     phone_number: str
     data: Dict[str, Any]
