@@ -35,7 +35,7 @@ class SmsMessages(BaseResource):
         
         response = self.client.request(
             method="GET",
-            endpoint="/v1/sms-messages",
+            path="sms-messages",
             params=params
         )
         
@@ -55,7 +55,7 @@ class SmsMessages(BaseResource):
         
         response = self.client.request(
             method="GET",
-            endpoint=f"/v1/sms-messages/{request.sms_message_id}"
+            path=f"sms-messages/{request.sms_message_id}"
         )
         
         return self._create_response(response, SmsMessageResponse) 
