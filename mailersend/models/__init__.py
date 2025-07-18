@@ -199,6 +199,11 @@ from .users import (
     InviteResponse,
     InviteResendResponse,
 )
+from .sms_sending import (
+    SmsPersonalization,
+    SmsSendRequest,
+    SmsSendResponse
+)
 
 __all__ = [
     "BaseModel",
@@ -373,4 +378,8 @@ __all__ = [
     "InvitesListResponse",
     "InviteResponse",
     "InviteResendResponse",
+    # SMS Sending models
+    "SmsPersonalization",
+    "SmsSendRequest",
+    "SmsSendResponse",
 ]

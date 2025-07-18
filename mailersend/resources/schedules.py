@@ -46,7 +46,7 @@ class Schedules(BaseResource):
         # Make API request
         response = self.client.request(
             method='GET',
-            endpoint='message-schedules',
+            path='message-schedules',
             params=params if params else None
         )
         
@@ -74,7 +74,7 @@ class Schedules(BaseResource):
         # Make API request
         response = self.client.request(
             method='GET',
-            endpoint=f'message-schedules/{request.message_id}'
+            path=f'message-schedules/{request.message_id}'
         )
         
         return self._create_response(response, ScheduleResponse)
@@ -101,7 +101,7 @@ class Schedules(BaseResource):
         # Make API request
         response = self.client.request(
             method='DELETE',
-            endpoint=f'message-schedules/{request.message_id}'
+            path=f'message-schedules/{request.message_id}'
         )
         
         return self._create_response(response) 

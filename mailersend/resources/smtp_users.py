@@ -33,7 +33,7 @@ class SmtpUsers(BaseResource):
         # Make API call
         response = self.client.request(
             method="GET",
-            endpoint=f"/v1/domains/{request.domain_id}/smtp-users",
+            path=f"domains/{request.domain_id}/smtp-users",
             params=params
         )
         
@@ -54,7 +54,7 @@ class SmtpUsers(BaseResource):
         # Make API call
         response = self.client.request(
             method="GET",
-            endpoint=f"/v1/domains/{request.domain_id}/smtp-users/{request.smtp_user_id}"
+            path=f"/v1/domains/{request.domain_id}/smtp-users/{request.smtp_user_id}"
         )
         
         # Create standardized response
@@ -74,8 +74,8 @@ class SmtpUsers(BaseResource):
         # Make API call
         response = self.client.request(
             method="POST",
-            endpoint=f"/v1/domains/{request.domain_id}/smtp-users",
-            json=request.to_json()
+            path=f"/v1/domains/{request.domain_id}/smtp-users",
+            body=request.to_json()
         )
         
         # Create standardized response
@@ -95,8 +95,8 @@ class SmtpUsers(BaseResource):
         # Make API call
         response = self.client.request(
             method="PUT",
-            endpoint=f"/v1/domains/{request.domain_id}/smtp-users/{request.smtp_user_id}",
-            json=request.to_json()
+            path=f"/v1/domains/{request.domain_id}/smtp-users/{request.smtp_user_id}",
+            body=request.to_json()
         )
         
         # Create standardized response
@@ -116,7 +116,7 @@ class SmtpUsers(BaseResource):
         # Make API call
         response = self.client.request(
             method="DELETE",
-            endpoint=f"/v1/domains/{request.domain_id}/smtp-users/{request.smtp_user_id}"
+            path=f"/v1/domains/{request.domain_id}/smtp-users/{request.smtp_user_id}"
         )
         
         # Create standardized response
