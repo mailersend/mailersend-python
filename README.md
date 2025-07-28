@@ -9,15 +9,29 @@ MailerSend Python SDK
 - [Installation](#installation)
   - [Requirements](#requirements)
   - [Authentication](#authentication)
+    - [Environment Variable (Recommended)](#environment-variable-recommended)
+    - [Direct API Key](#direct-api-key)
 - [SDK Architecture](#sdk-architecture)
   - [Builder Pattern](#builder-pattern)
   - [Resource Classes](#resource-classes)
   - [Request and Response Models](#request-and-response-models)
 - [Response Data Access](#response-data-access)
   - [Multiple Access Patterns](#multiple-access-patterns)
+    - [Dict-like Access](#dict-like-access)
+    - [Attribute Access](#attribute-access)
+    - [Safe Access with Defaults](#safe-access-with-defaults)
+    - [Handling Method Name Conflicts](#handling-method-name-conflicts)
   - [Data Format Conversion](#data-format-conversion)
+    - [Convert to Dictionary](#convert-to-dictionary)
+    - [Convert to JSON](#convert-to-json)
+    - [Extract Raw Data](#extract-raw-data)
   - [Headers and Metadata](#headers-and-metadata)
+    - [Access Response Headers](#access-response-headers)
+    - [Response Metadata](#response-metadata)
   - [Error Handling with Responses](#error-handling-with-responses)
+    - [Check Response Status](#check-response-status)
+    - [Access Error Information](#access-error-information)
+    - [Working with Different Response Types](#working-with-different-response-types)
 - [Logging](#logging)
   - [Enable Debug Logging](#enable-debug-logging)
   - [Custom Logging Configuration](#custom-logging-configuration)
@@ -139,6 +153,8 @@ MailerSend Python SDK
     - [Get API Quota](#get-api-quota)
 - [Error Handling](#error-handling)
 - [Testing](#testing)
+  - [Running Unit Tests](#running-unit-tests)
+  - [Testing with VCR](#testing-with-vcr)
 - [Available endpoints](#available-endpoints)
 - [Support and Feedback](#support-and-feedback)
 - [License](#license)
@@ -275,7 +291,7 @@ if "sms" in response["data"]:
 
 # Check if key exists
 if "error" in response:
-    print(f"Error: {response['error']}")
+    error_message = response['error']
 ```
 
 ### Attribute Access
@@ -335,8 +351,7 @@ Get the complete response as a dictionary:
 ```python
 # Convert entire response to dict
 response_dict = response.to_dict()
-print(response_dict)
-# Output:
+# Returns:
 # {
 #     "data": {"id": "123", "number": "+1234567890", ...},
 #     "headers": {"x-request-id": "req-456", ...},
@@ -363,7 +378,6 @@ json_string = response.to_json()
 
 # Pretty-printed JSON with indentation
 pretty_json = response.to_json(indent=2)
-print(pretty_json)
 
 # Custom JSON options
 unicode_json = response.to_json(ensure_ascii=False, indent=4)
@@ -450,18 +464,18 @@ try:
     response = ms.email.send(email)
     
     if response.success:
-        print(f"Email sent successfully! ID: {response.data.id}")
-        print(f"Remaining quota: {response.rate_limit_remaining}")
+        email_id = response.data.id
+        remaining_quota = response.rate_limit_remaining
     else:
-        print(f"Request failed with status: {response.status_code}")
-        print(f"Error details: {response.data}")
+        status_code = response.status_code
+        error_details = response.data
         
         # Handle rate limiting
         if response.status_code == 429 and response.retry_after:
-            print(f"Rate limited. Retry after {response.retry_after} seconds")
+            retry_seconds = response.retry_after
             
 except Exception as e:
-    print(f"Request failed: {e}")
+    # Handle exception
 ```
 
 ### Access Error Information
@@ -478,7 +492,7 @@ if not response.success:
     # Validation errors (422 responses)
     if "errors" in error_data:
         for field, messages in error_data["errors"].items():
-            print(f"Validation error in {field}: {', '.join(messages)}")
+            validation_errors = {field: messages}
 ```
 
 ### Working with Different Response Types
@@ -497,13 +511,14 @@ if users_response.success:
     total_count = users_response.data["meta"]["total"]
     
     for user in users:
-        print(f"User: {user['name']} ({user['email']})")
+        user_name = user['name']
+        user_email = user['email']
 
 # Empty responses (delete operations)
 delete_response = ms.users.delete_user(request)
 if delete_response.success:
-    print("User deleted successfully")
     # delete_response.data is typically empty or contains confirmation
+    deletion_confirmed = True
 ```
 
 <a name="logging"></a>
@@ -1970,9 +1985,9 @@ for recipient in response.data:
     print(f"Recipient: {recipient.number}, Status: {recipient.status}")
 
 # Alternative access patterns
-print(f"Total recipients: {response['meta']['total']}")  # Dict access
-print(f"Request ID: {response.headers.x_request_id}")    # Header attribute access
-print(f"Status code: {response.status_code}")           # Direct property access
+total_recipients = response['meta']['total']        # Dict access
+request_id = response.headers.x_request_id         # Header attribute access
+status_code = response.status_code                 # Direct property access
 
 # Convert to different formats
 json_response = response.to_json(indent=2)  # Pretty JSON
