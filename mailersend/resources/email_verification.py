@@ -59,13 +59,10 @@ class EmailVerification(BaseResource):
         logger.info(f"Verifying email address: {request.email}")
         
         # Make API call
-        response = self.client.request("POST", "email-verification/verify", json=payload)
+        response = self.client.request("POST", "email-verification/verify", body=payload)
         
         # Create standardized response
-        return self._create_response(
-            response,
-            EmailVerifyResponse(**response.json())
-        )
+        return self._create_response(response, EmailVerifyResponse)
 
     def verify_email_async(self, request: EmailVerifyAsyncRequest) -> APIResponse:
         """Verify a single email address (asynchronous).
@@ -98,13 +95,10 @@ class EmailVerification(BaseResource):
         logger.info(f"Starting async verification for email: {request.email}")
         
         # Make API call
-        response = self.client.request("POST", "email-verification/verify-async", json=payload)
+        response = self.client.request("POST", "email-verification/verify-async", body=payload)
         
         # Create standardized response
-        return self._create_response(
-            response,
-            EmailVerifyAsyncResponse(**response.json())
-        )
+        return self._create_response(response, EmailVerifyAsyncResponse)
 
     def get_async_status(self, request: EmailVerificationAsyncStatusRequest) -> APIResponse:
         """Get the status of an async email verification.
@@ -139,10 +133,7 @@ class EmailVerification(BaseResource):
         response = self.client.request("GET", url)
         
         # Create standardized response
-        return self._create_response(
-            response,
-            EmailVerificationAsyncStatusResponse(**response.json())
-        )
+        return self._create_response(response, EmailVerificationAsyncStatusResponse)
 
     def list_verifications(self, request: EmailVerificationListsRequest) -> APIResponse:
         """List all email verification lists.
@@ -178,10 +169,7 @@ class EmailVerification(BaseResource):
         response = self.client.request("GET", "email-verification", params=params)
         
         # Create standardized response
-        return self._create_response(
-            response,
-            EmailVerificationListsResponse(**response.json())
-        )
+        return self._create_response(response, EmailVerificationListsResponse)
 
     def get_verification(self, request: EmailVerificationGetRequest) -> APIResponse:
         """Get a single email verification list.
@@ -216,10 +204,7 @@ class EmailVerification(BaseResource):
         response = self.client.request("GET", url)
         
         # Create standardized response
-        return self._create_response(
-            response,
-            EmailVerificationResponse(**response.json())
-        )
+        return self._create_response(response, EmailVerificationResponse)
 
     def create_verification(self, request: EmailVerificationCreateRequest) -> APIResponse:
         """Create a new email verification list.
@@ -255,13 +240,10 @@ class EmailVerification(BaseResource):
         logger.info(f"Creating email verification list: {request.name} with {len(request.emails)} emails")
         
         # Make API call
-        response = self.client.request("POST", "email-verification", json=payload)
+        response = self.client.request("POST", "email-verification", body=payload)
         
         # Create standardized response
-        return self._create_response(
-            response,
-            EmailVerificationResponse(**response.json())
-        )
+        return self._create_response(response, EmailVerificationResponse)
 
     def verify_list(self, request: EmailVerificationVerifyRequest) -> APIResponse:
         """Start verification of an email verification list.
@@ -296,10 +278,7 @@ class EmailVerification(BaseResource):
         response = self.client.request("GET", url)
         
         # Create standardized response
-        return self._create_response(
-            response,
-            EmailVerificationResponse(**response.json())
-        )
+        return self._create_response(response, EmailVerificationResponse)
 
     def get_results(self, request: EmailVerificationResultsRequest) -> APIResponse:
         """Get verification results for an email verification list.
@@ -337,7 +316,4 @@ class EmailVerification(BaseResource):
         response = self.client.request("GET", url, params=params)
         
         # Create standardized response
-        return self._create_response(
-            response,
-            EmailVerificationResultsResponse(**response.json())
-        ) 
+        return self._create_response(response, EmailVerificationResultsResponse) 
