@@ -23,6 +23,7 @@ from .sms_activity import SmsActivity
 from .sms_sending import SmsSending
 from .sms_recipients import SmsRecipients
 from .sms_webhooks import SmsWebhooks
+from .sms_inbounds import SmsInbounds
 
 __all__ = [
     "BaseResource",
@@ -46,4 +47,5 @@ __all__ = [
     "SmsSending",
     "SmsRecipients",
     "SmsWebhooks",
+    "SmsInbounds",
 ]
