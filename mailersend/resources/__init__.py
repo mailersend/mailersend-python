@@ -17,7 +17,12 @@ from .tokens import Tokens
 from .webhooks import Webhooks
 from .email_verification import EmailVerification
 from .users import Users
+from .sms_messages import SmsMessages
+from .sms_numbers import SmsNumbers
+from .sms_activity import SmsActivity
+from .sms_sending import SmsSending
 from .sms_recipients import SmsRecipients
+from .sms_webhooks import SmsWebhooks
 
 __all__ = [
     "BaseResource",
@@ -35,5 +40,10 @@ __all__ = [
     "Webhooks",
     "EmailVerification",
     "Users",
+    "SmsMessages",
+    "SmsNumbers",
+    "SmsActivity",
+    "SmsSending",
     "SmsRecipients",
+    "SmsWebhooks",
 ]
