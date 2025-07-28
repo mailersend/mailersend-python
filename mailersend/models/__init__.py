@@ -232,6 +232,20 @@ from .sms_recipients import (
     SmsRecipientGetResponse,
     SmsRecipientUpdateResponse
 )
+from .sms_webhooks import (
+    SmsWebhookEvent,
+    SmsWebhooksListRequest,
+    SmsWebhookGetRequest,
+    SmsWebhookCreateRequest,
+    SmsWebhookUpdateRequest,
+    SmsWebhookDeleteRequest,
+    SmsWebhook,
+    SmsWebhooksListResponse,
+    SmsWebhookGetResponse,
+    SmsWebhookCreateResponse,
+    SmsWebhookUpdateResponse,
+    SmsWebhookDeleteResponse
+)
 
 __all__ = [
     "BaseModel",
@@ -435,4 +449,17 @@ __all__ = [
     "SmsRecipientsListResponse",
     "SmsRecipientGetResponse",
     "SmsRecipientUpdateResponse",
+    # SMS Webhooks models
+    "SmsWebhookEvent",
+    "SmsWebhooksListRequest",
+    "SmsWebhookGetRequest",
+    "SmsWebhookCreateRequest",
+    "SmsWebhookUpdateRequest",
+    "SmsWebhookDeleteRequest",
+    "SmsWebhook",
+    "SmsWebhooksListResponse",
+    "SmsWebhookGetResponse",
+    "SmsWebhookCreateResponse",
+    "SmsWebhookUpdateResponse",
+    "SmsWebhookDeleteResponse",
 ]
