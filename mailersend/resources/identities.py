@@ -81,7 +81,7 @@ class IdentitiesResource(BaseResource):
         response = self.client.request(
             method='POST',
             endpoint='/identities',
-            json=data
+            body=data
         )
         
         return self._create_response(response, IdentityResponse)
@@ -168,7 +168,7 @@ class IdentitiesResource(BaseResource):
         response = self.client.request(
             method='PUT',
             endpoint=f'/identities/{request.identity_id}',
-            json=data if data else None
+            body=data if data else None
         )
         
         return self._create_response(response, IdentityResponse)
@@ -201,7 +201,7 @@ class IdentitiesResource(BaseResource):
         response = self.client.request(
             method='PUT',
             endpoint=f'/identities/email/{request.email}',
-            json=data if data else None
+            body=data if data else None
         )
         
         return self._create_response(response, IdentityResponse)

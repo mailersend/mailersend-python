@@ -117,7 +117,7 @@ class InboundResource(BaseResource):
         response = self.client.request(
             method='POST',
             endpoint='inbound',
-            json=data
+            body=data
         )
         
         return self._create_response(response, InboundResponse)
@@ -162,7 +162,7 @@ class InboundResource(BaseResource):
         response = self.client.request(
             method='PUT',
             endpoint=f'inbound/{request.inbound_id}',
-            json=data
+            body=data
         )
         
         return self._create_response(response, InboundResponse)
