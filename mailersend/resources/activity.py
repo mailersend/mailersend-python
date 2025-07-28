@@ -1,6 +1,3 @@
-from typing import Optional, List, Union
-from datetime import datetime
-
 from .base import BaseResource
 from ..models.activity import ActivityRequest, SingleActivityRequest
 from ..models.base import APIResponse

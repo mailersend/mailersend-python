@@ -19,6 +19,11 @@ from .tokens import TokensBuilder
 from .webhooks import WebhooksBuilder
 from .email_verification import EmailVerificationBuilder
 from .users import UsersBuilder
+from .sms_messages import SmsMessagesBuilder
+from .sms_numbers import SmsNumbersBuilder
+from .sms_activity import SmsActivityBuilder
+from .sms_sending import SmsSendingBuilder
+from .sms_recipients import SmsRecipientsBuilder
 
 __all__ = [
     'EmailBuilder',
@@ -36,4 +41,9 @@ __all__ = [
     'WebhooksBuilder',
     'EmailVerificationBuilder',
     'UsersBuilder',
+    'SmsMessagesBuilder',
+    'SmsNumbersBuilder',
+    'SmsActivityBuilder',
+    'SmsSendingBuilder',
+    'SmsRecipientsBuilder',
 ] 

@@ -1,0 +1,74 @@
+"""SMS Recipients resource."""
+
+from .base import BaseResource
+from ..models.sms_recipients import (
+    SmsRecipientsListRequest,
+    SmsRecipientGetRequest,
+    SmsRecipientUpdateRequest
+)
+from ..models.base import APIResponse
+
+
+class SmsRecipients(BaseResource):
+    """SMS Recipients resource for MailerSend API."""
+
+    def list_sms_recipients(self, request: SmsRecipientsListRequest) -> APIResponse:
+        """
+        List SMS recipients.
+        
+        Args:
+            request: SmsRecipientsListRequest object containing query parameters
+            
+        Returns:
+            APIResponse: Response containing list of SMS recipients
+        """
+        params = request.to_query_params()
+        
+        self.logger.info(f"Listing SMS recipients with page: {request.query_params.page}, limit: {request.query_params.limit}")
+        
+        response = self.client.request(
+            method="GET",
+            path="sms-recipients",
+            params=params
+        )
+        
+        return self._create_response(response)
+
+    def get_sms_recipient(self, request: SmsRecipientGetRequest) -> APIResponse:
+        """
+        Get a single SMS recipient.
+        
+        Args:
+            request: SmsRecipientGetRequest object containing SMS recipient ID
+            
+        Returns:
+            APIResponse: Response containing SMS recipient details
+        """
+        self.logger.info(f"Getting SMS recipient: {request.sms_recipient_id}")
+        
+        response = self.client.request(
+            method="GET",
+            path=f"sms-recipients/{request.sms_recipient_id}"
+        )
+        
+        return self._create_response(response)
+
+    def update_sms_recipient(self, request: SmsRecipientUpdateRequest) -> APIResponse:
+        """
+        Update a single SMS recipient.
+        
+        Args:
+            request: SmsRecipientUpdateRequest object containing SMS recipient ID and new status
+            
+        Returns:
+            APIResponse: Response containing updated SMS recipient
+        """
+        self.logger.info(f"Updating SMS recipient: {request.sms_recipient_id} to status: {request.status}")
+        
+        response = self.client.request(
+            method="PUT",
+            path=f"sms-recipients/{request.sms_recipient_id}",
+            data=request.to_request_body()
+        )
+        
+        return self._create_response(response) 

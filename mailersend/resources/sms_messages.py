@@ -1,20 +1,8 @@
 """SMS Messages resource."""
 
-import logging
-from typing import TYPE_CHECKING
-
-from mailersend.models.sms_messages import (
-    SmsMessagesListRequest, SmsMessageGetRequest,
-    SmsMessagesListResponse, SmsMessageResponse
-)
-from mailersend.models.base import APIResponse
 from .base import BaseResource
-
-if TYPE_CHECKING:
-    from mailersend.client import Client
-
-logger = logging.getLogger(__name__)
-
+from ..models.sms_messages import SmsMessagesListRequest, SmsMessageGetRequest
+from ..models.base import APIResponse
 
 class SmsMessages(BaseResource):
     """SMS Messages resource for MailerSend API."""
@@ -31,7 +19,7 @@ class SmsMessages(BaseResource):
         """
         params = request.to_query_params()
         
-        logger.info(f"Listing SMS messages with page: {request.query_params.page}, limit: {request.query_params.limit}")
+        self.logger.info(f"Listing SMS messages with page: {request.query_params.page}, limit: {request.query_params.limit}")
         
         response = self.client.request(
             method="GET",
@@ -39,7 +27,7 @@ class SmsMessages(BaseResource):
             params=params
         )
         
-        return self._create_response(response, SmsMessagesListResponse)
+        return self._create_response(response)
 
     def get_sms_message(self, request: SmsMessageGetRequest) -> APIResponse:
         """
@@ -51,11 +39,11 @@ class SmsMessages(BaseResource):
         Returns:
             APIResponse: Response containing SMS message details
         """
-        logger.info(f"Getting SMS message: {request.sms_message_id}")
+        self.logger.info(f"Getting SMS message: {request.sms_message_id}")
         
         response = self.client.request(
             method="GET",
             path=f"sms-messages/{request.sms_message_id}"
         )
         
-        return self._create_response(response, SmsMessageResponse) 
+        return self._create_response(response) 
