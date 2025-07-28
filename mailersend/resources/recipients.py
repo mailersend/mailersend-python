@@ -57,15 +57,15 @@ class Recipients(BaseResource):
         logger.debug(f"Listing recipients with params: {params}")
 
         # Make API call
-        response = self.client.get("/v1/recipients", params=params)
-        
-        # Create response model instance
-        response_data = response.json()
-        recipients_response = RecipientsListResponse(**response_data)
+        response = self.client.request(
+            method='GET',
+            endpoint='/v1/recipients',
+            params=params
+        )
 
         logger.info(f"Listed recipients successfully")
 
-        return self._create_response(response, recipients_response)
+        return self._create_response(response, RecipientsListResponse)
 
     def get_recipient(self, request: RecipientGetRequest) -> APIResponse:
         """
@@ -87,15 +87,14 @@ class Recipients(BaseResource):
         logger.debug(f"Getting recipient: {request.recipient_id}")
 
         # Make API call
-        response = self.client.get(f"/v1/recipients/{request.recipient_id}")
-        
-        # Create response model instance
-        response_data = response.json()
-        recipient_response = RecipientResponse(**response_data)
+        response = self.client.request(
+            method='GET',
+            endpoint=f'/v1/recipients/{request.recipient_id}'
+        )
 
         logger.info(f"Retrieved recipient {request.recipient_id} successfully")
 
-        return self._create_response(response, recipient_response)
+        return self._create_response(response, RecipientResponse)
 
     def delete_recipient(self, request: RecipientDeleteRequest) -> APIResponse:
         """
@@ -117,7 +116,10 @@ class Recipients(BaseResource):
         logger.debug(f"Deleting recipient: {request.recipient_id}")
 
         # Make API call
-        response = self.client.delete(f"/v1/recipients/{request.recipient_id}")
+        response = self.client.request(
+            method='DELETE',
+            endpoint=f'/v1/recipients/{request.recipient_id}'
+        )
 
         logger.info(f"Deleted recipient {request.recipient_id} successfully")
 
@@ -145,15 +147,15 @@ class Recipients(BaseResource):
         logger.debug(f"Listing blocklist with params: {params}")
 
         # Make API call
-        response = self.client.get("/v1/suppressions/blocklist", params=params)
-        
-        # Create response model instance
-        response_data = response.json()
-        blocklist_response = BlocklistResponse(**response_data)
+        response = self.client.request(
+            method='GET',
+            endpoint='/v1/suppressions/blocklist',
+            params=params
+        )
 
         logger.info("Listed blocklist successfully")
 
-        return self._create_response(response, blocklist_response)
+        return self._create_response(response, BlocklistResponse)
 
     def list_hard_bounces(self, request: Optional[SuppressionListRequest] = None) -> APIResponse:
         """
@@ -177,15 +179,15 @@ class Recipients(BaseResource):
         logger.debug(f"Listing hard bounces with params: {params}")
 
         # Make API call
-        response = self.client.get("/v1/suppressions/hard-bounces", params=params)
-        
-        # Create response model instance
-        response_data = response.json()
-        hard_bounces_response = HardBouncesResponse(**response_data)
+        response = self.client.request(
+            method='GET',
+            endpoint='/v1/suppressions/hard-bounces',
+            params=params
+        )
 
         logger.info("Listed hard bounces successfully")
 
-        return self._create_response(response, hard_bounces_response)
+        return self._create_response(response, HardBouncesResponse)
 
     def list_spam_complaints(self, request: Optional[SuppressionListRequest] = None) -> APIResponse:
         """
@@ -209,15 +211,15 @@ class Recipients(BaseResource):
         logger.debug(f"Listing spam complaints with params: {params}")
 
         # Make API call
-        response = self.client.get("/v1/suppressions/spam-complaints", params=params)
-        
-        # Create response model instance
-        response_data = response.json()
-        spam_complaints_response = SpamComplaintsResponse(**response_data)
+        response = self.client.request(
+            method='GET',
+            endpoint='/v1/suppressions/spam-complaints',
+            params=params
+        )
 
         logger.info("Listed spam complaints successfully")
 
-        return self._create_response(response, spam_complaints_response)
+        return self._create_response(response, SpamComplaintsResponse)
 
     def list_unsubscribes(self, request: Optional[SuppressionListRequest] = None) -> APIResponse:
         """
@@ -241,15 +243,15 @@ class Recipients(BaseResource):
         logger.debug(f"Listing unsubscribes with params: {params}")
 
         # Make API call
-        response = self.client.get("/v1/suppressions/unsubscribes", params=params)
-        
-        # Create response model instance
-        response_data = response.json()
-        unsubscribes_response = UnsubscribesResponse(**response_data)
+        response = self.client.request(
+            method='GET',
+            endpoint='/v1/suppressions/unsubscribes',
+            params=params
+        )
 
         logger.info("Listed unsubscribes successfully")
 
-        return self._create_response(response, unsubscribes_response)
+        return self._create_response(response, UnsubscribesResponse)
 
     def list_on_hold(self, request: Optional[SuppressionListRequest] = None) -> APIResponse:
         """
@@ -273,15 +275,15 @@ class Recipients(BaseResource):
         logger.debug(f"Listing on-hold entries with params: {params}")
 
         # Make API call
-        response = self.client.get("/v1/suppressions/on-hold-list", params=params)
-        
-        # Create response model instance
-        response_data = response.json()
-        on_hold_response = OnHoldResponse(**response_data)
+        response = self.client.request(
+            method='GET',
+            endpoint='/v1/suppressions/on-hold-list',
+            params=params
+        )
 
         logger.info("Listed on-hold entries successfully")
 
-        return self._create_response(response, on_hold_response)
+        return self._create_response(response, OnHoldResponse)
 
     def add_to_blocklist(self, request: SuppressionAddRequest) -> APIResponse:
         """
@@ -306,15 +308,15 @@ class Recipients(BaseResource):
         logger.debug(f"Adding to blocklist with body: {body}")
 
         # Make API call
-        response = self.client.post("/v1/suppressions/blocklist", json=body)
-        
-        # Create response model instance
-        response_data = response.json()
-        suppression_response = SuppressionAddResponse(**response_data)
+        response = self.client.request(
+            method='POST',
+            endpoint='/v1/suppressions/blocklist',
+            body=body
+        )
 
         logger.info("Added to blocklist successfully")
 
-        return self._create_response(response, suppression_response)
+        return self._create_response(response, SuppressionAddResponse)
 
     def add_hard_bounces(self, request: SuppressionAddRequest) -> APIResponse:
         """
@@ -343,15 +345,15 @@ class Recipients(BaseResource):
         logger.debug(f"Adding hard bounces with body: {body}")
 
         # Make API call
-        response = self.client.post("/v1/suppressions/hard-bounces", json=body)
-        
-        # Create response model instance
-        response_data = response.json()
-        suppression_response = SuppressionAddResponse(**response_data)
+        response = self.client.request(
+            method='POST',
+            endpoint='/v1/suppressions/hard-bounces',
+            body=body
+        )
 
         logger.info("Added hard bounces successfully")
 
-        return self._create_response(response, suppression_response)
+        return self._create_response(response, SuppressionAddResponse)
 
     def add_spam_complaints(self, request: SuppressionAddRequest) -> APIResponse:
         """
@@ -376,15 +378,15 @@ class Recipients(BaseResource):
         logger.debug(f"Adding spam complaints with body: {body}")
 
         # Make API call
-        response = self.client.post("/v1/suppressions/spam-complaints", json=body)
-        
-        # Create response model instance
-        response_data = response.json()
-        suppression_response = SuppressionAddResponse(**response_data)
+        response = self.client.request(
+            method='POST',
+            endpoint='/v1/suppressions/spam-complaints',
+            body=body
+        )
 
         logger.info("Added spam complaints successfully")
 
-        return self._create_response(response, suppression_response)
+        return self._create_response(response, SuppressionAddResponse)
 
     def add_unsubscribes(self, request: SuppressionAddRequest) -> APIResponse:
         """
@@ -409,15 +411,15 @@ class Recipients(BaseResource):
         logger.debug(f"Adding unsubscribes with body: {body}")
 
         # Make API call
-        response = self.client.post("/v1/suppressions/unsubscribes", json=body)
-        
-        # Create response model instance
-        response_data = response.json()
-        suppression_response = SuppressionAddResponse(**response_data)
+        response = self.client.request(
+            method='POST',
+            endpoint='/v1/suppressions/unsubscribes',
+            body=body
+        )
 
         logger.info("Added unsubscribes successfully")
 
-        return self._create_response(response, suppression_response)
+        return self._create_response(response, SuppressionAddResponse)
 
     def delete_from_blocklist(self, request: SuppressionDeleteRequest) -> APIResponse:
         """
@@ -442,7 +444,11 @@ class Recipients(BaseResource):
         logger.debug(f"Deleting from blocklist with body: {body}")
 
         # Make API call
-        response = self.client.delete("/v1/suppressions/blocklist", json=body)
+        response = self.client.request(
+            method='DELETE',
+            endpoint='/v1/suppressions/blocklist',
+            body=body
+        )
 
         logger.info("Deleted from blocklist successfully")
 
@@ -475,7 +481,11 @@ class Recipients(BaseResource):
         logger.debug(f"Deleting hard bounces with body: {body}")
 
         # Make API call
-        response = self.client.delete("/v1/suppressions/hard-bounces", json=body)
+        response = self.client.request(
+            method='DELETE',
+            endpoint='/v1/suppressions/hard-bounces',
+            body=body
+        )
 
         logger.info("Deleted hard bounces successfully")
 
@@ -508,7 +518,11 @@ class Recipients(BaseResource):
         logger.debug(f"Deleting spam complaints with body: {body}")
 
         # Make API call
-        response = self.client.delete("/v1/suppressions/spam-complaints", json=body)
+        response = self.client.request(
+            method='DELETE',
+            endpoint='/v1/suppressions/spam-complaints',
+            body=body
+        )
 
         logger.info("Deleted spam complaints successfully")
 
@@ -541,7 +555,11 @@ class Recipients(BaseResource):
         logger.debug(f"Deleting unsubscribes with body: {body}")
 
         # Make API call
-        response = self.client.delete("/v1/suppressions/unsubscribes", json=body)
+        response = self.client.request(
+            method='DELETE',
+            endpoint='/v1/suppressions/unsubscribes',
+            body=body
+        )
 
         logger.info("Deleted unsubscribes successfully")
 
@@ -574,7 +592,11 @@ class Recipients(BaseResource):
         logger.debug(f"Deleting from on-hold with body: {body}")
 
         # Make API call
-        response = self.client.delete("/v1/suppressions/on-hold-list", json=body)
+        response = self.client.request(
+            method='DELETE',
+            endpoint='/v1/suppressions/on-hold-list',
+            body=body
+        )
 
         logger.info("Deleted from on-hold successfully")
 
