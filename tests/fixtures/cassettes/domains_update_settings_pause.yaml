@@ -1,0 +1,59 @@
+interactions:
+- request:
+    body: '{"send_paused": true}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '21'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - mailersend-python/2.0.0 (Python/3.9.1; OS/Darwin 24.5.0; Impl/CPython)
+    method: PUT
+    uri: https://api.mailersend.com/v1/domains/65qngkdovk8lwr12/settings
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA4RTwW7bMAz9lYJnp7PdJF2Fopf9Qk/DAEGWGEezLKkSlQwI/O+DHTt22gT1SeJ7
+        fI+0yBMoQQLYCbQCBtvNh60b5Q7NT3MMRQkZWNEiMNC1C487oQ1koBrdAqOQMIPod9ORgpCNtjWw
+        nTARM9CRHzDonUY1cXTksle8BSgbuZCkD/iFPYVn4cmMC2PcsdcZMeVaoS2PJCj2fZEjYYCtXzL4
+        SJh6Zp5BREvDIeBflNRHywwUGn3A0N/Wz10GexG5dcTPibzFGEWN8eJ1A+PSpVF6qgSJtK2HYiJa
+        xb1IcW58aIRLo2UTr2POo70V4l7/Q8Od5eT8pZYzIdmYqiiDrvA6cwHwPbUGGLz6t18pkmsfFuDD
+        6bS4dd3rnx/+De6pcLSiMou//5XmjdAWGHxvBXfT79hIZ2l4x3OjcnCYJ+OSdBuOqTq/ELCzHvTT
+        QClY7gXtr/CWBGSgbeWSVTy4RFcG01h+wpcKIwYZ+IASFVqJvEqmmbNr6wJylbzRUhAqHlBqr9HS
+        PHFx745ctSLIMdRlIAMOdEHAoMzLzSpfr/LivSjZ0xNbF4/58P2GDJJXn6nbVfn8XhRs88I22wV1
+        2JtpaMeBXq5Hvx1B8b4rOa5PdDuaA3nXdf8BAAD//wMAPXFi3l8EAAA=
+    headers:
+      CF-RAY:
+      - 9564c7fa5939f978-PRG
+      Cache-Control:
+      - no-cache, private
+      Connection:
+      - keep-alive
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/json
+      Date:
+      - Fri, 27 Jun 2025 11:59:56 GMT
+      Server:
+      - cloudflare
+      Transfer-Encoding:
+      - chunked
+      cf-cache-status:
+      - DYNAMIC
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-apiquota-remaining:
+      - '-1'
+      x-apiquota-reset:
+      - '2025-06-28T00:00:00Z'
+    status:
+      code: 200
+      message: OK
+version: 1

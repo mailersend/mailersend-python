@@ -1,0 +1,63 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      User-Agent:
+      - mailersend-python/2.0.0 (Python/3.9.1; OS/Darwin 24.5.0; Impl/CPython)
+    method: GET
+    uri: https://api.mailersend.com/v1/domains?page=1&limit=10
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA9yWTXPbOAyG/4oHh56Y2FLluOWm6WHvO3voaesOh6JgmzFFKvxwPOvRf9+hPmxZ
+        jptNp71UJwp4CYAU8IwOUHDPgX49gCyAwn77qLOkfNxXH7N/Fx8SIKB5iUAhN/ntiksFBIqtLIF6
+        G5CAq1ZAV1w5JOAtF1up10eDdGyHVq4kFr1eOiZixIHjJC60Y1x4ucOhtdX39mOYPhvjSpnnQaDC
+        lFxq5jz3DugBvPFcAZ0ReAoYonBGwKH2zcLiIwrfWQtUcoe2easJbLhj2njW7mMlOsfX6I6ZXvAx
+        YUIXua8DvZd63ZTiUBes4sENym3OwYSSYuv647U2U6F+ycQquUfFjGbeVKM4QbuQO2Fljtc9bONL
+        BRTuq4c/Y97JBi1OvJnc88nG4urTEg6Hgb6ul/AweL9fTvnD/XJaPcC16Aw1z9XFMYeySnGpgcJ5
+        CQMFnYyqgKthrqQTRvvmQ3dWEZw35al1xrvGfhfy9isCBSzb7rfog9Ws4n5z5i89BwJS5yboglkT
+        /EsZxv5hhM4HBCqLAgvUAlke1Pa0e62NRVaESknBPRbMopCVRO1PXek25pkVJbeiM9UEhMVGzj1Q
+        SGfp/GaW3cySL0lK5xlNkttZ8/wDBEJVjKV3N+ldlKZRPZA2k9U3tr+YoDhAtmDxUKIfO7PyA0Nd
+        kw48d/Mnvd4WZrf9oJ5tkp7AI9fGXiXPYDbeDp6jY8idkfoSR2/lTvbxNfCkZ9eWLX45eYZE6cFz
+        NjcdeS5tPxU9zbANB3487z8PMa+m+nVoaS/7e2RpjL8hWd6/p9nrZFl8SRI6X9Bs/r/Jki3GaElf
+        QMs3AkrqbRNlJa2LWTfeV44up8spr+RtJDraOBq3wpTL6S5ZTts7c58rvsZP8f9H8R/dWVncAdVB
+        KQIa975d1wRKjP9cBxDBWtSexR1AEwIra8pmEZOezN0xvh4gWNVHVDzHOEnvFH8K5o/J3xZ30gQH
+        BM6gFRHbbPuxw7dJkkHU2NDHoOe1/IV7P3lnm4Iu6vhGILb2WwqJl4i2v4hZ7IvmW3doTev6PwAA
+        AP//AwC1XFzOwQoAAA==
+    headers:
+      CF-RAY:
+      - 9564c7a94db7f996-PRG
+      Cache-Control:
+      - no-cache, private
+      Connection:
+      - keep-alive
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/json
+      Date:
+      - Fri, 27 Jun 2025 11:59:43 GMT
+      Server:
+      - cloudflare
+      Transfer-Encoding:
+      - chunked
+      cf-cache-status:
+      - DYNAMIC
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-apiquota-remaining:
+      - '-1'
+      x-apiquota-reset:
+      - '2025-06-28T00:00:00Z'
+    status:
+      code: 200
+      message: OK
+version: 1

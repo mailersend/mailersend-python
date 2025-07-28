@@ -1,0 +1,48 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - mailersend-python/2.0.0 (Python/3.9.1; OS/Darwin 24.5.0; Impl/CPython)
+    method: DELETE
+    uri: https://api.mailersend.com/v1/domains/non-existent-domain-id
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA6rmUlBQUFDKTS0uTkxPVbJSUApKLc4vLUpOVcjLL1FIyy/NS9FT4qoFAAAA//8D
+        AC9hLe8oAAAA
+    headers:
+      CF-RAY:
+      - 9564c8123e63c1bb-PRG
+      Cache-Control:
+      - no-cache, private
+      Connection:
+      - keep-alive
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/json
+      Date:
+      - Fri, 27 Jun 2025 12:00:00 GMT
+      Server:
+      - cloudflare
+      Transfer-Encoding:
+      - chunked
+      cf-cache-status:
+      - DYNAMIC
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+    status:
+      code: 404
+      message: Not Found
+version: 1
