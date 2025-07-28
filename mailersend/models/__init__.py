@@ -246,6 +246,22 @@ from .sms_webhooks import (
     SmsWebhookUpdateResponse,
     SmsWebhookDeleteResponse
 )
+from .sms_inbounds import (
+    FilterComparer,
+    SmsInboundFilter,
+    SmsInboundsListRequest,
+    SmsInboundGetRequest,
+    SmsInboundCreateRequest,
+    SmsInboundUpdateRequest,
+    SmsInboundDeleteRequest,
+    SmsNumber,
+    SmsInbound,
+    SmsInboundsListResponse,
+    SmsInboundGetResponse,
+    SmsInboundCreateResponse,
+    SmsInboundUpdateResponse,
+    SmsInboundDeleteResponse
+)
 
 __all__ = [
     "BaseModel",
@@ -462,4 +478,19 @@ __all__ = [
     "SmsWebhookCreateResponse",
     "SmsWebhookUpdateResponse",
     "SmsWebhookDeleteResponse",
+    # SMS Inbounds models
+    "FilterComparer",
+    "SmsInboundFilter",
+    "SmsInboundsListRequest",
+    "SmsInboundGetRequest",
+    "SmsInboundCreateRequest",
+    "SmsInboundUpdateRequest",
+    "SmsInboundDeleteRequest",
+    "SmsNumber",
+    "SmsInbound",
+    "SmsInboundsListResponse",
+    "SmsInboundGetResponse",
+    "SmsInboundCreateResponse",
+    "SmsInboundUpdateResponse",
+    "SmsInboundDeleteResponse",
 ]
