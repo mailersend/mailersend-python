@@ -221,6 +221,17 @@ from .sms_activity import (
     SmsMessage,
     SmsMessageResponse
 )
+from .sms_recipients import (
+    SmsRecipientStatus,
+    SmsRecipientsListRequest,
+    SmsRecipientGetRequest,
+    SmsRecipientUpdateRequest,
+    SmsRecipient,
+    SmsRecipientDetails,
+    SmsRecipientsListResponse,
+    SmsRecipientGetResponse,
+    SmsRecipientUpdateResponse
+)
 
 __all__ = [
     "BaseModel",
@@ -414,4 +425,14 @@ __all__ = [
     "SmsActivityListResponse",
     "SmsMessage",
     "SmsMessageResponse",
+    # SMS Recipients models
+    "SmsRecipientStatus",
+    "SmsRecipientsListRequest",
+    "SmsRecipientGetRequest",
+    "SmsRecipientUpdateRequest",
+    "SmsRecipient",
+    "SmsRecipientDetails",
+    "SmsRecipientsListResponse",
+    "SmsRecipientGetResponse",
+    "SmsRecipientUpdateResponse",
 ]
