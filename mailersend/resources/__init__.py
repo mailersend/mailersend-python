@@ -1,0 +1,37 @@
+"""
+API resource classes for interacting with specific MailerSend API endpoints.
+"""
+
+from .base import BaseResource
+from .email import Email
+from .activity import Activity
+from .analytics import Analytics
+from .domains import Domains
+from .identities import IdentitiesResource
+from .inbound import InboundResource
+from .messages import Messages
+from .schedules import Schedules
+from .recipients import Recipients
+from .templates import Templates
+from .tokens import Tokens
+from .webhooks import Webhooks
+from .email_verification import EmailVerification
+from .users import Users
+
+__all__ = [
+    "BaseResource",
+    "Email",
+    "Activity",
+    "Analytics",
+    "Domains",
+    "IdentitiesResource",
+    "InboundResource",
+    "Messages",
+    "Schedules",
+    "Recipients",
+    "Templates",
+    "Tokens",
+    "Webhooks",
+    "EmailVerification",
+    "Users",
+]

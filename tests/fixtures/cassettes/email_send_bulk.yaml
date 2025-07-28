@@ -1,0 +1,52 @@
+interactions:
+- request:
+    body: '[{"from": {"email": "ms-sdk@igor.fail", "name": "Sender"}, "to": [{"email":
+      "igor@mailerlite.com", "name": "Recipient"}], "subject": "Test Email", "html":
+      "<p>First Email</p>"}, {"from": {"email": "ms-sdk@igor.fail", "name": "Sender"},
+      "to": [{"email": "igor@mailerlite.com", "name": "Recipient"}], "subject": "Test
+      Email", "html": "<p>Second Email</p>"}]'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '355'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - mailersend-python/2.0.0 (Python/3.9.1; OS/Darwin 24.3.0; Impl/CPython)
+    method: POST
+    uri: https://api.mailersend.com/v1/bulk-email
+  response:
+    body:
+      string: '{"message":"The bulk email is being processed.","bulk_email_id":"67efdd8f99b6cb305fe3b0c3"}'
+    headers:
+      CF-RAY:
+      - 92b120600993dc6f-BUD
+      Cache-Control:
+      - no-cache, private
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Date:
+      - Fri, 04 Apr 2025 13:24:31 GMT
+      Server:
+      - cloudflare
+      Transfer-Encoding:
+      - chunked
+      cf-cache-status:
+      - DYNAMIC
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-apiquota-remaining:
+      - '-1'
+      x-apiquota-reset:
+      - '2025-04-05T00:00:00Z'
+    status:
+      code: 202
+      message: Accepted
+version: 1
