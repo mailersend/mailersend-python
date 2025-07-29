@@ -14,700 +14,364 @@ from mailersend.models.recipients import (
     SuppressionListRequest,
     SuppressionAddRequest,
     SuppressionDeleteRequest,
-    # Response Models
-    RecipientDomain,
-    Recipient,
-    BlocklistEntry,
-    HardBounce,
-    SpamComplaint,
-    Unsubscribe,
-    OnHoldEntry,
-    RecipientsListResponse,
-    RecipientResponse,
-    BlocklistResponse,
-    HardBouncesResponse,
-    SpamComplaintsResponse,
-    UnsubscribesResponse,
-    OnHoldResponse,
-    SuppressionAddResponse,
 )
 
 
 class TestRecipientsListQueryParams:
     """Test RecipientsListQueryParams model."""
-    
-    def test_create_with_defaults(self):
-        """Test creating query params with default values."""
-        params = RecipientsListQueryParams()
-        
-        assert params.domain_id is None
-        assert params.page == 1
-        assert params.limit == 25
-    
-    def test_create_with_all_params(self):
-        """Test creating query params with all parameters."""
-        params = RecipientsListQueryParams(
-            domain_id="domain123",
+
+    def test_default_values(self):
+        """Test default values."""
+        query_params = RecipientsListQueryParams()
+        assert query_params.domain_id is None
+        assert query_params.page == 1
+        assert query_params.limit == 25
+
+    def test_custom_values(self):
+        """Test custom values."""
+        query_params = RecipientsListQueryParams(
+            domain_id="test-domain",
             page=2,
-            limit=50,
+            limit=50
         )
-        
-        assert params.domain_id == "domain123"
-        assert params.page == 2
-        assert params.limit == 50
-    
+        assert query_params.domain_id == "test-domain"
+        assert query_params.page == 2
+        assert query_params.limit == 50
+
     def test_domain_id_validation(self):
-        """Test domain_id validation and cleaning."""
-        params = RecipientsListQueryParams(domain_id="  domain123  ")
-        assert params.domain_id == "domain123"
-        
-        params = RecipientsListQueryParams(domain_id=None)
-        assert params.domain_id is None
-    
+        """Test domain_id validation."""
+        # Test trimming
+        query_params = RecipientsListQueryParams(domain_id="  test-domain  ")
+        assert query_params.domain_id == "test-domain"
+
     def test_page_validation(self):
         """Test page validation."""
-        # Valid page
-        params = RecipientsListQueryParams(page=1)
-        assert params.page == 1
-        
-        # Invalid page
-        with pytest.raises(ValidationError) as exc_info:
+        with pytest.raises(ValidationError):
             RecipientsListQueryParams(page=0)
-        assert "greater than or equal to 1" in str(exc_info.value)
-    
+
+        with pytest.raises(ValidationError):
+            RecipientsListQueryParams(page=-1)
+
     def test_limit_validation(self):
         """Test limit validation."""
-        # Valid limits
-        params = RecipientsListQueryParams(limit=10)
-        assert params.limit == 10
-        
-        params = RecipientsListQueryParams(limit=100)
-        assert params.limit == 100
-        
-        # Invalid limits
-        with pytest.raises(ValidationError) as exc_info:
+        with pytest.raises(ValidationError):
             RecipientsListQueryParams(limit=9)
-        assert "greater than or equal to 10" in str(exc_info.value)
-        
-        with pytest.raises(ValidationError) as exc_info:
+
+        with pytest.raises(ValidationError):
             RecipientsListQueryParams(limit=101)
-        assert "less than or equal to 100" in str(exc_info.value)
-    
+
     def test_to_query_params(self):
-        """Test converting to query parameters."""
-        # With all params
-        params = RecipientsListQueryParams(
-            domain_id="domain123",
+        """Test to_query_params method."""
+        query_params = RecipientsListQueryParams(
+            domain_id="test-domain",
             page=2,
-            limit=50,
+            limit=50
         )
-        result = params.to_query_params()
-        
+        result = query_params.to_query_params()
         expected = {
-            "domain_id": "domain123",
+            "domain_id": "test-domain",
             "page": 2,
-            "limit": 50,
+            "limit": 50
         }
         assert result == expected
-        
-        # With defaults (no domain_id)
-        params = RecipientsListQueryParams()
-        result = params.to_query_params()
-        
-        expected = {
-            "page": 1,
-            "limit": 25,
-        }
+
+    def test_to_query_params_excludes_none(self):
+        """Test to_query_params excludes None values."""
+        query_params = RecipientsListQueryParams(page=2, limit=30)
+        result = query_params.to_query_params()
+        expected = {"page": 2, "limit": 30}
         assert result == expected
+        assert "domain_id" not in result
 
 
 class TestSuppressionListQueryParams:
     """Test SuppressionListQueryParams model."""
-    
-    def test_create_with_defaults(self):
-        """Test creating query params with default values."""
-        params = SuppressionListQueryParams()
-        
-        assert params.domain_id is None
-        assert params.page == 1
-        assert params.limit == 25
-    
-    def test_create_with_all_params(self):
-        """Test creating query params with all parameters."""
-        params = SuppressionListQueryParams(
-            domain_id="domain123",
+
+    def test_default_values(self):
+        """Test default values."""
+        query_params = SuppressionListQueryParams()
+        assert query_params.domain_id is None
+        assert query_params.page == 1
+        assert query_params.limit == 25
+
+    def test_custom_values(self):
+        """Test custom values."""
+        query_params = SuppressionListQueryParams(
+            domain_id="test-domain",
             page=3,
-            limit=75,
+            limit=75
         )
-        
-        assert params.domain_id == "domain123"
-        assert params.page == 3
-        assert params.limit == 75
-    
+        assert query_params.domain_id == "test-domain"
+        assert query_params.page == 3
+        assert query_params.limit == 75
+
     def test_to_query_params(self):
-        """Test converting to query parameters."""
-        # With all params
-        params = SuppressionListQueryParams(
-            domain_id="domain123",
+        """Test to_query_params method."""
+        query_params = SuppressionListQueryParams(
+            domain_id="test-domain",
             page=3,
-            limit=75,
+            limit=75
         )
-        result = params.to_query_params()
-        
+        result = query_params.to_query_params()
         expected = {
-            "domain_id": "domain123",
+            "domain_id": "test-domain",
             "page": 3,
-            "limit": 75,
+            "limit": 75
         }
         assert result == expected
 
 
 class TestRecipientsListRequest:
     """Test RecipientsListRequest model."""
-    
-    def test_create_with_defaults(self):
-        """Test creating request with default values."""
+
+    def test_default_request(self):
+        """Test request with default query params."""
         request = RecipientsListRequest()
-        
-        assert request.query_params.domain_id is None
         assert request.query_params.page == 1
         assert request.query_params.limit == 25
-    
-    def test_create_with_query_params(self):
-        """Test creating request with query params."""
+        assert request.query_params.domain_id is None
+
+    def test_custom_query_params(self):
+        """Test request with custom query params."""
         query_params = RecipientsListQueryParams(
-            domain_id="domain123",
+            domain_id="test-domain",
             page=2,
-            limit=50,
+            limit=50
         )
         request = RecipientsListRequest(query_params=query_params)
-        
-        assert request.query_params.domain_id == "domain123"
-        assert request.query_params.page == 2
-        assert request.query_params.limit == 50
-    
-    def test_to_query_params(self):
-        """Test converting to query parameters."""
+        assert request.query_params == query_params
+
+    def test_to_query_params_delegation(self):
+        """Test that to_query_params delegates to query_params."""
         query_params = RecipientsListQueryParams(
-            domain_id="domain123",
+            domain_id="test-domain",
             page=2,
-            limit=50,
+            limit=50
         )
         request = RecipientsListRequest(query_params=query_params)
         result = request.to_query_params()
-        
         expected = {
-            "domain_id": "domain123",
+            "domain_id": "test-domain",
             "page": 2,
-            "limit": 50,
+            "limit": 50
         }
         assert result == expected
 
 
 class TestRecipientGetRequest:
     """Test RecipientGetRequest model."""
-    
-    def test_create_valid(self):
-        """Test creating valid request."""
-        request = RecipientGetRequest(recipient_id="recipient123")
-        assert request.recipient_id == "recipient123"
-    
+
+    def test_valid_request(self):
+        """Test valid request."""
+        request = RecipientGetRequest(recipient_id="test-recipient")
+        assert request.recipient_id == "test-recipient"
+
     def test_recipient_id_validation(self):
-        """Test recipient_id validation and cleaning."""
-        request = RecipientGetRequest(recipient_id="  recipient123  ")
-        assert request.recipient_id == "recipient123"
-        
-        # Empty recipient_id
-        with pytest.raises(ValidationError) as exc_info:
+        """Test recipient_id validation."""
+        with pytest.raises(ValidationError, match="recipient_id cannot be empty"):
             RecipientGetRequest(recipient_id="")
-        assert "recipient_id cannot be empty" in str(exc_info.value)
-        
-        with pytest.raises(ValidationError) as exc_info:
+
+        with pytest.raises(ValidationError, match="recipient_id cannot be empty"):
             RecipientGetRequest(recipient_id="   ")
-        assert "recipient_id cannot be empty" in str(exc_info.value)
+
+    def test_recipient_id_trimming(self):
+        """Test recipient_id trimming."""
+        request = RecipientGetRequest(recipient_id="  test-recipient  ")
+        assert request.recipient_id == "test-recipient"
 
 
 class TestRecipientDeleteRequest:
     """Test RecipientDeleteRequest model."""
-    
-    def test_create_valid(self):
-        """Test creating valid request."""
-        request = RecipientDeleteRequest(recipient_id="recipient123")
-        assert request.recipient_id == "recipient123"
-    
+
+    def test_valid_request(self):
+        """Test valid request."""
+        request = RecipientDeleteRequest(recipient_id="test-recipient")
+        assert request.recipient_id == "test-recipient"
+
     def test_recipient_id_validation(self):
-        """Test recipient_id validation and cleaning."""
-        request = RecipientDeleteRequest(recipient_id="  recipient123  ")
-        assert request.recipient_id == "recipient123"
-        
-        # Empty recipient_id
-        with pytest.raises(ValidationError) as exc_info:
+        """Test recipient_id validation."""
+        with pytest.raises(ValidationError, match="recipient_id cannot be empty"):
             RecipientDeleteRequest(recipient_id="")
-        assert "recipient_id cannot be empty" in str(exc_info.value)
+
+        with pytest.raises(ValidationError, match="recipient_id cannot be empty"):
+            RecipientDeleteRequest(recipient_id="   ")
+
+    def test_recipient_id_trimming(self):
+        """Test recipient_id trimming."""
+        request = RecipientDeleteRequest(recipient_id="  test-recipient  ")
+        assert request.recipient_id == "test-recipient"
 
 
 class TestSuppressionListRequest:
     """Test SuppressionListRequest model."""
-    
-    def test_create_with_defaults(self):
-        """Test creating request with default values."""
+
+    def test_default_request(self):
+        """Test request with default query params."""
         request = SuppressionListRequest()
-        
-        assert request.query_params.domain_id is None
         assert request.query_params.page == 1
         assert request.query_params.limit == 25
-    
-    def test_create_with_query_params(self):
-        """Test creating request with query params."""
+        assert request.query_params.domain_id is None
+
+    def test_custom_query_params(self):
+        """Test request with custom query params."""
         query_params = SuppressionListQueryParams(
-            domain_id="domain123",
+            domain_id="test-domain",
             page=3,
-            limit=75,
+            limit=75
         )
         request = SuppressionListRequest(query_params=query_params)
-        
-        assert request.query_params.domain_id == "domain123"
-        assert request.query_params.page == 3
-        assert request.query_params.limit == 75
-    
-    def test_to_query_params(self):
-        """Test converting to query parameters."""
+        assert request.query_params == query_params
+
+    def test_to_query_params_delegation(self):
+        """Test that to_query_params delegates to query_params."""
         query_params = SuppressionListQueryParams(
-            domain_id="domain123",
+            domain_id="test-domain",
             page=3,
-            limit=75,
+            limit=75
         )
         request = SuppressionListRequest(query_params=query_params)
         result = request.to_query_params()
-        
         expected = {
-            "domain_id": "domain123",
+            "domain_id": "test-domain",
             "page": 3,
-            "limit": 75,
+            "limit": 75
         }
         assert result == expected
 
 
 class TestSuppressionAddRequest:
     """Test SuppressionAddRequest model."""
-    
-    def test_create_with_recipients(self):
-        """Test creating request with recipients."""
+
+    def test_valid_request_with_recipients(self):
+        """Test valid request with recipients."""
         request = SuppressionAddRequest(
-            domain_id="domain123",
-            recipients=["test@example.com", "user@example.com"],
+            domain_id="test-domain",
+            recipients=["test@example.com", "test2@example.com"]
         )
-        
-        assert request.domain_id == "domain123"
-        assert request.recipients == ["test@example.com", "user@example.com"]
+        assert request.domain_id == "test-domain"
+        assert request.recipients == ["test@example.com", "test2@example.com"]
         assert request.patterns is None
-    
-    def test_create_with_patterns(self):
-        """Test creating request with patterns."""
+
+    def test_valid_request_with_patterns(self):
+        """Test valid request with patterns."""
         request = SuppressionAddRequest(
-            domain_id="domain123",
-            patterns=[".*@example.com", ".*@test.com"],
+            domain_id="test-domain",
+            patterns=["@spam.com", "@blocked.net"]
         )
-        
-        assert request.domain_id == "domain123"
-        assert request.patterns == [".*@example.com", ".*@test.com"]
+        assert request.domain_id == "test-domain"
+        assert request.patterns == ["@spam.com", "@blocked.net"]
         assert request.recipients is None
-    
-    def test_create_with_both(self):
-        """Test creating request with both recipients and patterns."""
-        request = SuppressionAddRequest(
-            domain_id="domain123",
-            recipients=["test@example.com"],
-            patterns=[".*@example.com"],
-        )
-        
-        assert request.domain_id == "domain123"
-        assert request.recipients == ["test@example.com"]
-        assert request.patterns == [".*@example.com"]
-    
+
     def test_domain_id_validation(self):
         """Test domain_id validation."""
+        with pytest.raises(ValidationError, match="domain_id cannot be empty"):
+            SuppressionAddRequest(domain_id="", recipients=["test@example.com"])
+
+        with pytest.raises(ValidationError, match="domain_id cannot be empty"):
+            SuppressionAddRequest(domain_id="   ", recipients=["test@example.com"])
+
+    def test_domain_id_trimming(self):
+        """Test domain_id trimming."""
         request = SuppressionAddRequest(
-            domain_id="  domain123  ",
-            recipients=["test@example.com"],
+            domain_id="  test-domain  ",
+            recipients=["test@example.com"]
         )
-        assert request.domain_id == "domain123"
-        
-        # Empty domain_id
-        with pytest.raises(ValidationError) as exc_info:
-            SuppressionAddRequest(
-                domain_id="",
-                recipients=["test@example.com"],
-            )
-        assert "domain_id cannot be empty" in str(exc_info.value)
-    
+        assert request.domain_id == "test-domain"
+
     def test_recipients_validation(self):
         """Test recipients validation."""
-        # Valid recipients
+        # Empty list
+        with pytest.raises(ValidationError, match="recipients list cannot be empty if provided"):
+            SuppressionAddRequest(domain_id="test-domain", recipients=[])
+
+        # Empty recipient
+        with pytest.raises(ValidationError, match="recipient email cannot be empty"):
+            SuppressionAddRequest(domain_id="test-domain", recipients=["test@example.com", ""])
+
+        # Whitespace recipient
+        with pytest.raises(ValidationError, match="recipient email cannot be empty"):
+            SuppressionAddRequest(domain_id="test-domain", recipients=["test@example.com", "   "])
+
+    def test_recipients_trimming(self):
+        """Test recipients trimming."""
         request = SuppressionAddRequest(
-            domain_id="domain123",
-            recipients=["test@example.com", "user@example.com"],
+            domain_id="test-domain",
+            recipients=["  test@example.com  ", "  test2@example.com  "]
         )
-        assert request.recipients == ["test@example.com", "user@example.com"]
-        
-        # Clean recipients
-        request = SuppressionAddRequest(
-            domain_id="domain123",
-            recipients=["  test@example.com  ", "user@example.com"],
-        )
-        assert request.recipients == ["test@example.com", "user@example.com"]
-        
-        # Empty recipients list
-        with pytest.raises(ValidationError) as exc_info:
-            SuppressionAddRequest(
-                domain_id="domain123",
-                recipients=[],
-            )
-        assert "recipients list cannot be empty if provided" in str(exc_info.value)
-        
-        # Empty recipient email
-        with pytest.raises(ValidationError) as exc_info:
-            SuppressionAddRequest(
-                domain_id="domain123",
-                recipients=["test@example.com", ""],
-            )
-        assert "recipient email cannot be empty" in str(exc_info.value)
-    
+        assert request.recipients == ["test@example.com", "test2@example.com"]
+
     def test_patterns_validation(self):
         """Test patterns validation."""
-        # Valid patterns
-        request = SuppressionAddRequest(
-            domain_id="domain123",
-            patterns=[".*@example.com", ".*@test.com"],
-        )
-        assert request.patterns == [".*@example.com", ".*@test.com"]
-        
-        # Clean patterns
-        request = SuppressionAddRequest(
-            domain_id="domain123",
-            patterns=["  .*@example.com  ", ".*@test.com"],
-        )
-        assert request.patterns == [".*@example.com", ".*@test.com"]
-        
-        # Empty patterns list
-        with pytest.raises(ValidationError) as exc_info:
-            SuppressionAddRequest(
-                domain_id="domain123",
-                patterns=[],
-            )
-        assert "patterns list cannot be empty if provided" in str(exc_info.value)
-        
+        # Empty list
+        with pytest.raises(ValidationError, match="patterns list cannot be empty if provided"):
+            SuppressionAddRequest(domain_id="test-domain", patterns=[])
+
         # Empty pattern
-        with pytest.raises(ValidationError) as exc_info:
-            SuppressionAddRequest(
-                domain_id="domain123",
-                patterns=[".*@example.com", ""],
-            )
-        assert "pattern cannot be empty" in str(exc_info.value)
+        with pytest.raises(ValidationError, match="pattern cannot be empty"):
+            SuppressionAddRequest(domain_id="test-domain", patterns=["@spam.com", ""])
+
+        # Whitespace pattern
+        with pytest.raises(ValidationError, match="pattern cannot be empty"):
+            SuppressionAddRequest(domain_id="test-domain", patterns=["@spam.com", "   "])
+
+    def test_patterns_trimming(self):
+        """Test patterns trimming."""
+        request = SuppressionAddRequest(
+            domain_id="test-domain",
+            patterns=["  @spam.com  ", "  @blocked.net  "]
+        )
+        assert request.patterns == ["@spam.com", "@blocked.net"]
 
 
 class TestSuppressionDeleteRequest:
     """Test SuppressionDeleteRequest model."""
-    
-    def test_create_with_ids(self):
-        """Test creating request with IDs."""
+
+    def test_valid_request_with_ids(self):
+        """Test valid request with ids."""
         request = SuppressionDeleteRequest(
-            domain_id="domain123",
-            ids=["id1", "id2", "id3"],
+            domain_id="test-domain",
+            ids=["id1", "id2"]
         )
-        
-        assert request.domain_id == "domain123"
-        assert request.ids == ["id1", "id2", "id3"]
+        assert request.domain_id == "test-domain"
+        assert request.ids == ["id1", "id2"]
         assert request.all is None
-    
-    def test_create_with_all_flag(self):
-        """Test creating request with all flag."""
+
+    def test_valid_request_with_all(self):
+        """Test valid request with all flag."""
         request = SuppressionDeleteRequest(
-            domain_id="domain123",
-            all=True,
+            domain_id="test-domain",
+            all=True
         )
-        
-        assert request.domain_id == "domain123"
+        assert request.domain_id == "test-domain"
         assert request.all is True
         assert request.ids is None
-    
-    def test_create_without_domain_id(self):
-        """Test creating request without domain_id (for on-hold)."""
+
+    def test_domain_id_trimming(self):
+        """Test domain_id trimming."""
         request = SuppressionDeleteRequest(
-            ids=["id1", "id2"],
+            domain_id="  test-domain  ",
+            all=True
         )
-        
-        assert request.domain_id is None
-        assert request.ids == ["id1", "id2"]
-    
+        assert request.domain_id == "test-domain"
+
     def test_ids_validation(self):
-        """Test IDs validation."""
-        # Valid IDs
-        request = SuppressionDeleteRequest(ids=["id1", "id2"])
-        assert request.ids == ["id1", "id2"]
-        
-        # Clean IDs
-        request = SuppressionDeleteRequest(ids=["  id1  ", "id2"])
-        assert request.ids == ["id1", "id2"]
-        
-        # Empty IDs list
-        with pytest.raises(ValidationError) as exc_info:
-            SuppressionDeleteRequest(ids=[])
-        assert "ids list cannot be empty if provided" in str(exc_info.value)
-        
-        # Empty ID
-        with pytest.raises(ValidationError) as exc_info:
-            SuppressionDeleteRequest(ids=["id1", ""])
-        assert "id cannot be empty" in str(exc_info.value)
+        """Test ids validation."""
+        # Empty list
+        with pytest.raises(ValidationError, match="ids list cannot be empty if provided"):
+            SuppressionDeleteRequest(domain_id="test-domain", ids=[])
 
+        # Empty id
+        with pytest.raises(ValidationError, match="id cannot be empty"):
+            SuppressionDeleteRequest(domain_id="test-domain", ids=["id1", ""])
 
-class TestResponseModels:
-    """Test response models."""
-    
-    def test_recipient_domain(self):
-        """Test RecipientDomain model."""
-        domain_data = {
-            "id": "domain123",
-            "name": "example.com",
-            "created_at": "2020-06-10T10:09:56Z",
-            "updated_at": "2020-06-10T10:09:56Z",
-            "dkim": True,
-            "spf": True,
-            "mx": False,
-            "tracking": False,
-            "is_verified": True,
-        }
-        
-        domain = RecipientDomain(**domain_data)
-        
-        assert domain.id == "domain123"
-        assert domain.name == "example.com"
-        assert isinstance(domain.created_at, datetime)
-        assert isinstance(domain.updated_at, datetime)
-        assert domain.dkim is True
-        assert domain.spf is True
-        assert domain.mx is False
-        assert domain.tracking is False
-        assert domain.is_verified is True
-    
-    def test_recipient(self):
-        """Test Recipient model."""
-        recipient_data = {
-            "id": "recipient123",
-            "email": "test@example.com",
-            "created_at": "2020-06-10T10:09:56Z",
-            "updated_at": "2020-06-10T10:09:56Z",
-            "deleted_at": "",
-            "emails": [],
-            "domain": {
-                "id": "domain123",
-                "name": "example.com",
-                "created_at": "2020-06-10T10:09:56Z",
-                "updated_at": "2020-06-10T10:09:56Z",
-            },
-        }
-        
-        recipient = Recipient(**recipient_data)
-        
-        assert recipient.id == "recipient123"
-        assert recipient.email == "test@example.com"
-        assert isinstance(recipient.created_at, datetime)
-        assert isinstance(recipient.updated_at, datetime)
-        assert recipient.deleted_at == ""
-        assert recipient.emails == []
-        assert isinstance(recipient.domain, RecipientDomain)
-        assert recipient.domain.id == "domain123"
-    
-    def test_blocklist_entry(self):
-        """Test BlocklistEntry model."""
-        entry_data = {
-            "id": "entry123",
-            "type": "pattern",
-            "pattern": ".*@example.com",
-            "created_at": "2020-06-10T10:09:56Z",
-            "updated_at": "2020-06-10T10:09:56Z",
-            "domain": {
-                "id": "domain123",
-                "name": "example.com",
-                "created_at": "2020-06-10T10:09:56Z",
-                "updated_at": "2020-06-10T10:09:56Z",
-            },
-        }
-        
-        entry = BlocklistEntry(**entry_data)
-        
-        assert entry.id == "entry123"
-        assert entry.type == "pattern"
-        assert entry.pattern == ".*@example.com"
-        assert isinstance(entry.created_at, datetime)
-        assert isinstance(entry.updated_at, datetime)
-        assert isinstance(entry.domain, RecipientDomain)
-    
-    def test_hard_bounce(self):
-        """Test HardBounce model."""
-        bounce_data = {
-            "id": "bounce123",
-            "reason": "Unknown reason",
-            "created_at": "2020-06-10T10:09:56Z",
-            "recipient": {
-                "id": "recipient123",
-                "email": "test@example.com",
-                "created_at": "2020-06-10T10:09:56Z",
-                "updated_at": "2020-06-10T10:09:56Z",
-                "deleted_at": "",
-                "domain": {
-                    "id": "domain123",
-                    "name": "example.com",
-                    "created_at": "2020-06-10T10:09:56Z",
-                    "updated_at": "2020-06-10T10:09:56Z",
-                },
-            },
-        }
-        
-        bounce = HardBounce(**bounce_data)
-        
-        assert bounce.id == "bounce123"
-        assert bounce.reason == "Unknown reason"
-        assert isinstance(bounce.created_at, datetime)
-        assert isinstance(bounce.recipient, Recipient)
-        assert bounce.recipient.id == "recipient123"
-    
-    def test_spam_complaint(self):
-        """Test SpamComplaint model."""
-        complaint_data = {
-            "id": "complaint123",
-            "created_at": "2020-06-10T10:09:56Z",
-            "recipient": {
-                "id": "recipient123",
-                "email": "test@example.com",
-                "created_at": "2020-06-10T10:09:56Z",
-                "updated_at": "2020-06-10T10:09:56Z",
-                "deleted_at": "",
-                "domain": {
-                    "id": "domain123",
-                    "name": "example.com",
-                    "created_at": "2020-06-10T10:09:56Z",
-                    "updated_at": "2020-06-10T10:09:56Z",
-                },
-            },
-        }
-        
-        complaint = SpamComplaint(**complaint_data)
-        
-        assert complaint.id == "complaint123"
-        assert isinstance(complaint.created_at, datetime)
-        assert isinstance(complaint.recipient, Recipient)
-        assert complaint.recipient.id == "recipient123"
-    
-    def test_unsubscribe(self):
-        """Test Unsubscribe model."""
-        unsubscribe_data = {
-            "id": "unsubscribe123",
-            "reason": "NEVER_SIGNED",
-            "readable_reason": "I never signed up for this mailing list",
-            "created_at": "2020-06-10T10:09:56Z",
-            "recipient": {
-                "id": "recipient123",
-                "email": "test@example.com",
-                "created_at": "2020-06-10T10:09:56Z",
-                "updated_at": "2020-06-10T10:09:56Z",
-                "deleted_at": "",
-                "domain": {
-                    "id": "domain123",
-                    "name": "example.com",
-                    "created_at": "2020-06-10T10:09:56Z",
-                    "updated_at": "2020-06-10T10:09:56Z",
-                },
-            },
-        }
-        
-        unsubscribe = Unsubscribe(**unsubscribe_data)
-        
-        assert unsubscribe.id == "unsubscribe123"
-        assert unsubscribe.reason == "NEVER_SIGNED"
-        assert unsubscribe.readable_reason == "I never signed up for this mailing list"
-        assert isinstance(unsubscribe.created_at, datetime)
-        assert isinstance(unsubscribe.recipient, Recipient)
-    
-    def test_on_hold_entry(self):
-        """Test OnHoldEntry model."""
-        hold_data = {
-            "id": "hold123",
-            "created_at": "2020-06-10T10:09:56Z",
-            "on_hold_until": "2020-06-13T10:09:56Z",
-            "email": "test@example.com",
-            "recipient": {
-                "id": "recipient123",
-                "email": "test@example.com",
-                "created_at": "2020-06-10T10:09:56Z",
-                "updated_at": "2020-06-10T10:09:56Z",
-                "deleted_at": "",
-                "domain": {
-                    "id": "domain123",
-                    "name": "example.com",
-                    "created_at": "2020-06-10T10:09:56Z",
-                    "updated_at": "2020-06-10T10:09:56Z",
-                },
-            },
-        }
-        
-        hold = OnHoldEntry(**hold_data)
-        
-        assert hold.id == "hold123"
-        assert isinstance(hold.created_at, datetime)
-        assert isinstance(hold.on_hold_until, datetime)
-        assert hold.email == "test@example.com"
-        assert isinstance(hold.recipient, Recipient)
-    
-    def test_recipients_list_response(self):
-        """Test RecipientsListResponse model."""
-        response_data = {
-            "data": [
-                {
-                    "id": "recipient123",
-                    "email": "test@example.com",
-                    "created_at": "2020-06-10T10:09:56Z",
-                    "updated_at": "2020-06-10T10:09:56Z",
-                    "deleted_at": "",
-                },
-            ],
-            "links": {
-                "first": "https://api.mailersend.com/v1/recipients?page=1",
-                "last": "https://api.mailersend.com/v1/recipients?page=1",
-                "prev": None,
-                "next": None,
-            },
-            "meta": {
-                "current_page": 1,
-                "from": 1,
-                "last_page": 1,
-                "per_page": 25,
-                "to": 1,
-                "total": 1,
-            },
-        }
-        
-        response = RecipientsListResponse(**response_data)
-        
-        assert len(response.data) == 1
-        assert isinstance(response.data[0], Recipient)
-        assert response.data[0].id == "recipient123"
-        assert response.links is not None
-        assert response.meta is not None
-    
-    def test_recipient_response(self):
-        """Test RecipientResponse model."""
-        response_data = {
-            "data": {
-                "id": "recipient123",
-                "email": "test@example.com",
-                "created_at": "2020-06-10T10:09:56Z",
-                "updated_at": "2020-06-10T10:09:56Z",
-                "deleted_at": "",
-            },
-        }
-        
-        response = RecipientResponse(**response_data)
-        
-        assert isinstance(response.data, Recipient)
-        assert response.data.id == "recipient123" 
+        # Whitespace id
+        with pytest.raises(ValidationError, match="id cannot be empty"):
+            SuppressionDeleteRequest(domain_id="test-domain", ids=["id1", "   "])
+
+    def test_ids_trimming(self):
+        """Test ids trimming."""
+        request = SuppressionDeleteRequest(
+            domain_id="test-domain",
+            ids=["  id1  ", "  id2  "]
+        )
+        assert request.ids == ["id1", "id2"] 

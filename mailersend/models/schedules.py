@@ -67,31 +67,4 @@ class ScheduleDeleteRequest(MailerSendBaseModel):
         return v.strip()
 
 
-class ScheduleDomain(MailerSendBaseModel):
-    """Model representing a domain in scheduled message response."""
 
-    id: str
-    name: str
-    created_at: str
-    updated_at: str
-
-
-class ScheduleMessage(MailerSendBaseModel):
-    """Model representing a message in scheduled message response."""
-
-    id: str
-    created_at: str
-    updated_at: str
-
-
-class ScheduledMessage(MailerSendBaseModel):
-    """Model representing a scheduled message."""
-
-    message_id: str
-    subject: str
-    send_at: str
-    status: Literal["scheduled", "sent", "error"]
-    status_message: Optional[str] = None
-    created_at: str
-    domain: Optional[ScheduleDomain] = None
-    message: Optional[ScheduleMessage] = None
