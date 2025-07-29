@@ -1,7 +1,5 @@
 """Webhooks resource for MailerSend SDK."""
 
-from typing import Dict, Any
-
 from .base import BaseResource
 from ..models.base import APIResponse
 from ..models.webhooks import (
@@ -11,8 +9,6 @@ from ..models.webhooks import (
     WebhookUpdateRequest,
     WebhookDeleteRequest,
 )
-from ..exceptions import ValidationError
-
 
 class Webhooks(BaseResource):
     """Webhooks API resource for managing webhooks."""
@@ -51,7 +47,6 @@ class Webhooks(BaseResource):
         """
         self.logger.debug("Starting get_webhook operation")
         self.logger.debug("Webhook get request: %s", request)
-        self.logger.debug("Getting webhook: %s", request.webhook_id)
 
         # Make API call
         response = self.client.request(
@@ -71,18 +66,9 @@ class Webhooks(BaseResource):
             APIResponse with WebhookResponse data
         """
         self.logger.debug("Starting create_webhook operation")
-        self.logger.debug("Webhook create request: %s", request)
 
         # Prepare request body
-        data: Dict[str, Any] = {
-            "url": request.url,
-            "name": request.name,
-            "events": request.events,
-            "domain_id": request.domain_id,
-        }
-
-        if request.enabled is not None:
-            data["enabled"] = request.enabled
+        data = request.model_dump(exclude_none=True)
 
         self.logger.debug("Creating webhook: %s", request.name)
 
@@ -104,19 +90,10 @@ class Webhooks(BaseResource):
         self.logger.debug("Starting update_webhook operation")
         self.logger.debug("Webhook update request: %s", request)
 
-        # Prepare request body - only include non-None fields
-        data: Dict[str, Any] = {}
+        # Prepare request body - exclude webhook_id (goes in URL) and None fields
+        data = request.model_dump(exclude_none=True, exclude={"webhook_id"})
 
-        if request.url is not None:
-            data["url"] = request.url
-        if request.name is not None:
-            data["name"] = request.name
-        if request.events is not None:
-            data["events"] = request.events
-        if request.enabled is not None:
-            data["enabled"] = request.enabled
-
-        self.logger.debug("Updating webhook: %s", request.webhook_id)
+        self.logger.debug("Updating webhook: %s", data)
 
         # Make API call
         response = self.client.request(
