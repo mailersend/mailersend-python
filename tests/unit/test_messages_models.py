@@ -10,7 +10,7 @@ from mailersend.models.messages import (
     MessagesListResponse,
     MessageResponse
 )
-from mailersend.models.domains import Domain, DomainSettings
+
 
 
 class TestMessagesListQueryParams:
@@ -166,36 +166,7 @@ class TestMessage:
         assert message.emails == []
         assert message.domain is None
     
-    def test_message_with_domain(self):
-        """Test creating a message with domain data."""
-        domain_settings = DomainSettings(
-            send_paused=False,
-            track_clicks=True,
-            track_opens=True,
-            track_unsubscribe=True
-        )
-        
-        domain = Domain(
-            id="zo8zdo",
-            name="example.net",
-            is_verified=True,
-            is_dns_active=True,
-            domain_settings=domain_settings,
-            created_at="2020-06-10 10:10:11",
-            updated_at="2020-06-10 10:10:11"
-        )
-        
-        message = Message(
-            id="5ee0b183b251345e407c936a",
-            created_at="2020-06-10T10:10:11.231000Z",
-            updated_at="2020-06-10T10:10:11.231000Z",
-            emails=[],
-            domain=domain
-        )
-        
-        assert message.domain.id == "zo8zdo"
-        assert message.domain.name == "example.net"
-        assert message.domain.is_verified is True
+
     
     def test_message_with_emails(self):
         """Test creating a message with emails."""

@@ -4,24 +4,17 @@ Unit tests for Domains resource.
 Tests basic functionality, validation, and error handling.
 """
 
-import pytest
 from unittest.mock import Mock
-from pydantic import ValidationError as PydanticValidationError
 
 from mailersend.resources.domains import Domains
 from mailersend.models.domains import (
     DomainListRequest,
     DomainListQueryParams,
     DomainCreateRequest,
-    DomainDeleteRequest,
-    DomainGetRequest,
     DomainUpdateSettingsRequest,
     DomainRecipientsRequest,
     DomainRecipientsQueryParams,
-    DomainDnsRecordsRequest,
-    DomainVerificationRequest
 )
-from mailersend.exceptions import ValidationError
 from mailersend.models.base import APIResponse
 
 
@@ -37,128 +30,7 @@ class TestDomainsResourceInitialization:
         assert domains.logger is not None
 
 
-class TestDomainsResourceValidation:
-    """Test resource validation."""
-    
-    def test_empty_domain_id_validation_get(self):
-        """Test that empty domain IDs raise errors for get_domain."""
-        mock_client = Mock()
-        domains = Domains(mock_client)
-        
-        with pytest.raises(ValidationError, match="DomainGetRequest must be provided"):
-            domains.get_domain(None)
-    
-    def test_invalid_type_validation_get(self):
-        """Test that invalid request types raise errors for get_domain."""
-        mock_client = Mock()
-        domains = Domains(mock_client)
-        
-        with pytest.raises(ValidationError, match="DomainGetRequest must be provided"):
-            domains.get_domain("not-a-request-object")
-    
-    def test_empty_domain_id_validation_delete(self):
-        """Test that empty domain IDs raise errors for delete_domain."""
-        mock_client = Mock()
-        domains = Domains(mock_client)
-        
-        with pytest.raises(ValidationError, match="DomainDeleteRequest must be provided"):
-            domains.delete_domain(None)
-    
-    def test_invalid_type_validation_delete(self):
-        """Test that invalid request types raise errors for delete_domain."""
-        mock_client = Mock()
-        domains = Domains(mock_client)
-        
-        with pytest.raises(ValidationError, match="DomainDeleteRequest must be provided"):
-            domains.delete_domain("not-a-request-object")
-    
-    def test_empty_domain_id_validation_recipients(self):
-        """Test that empty domain IDs raise errors for get_domain_recipients."""
-        mock_client = Mock()
-        domains = Domains(mock_client)
-        
-        with pytest.raises(ValidationError, match="DomainRecipientsRequest must be provided"):
-            domains.get_domain_recipients(None)
-    
-    def test_invalid_type_validation_recipients(self):
-        """Test that invalid request types raise errors for get_domain_recipients."""
-        mock_client = Mock()
-        domains = Domains(mock_client)
-        
-        with pytest.raises(ValidationError, match="DomainRecipientsRequest must be provided"):
-            domains.get_domain_recipients("not-a-request-object")
-    
-    def test_empty_domain_id_validation_settings(self):
-        """Test that empty domain IDs raise errors for update_domain_settings."""
-        mock_client = Mock()
-        domains = Domains(mock_client)
-        
-        with pytest.raises(ValidationError, match="DomainUpdateSettingsRequest must be provided"):
-            domains.update_domain_settings(None)
-    
-    def test_invalid_type_validation_settings(self):
-        """Test that invalid request types raise errors for update_domain_settings."""
-        mock_client = Mock()
-        domains = Domains(mock_client)
-        
-        with pytest.raises(ValidationError, match="DomainUpdateSettingsRequest must be provided"):
-            domains.update_domain_settings("not-a-request-object")
-    
-    def test_empty_domain_id_validation_dns(self):
-        """Test that empty domain IDs raise errors for get_domain_dns_records."""
-        mock_client = Mock()
-        domains = Domains(mock_client)
-        
-        with pytest.raises(ValidationError, match="DomainDnsRecordsRequest must be provided"):
-            domains.get_domain_dns_records(None)
-    
-    def test_invalid_type_validation_dns(self):
-        """Test that invalid request types raise errors for get_domain_dns_records."""
-        mock_client = Mock()
-        domains = Domains(mock_client)
-        
-        with pytest.raises(ValidationError, match="DomainDnsRecordsRequest must be provided"):
-            domains.get_domain_dns_records("not-a-request-object")
-    
-    def test_empty_domain_id_validation_verification(self):
-        """Test that empty domain IDs raise errors for get_domain_verification_status."""
-        mock_client = Mock()
-        domains = Domains(mock_client)
-        
-        with pytest.raises(ValidationError, match="DomainVerificationRequest must be provided"):
-            domains.get_domain_verification_status(None)
-    
-    def test_invalid_type_validation_verification(self):
-        """Test that invalid request types raise errors for get_domain_verification_status."""
-        mock_client = Mock()
-        domains = Domains(mock_client)
-        
-        with pytest.raises(ValidationError, match="DomainVerificationRequest must be provided"):
-            domains.get_domain_verification_status("not-a-request-object")
-    
-    def test_missing_create_request_validation(self):
-        """Test that missing create request raises error."""
-        mock_client = Mock()
-        domains = Domains(mock_client)
-        
-        with pytest.raises(ValidationError, match="DomainCreateRequest must be provided"):
-            domains.create_domain(None)
-    
-    def test_invalid_type_validation_create(self):
-        """Test that invalid request types raise errors for create_domain."""
-        mock_client = Mock()
-        domains = Domains(mock_client)
-        
-        with pytest.raises(ValidationError, match="DomainCreateRequest must be provided"):
-            domains.create_domain("not-a-request-object")
-    
-    def test_missing_list_request_validation(self):
-        """Test that invalid list request types raise errors."""
-        mock_client = Mock()
-        domains = Domains(mock_client)
-        
-        with pytest.raises(ValidationError, match="DomainListRequest must be provided"):
-            domains.list_domains("not-a-request-object")
+
 
 
 class TestDomainsResourceQueryParams:

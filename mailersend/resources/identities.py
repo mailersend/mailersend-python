@@ -9,8 +9,6 @@ from ..models.identities import (
     IdentityUpdateByEmailRequest,
     IdentityDeleteRequest,
     IdentityDeleteByEmailRequest,
-    IdentityListResponse,
-    IdentityResponse,
 )
 from ..models.base import APIResponse
 from .base import BaseResource
@@ -41,7 +39,7 @@ class IdentitiesResource(BaseResource):
             method="GET", endpoint="/identities", params=params if params else None
         )
 
-        return self._create_response(response, IdentityListResponse)
+        return self._create_response(response)
 
     def create_identity(self, request: IdentityCreateRequest) -> APIResponse:
         """
@@ -63,7 +61,7 @@ class IdentitiesResource(BaseResource):
         # Make API request
         response = self.client.request(method="POST", endpoint="/identities", body=data)
 
-        return self._create_response(response, IdentityResponse)
+        return self._create_response(response)
 
     def get_identity(self, request: IdentityGetRequest) -> APIResponse:
         """
@@ -82,7 +80,7 @@ class IdentitiesResource(BaseResource):
             method="GET", endpoint=f"/identities/{request.identity_id}"
         )
 
-        return self._create_response(response, IdentityResponse)
+        return self._create_response(response)
 
     def get_identity_by_email(self, request: IdentityGetByEmailRequest) -> APIResponse:
         """
@@ -101,7 +99,7 @@ class IdentitiesResource(BaseResource):
             method="GET", endpoint=f"/identities/email/{request.email}"
         )
 
-        return self._create_response(response, IdentityResponse)
+        return self._create_response(response)
 
     def update_identity(self, request: IdentityUpdateRequest) -> APIResponse:
         """
@@ -129,7 +127,7 @@ class IdentitiesResource(BaseResource):
             body=data if data else None,
         )
 
-        return self._create_response(response, IdentityResponse)
+        return self._create_response(response)
 
     def update_identity_by_email(
         self, request: IdentityUpdateByEmailRequest
@@ -157,7 +155,7 @@ class IdentitiesResource(BaseResource):
             body=data if data else None,
         )
 
-        return self._create_response(response, IdentityResponse)
+        return self._create_response(response)
 
     def delete_identity(self, request: IdentityDeleteRequest) -> APIResponse:
         """

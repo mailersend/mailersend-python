@@ -2,7 +2,7 @@ from typing import List, Optional, Any
 from pydantic import field_validator, Field
 
 from .base import BaseModel as MailerSendBaseModel
-from .domains import Domain, DomainSettings
+
 
 
 class MessagesListQueryParams(MailerSendBaseModel):
@@ -56,7 +56,7 @@ class Message(MailerSendBaseModel):
     created_at: str
     updated_at: str
     emails: List[Email] = []
-    domain: Optional[Domain] = None
+    domain: Optional[dict] = None
 
 
 class MessagesListResponse(MailerSendBaseModel):

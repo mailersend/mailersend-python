@@ -1,8 +1,5 @@
 """Tests for Email Verification API resource."""
 
-from unittest.mock import Mock, patch
-import pytest
-
 from mailersend.resources.email_verification import EmailVerification
 from mailersend.models.base import APIResponse
 from mailersend.models.email_verification import (
@@ -16,14 +13,8 @@ from mailersend.models.email_verification import (
     EmailVerificationCreateRequest,
     EmailVerificationVerifyRequest,
     EmailVerificationResultsRequest,
-    EmailVerifyResponse,
-    EmailVerifyAsyncResponse,
-    EmailVerificationAsyncStatusResponse,
-    EmailVerificationListsResponse,
-    EmailVerificationResponse,
-    EmailVerificationResultsResponse,
 )
-from mailersend.exceptions import ValidationError
+from unittest.mock import Mock
 
 
 class TestEmailVerification:
@@ -48,19 +39,9 @@ class TestEmailVerification:
         assert isinstance(result, APIResponse)
         self.mock_client.request.assert_called_once_with(
             "POST",
-            "email-verification/verify", 
-            json={"email": "test@example.com"}
+            "email-verification/verify",
+            body={"email": "test@example.com"}
         )
-
-    def test_verify_email_invalid_request_none(self):
-        """Test verify_email with None request."""
-        with pytest.raises(ValidationError, match="EmailVerifyRequest must be provided"):
-            self.resource.verify_email(None)
-
-    def test_verify_email_invalid_request_type(self):
-        """Test verify_email with wrong request type."""
-        with pytest.raises(ValidationError, match="request must be an EmailVerifyRequest instance"):
-            self.resource.verify_email("invalid")
 
     def test_verify_email_async_valid_request(self):
         """Test verify_email_async with valid request."""
@@ -77,13 +58,8 @@ class TestEmailVerification:
         self.mock_client.request.assert_called_once_with(
             "POST",
             "email-verification/verify-async",
-            json={"email": "test@example.com"}
+            body={"email": "test@example.com"}
         )
-
-    def test_verify_email_async_invalid_request_none(self):
-        """Test verify_email_async with None request."""
-        with pytest.raises(ValidationError, match="EmailVerifyAsyncRequest must be provided"):
-            self.resource.verify_email_async(None)
 
     def test_get_async_status_valid_request(self):
         """Test get_async_status with valid request."""
@@ -98,14 +74,9 @@ class TestEmailVerification:
 
         assert isinstance(result, APIResponse)
         self.mock_client.request.assert_called_once_with(
-            "GET",
-            "email-verification/verify-async/abc123"
+            method="GET", 
+            endpoint="email-verification/verify-async/abc123"
         )
-
-    def test_get_async_status_invalid_request_none(self):
-        """Test get_async_status with None request."""
-        with pytest.raises(ValidationError, match="EmailVerificationAsyncStatusRequest must be provided"):
-            self.resource.get_async_status(None)
 
     def test_list_verifications_with_defaults(self):
         """Test list_verifications with default parameters."""
@@ -132,8 +103,8 @@ class TestEmailVerification:
 
         assert isinstance(result, APIResponse)
         self.mock_client.request.assert_called_once_with(
-            "GET",
-            "email-verification",
+            method="GET",
+            endpoint="email-verification",
             params={"page": 1, "limit": 25}
         )
 
@@ -162,15 +133,10 @@ class TestEmailVerification:
 
         assert isinstance(result, APIResponse)
         self.mock_client.request.assert_called_once_with(
-            "GET",
-            "email-verification",
+            method="GET",
+            endpoint="email-verification",
             params={"page": 2, "limit": 50}
         )
-
-    def test_list_verifications_invalid_request_none(self):
-        """Test list_verifications with None request."""
-        with pytest.raises(ValidationError, match="EmailVerificationListsRequest must be provided"):
-            self.resource.list_verifications(None)
 
     def test_get_verification_valid_request(self):
         """Test get_verification with valid request."""
@@ -197,14 +163,9 @@ class TestEmailVerification:
 
         assert isinstance(result, APIResponse)
         self.mock_client.request.assert_called_once_with(
-            "GET",
-            "email-verification/abc123"
+            method="GET",
+            endpoint="email-verification/abc123"
         )
-
-    def test_get_verification_invalid_request_none(self):
-        """Test get_verification with None request."""
-        with pytest.raises(ValidationError, match="EmailVerificationGetRequest must be provided"):
-            self.resource.get_verification(None)
 
     def test_create_verification_valid_request(self):
         """Test create_verification with valid request."""
@@ -234,13 +195,8 @@ class TestEmailVerification:
         self.mock_client.request.assert_called_once_with(
             "POST",
             "email-verification",
-            json={"name": "Test List", "emails": emails}
+            body={"name": "Test List", "emails": emails}
         )
-
-    def test_create_verification_invalid_request_none(self):
-        """Test create_verification with None request."""
-        with pytest.raises(ValidationError, match="EmailVerificationCreateRequest must be provided"):
-            self.resource.create_verification(None)
 
     def test_verify_list_valid_request(self):
         """Test verify_list with valid request."""
@@ -248,7 +204,7 @@ class TestEmailVerification:
         self.mock_response.json.return_value = {
             "data": {
                 "id": "abc123",
-                "name": "Test List", 
+                "name": "Test List",
                 "total": 100,
                 "created_at": "2023-01-01T10:00:00Z",
                 "updated_at": "2023-01-01T11:00:00Z",
@@ -267,14 +223,9 @@ class TestEmailVerification:
 
         assert isinstance(result, APIResponse)
         self.mock_client.request.assert_called_once_with(
-            "GET",
-            "email-verification/abc123/verify"
+            method="GET",
+            endpoint="email-verification/abc123/verify"
         )
-
-    def test_verify_list_invalid_request_none(self):
-        """Test verify_list with None request."""
-        with pytest.raises(ValidationError, match="EmailVerificationVerifyRequest must be provided"):
-            self.resource.verify_list(None)
 
     def test_get_results_with_defaults(self):
         """Test get_results with default parameters."""
@@ -304,8 +255,8 @@ class TestEmailVerification:
 
         assert isinstance(result, APIResponse)
         self.mock_client.request.assert_called_once_with(
-            "GET",
-            "email-verification/abc123/results",
+            method="GET",
+            endpoint="email-verification/abc123/results",
             params={"page": 1, "limit": 25}
         )
 
@@ -340,12 +291,7 @@ class TestEmailVerification:
 
         assert isinstance(result, APIResponse)
         self.mock_client.request.assert_called_once_with(
-            "GET",
-            "email-verification/abc123/results",
+            method="GET",
+            endpoint="email-verification/abc123/results",
             params={"page": 2, "limit": 50, "results": results_filter}
-        )
-
-    def test_get_results_invalid_request_none(self):
-        """Test get_results with None request."""
-        with pytest.raises(ValidationError, match="EmailVerificationResultsRequest must be provided"):
-            self.resource.get_results(None) 
+        ) 

@@ -1,11 +1,10 @@
 import pytest
-from tests.test_helpers import vcr, email_client
-import os
+from tests.test_helpers import vcr
 
 from mailersend.models.email_verification import (
-    EmailVerificationListRequest, EmailVerificationGetRequest,
+    EmailVerificationListsRequest, EmailVerificationGetRequest,
     EmailVerificationCreateRequest, EmailVerificationVerifyRequest,
-    EmailVerificationResultsRequest, EmailVerificationQueryParams
+    EmailVerificationResultsRequest, EmailVerificationListsQueryParams
 )
 from mailersend.models.base import APIResponse
 
@@ -13,8 +12,8 @@ from mailersend.models.base import APIResponse
 @pytest.fixture
 def basic_list_request():
     """Basic email verification list request"""
-    return EmailVerificationListRequest(
-        query_params=EmailVerificationQueryParams(
+    return EmailVerificationListsRequest(
+        query_params=EmailVerificationListsQueryParams(
             page=1,
             limit=10
         )
