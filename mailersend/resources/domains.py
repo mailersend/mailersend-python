@@ -1,4 +1,4 @@
-from typing import Dict, Any, Optional
+from typing import Optional
 
 from .base import BaseResource
 from ..models.domains import (
@@ -13,7 +13,6 @@ from ..models.domains import (
     DomainListQueryParams,
 )
 from ..models.base import APIResponse
-from ..exceptions import ValidationError
 
 
 class Domains(BaseResource):
@@ -43,7 +42,6 @@ class Domains(BaseResource):
         else:
             params = request.to_query_params()
 
-        self.logger.info("Requesting domains list")
         self.logger.debug(f"Query params: {params}")
 
         response = self.client.request("GET", "domains", params=params)
@@ -61,8 +59,7 @@ class Domains(BaseResource):
             APIResponse with domain information
         """
         self.logger.debug("Preparing to get domain")
-        self.logger.debug(f"Retrieving domain: {request.domain_id}")
-        self.logger.info(f"Requesting domain information for: {request.domain_id}")
+        self.logger.debug(f"Requesting domain information for: {request.domain_id}")
 
         response = self.client.request("GET", f"domains/{request.domain_id}")
 

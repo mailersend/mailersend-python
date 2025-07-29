@@ -5,8 +5,6 @@ SMS Activity API resource.
 from .base import BaseResource
 from ..models.sms_activity import SmsActivityListRequest, SmsMessageGetRequest
 from ..models.base import APIResponse
-from ..exceptions import ValidationError
-
 
 class SmsActivity(BaseResource):
     """Resource for SMS Activity API endpoints."""
@@ -26,13 +24,10 @@ class SmsActivity(BaseResource):
         """
         self.logger.debug("Preparing to list SMS activities")
 
-        if not isinstance(request, SmsActivityListRequest):
-            raise ValidationError("SmsActivityListRequest must be provided")
-
         # Convert to query parameters
         params = request.to_query_params()
 
-        self.logger.info(f"Listing SMS activities with params: {params}")
+        self.logger.debug(f"Listing SMS activities with params: {params}")
 
         # Make API request
         response = self.client.request(
@@ -50,16 +45,8 @@ class SmsActivity(BaseResource):
 
         Returns:
             API response with SMS message activity
-
-        Raises:
-            ValidationError: If request is invalid
         """
-        self.logger.debug("Preparing to get SMS message activity")
-
-        if not isinstance(request, SmsMessageGetRequest):
-            raise ValidationError("SmsMessageGetRequest must be provided")
-
-        self.logger.info(f"Getting SMS message activity: {request.sms_message_id}")
+        self.logger.debug(f"Getting SMS message activity: {request.sms_message_id}")
 
         # Make API request
         response = self.client.request(
