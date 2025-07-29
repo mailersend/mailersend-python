@@ -7,7 +7,6 @@ from ..models.schedules import (
     ScheduleResponse,
 )
 from ..models.base import APIResponse
-from ..exceptions import ValidationError as MailerSendValidationError
 
 
 class Schedules(BaseResource):
@@ -26,16 +25,7 @@ class Schedules(BaseResource):
 
         Returns:
             APIResponse containing the schedules list response
-
-        Raises:
-            MailerSendValidationError: If the request is invalid or has wrong type
         """
-        # Validation
-        if not isinstance(request, SchedulesListRequest):
-            raise MailerSendValidationError(
-                "Request must be an instance of SchedulesListRequest"
-            )
-
         self.logger.debug("Preparing to list scheduled messages with query parameters")
 
         # Extract query parameters
@@ -63,16 +53,7 @@ class Schedules(BaseResource):
 
         Returns:
             APIResponse containing the schedule response
-
-        Raises:
-            MailerSendValidationError: If the request is invalid or has wrong type
         """
-        # Validation
-        if not isinstance(request, ScheduleGetRequest):
-            raise MailerSendValidationError(
-                "Request must be an instance of ScheduleGetRequest"
-            )
-
         self.logger.debug(
             f"Preparing to get scheduled message with ID: {request.message_id}"
         )
@@ -93,16 +74,7 @@ class Schedules(BaseResource):
 
         Returns:
             APIResponse (204 No Content on success)
-
-        Raises:
-            MailerSendValidationError: If the request is invalid or has wrong type
         """
-        # Validation
-        if not isinstance(request, ScheduleDeleteRequest):
-            raise MailerSendValidationError(
-                "Request must be an instance of ScheduleDeleteRequest"
-            )
-
         self.logger.debug(
             f"Preparing to delete scheduled message with ID: {request.message_id}"
         )
