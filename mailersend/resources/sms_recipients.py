@@ -27,8 +27,8 @@ class SmsRecipients(BaseResource):
         self.logger.info(f"Listing SMS recipients with page: {request.query_params.page}, limit: {request.query_params.limit}")
         
         response = self.client.request(
-            method="GET",
-            path="sms-recipients",
+            method='GET',
+            endpoint='sms-recipients',
             params=params
         )
         
@@ -47,8 +47,8 @@ class SmsRecipients(BaseResource):
         self.logger.info(f"Getting SMS recipient: {request.sms_recipient_id}")
         
         response = self.client.request(
-            method="GET",
-            path=f"sms-recipients/{request.sms_recipient_id}"
+            method='GET',
+            endpoint=f'sms-recipients/{request.sms_recipient_id}'
         )
         
         return self._create_response(response)
@@ -66,9 +66,9 @@ class SmsRecipients(BaseResource):
         self.logger.info(f"Updating SMS recipient: {request.sms_recipient_id} to status: {request.status}")
         
         response = self.client.request(
-            method="PUT",
-            path=f"sms-recipients/{request.sms_recipient_id}",
-            data=request.to_request_body()
+            method='PUT',
+            endpoint=f'sms-recipients/{request.sms_recipient_id}',
+            body=request.to_request_body()
         )
         
         return self._create_response(response) 

@@ -169,6 +169,8 @@ class SmsWebhooksListResponse(BaseMailerSendModel):
     """Response model for SMS webhooks list."""
     
     data: List[SmsWebhook] = Field(..., description="List of SMS webhooks")
+    links: Dict[str, Optional[str]]
+    meta: Dict[str, Any]
 
 
 class SmsWebhookGetResponse(BaseMailerSendModel):

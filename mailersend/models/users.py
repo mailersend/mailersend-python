@@ -9,6 +9,7 @@ from pydantic import BaseModel, Field, field_validator
 # Domain and Template nested models
 class UserDomain(BaseModel):
     """Domain associated with a user."""
+
     id: str
     name: str
     created_at: datetime
@@ -17,6 +18,7 @@ class UserDomain(BaseModel):
 
 class UserTemplate(BaseModel):
     """Template associated with a user."""
+
     id: str
     name: str
     type: str
@@ -26,6 +28,7 @@ class UserTemplate(BaseModel):
 # User models
 class User(BaseModel):
     """User data model."""
+
     id: str
     email: str
     last_name: Optional[str] = None
@@ -42,12 +45,14 @@ class User(BaseModel):
 
 class UserInviteData(BaseModel):
     """Data associated with a user invite."""
+
     domains: List[str] = Field(default_factory=list)
     templates: List[str] = Field(default_factory=list)
 
 
 class UserInvite(BaseModel):
     """User invite data model."""
+
     id: str
     email: str
     data: Optional[UserInviteData] = None
@@ -61,39 +66,42 @@ class UserInvite(BaseModel):
 # Query parameters models
 class UsersListQueryParams(BaseModel):
     """Query parameters for users list request."""
+
     page: int = Field(default=1, ge=1)
     limit: int = Field(default=25, ge=10, le=100)
-    
+
     def to_query_params(self) -> Dict[str, Any]:
         """Convert to query parameters dictionary."""
         params = {}
         if self.page != 1:  # Only include if not default
-            params['page'] = self.page
+            params["page"] = self.page
         if self.limit != 25:  # Only include if not default
-            params['limit'] = self.limit
+            params["limit"] = self.limit
         return params
 
 
 class InvitesListQueryParams(BaseModel):
     """Query parameters for invites list request."""
+
     page: int = Field(default=1, ge=1)
     limit: int = Field(default=25, ge=10, le=100)
-    
+
     def to_query_params(self) -> Dict[str, Any]:
         """Convert to query parameters dictionary."""
         params = {}
         if self.page != 1:  # Only include if not default
-            params['page'] = self.page
+            params["page"] = self.page
         if self.limit != 25:  # Only include if not default
-            params['limit'] = self.limit
+            params["limit"] = self.limit
         return params
 
 
 # Request models
 class UsersListRequest(BaseModel):
     """Request model for listing users."""
+
     query_params: UsersListQueryParams = Field(default_factory=UsersListQueryParams)
-    
+
     def to_query_params(self) -> Dict[str, Any]:
         """Convert to query parameters dictionary."""
         return self.query_params.to_query_params()
@@ -101,11 +109,13 @@ class UsersListRequest(BaseModel):
 
 class UserGetRequest(BaseModel):
     """Request model for getting a single user."""
+
     user_id: str
 
 
 class UserInviteRequest(BaseModel):
     """Request model for inviting a user."""
+
     email: str = Field(..., max_length=191)
     role: str
     permissions: List[str] = Field(default_factory=list)
@@ -113,20 +123,21 @@ class UserInviteRequest(BaseModel):
     domains: List[str] = Field(default_factory=list)
     requires_periodic_password_change: Optional[bool] = None
 
-    @field_validator('email')
+    @field_validator("email")
     @classmethod
     def validate_email(cls, v):
         """Validate email format."""
         import re
+
         if not v or not v.strip():
             raise ValueError("Invalid email address")
         # Basic email validation
-        pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+        pattern = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
         if not re.match(pattern, v.strip()):
             raise ValueError("Invalid email address")
         return v.strip()
 
-    @field_validator('role')
+    @field_validator("role")
     @classmethod
     def validate_role(cls, v):
         """Validate role is not empty."""
@@ -143,15 +154,18 @@ class UserInviteRequest(BaseModel):
             "templates": self.templates,
             "domains": self.domains,
         }
-        
+
         if self.requires_periodic_password_change is not None:
-            json_data["requires_periodic_password_change"] = self.requires_periodic_password_change
-            
+            json_data["requires_periodic_password_change"] = (
+                self.requires_periodic_password_change
+            )
+
         return json_data
 
 
 class UserUpdateRequest(BaseModel):
     """Request model for updating a user."""
+
     user_id: str
     role: str
     permissions: List[str] = Field(default_factory=list)
@@ -159,7 +173,7 @@ class UserUpdateRequest(BaseModel):
     domains: List[str] = Field(default_factory=list)
     requires_periodic_password_change: Optional[bool] = None
 
-    @field_validator('role')
+    @field_validator("role")
     @classmethod
     def validate_role(cls, v):
         """Validate role is not empty."""
@@ -175,22 +189,26 @@ class UserUpdateRequest(BaseModel):
             "templates": self.templates,
             "domains": self.domains,
         }
-        
+
         if self.requires_periodic_password_change is not None:
-            json_data["requires_periodic_password_change"] = self.requires_periodic_password_change
-            
+            json_data["requires_periodic_password_change"] = (
+                self.requires_periodic_password_change
+            )
+
         return json_data
 
 
 class UserDeleteRequest(BaseModel):
     """Request model for deleting a user."""
+
     user_id: str
 
 
 class InvitesListRequest(BaseModel):
     """Request model for listing invites."""
+
     query_params: InvitesListQueryParams = Field(default_factory=InvitesListQueryParams)
-    
+
     def to_query_params(self) -> Dict[str, Any]:
         """Convert to query parameters dictionary."""
         return self.query_params.to_query_params()
@@ -198,50 +216,64 @@ class InvitesListRequest(BaseModel):
 
 class InviteGetRequest(BaseModel):
     """Request model for getting a single invite."""
+
     invite_id: str
 
 
 class InviteResendRequest(BaseModel):
     """Request model for resending an invite."""
+
     invite_id: str
 
 
 class InviteCancelRequest(BaseModel):
     """Request model for canceling an invite."""
+
     invite_id: str
 
 
 # Response models
 class UsersListResponse(BaseModel):
     """Response model for users list."""
+
     data: List[User]
+    links: Dict[str, Optional[str]]
+    meta: Dict[str, Any]
 
 
 class UserResponse(BaseModel):
     """Response model for single user."""
+
     data: User
 
 
 class UserInviteResponse(BaseModel):
     """Response model for user invite creation."""
+
     data: UserInvite
 
 
 class UserUpdateResponse(BaseModel):
     """Response model for user update."""
+
     data: User
 
 
 class InvitesListResponse(BaseModel):
     """Response model for invites list."""
+
     data: List[UserInvite]
+    links: Dict[str, Optional[str]]
+    meta: Dict[str, Any]
 
 
 class InviteResponse(BaseModel):
     """Response model for single invite."""
+
     data: UserInvite
 
 
 class InviteResendResponse(BaseModel):
     """Response model for invite resend."""
-    data: UserInvite 
+
+    data: UserInvite

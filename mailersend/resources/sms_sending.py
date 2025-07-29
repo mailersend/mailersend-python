@@ -39,6 +39,6 @@ class SmsSending(BaseResource):
         self.logger.info(f"Sending SMS to {len(request.to)} recipients")
         self.logger.debug(f"SMS payload: {payload}")
         
-        response = self.client.request("POST", "sms", body=payload)
+        response = self.client.request(method='POST', endpoint='sms', body=payload)
         
         return self._create_response(response)

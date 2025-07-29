@@ -6,23 +6,21 @@ from .base import BaseModel
 
 class IdentityListQueryParams(BaseModel):
     """Model for identity list query parameters with validation."""
+
     page: Optional[int] = Field(default=1, ge=1)
     limit: Optional[int] = Field(default=25, ge=10, le=100)
     domain_id: Optional[str] = None
 
     def to_query_params(self) -> dict:
         """Convert to query parameters for API request."""
-        params = {
-            'page': self.page,
-            'limit': self.limit,
-            'domain_id': self.domain_id
-        }
-        
+        params = {"page": self.page, "limit": self.limit, "domain_id": self.domain_id}
+
         return {k: v for k, v in params.items() if v is not None}
 
 
 class IdentityListRequest(BaseModel):
     """Request model for listing sender identities."""
+
     query_params: IdentityListQueryParams
 
     def to_query_params(self) -> dict:
@@ -32,7 +30,7 @@ class IdentityListRequest(BaseModel):
 
 class IdentityCreateRequest(BaseModel):
     """Request model for creating a new sender identity."""
-    
+
     domain_id: str
     name: str
     email: str
@@ -40,15 +38,15 @@ class IdentityCreateRequest(BaseModel):
     reply_to_name: Optional[str] = None
     add_note: Optional[bool] = None
     personal_note: Optional[str] = None
-    
-    @field_validator('domain_id')
+
+    @field_validator("domain_id")
     def validate_domain_id(cls, v):
         """Validate domain ID is provided and not empty."""
         if not v or not v.strip():
             raise ValueError("Domain ID is required")
         return v.strip()
-    
-    @field_validator('name')
+
+    @field_validator("name")
     def validate_name(cls, v):
         """Validate name is provided and within length limits."""
         if not v or not v.strip():
@@ -56,8 +54,8 @@ class IdentityCreateRequest(BaseModel):
         if len(v.strip()) > 191:
             raise ValueError("Name must be 191 characters or less")
         return v.strip()
-    
-    @field_validator('email')
+
+    @field_validator("email")
     def validate_email(cls, v):
         """Validate email is provided and within length limits."""
         if not v or not v.strip():
@@ -65,22 +63,22 @@ class IdentityCreateRequest(BaseModel):
         if len(v.strip()) > 191:
             raise ValueError("Email must be 191 characters or less")
         # Basic email validation
-        if '@' not in v.strip():
+        if "@" not in v.strip():
             raise ValueError("Invalid email format")
         return v.strip()
-    
-    @field_validator('reply_to_email')
+
+    @field_validator("reply_to_email")
     def validate_reply_to_email(cls, v):
         """Validate reply-to email format if provided."""
         if v is not None:
             v = v.strip()
-            if v and '@' not in v:
+            if v and "@" not in v:
                 raise ValueError("Invalid reply-to email format")
             if len(v) > 191:
                 raise ValueError("Reply-to email must be 191 characters or less")
         return v
-    
-    @field_validator('personal_note')
+
+    @field_validator("personal_note")
     def validate_personal_note(cls, v):
         """Validate personal note length."""
         if v is not None and len(v) > 250:
@@ -90,10 +88,10 @@ class IdentityCreateRequest(BaseModel):
 
 class IdentityGetRequest(BaseModel):
     """Request model for getting a single identity by ID."""
-    
+
     identity_id: str
-    
-    @field_validator('identity_id')
+
+    @field_validator("identity_id")
     def validate_identity_id(cls, v):
         """Validate identity ID is provided and not empty."""
         if not v or not v.strip():
@@ -103,37 +101,37 @@ class IdentityGetRequest(BaseModel):
 
 class IdentityGetByEmailRequest(BaseModel):
     """Request model for getting a single identity by email."""
-    
+
     email: str
-    
-    @field_validator('email')
+
+    @field_validator("email")
     def validate_email(cls, v):
         """Validate email is provided and has valid format."""
         if not v or not v.strip():
             raise ValueError("Email is required")
-        if '@' not in v.strip():
+        if "@" not in v.strip():
             raise ValueError("Invalid email format")
         return v.strip()
 
 
 class IdentityUpdateRequest(BaseModel):
     """Request model for updating an identity by ID."""
-    
+
     identity_id: str
     name: Optional[str] = None
     reply_to_email: Optional[str] = None
     reply_to_name: Optional[str] = None
     add_note: Optional[bool] = None
     personal_note: Optional[str] = None
-    
-    @field_validator('identity_id')
+
+    @field_validator("identity_id")
     def validate_identity_id(cls, v):
         """Validate identity ID is provided and not empty."""
         if not v or not v.strip():
             raise ValueError("Identity ID is required")
         return v.strip()
-    
-    @field_validator('name')
+
+    @field_validator("name")
     def validate_name(cls, v):
         """Validate name length if provided."""
         if v is not None:
@@ -143,19 +141,19 @@ class IdentityUpdateRequest(BaseModel):
             if not v:
                 raise ValueError("Name cannot be empty")
         return v
-    
-    @field_validator('reply_to_email')
+
+    @field_validator("reply_to_email")
     def validate_reply_to_email(cls, v):
         """Validate reply-to email format if provided."""
         if v is not None:
             v = v.strip()
-            if v and '@' not in v:
+            if v and "@" not in v:
                 raise ValueError("Invalid reply-to email format")
             if len(v) > 191:
                 raise ValueError("Reply-to email must be 191 characters or less")
         return v
-    
-    @field_validator('personal_note')
+
+    @field_validator("personal_note")
     def validate_personal_note(cls, v):
         """Validate personal note length."""
         if v is not None and len(v) > 250:
@@ -165,24 +163,24 @@ class IdentityUpdateRequest(BaseModel):
 
 class IdentityUpdateByEmailRequest(BaseModel):
     """Request model for updating an identity by email."""
-    
+
     email: str
     name: Optional[str] = None
     reply_to_email: Optional[str] = None
     reply_to_name: Optional[str] = None
     add_note: Optional[bool] = None
     personal_note: Optional[str] = None
-    
-    @field_validator('email')
+
+    @field_validator("email")
     def validate_email(cls, v):
         """Validate email is provided and has valid format."""
         if not v or not v.strip():
             raise ValueError("Email is required")
-        if '@' not in v.strip():
+        if "@" not in v.strip():
             raise ValueError("Invalid email format")
         return v.strip()
-    
-    @field_validator('name')
+
+    @field_validator("name")
     def validate_name(cls, v):
         """Validate name length if provided."""
         if v is not None:
@@ -192,19 +190,19 @@ class IdentityUpdateByEmailRequest(BaseModel):
             if not v:
                 raise ValueError("Name cannot be empty")
         return v
-    
-    @field_validator('reply_to_email')
+
+    @field_validator("reply_to_email")
     def validate_reply_to_email(cls, v):
         """Validate reply-to email format if provided."""
         if v is not None:
             v = v.strip()
-            if v and '@' not in v:
+            if v and "@" not in v:
                 raise ValueError("Invalid reply-to email format")
             if len(v) > 191:
                 raise ValueError("Reply-to email must be 191 characters or less")
         return v
-    
-    @field_validator('personal_note')
+
+    @field_validator("personal_note")
     def validate_personal_note(cls, v):
         """Validate personal note length."""
         if v is not None and len(v) > 250:
@@ -214,10 +212,10 @@ class IdentityUpdateByEmailRequest(BaseModel):
 
 class IdentityDeleteRequest(BaseModel):
     """Request model for deleting an identity by ID."""
-    
+
     identity_id: str
-    
-    @field_validator('identity_id')
+
+    @field_validator("identity_id")
     def validate_identity_id(cls, v):
         """Validate identity ID is provided and not empty."""
         if not v or not v.strip():
@@ -227,22 +225,22 @@ class IdentityDeleteRequest(BaseModel):
 
 class IdentityDeleteByEmailRequest(BaseModel):
     """Request model for deleting an identity by email."""
-    
+
     email: str
-    
-    @field_validator('email')
+
+    @field_validator("email")
     def validate_email(cls, v):
         """Validate email is provided and has valid format."""
         if not v or not v.strip():
             raise ValueError("Email is required")
-        if '@' not in v.strip():
+        if "@" not in v.strip():
             raise ValueError("Invalid email format")
         return v.strip()
 
 
 class IdentityDomain(BaseModel):
     """Model representing a domain associated with an identity."""
-    
+
     id: str
     name: str
     created_at: str
@@ -251,7 +249,7 @@ class IdentityDomain(BaseModel):
 
 class Identity(BaseModel):
     """Model representing a sender identity."""
-    
+
     id: str
     email: str
     name: str
@@ -266,7 +264,7 @@ class Identity(BaseModel):
 
 class IdentityListResponse(BaseModel):
     """Response model for identity list."""
-    
+
     data: List[Identity]
     links: Optional[dict] = None
     meta: Optional[dict] = None
@@ -274,5 +272,5 @@ class IdentityListResponse(BaseModel):
 
 class IdentityResponse(BaseModel):
     """Response model for single identity."""
-    
-    data: Identity 
+
+    data: Identity
