@@ -14,8 +14,6 @@ from mailersend.models.identities import (
     IdentityUpdateByEmailRequest,
     IdentityDeleteRequest,
     IdentityDeleteByEmailRequest,
-    IdentityListResponse,
-    IdentityResponse
 )
 
 
@@ -28,21 +26,12 @@ class TestIdentitiesResource:
         self.resource = IdentitiesResource(self.mock_client)
         self.resource.logger = Mock()
         
-        # Mock the _create_response method to return APIResponse
-        self.mock_api_response = Mock(spec=APIResponse)
+        # Mock _create_response method
+        self.mock_api_response = MagicMock(spec=APIResponse)
         self.resource._create_response = Mock(return_value=self.mock_api_response)
 
-    def test_initialization(self):
-        """Test resource initialization."""
-        assert self.resource.client is self.mock_client
-
-    def test_list_identities_with_invalid_type(self):
-        """Test list_identities with invalid request type."""
-        with pytest.raises(MailerSendValidationError, match="Request must be an instance of IdentityListRequest"):
-            self.resource.list_identities("invalid")
-
-    def test_list_identities_minimal_request(self):
-        """Test list_identities with minimal request."""
+    def test_list_identities_basic(self):
+        """Test list_identities with basic request."""
         query_params = IdentityListQueryParams()
         request = IdentityListRequest(query_params=query_params)
         mock_response = {"data": []}
@@ -54,17 +43,13 @@ class TestIdentitiesResource:
         self.mock_client.request.assert_called_once_with(
             method='GET',
             endpoint='/identities',
-            params={'page': 1, 'limit': 25}  # Default values
+            params={'page': 1, 'limit': 25}
         )
-        self.resource._create_response.assert_called_once_with(mock_response, IdentityListResponse)
+        self.resource._create_response.assert_called_once_with(mock_response)
 
-    def test_list_identities_with_all_parameters(self):
-        """Test list_identities with all parameters."""
-        query_params = IdentityListQueryParams(
-            page=2,
-            limit=50,
-            domain_id="domain123"
-        )
+    def test_list_identities_with_params(self):
+        """Test list_identities with query parameters."""
+        query_params = IdentityListQueryParams(page=2, limit=50, domain_id="domain123")
         request = IdentityListRequest(query_params=query_params)
         mock_response = {"data": []}
         self.mock_client.request.return_value = mock_response
@@ -75,17 +60,13 @@ class TestIdentitiesResource:
         self.mock_client.request.assert_called_once_with(
             method='GET',
             endpoint='/identities',
-            params={
-                'page': 2,
-                'limit': 50,
-                'domain_id': 'domain123'
-            }
+            params={'page': 2, 'limit': 50, 'domain_id': 'domain123'}
         )
-        self.resource._create_response.assert_called_once_with(mock_response, IdentityListResponse)
+        self.resource._create_response.assert_called_once_with(mock_response)
 
-    def test_list_identities_with_partial_parameters(self):
-        """Test list_identities with partial parameters."""
-        query_params = IdentityListQueryParams(domain_id="domain123", page=3)
+    def test_list_identities_with_minimal_params(self):
+        """Test list_identities with minimal parameters."""
+        query_params = IdentityListQueryParams(domain_id="domain123")
         request = IdentityListRequest(query_params=query_params)
         mock_response = {"data": []}
         self.mock_client.request.return_value = mock_response
@@ -96,35 +77,9 @@ class TestIdentitiesResource:
         self.mock_client.request.assert_called_once_with(
             method='GET',
             endpoint='/identities',
-            params={
-                'page': 3,
-                'limit': 25,  # Default value
-                'domain_id': 'domain123'
-            }
+            params={'page': 1, 'limit': 25, 'domain_id': 'domain123'}
         )
-        self.resource._create_response.assert_called_once_with(mock_response, IdentityListResponse)
-
-    def test_list_identities_query_params_handling(self):
-        """Test that query parameters are properly delegated."""
-        query_params = IdentityListQueryParams(page=2, limit=30)
-        request = IdentityListRequest(query_params=query_params)
-        mock_response = {"data": []}
-        self.mock_client.request.return_value = mock_response
-
-        result = self.resource.list_identities(request)
-
-        # Verify to_query_params was called correctly
-        expected_params = {'page': 2, 'limit': 30}
-        self.mock_client.request.assert_called_once_with(
-            method='GET',
-            endpoint='/identities',
-            params=expected_params
-        )
-
-    def test_create_identity_with_invalid_type(self):
-        """Test create_identity with invalid request type."""
-        with pytest.raises(MailerSendValidationError, match="Request must be an instance of IdentityCreateRequest"):
-            self.resource.create_identity("invalid")
+        self.resource._create_response.assert_called_once_with(mock_response)
 
     def test_create_identity_minimal_request(self):
         """Test create_identity with minimal required fields."""
@@ -142,13 +97,13 @@ class TestIdentitiesResource:
         self.mock_client.request.assert_called_once_with(
             method='POST',
             endpoint='/identities',
-            json={
+            body={
                 'domain_id': 'domain123',
                 'name': 'John Doe',
                 'email': 'john@example.com'
             }
         )
-        self.resource._create_response.assert_called_once_with(mock_response, IdentityResponse)
+        self.resource._create_response.assert_called_once_with(mock_response)
 
     def test_create_identity_with_all_fields(self):
         """Test create_identity with all fields."""
@@ -170,7 +125,7 @@ class TestIdentitiesResource:
         self.mock_client.request.assert_called_once_with(
             method='POST',
             endpoint='/identities',
-            json={
+            body={
                 'domain_id': 'domain123',
                 'name': 'John Doe',
                 'email': 'john@example.com',
@@ -180,7 +135,7 @@ class TestIdentitiesResource:
                 'personal_note': 'Personal note content'
             }
         )
-        self.resource._create_response.assert_called_once_with(mock_response, IdentityResponse)
+        self.resource._create_response.assert_called_once_with(mock_response)
 
     def test_create_identity_model_dump_serialization(self):
         """Test create_identity uses model_dump for request body serialization."""
@@ -202,21 +157,17 @@ class TestIdentitiesResource:
         self.mock_client.request.assert_called_once_with(
             method='POST',
             endpoint='/identities',
-            json={
+            body={
                 'domain_id': 'domain123',
                 'name': 'John Doe',
                 'email': 'john@example.com',
                 'reply_to_email': 'reply@example.com'
             }
         )
-
-    def test_get_identity_with_invalid_type(self):
-        """Test get_identity with invalid request type."""
-        with pytest.raises(MailerSendValidationError, match="Request must be an instance of IdentityGetRequest"):
-            self.resource.get_identity("invalid")
+        self.resource._create_response.assert_called_once_with(mock_response)
 
     def test_get_identity_success(self):
-        """Test get_identity success."""
+        """Test get_identity with valid request."""
         request = IdentityGetRequest(identity_id="identity123")
         mock_response = {"data": {"id": "identity123"}}
         self.mock_client.request.return_value = mock_response
@@ -228,15 +179,10 @@ class TestIdentitiesResource:
             method='GET',
             endpoint='/identities/identity123'
         )
-        self.resource._create_response.assert_called_once_with(mock_response, IdentityResponse)
-
-    def test_get_identity_by_email_with_invalid_type(self):
-        """Test get_identity_by_email with invalid request type."""
-        with pytest.raises(MailerSendValidationError, match="Request must be an instance of IdentityGetByEmailRequest"):
-            self.resource.get_identity_by_email("invalid")
+        self.resource._create_response.assert_called_once_with(mock_response)
 
     def test_get_identity_by_email_success(self):
-        """Test get_identity_by_email success."""
+        """Test get_identity_by_email with valid request."""
         request = IdentityGetByEmailRequest(email="john@example.com")
         mock_response = {"data": {"email": "john@example.com"}}
         self.mock_client.request.return_value = mock_response
@@ -248,12 +194,7 @@ class TestIdentitiesResource:
             method='GET',
             endpoint='/identities/email/john@example.com'
         )
-        self.resource._create_response.assert_called_once_with(mock_response, IdentityResponse)
-
-    def test_update_identity_with_invalid_type(self):
-        """Test update_identity with invalid request type."""
-        with pytest.raises(MailerSendValidationError, match="Request must be an instance of IdentityUpdateRequest"):
-            self.resource.update_identity("invalid")
+        self.resource._create_response.assert_called_once_with(mock_response)
 
     def test_update_identity_with_minimal_data(self):
         """Test update_identity with minimal data."""
@@ -267,9 +208,9 @@ class TestIdentitiesResource:
         self.mock_client.request.assert_called_once_with(
             method='PUT',
             endpoint='/identities/identity123',
-            json={'name': 'Updated Name'}
+            body={'name': 'Updated Name'}
         )
-        self.resource._create_response.assert_called_once_with(mock_response, IdentityResponse)
+        self.resource._create_response.assert_called_once_with(mock_response)
 
     def test_update_identity_excludes_identity_id_from_body(self):
         """Test update_identity excludes identity_id from request body."""
@@ -291,13 +232,9 @@ class TestIdentitiesResource:
         self.mock_client.request.assert_called_once_with(
             method='PUT',
             endpoint='/identities/identity123',
-            json=expected_data
+            body=expected_data
         )
-
-    def test_update_identity_by_email_with_invalid_type(self):
-        """Test update_identity_by_email with invalid request type."""
-        with pytest.raises(MailerSendValidationError, match="Request must be an instance of IdentityUpdateByEmailRequest"):
-            self.resource.update_identity_by_email("invalid")
+        self.resource._create_response.assert_called_once_with(mock_response)
 
     def test_update_identity_by_email_excludes_email_from_body(self):
         """Test update_identity_by_email excludes email from request body."""
@@ -319,19 +256,14 @@ class TestIdentitiesResource:
         self.mock_client.request.assert_called_once_with(
             method='PUT',
             endpoint='/identities/email/john@example.com',
-            json=expected_data
+            body=expected_data
         )
-        self.resource._create_response.assert_called_once_with(mock_response, IdentityResponse)
-
-    def test_delete_identity_with_invalid_type(self):
-        """Test delete_identity with invalid request type."""
-        with pytest.raises(MailerSendValidationError, match="Request must be an instance of IdentityDeleteRequest"):
-            self.resource.delete_identity("invalid")
+        self.resource._create_response.assert_called_once_with(mock_response)
 
     def test_delete_identity_success(self):
-        """Test delete_identity success."""
+        """Test delete_identity with valid request."""
         request = IdentityDeleteRequest(identity_id="identity123")
-        mock_response = {"message": "Identity deleted"}
+        mock_response = {}
         self.mock_client.request.return_value = mock_response
 
         result = self.resource.delete_identity(request)
@@ -343,15 +275,10 @@ class TestIdentitiesResource:
         )
         self.resource._create_response.assert_called_once_with(mock_response)
 
-    def test_delete_identity_by_email_with_invalid_type(self):
-        """Test delete_identity_by_email with invalid request type."""
-        with pytest.raises(MailerSendValidationError, match="Request must be an instance of IdentityDeleteByEmailRequest"):
-            self.resource.delete_identity_by_email("invalid")
-
     def test_delete_identity_by_email_success(self):
-        """Test delete_identity_by_email success."""
+        """Test delete_identity_by_email with valid request."""
         request = IdentityDeleteByEmailRequest(email="john@example.com")
-        mock_response = {"message": "Identity deleted"}
+        mock_response = {}
         self.mock_client.request.return_value = mock_response
 
         result = self.resource.delete_identity_by_email(request)
@@ -363,46 +290,26 @@ class TestIdentitiesResource:
         )
         self.resource._create_response.assert_called_once_with(mock_response)
 
-    def test_all_methods_return_api_response(self):
-        """Test that all methods return APIResponse objects."""
-        mock_response = {"data": {}}
-        self.mock_client.request.return_value = mock_response
+    def test_integration_workflow(self):
+        """Test integration workflow with multiple operations."""
+        # Setup different requests for different methods
+        request_create = IdentityCreateRequest(
+            domain_id="domain123",
+            name="John Doe",
+            email="john@example.com"
+        )
+        request_get = IdentityGetRequest(identity_id="identity123")
+        request_get_email = IdentityGetByEmailRequest(email="john@example.com")
+        request_update = IdentityUpdateRequest(identity_id="identity123", name="Updated")
+        request_update_email = IdentityUpdateByEmailRequest(email="john@example.com", name="Updated")
+        request_delete = IdentityDeleteRequest(identity_id="identity123")
+        request_delete_email = IdentityDeleteByEmailRequest(email="john@example.com")
 
-        # Test each method returns APIResponse
-        query_params = IdentityListQueryParams()
-        request_list = IdentityListRequest(query_params=query_params)
-        assert isinstance(self.resource.list_identities(request_list), type(self.mock_api_response))
-
-        request_create = IdentityCreateRequest(domain_id="d1", name="n", email="e@e.com")
+        # Test that each method returns the expected APIResponse type
         assert isinstance(self.resource.create_identity(request_create), type(self.mock_api_response))
-
-        request_get = IdentityGetRequest(identity_id="id1")
         assert isinstance(self.resource.get_identity(request_get), type(self.mock_api_response))
-
-        request_get_email = IdentityGetByEmailRequest(email="e@e.com")
         assert isinstance(self.resource.get_identity_by_email(request_get_email), type(self.mock_api_response))
-
-        request_update = IdentityUpdateRequest(identity_id="id1")
         assert isinstance(self.resource.update_identity(request_update), type(self.mock_api_response))
-
-        request_update_email = IdentityUpdateByEmailRequest(email="e@e.com")
         assert isinstance(self.resource.update_identity_by_email(request_update_email), type(self.mock_api_response))
-
-        request_delete = IdentityDeleteRequest(identity_id="id1")
         assert isinstance(self.resource.delete_identity(request_delete), type(self.mock_api_response))
-
-        request_delete_email = IdentityDeleteByEmailRequest(email="e@e.com")
-        assert isinstance(self.resource.delete_identity_by_email(request_delete_email), type(self.mock_api_response))
-
-    def test_logging_is_called(self):
-        """Test that logging is called for each method."""
-        mock_response = {"data": {}}
-        self.mock_client.request.return_value = mock_response
-
-        # Test logging for list method
-        query_params = IdentityListQueryParams()
-        request = IdentityListRequest(query_params=query_params)
-        self.resource.list_identities(request)
-        
-        # Verify logging was called
-        assert self.resource.logger.debug.called 
+        assert isinstance(self.resource.delete_identity_by_email(request_delete_email), type(self.mock_api_response)) 

@@ -132,32 +132,7 @@ class InboundForward(BaseModel):
         return v.strip()
 
 
-class InboundMxValues(BaseModel):
-    """Represents MX record values for inbound routing."""
 
-    priority: int = Field(..., description="MX priority")
-    target: str = Field(..., description="MX target")
-
-
-class InboundRoute(BaseModel):
-    """Represents a complete inbound route."""
-
-    id: str = Field(..., description="Inbound route ID")
-    name: str = Field(..., description="Inbound route name")
-    address: str = Field(..., description="Inbound email address")
-    domain: str = Field(..., description="Domain name")
-    dns_checked_at: Optional[str] = Field(None, description="DNS check timestamp")
-    enabled: bool = Field(..., description="Whether the route is enabled")
-    filters: List[InboundFilter] = Field(
-        default_factory=list, description="List of filters"
-    )
-    forwards: List[InboundForward] = Field(
-        default_factory=list, description="List of forwards"
-    )
-    priority: Optional[int] = Field(None, description="Route priority")
-    mxValues: Optional[InboundMxValues] = Field(
-        None, description="MX record values", alias="mxValues"
-    )
 
 
 # Request Models

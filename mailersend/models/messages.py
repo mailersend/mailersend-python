@@ -41,33 +41,4 @@ class MessageGetRequest(MailerSendBaseModel):
         return v.strip()
 
 
-class Email(MailerSendBaseModel):
-    """Model representing an email within a message."""
 
-    # Based on the API documentation, the emails array structure is not detailed
-    # This is a placeholder that can be expanded when more information is available
-    pass
-
-
-class Message(MailerSendBaseModel):
-    """Model representing a message."""
-
-    id: str
-    created_at: str
-    updated_at: str
-    emails: List[Email] = []
-    domain: Optional[dict] = None
-
-
-class MessagesListResponse(MailerSendBaseModel):
-    """Response model for messages list."""
-
-    data: List[Message]
-    links: dict
-    meta: dict
-
-
-class MessageResponse(MailerSendBaseModel):
-    """Response model for single message."""
-
-    data: Message

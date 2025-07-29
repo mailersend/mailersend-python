@@ -11,10 +11,6 @@ from mailersend.models.identities import (
     IdentityUpdateByEmailRequest,
     IdentityDeleteRequest,
     IdentityDeleteByEmailRequest,
-    IdentityDomain,
-    Identity,
-    IdentityListResponse,
-    IdentityResponse
 )
 
 
@@ -708,23 +704,31 @@ class TestIdentityDeleteRequest:
 class TestIdentityDeleteByEmailRequest:
     """Test IdentityDeleteByEmailRequest model."""
 
-    def test_valid_email(self):
-        """Test with valid email."""
+    def test_basic(self):
+        """Test basic functionality."""
         request = IdentityDeleteByEmailRequest(email="john@example.com")
         assert request.email == "john@example.com"
 
-    def test_email_validation(self):
-        """Test email validation."""
-        # Empty email
-        with pytest.raises(ValidationError, match="Email is required"):
+    def test_empty_email(self):
+        """Test empty email validation."""
+        with pytest.raises(ValidationError) as exc_info:
             IdentityDeleteByEmailRequest(email="")
-        
-        # Invalid email format
-        with pytest.raises(ValidationError, match="Invalid email format"):
-            IdentityDeleteByEmailRequest(email="invalid-email")
+        assert "Email is required" in str(exc_info.value)
+
+    def test_whitespace_email(self):
+        """Test whitespace-only email validation."""
+        with pytest.raises(ValidationError) as exc_info:
+            IdentityDeleteByEmailRequest(email="   ")
+        assert "Email is required" in str(exc_info.value)
+
+    def test_invalid_email_format(self):
+        """Test invalid email format validation."""
+        with pytest.raises(ValidationError) as exc_info:
+            IdentityDeleteByEmailRequest(email="invalid_email")
+        assert "Invalid email format" in str(exc_info.value)
 
     def test_email_trimming(self):
-        """Test email is trimmed."""
+        """Test email trimming."""
         request = IdentityDeleteByEmailRequest(email="  john@example.com  ")
         assert request.email == "john@example.com"
 
@@ -732,224 +736,4 @@ class TestIdentityDeleteByEmailRequest:
         """Test model serialization."""
         request = IdentityDeleteByEmailRequest(email="john@example.com")
         data = request.model_dump()
-        assert data == {"email": "john@example.com"}
-
-
-class TestIdentityDomain:
-    """Test IdentityDomain model."""
-
-    def test_required_fields(self):
-        """Test with all required fields."""
-        domain = IdentityDomain(
-            id="domain123",
-            name="example.com",
-            created_at="2023-01-01T00:00:00Z",
-            updated_at="2023-01-01T00:00:00Z"
-        )
-        assert domain.id == "domain123"
-        assert domain.name == "example.com"
-        assert domain.created_at == "2023-01-01T00:00:00Z"
-        assert domain.updated_at == "2023-01-01T00:00:00Z"
-
-    def test_serialization(self):
-        """Test model serialization."""
-        domain = IdentityDomain(
-            id="domain123",
-            name="example.com",
-            created_at="2023-01-01T00:00:00Z",
-            updated_at="2023-01-01T00:00:00Z"
-        )
-        data = domain.model_dump()
-        assert data == {
-            "id": "domain123",
-            "name": "example.com",
-            "created_at": "2023-01-01T00:00:00Z",
-            "updated_at": "2023-01-01T00:00:00Z"
-        }
-
-
-class TestIdentity:
-    """Test Identity model."""
-
-    def test_required_fields(self):
-        """Test with all required fields."""
-        domain = IdentityDomain(
-            id="domain123",
-            name="example.com",
-            created_at="2023-01-01T00:00:00Z",
-            updated_at="2023-01-01T00:00:00Z"
-        )
-        identity = Identity(
-            id="identity123",
-            email="john@example.com",
-            name="John Doe",
-            domain=domain
-        )
-        assert identity.id == "identity123"
-        assert identity.email == "john@example.com"
-        assert identity.name == "John Doe"
-        assert identity.reply_to_email is None
-        assert identity.reply_to_name is None
-        assert identity.is_verified is False
-        assert identity.resends == 0
-        assert identity.add_note is False
-        assert identity.personal_note is None
-        assert identity.domain == domain
-
-    def test_with_all_fields(self):
-        """Test with all fields provided."""
-        domain = IdentityDomain(
-            id="domain123",
-            name="example.com",
-            created_at="2023-01-01T00:00:00Z",
-            updated_at="2023-01-01T00:00:00Z"
-        )
-        identity = Identity(
-            id="identity123",
-            email="john@example.com",
-            name="John Doe",
-            reply_to_email="reply@example.com",
-            reply_to_name="Reply Name",
-            is_verified=True,
-            resends=3,
-            add_note=True,
-            personal_note="Personal note",
-            domain=domain
-        )
-        assert identity.id == "identity123"
-        assert identity.email == "john@example.com"
-        assert identity.name == "John Doe"
-        assert identity.reply_to_email == "reply@example.com"
-        assert identity.reply_to_name == "Reply Name"
-        assert identity.is_verified is True
-        assert identity.resends == 3
-        assert identity.add_note is True
-        assert identity.personal_note == "Personal note"
-        assert identity.domain == domain
-
-    def test_serialization(self):
-        """Test model serialization."""
-        domain = IdentityDomain(
-            id="domain123",
-            name="example.com",
-            created_at="2023-01-01T00:00:00Z",
-            updated_at="2023-01-01T00:00:00Z"
-        )
-        identity = Identity(
-            id="identity123",
-            email="john@example.com",
-            name="John Doe",
-            reply_to_email="reply@example.com",
-            is_verified=True,
-            domain=domain
-        )
-        data = identity.model_dump()
-        assert data == {
-            "id": "identity123",
-            "email": "john@example.com",
-            "name": "John Doe",
-            "reply_to_email": "reply@example.com",
-            "reply_to_name": None,
-            "is_verified": True,
-            "resends": 0,
-            "add_note": False,
-            "personal_note": None,
-            "domain": {
-                "id": "domain123",
-                "name": "example.com",
-                "created_at": "2023-01-01T00:00:00Z",
-                "updated_at": "2023-01-01T00:00:00Z"
-            }
-        }
-
-
-class TestIdentityListResponse:
-    """Test IdentityListResponse model."""
-
-    def test_with_data_only(self):
-        """Test with data only."""
-        domain = IdentityDomain(
-            id="domain123",
-            name="example.com",
-            created_at="2023-01-01T00:00:00Z",
-            updated_at="2023-01-01T00:00:00Z"
-        )
-        identity = Identity(
-            id="identity123",
-            email="john@example.com",
-            name="John Doe",
-            domain=domain
-        )
-        response = IdentityListResponse(data=[identity])
-        assert len(response.data) == 1
-        assert response.data[0] == identity
-        assert response.links is None
-        assert response.meta is None
-
-    def test_with_all_fields(self):
-        """Test with all fields provided."""
-        domain = IdentityDomain(
-            id="domain123",
-            name="example.com",
-            created_at="2023-01-01T00:00:00Z",
-            updated_at="2023-01-01T00:00:00Z"
-        )
-        identity = Identity(
-            id="identity123",
-            email="john@example.com",
-            name="John Doe",
-            domain=domain
-        )
-        links = {"next": "https://api.mailersend.com/v1/identities?page=2"}
-        meta = {"total": 100, "page": 1}
-        
-        response = IdentityListResponse(
-            data=[identity],
-            links=links,
-            meta=meta
-        )
-        assert len(response.data) == 1
-        assert response.data[0] == identity
-        assert response.links == links
-        assert response.meta == meta
-
-
-class TestIdentityResponse:
-    """Test IdentityResponse model."""
-
-    def test_single_identity(self):
-        """Test with single identity."""
-        domain = IdentityDomain(
-            id="domain123",
-            name="example.com",
-            created_at="2023-01-01T00:00:00Z",
-            updated_at="2023-01-01T00:00:00Z"
-        )
-        identity = Identity(
-            id="identity123",
-            email="john@example.com",
-            name="John Doe",
-            domain=domain
-        )
-        response = IdentityResponse(data=identity)
-        assert response.data == identity
-
-    def test_serialization(self):
-        """Test model serialization."""
-        domain = IdentityDomain(
-            id="domain123",
-            name="example.com",
-            created_at="2023-01-01T00:00:00Z",
-            updated_at="2023-01-01T00:00:00Z"
-        )
-        identity = Identity(
-            id="identity123",
-            email="john@example.com",
-            name="John Doe",
-            domain=domain
-        )
-        response = IdentityResponse(data=identity)
-        data = response.model_dump()
-        assert "data" in data
-        assert data["data"]["id"] == "identity123"
-        assert data["data"]["email"] == "john@example.com" 
+        assert data == {"email": "john@example.com"} 
