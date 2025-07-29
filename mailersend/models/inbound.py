@@ -192,7 +192,7 @@ class InboundGetRequest(BaseModel):
 
     @field_validator("inbound_id")
     @classmethod
-    def validate_inbound_id(cls, v): 
+    def validate_inbound_id(cls, v):
         """Validate inbound ID."""
         if not v or not v.strip():
             raise ValueError("Inbound ID is required")

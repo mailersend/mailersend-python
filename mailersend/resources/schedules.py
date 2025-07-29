@@ -5,7 +5,6 @@ from ..models.schedules import (
     SchedulesListRequest,
     ScheduleGetRequest,
     ScheduleDeleteRequest,
-    SchedulesListResponse
 )
 from ..models.base import APIResponse
 
@@ -41,7 +40,7 @@ class Schedules(BaseResource):
             params=params if params else None,
         )
 
-        return self._create_response(response, SchedulesListResponse)
+        return self._create_response(response)
 
     def get_schedule(self, request: ScheduleGetRequest) -> APIResponse:
         """

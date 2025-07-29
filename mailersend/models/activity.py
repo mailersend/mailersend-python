@@ -130,17 +130,3 @@ class SingleActivityRequest(BaseModel):
             raise ValueError("activity_id cannot be empty")
         # Strip whitespace
         self.activity_id = self.activity_id.strip()
-
-
-class ActivityListResponse(BaseMailerSendModel):
-    """Response model for activity list."""
-    
-    data: List[Activity] = Field(..., description="List of activities")
-    links: Dict[str, Optional[str]]
-    meta: Dict[str, Any]
-
-
-class SingleActivityResponse(BaseMailerSendModel):
-    """Response model for single activity."""
-    
-    data: Activity = Field(..., description="Activity details")

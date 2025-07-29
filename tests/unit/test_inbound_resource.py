@@ -11,8 +11,6 @@ from mailersend.models.inbound import (
     InboundCreateRequest,
     InboundUpdateRequest,
     InboundDeleteRequest,
-    InboundListResponse,
-    InboundResponse,
     InboundRoute,
     InboundFilterGroup,
     InboundForward

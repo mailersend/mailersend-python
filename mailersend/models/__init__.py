@@ -3,12 +3,12 @@ Data models used for communicating with the MailerSend API.
 """
 from .base import BaseModel
 from .email import (
-    EmailContact, 
+    EmailContact,
     EmailAttachment,
-    EmailPersonalization, 
+    EmailPersonalization,
     EmailRequest,
-    EmailTrackingSettings, 
-    EmailHeader
+    EmailTrackingSettings,
+    EmailHeader,
 )
 from .activity import (
     ActivityRecipient,
@@ -16,18 +16,10 @@ from .activity import (
     Activity,
     ActivityQueryParams,
     ActivityRequest,
-    SingleActivityRequest
+    SingleActivityRequest,
 )
 from .analytics import (
     AnalyticsRequest,
-    AnalyticsDateStats,
-    AnalyticsDateResponse,
-    AnalyticsCountryStats,
-    AnalyticsCountryResponse,
-    AnalyticsUserAgentStats,
-    AnalyticsUserAgentResponse,
-    AnalyticsReadingEnvironmentStats,
-    AnalyticsReadingEnvironmentResponse
 )
 from .domains import (
     DomainListRequest,
@@ -48,7 +40,7 @@ from .domains import (
     DomainDnsRecords,
     DomainDnsRecordsResponse,
     DomainVerificationData,
-    DomainVerificationResponse
+    DomainVerificationResponse,
 )
 from .identities import (
     IdentityListRequest,
@@ -62,7 +54,7 @@ from .identities import (
     IdentityDomain,
     Identity,
     IdentityListResponse,
-    IdentityResponse
+    IdentityResponse,
 )
 from .inbound import (
     InboundListRequest,
@@ -70,8 +62,6 @@ from .inbound import (
     InboundCreateRequest,
     InboundUpdateRequest,
     InboundDeleteRequest,
-    InboundListResponse,
-    InboundResponse,
     InboundRoute,
     InboundFilter,
     InboundFilterGroup,
@@ -84,7 +74,7 @@ from .messages import (
     Email,
     Message,
     MessagesListResponse,
-    MessageResponse
+    MessageResponse,
 )
 from .schedules import (
     SchedulesListRequest,
@@ -93,8 +83,6 @@ from .schedules import (
     ScheduleDomain,
     ScheduleMessage,
     ScheduledMessage,
-    SchedulesListResponse,
-    ScheduleResponse
 )
 from .recipients import (
     RecipientsListRequest,
@@ -129,7 +117,7 @@ from .templates import (
     TemplateStats,
     Template,
     TemplatesListResponse,
-    TemplateResponse
+    TemplateResponse,
 )
 from .tokens import (
     TOKEN_SCOPES,
@@ -153,8 +141,6 @@ from .webhooks import (
     WebhookUpdateRequest,
     WebhookDeleteRequest,
     Webhook,
-    WebhooksListResponse,
-    WebhookResponse,
 )
 from .email_verification import (
     EmailVerifyRequest,
@@ -199,11 +185,7 @@ from .users import (
     InviteResponse,
     InviteResendResponse,
 )
-from .sms_sending import (
-    SmsPersonalization,
-    SmsSendRequest,
-    SmsSendResponse
-)
+from .sms_sending import SmsPersonalization, SmsSendRequest, SmsSendResponse
 from .sms_numbers import (
     SmsNumber,
     SmsNumbersListRequest,
@@ -211,7 +193,7 @@ from .sms_numbers import (
     SmsNumberUpdateRequest,
     SmsNumberDeleteRequest,
     SmsNumbersListResponse,
-    SmsNumberResponse
+    SmsNumberResponse,
 )
 from .sms_activity import (
     SmsActivity,
@@ -219,7 +201,7 @@ from .sms_activity import (
     SmsMessageGetRequest,
     SmsActivityListResponse,
     SmsMessage,
-    SmsMessageResponse
+    SmsMessageResponse,
 )
 from .sms_recipients import (
     SmsRecipientStatus,
@@ -230,7 +212,7 @@ from .sms_recipients import (
     SmsRecipientDetails,
     SmsRecipientsListResponse,
     SmsRecipientGetResponse,
-    SmsRecipientUpdateResponse
+    SmsRecipientUpdateResponse,
 )
 from .sms_webhooks import (
     SmsWebhookEvent,
@@ -244,7 +226,7 @@ from .sms_webhooks import (
     SmsWebhookGetResponse,
     SmsWebhookCreateResponse,
     SmsWebhookUpdateResponse,
-    SmsWebhookDeleteResponse
+    SmsWebhookDeleteResponse,
 )
 from .sms_inbounds import (
     FilterComparer,
@@ -260,16 +242,16 @@ from .sms_inbounds import (
     SmsInboundGetResponse,
     SmsInboundCreateResponse,
     SmsInboundUpdateResponse,
-    SmsInboundDeleteResponse
+    SmsInboundDeleteResponse,
 )
 
 __all__ = [
     "BaseModel",
     "EmailContact",
     "EmailAttachment",
-    "EmailPersonalization", 
+    "EmailPersonalization",
     "EmailRequest",
-    "EmailTrackingSettings", 
+    "EmailTrackingSettings",
     "EmailHeader",
     "ActivityRecipient",
     "ActivityEmail",
@@ -277,14 +259,6 @@ __all__ = [
     "ActivityQueryParams",
     "ActivityRequest",
     "AnalyticsRequest",
-    "AnalyticsDateStats",
-    "AnalyticsDateResponse",
-    "AnalyticsCountryStats",
-    "AnalyticsCountryResponse",
-    "AnalyticsUserAgentStats",
-    "AnalyticsUserAgentResponse",
-    "AnalyticsReadingEnvironmentStats",
-    "AnalyticsReadingEnvironmentResponse",
     "DomainListRequest",
     "DomainCreateRequest",
     "DomainDeleteRequest",
@@ -340,8 +314,6 @@ __all__ = [
     "ScheduleDomain",
     "ScheduleMessage",
     "ScheduledMessage",
-    "SchedulesListResponse",
-    "ScheduleResponse",
     "RecipientsListRequest",
     "RecipientGetRequest",
     "RecipientDeleteRequest",
@@ -393,8 +365,6 @@ __all__ = [
     "WebhookUpdateRequest",
     "WebhookDeleteRequest",
     "Webhook",
-    "WebhooksListResponse",
-    "WebhookResponse",
     # Email Verification models
     "EmailVerifyRequest",
     "EmailVerifyAsyncRequest",

@@ -156,9 +156,9 @@ class UserInviteRequest(BaseModel):
         }
 
         if self.requires_periodic_password_change is not None:
-            json_data["requires_periodic_password_change"] = (
-                self.requires_periodic_password_change
-            )
+            json_data[
+                "requires_periodic_password_change"
+            ] = self.requires_periodic_password_change
 
         return json_data
 
@@ -191,9 +191,9 @@ class UserUpdateRequest(BaseModel):
         }
 
         if self.requires_periodic_password_change is not None:
-            json_data["requires_periodic_password_change"] = (
-                self.requires_periodic_password_change
-            )
+            json_data[
+                "requires_periodic_password_change"
+            ] = self.requires_periodic_password_change
 
         return json_data
 

@@ -12,7 +12,7 @@ class Email(BaseResource):
     Client for interacting with the MailerSend Email API.
     """
 
-    def send(self, email: EmailRequest = None) -> APIResponse:
+    def send(self, email: EmailRequest) -> APIResponse:
         """
         Send a single email.
 
@@ -30,7 +30,7 @@ class Email(BaseResource):
         self.logger.debug("Sending email request to MailerSend API")
         self.logger.debug("Payload: %s", payload)
 
-        response = self.client.request("POST", "email", body=payload)
+        response = self.client.request(method="POST", endpoint="email", body=payload)
 
         # Create custom data with email ID from headers
         email_data = {"id": response.headers.get("x-message-id")}
@@ -55,10 +55,10 @@ class Email(BaseResource):
             email_payload = email.model_dump(by_alias=True, exclude_none=True)
             payload.append(email_payload)
 
-        self.logger.info("Sending bulk email request to MailerSend API")
+        self.logger.debug("Sending bulk email request to MailerSend API")
         self.logger.debug("Payload: %s", payload)
 
-        response = self.client.request("POST", "bulk-email", body=payload)
+        response = self.client.request(method="POST", endpoint="bulk-email", body=payload)
 
         return self._create_response(response)
 
@@ -74,6 +74,6 @@ class Email(BaseResource):
         """
         self.logger.debug("Getting bulk email status")
 
-        response = self.client.request("GET", f"bulk-email/{bulk_email_id}")
+        response = self.client.request(method="GET", endpoint=f"bulk-email/{bulk_email_id}")
 
         return self._create_response(response)

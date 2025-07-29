@@ -9,8 +9,6 @@ from mailersend.models.schedules import (
     ScheduleDomain,
     ScheduleMessage,
     ScheduledMessage,
-    SchedulesListResponse,
-    ScheduleResponse
 )
 
 
@@ -314,58 +312,3 @@ class TestScheduledMessage:
                 created_at="2022-01-01T12:00:00.000000Z"
             )
             assert scheduled_msg.status == status
-
-
-class TestSchedulesListResponse:
-    """Test SchedulesListResponse model."""
-    
-    def test_valid_response(self):
-        """Test creating a valid schedules list response."""
-        scheduled_messages = [
-            ScheduledMessage(
-                message_id="61e01c6a7f97913a17075262",
-                subject="Hello from Company",
-                send_at="2022-01-01T12:00:00.000000Z",
-                status="scheduled",
-                created_at="2022-01-17:00:00.000000Z"
-            ),
-            ScheduledMessage(
-                message_id="61e01c6a7f97913a17075263",
-                subject="Another Message",
-                send_at="2022-01-02T12:00:00.000000Z",
-                status="sent",
-                created_at="2022-01-18:00:00.000000Z"
-            )
-        ]
-        
-        response = SchedulesListResponse(
-            data=scheduled_messages,
-            links={"first": "https://api.mailersend.com/v1/message-schedules?page=1"},
-            meta={"current_page": 1, "total": 2}
-        )
-        
-        assert len(response.data) == 2
-        assert response.data[0].message_id == "61e01c6a7f97913a17075262"
-        assert response.data[1].message_id == "61e01c6a7f97913a17075263"
-        assert response.links["first"] == "https://api.mailersend.com/v1/message-schedules?page=1"
-        assert response.meta["total"] == 2
-
-
-class TestScheduleResponse:
-    """Test ScheduleResponse model."""
-    
-    def test_valid_response(self):
-        """Test creating a valid schedule response."""
-        scheduled_msg = ScheduledMessage(
-            message_id="61e01f471053b349a5478a52",
-            subject="Hello from Company",
-            send_at="2022-01-01T12:00:00.000000Z",
-            status="scheduled",
-            created_at="2022-01-01T17:00:00.000000Z"
-        )
-        
-        response = ScheduleResponse(data=scheduled_msg)
-        
-        assert response.data.message_id == "61e01f471053b349a5478a52"
-        assert response.data.subject == "Hello from Company"
-        assert response.data.status == "scheduled" 
