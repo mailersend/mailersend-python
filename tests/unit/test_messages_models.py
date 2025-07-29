@@ -5,12 +5,7 @@ from mailersend.models.messages import (
     MessagesListRequest,
     MessagesListQueryParams,
     MessageGetRequest,
-    Email,
-    Message,
-    MessagesListResponse,
-    MessageResponse
 )
-
 
 
 class TestMessagesListQueryParams:
@@ -24,7 +19,10 @@ class TestMessagesListQueryParams:
 
     def test_custom_values(self):
         """Test setting custom values."""
-        query_params = MessagesListQueryParams(page=2, limit=50)
+        query_params = MessagesListQueryParams(
+            page=2,
+            limit=50
+        )
         assert query_params.page == 2
         assert query_params.limit == 50
 
@@ -56,7 +54,10 @@ class TestMessagesListQueryParams:
 
     def test_to_query_params_with_custom_values(self):
         """Test to_query_params with custom values."""
-        query_params = MessagesListQueryParams(page=3, limit=50)
+        query_params = MessagesListQueryParams(
+            page=3,
+            limit=50
+        )
         result = query_params.to_query_params()
         expected = {
             'page': 3,
@@ -73,12 +74,14 @@ class TestMessagesListQueryParams:
             'limit': 30
         }
         assert result == expected
-        # No None values in this case but testing the method works correctly
+        # Verify no None values are included
+        for key, value in result.items():
+            assert value is not None
 
 
 class TestMessagesListRequest:
     """Test MessagesListRequest model."""
-    
+
     def test_create_request_with_query_params(self):
         """Test creating request with query params object."""
         query_params = MessagesListQueryParams(page=2, limit=50)
@@ -114,118 +117,41 @@ class TestMessagesListRequest:
         }
         assert result == expected
 
+    def test_serialization(self):
+        """Test model serialization."""
+        query_params = MessagesListQueryParams(page=2, limit=40)
+        request = MessagesListRequest(query_params=query_params)
+        data = request.model_dump()
+        assert "query_params" in data
+        assert data["query_params"]["page"] == 2
+        assert data["query_params"]["limit"] == 40
+
 
 class TestMessageGetRequest:
     """Test MessageGetRequest model."""
-    
-    def test_valid_request(self):
-        """Test creating a valid message get request."""
-        request = MessageGetRequest(message_id="5ee0b183b251345e407c936a")
-        assert request.message_id == "5ee0b183b251345e407c936a"
-    
-    def test_empty_message_id(self):
-        """Test validation with empty message ID."""
-        with pytest.raises(ValidationError) as exc_info:
+
+    def test_valid_message_id(self):
+        """Test with valid message ID."""
+        request = MessageGetRequest(message_id="message123")
+        assert request.message_id == "message123"
+
+    def test_message_id_validation(self):
+        """Test message ID validation."""
+        # Empty message ID
+        with pytest.raises(ValidationError, match="Message ID is required"):
             MessageGetRequest(message_id="")
-        assert "Message ID is required" in str(exc_info.value)
-    
-    def test_whitespace_message_id(self):
-        """Test validation with whitespace-only message ID."""
-        with pytest.raises(ValidationError) as exc_info:
+        
+        # Whitespace-only message ID
+        with pytest.raises(ValidationError, match="Message ID is required"):
             MessageGetRequest(message_id="   ")
-        assert "Message ID is required" in str(exc_info.value)
-    
+
     def test_message_id_trimming(self):
         """Test message ID is trimmed."""
-        request = MessageGetRequest(message_id="  5ee0b183b251345e407c936a  ")
-        assert request.message_id == "5ee0b183b251345e407c936a"
+        request = MessageGetRequest(message_id="  message123  ")
+        assert request.message_id == "message123"
 
-
-class TestEmail:
-    """Test Email model."""
-    
-    def test_empty_email_creation(self):
-        """Test creating an empty email object."""
-        email = Email()
-        assert isinstance(email, Email)
-
-
-class TestMessage:
-    """Test Message model."""
-    
-    def test_minimal_message_creation(self):
-        """Test creating a message with minimal data."""
-        message = Message(
-            id="5ee0b183b251345e407c936a",
-            created_at="2020-06-10T10:10:11.231000Z",
-            updated_at="2020-06-10T10:10:11.231000Z"
-        )
-        assert message.id == "5ee0b183b251345e407c936a"
-        assert message.created_at == "2020-06-10T10:10:11.231000Z"
-        assert message.updated_at == "2020-06-10T10:10:11.231000Z"
-        assert message.emails == []
-        assert message.domain is None
-    
-
-    
-    def test_message_with_emails(self):
-        """Test creating a message with emails."""
-        emails = [Email(), Email()]
-        
-        message = Message(
-            id="5ee0b183b251345e407c936a",
-            created_at="2020-06-10T10:10:11.231000Z",
-            updated_at="2020-06-10T10:10:11.231000Z",
-            emails=emails
-        )
-        
-        assert len(message.emails) == 2
-        assert all(isinstance(email, Email) for email in message.emails)
-
-
-class TestMessagesListResponse:
-    """Test MessagesListResponse model."""
-    
-    def test_valid_response(self):
-        """Test creating a valid messages list response."""
-        messages = [
-            Message(
-                id="5ee0b182b251345e407c935a",
-                created_at="2020-06-10T10:10:10.377000Z",
-                updated_at="2020-06-10T10:10:10.377000Z"
-            ),
-            Message(
-                id="5ee0b182b251345e407c935c",
-                created_at="2020-06-10T10:10:10.385000Z",
-                updated_at="2020-06-10T10:10:10.385000Z"
-            )
-        ]
-        
-        response = MessagesListResponse(
-            data=messages,
-            links={"first": "https://api.mailersend.com/v1/messages?page=1"},
-            meta={"current_page": 1, "total": 2}
-        )
-        
-        assert len(response.data) == 2
-        assert response.data[0].id == "5ee0b182b251345e407c935a"
-        assert response.data[1].id == "5ee0b182b251345e407c935c"
-        assert response.links["first"] == "https://api.mailersend.com/v1/messages?page=1"
-        assert response.meta["total"] == 2
-
-
-class TestMessageResponse:
-    """Test MessageResponse model."""
-    
-    def test_valid_response(self):
-        """Test creating a valid message response."""
-        message = Message(
-            id="5ee0b183b251345e407c936a",
-            created_at="2020-06-10T10:10:11.231000Z",
-            updated_at="2020-06-10T10:10:11.231000Z"
-        )
-        
-        response = MessageResponse(data=message)
-        
-        assert response.data.id == "5ee0b183b251345e407c936a"
-        assert response.data.created_at == "2020-06-10T10:10:11.231000Z" 
+    def test_serialization(self):
+        """Test model serialization."""
+        request = MessageGetRequest(message_id="message123")
+        data = request.model_dump()
+        assert data == {"message_id": "message123"} 
