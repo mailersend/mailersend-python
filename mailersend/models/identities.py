@@ -238,39 +238,4 @@ class IdentityDeleteByEmailRequest(BaseModel):
         return v.strip()
 
 
-class IdentityDomain(BaseModel):
-    """Model representing a domain associated with an identity."""
 
-    id: str
-    name: str
-    created_at: str
-    updated_at: str
-
-
-class Identity(BaseModel):
-    """Model representing a sender identity."""
-
-    id: str
-    email: str
-    name: str
-    reply_to_email: Optional[str] = None
-    reply_to_name: Optional[str] = None
-    is_verified: bool = False
-    resends: int = 0
-    add_note: bool = False
-    personal_note: Optional[str] = None
-    domain: IdentityDomain
-
-
-class IdentityListResponse(BaseModel):
-    """Response model for identity list."""
-
-    data: List[Identity]
-    links: Optional[dict] = None
-    meta: Optional[dict] = None
-
-
-class IdentityResponse(BaseModel):
-    """Response model for single identity."""
-
-    data: Identity

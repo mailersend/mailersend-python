@@ -176,87 +176,6 @@ class DomainUpdateSettingsRequest(MailerSendBaseModel):
         return v
 
 
-class Domain(MailerSendBaseModel):
-    """Model representing a domain."""
-
-    id: str
-    name: str
-    dkim: Optional[bool] = None
-    spf: Optional[bool] = None
-    mx: Optional[bool] = None
-    tracking: Optional[bool] = None
-    is_verified: bool = False
-    is_cname_verified: Optional[bool] = None
-    is_dns_active: bool = False
-    is_cname_active: Optional[bool] = None
-    is_tracking_allowed: Optional[bool] = None
-    has_not_queued_messages: Optional[bool] = None
-    not_queued_messages_count: Optional[int] = None
-    domain_settings: DomainSettings
-    can: Optional[dict] = None
-    totals: Optional[List[Any]] = None
-    created_at: str
-    updated_at: str
-
-
-class DomainListResponse(MailerSendBaseModel):
-    """Response model for domain list."""
-
-    data: List[Domain]
-    links: dict
-    meta: dict
-
-
-class DomainResponse(MailerSendBaseModel):
-    """Response model for single domain."""
-
-    data: Domain
-
-
-class DomainRecipient(MailerSendBaseModel):
-    """Model representing a domain recipient."""
-
-    id: str
-    email: str
-    created_at: str
-    updated_at: str
-    deleted_at: Optional[str] = None
-
-
-class DomainRecipientsResponse(MailerSendBaseModel):
-    """Response model for domain recipients."""
-
-    data: List[DomainRecipient]
-    links: dict
-    meta: dict
-
-
-class DomainDnsRecord(MailerSendBaseModel):
-    """Model for DNS record details."""
-
-    hostname: str
-    type: str
-    value: str
-    priority: Optional[str] = None
-
-
-class DomainDnsRecords(MailerSendBaseModel):
-    """Model for all DNS records of a domain."""
-
-    id: str
-    spf: Optional[DomainDnsRecord] = None
-    dkim: Optional[DomainDnsRecord] = None
-    return_path: Optional[DomainDnsRecord] = None
-    custom_tracking: Optional[DomainDnsRecord] = None
-    inbound_routing: Optional[DomainDnsRecord] = None
-
-
-class DomainDnsRecordsResponse(MailerSendBaseModel):
-    """Response model for domain DNS records."""
-
-    data: DomainDnsRecords
-
-
 class DomainDnsRecordsRequest(MailerSendBaseModel):
     """Request model for getting domain DNS records."""
 
@@ -268,24 +187,6 @@ class DomainDnsRecordsRequest(MailerSendBaseModel):
         if not v or not v.strip():
             raise ValueError("Domain ID is required")
         return v.strip()
-
-
-class DomainVerificationData(MailerSendBaseModel):
-    """Model for domain verification status data."""
-
-    dkim: bool = False
-    spf: bool = False
-    mx: bool = False
-    tracking: bool = False
-    cname: bool = False
-    rp_cname: bool = False
-
-
-class DomainVerificationResponse(MailerSendBaseModel):
-    """Response model for domain verification status."""
-
-    message: str
-    data: DomainVerificationData
 
 
 class DomainVerificationRequest(MailerSendBaseModel):
