@@ -1,7 +1,6 @@
 """Tests for SMTP Users models."""
 
 import pytest
-from datetime import datetime
 from pydantic import ValidationError
 
 from mailersend.models.smtp_users import (

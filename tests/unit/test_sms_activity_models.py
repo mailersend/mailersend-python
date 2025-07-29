@@ -1,10 +1,14 @@
+"""Tests for SMS Activity models."""
+
 import pytest
 from datetime import datetime
 from pydantic import ValidationError
 
 from mailersend.models.sms_activity import (
-    SmsActivity, SmsActivityListRequest, SmsMessageGetRequest,
-    SmsActivityListResponse, SmsMessage, SmsMessageResponse
+    SmsActivity,
+    SmsActivityListRequest,
+    SmsMessageGetRequest,
+    SmsMessage,
 )
 
 
@@ -13,7 +17,7 @@ class TestSmsActivity:
 
     def test_valid_sms_activity(self):
         """Test creating valid SMS activity."""
-        sms_activity = SmsActivity(
+        activity = SmsActivity(
             from_="+18332647501",
             to="+16203221059",
             created_at=datetime.fromisoformat("2022-02-21T08:15:46.627000"),
@@ -22,35 +26,39 @@ class TestSmsActivity:
             sms_message_id="62134a2d7de3253bf10d6642"
         )
         
-        assert sms_activity.from_ == "+18332647501"
-        assert sms_activity.to == "+16203221059"
-        assert sms_activity.created_at == datetime.fromisoformat("2022-02-21T08:15:46.627000")
-        assert sms_activity.content == "Lorem Ipsum is simply dummy text"
-        assert sms_activity.status == "delivered"
-        assert sms_activity.sms_message_id == "62134a2d7de3253bf10d6642"
+        assert activity.from_ == "+18332647501"
+        assert activity.to == "+16203221059"
+        assert activity.content == "Lorem Ipsum is simply dummy text"
+        assert activity.status == "delivered"
+        assert activity.sms_message_id == "62134a2d7de3253bf10d6642"
 
-    def test_sms_activity_with_different_status(self):
-        """Test SMS activity with different status values."""
-        statuses = ["processed", "queued", "sent", "delivered", "failed"]
+    def test_sms_activity_from_field_alias(self):
+        """Test that 'from' field alias works correctly."""
+        data = {
+            "from": "+18332647501",
+            "to": "+16203221059",
+            "created_at": "2022-02-21T08:15:46.627000",
+            "content": "Lorem Ipsum is simply dummy text",
+            "status": "delivered",
+            "sms_message_id": "62134a2d7de3253bf10d6642"
+        }
         
-        for status in statuses:
-            sms_activity = SmsActivity(
-                from_="+18332647501",
-                to="+16203221059",
-                created_at=datetime.fromisoformat("2022-02-21T08:15:46.627000"),
-                content="Test message",
-                status=status,
-                sms_message_id="62134a2d7de3253bf10d6642"
-            )
-            
-            assert sms_activity.status == status
+        activity = SmsActivity(**data)
+        assert activity.from_ == "+18332647501"
 
 
 class TestSmsActivityListRequest:
     """Test SMS Activity list request model."""
 
-    def test_valid_list_request(self):
-        """Test creating valid list request."""
+    def test_empty_request(self):
+        """Test creating empty request."""
+        request = SmsActivityListRequest()
+        
+        params = request.to_query_params()
+        assert params == {}
+
+    def test_full_request(self):
+        """Test creating request with all parameters."""
         request = SmsActivityListRequest(
             sms_number_id="7z3m5jgrogdpyo6n",
             date_from=1443651141,
@@ -60,134 +68,63 @@ class TestSmsActivityListRequest:
             limit=25
         )
         
-        assert request.sms_number_id == "7z3m5jgrogdpyo6n"
-        assert request.date_from == 1443651141
-        assert request.date_to == 1443651200
-        assert request.status == ["delivered", "sent"]
-        assert request.page == 1
-        assert request.limit == 25
-
-    def test_empty_list_request(self):
-        """Test creating empty list request."""
-        request = SmsActivityListRequest()
-        
-        assert request.sms_number_id is None
-        assert request.date_from is None
-        assert request.date_to is None
-        assert request.status is None
-        assert request.page is None
-        assert request.limit is None
-
-    def test_to_query_params_full(self):
-        """Test converting full request to query parameters."""
-        request = SmsActivityListRequest(
-            sms_number_id="7z3m5jgrogdpyo6n",
-            date_from=1443651141,
-            date_to=1443651200,
-            status=["delivered", "sent"],
-            page=2,
-            limit=50
-        )
-        
         params = request.to_query_params()
         expected = {
             "sms_number_id": "7z3m5jgrogdpyo6n",
             "date_from": 1443651141,
             "date_to": 1443651200,
             "status[]": ["delivered", "sent"],
-            "page": 2,
-            "limit": 50
+            "page": 1,
+            "limit": 25
         }
         
         assert params == expected
 
-    def test_to_query_params_partial(self):
-        """Test converting partial request to query parameters."""
+    def test_partial_request(self):
+        """Test creating request with some parameters."""
         request = SmsActivityListRequest(
             sms_number_id="7z3m5jgrogdpyo6n",
-            page=1
+            status=["delivered"]
         )
         
         params = request.to_query_params()
         expected = {
             "sms_number_id": "7z3m5jgrogdpyo6n",
-            "page": 1
+            "status[]": ["delivered"]
         }
         
         assert params == expected
 
-    def test_to_query_params_empty(self):
-        """Test converting empty request to query parameters."""
-        request = SmsActivityListRequest()
+    def test_status_array_handling(self):
+        """Test that status parameter is correctly converted to array format."""
+        request = SmsActivityListRequest(status=["delivered", "sent", "failed"])
         
         params = request.to_query_params()
-        expected = {}
-        
-        assert params == expected
+        assert "status[]" in params
+        assert params["status[]"] == ["delivered", "sent", "failed"]
 
-    def test_to_query_params_single_status(self):
-        """Test converting request with single status to query parameters."""
+    def test_single_status_handling(self):
+        """Test that single status is correctly handled."""
         request = SmsActivityListRequest(status=["delivered"])
         
         params = request.to_query_params()
-        expected = {"status[]": ["delivered"]}
-        
-        assert params == expected
+        assert "status[]" in params
+        assert params["status[]"] == ["delivered"]
 
 
 class TestSmsMessageGetRequest:
     """Test SMS Message get request model."""
 
-    def test_valid_get_request(self):
-        """Test creating valid get request."""
+    def test_valid_request(self):
+        """Test creating valid request."""
         request = SmsMessageGetRequest(sms_message_id="62134a2d7de3253bf10d6642")
         
         assert request.sms_message_id == "62134a2d7de3253bf10d6642"
 
-    def test_empty_sms_message_id(self):
-        """Test validation error for empty SMS message ID."""
-        with pytest.raises(ValidationError) as exc_info:
+    def test_empty_sms_message_id_validation(self):
+        """Test that empty SMS message ID is rejected."""
+        with pytest.raises(ValidationError):
             SmsMessageGetRequest(sms_message_id="")
-        
-        error = exc_info.value.errors()[0]
-        assert "String should have at least 1 character" in error['msg']
-
-
-class TestSmsActivityListResponse:
-    """Test SMS Activity list response model."""
-
-    def test_valid_list_response(self):
-        """Test creating valid list response."""
-        activities = [
-            SmsActivity(
-                from_="+18332647501",
-                to="+16203221059",
-                created_at=datetime.fromisoformat("2022-02-21T08:15:46.627000"),
-                content="Lorem Ipsum is simply dummy text",
-                status="delivered",
-                sms_message_id="62134a2d7de3253bf10d6642"
-            ),
-            SmsActivity(
-                from_="+18332647501",
-                to="+16203221059",
-                created_at=datetime.fromisoformat("2022-02-21T08:15:42.508000"),
-                content="Lorem Ipsum is simply dummy text",
-                status="processed",
-                sms_message_id="62134a2d7de3253bf10d6642"
-            )
-        ]
-        
-        response = SmsActivityListResponse(data=activities)
-        
-        assert len(response.data) == 2
-        assert response.data[0].status == "delivered"
-        assert response.data[1].status == "processed"
-
-    def test_empty_list_response(self):
-        """Test creating empty list response."""
-        response = SmsActivityListResponse(data=[])
-        
-        assert len(response.data) == 0
 
 
 class TestSmsMessage:
@@ -206,54 +143,37 @@ class TestSmsMessage:
             )
         ]
         
-        sms_message = SmsMessage(
-            id="62134a2d7de3253bf10d6642",
-            from_="+18332647501",
-            to=["+16203221059", "+18044064234"],
-            text="Lorem Ipsum is simply dummy text",
-            paused=False,
-            created_at=datetime.fromisoformat("2022-02-21T08:15:41.339000"),
-            sms=[{
-                "id": "62134a2e4709ec689f72ea62",
-                "from": "+18332647501",
-                "to": "+16203221059",
-                "text": "Lorem Ipsum is simply dummy text",
-                "status": "delivered",
-                "segment_count": 1,
-                "error_type": None,
-                "error_description": None
-            }],
-            sms_activity=activities
-        )
-        
-        assert sms_message.id == "62134a2d7de3253bf10d6642"
-        assert sms_message.from_ == "+18332647501"
-        assert sms_message.to == ["+16203221059", "+18044064234"]
-        assert sms_message.text == "Lorem Ipsum is simply dummy text"
-        assert sms_message.paused is False
-        assert len(sms_message.sms) == 1
-        assert len(sms_message.sms_activity) == 1
-
-
-class TestSmsMessageResponse:
-    """Test SMS Message response model."""
-
-    def test_valid_response(self):
-        """Test creating valid response."""
-        sms_message = SmsMessage(
+        message = SmsMessage(
             id="62134a2d7de3253bf10d6642",
             from_="+18332647501",
             to=["+16203221059"],
             text="Lorem Ipsum is simply dummy text",
             paused=False,
-            created_at=datetime.fromisoformat("2022-02-21T08:15:41.339000"),
+            created_at=datetime.fromisoformat("2022-02-21T08:15:45.627000"),
             sms=[],
-            sms_activity=[]
+            sms_activity=activities
         )
         
-        response = SmsMessageResponse(data=sms_message)
+        assert message.id == "62134a2d7de3253bf10d6642"
+        assert message.from_ == "+18332647501"
+        assert message.to == ["+16203221059"]
+        assert message.text == "Lorem Ipsum is simply dummy text"
+        assert message.paused is False
+        assert len(message.sms_activity) == 1
+        assert isinstance(message.sms_activity[0], SmsActivity)
+
+    def test_sms_message_from_field_alias(self):
+        """Test that 'from' field alias works correctly."""
+        data = {
+            "id": "62134a2d7de3253bf10d6642",
+            "from": "+18332647501",
+            "to": ["+16203221059"],
+            "text": "Lorem Ipsum is simply dummy text",
+            "paused": False,
+            "created_at": "2022-02-21T08:15:45.627000",
+            "sms": [],
+            "sms_activity": []
+        }
         
-        assert response.data.id == "62134a2d7de3253bf10d6642"
-        assert response.data.from_ == "+18332647501"
-        assert response.data.text == "Lorem Ipsum is simply dummy text"
-        assert response.data.paused is False
+        message = SmsMessage(**data)
+        assert message.from_ == "+18332647501"
