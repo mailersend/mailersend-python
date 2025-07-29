@@ -1,4 +1,4 @@
-"""Recipients API resource for MailerSend SDK."""
+"""Recipients API resource"""
 
 from typing import Optional
 
@@ -40,7 +40,7 @@ class Recipients(BaseResource):
         # Extract query parameters
         params = request.to_query_params()
 
-        self.logger.debug(f"Listing recipients with params: {params}")
+        self.logger.debug("Listing recipients with params: %s", params)
 
         # Make API call
         response = self.client.request(
@@ -56,7 +56,7 @@ class Recipients(BaseResource):
         Args:
             request: Request parameters for getting recipient
         """
-        self.logger.debug(f"Getting recipient: {request.recipient_id}")
+        self.logger.debug("Getting recipient: %s", request.recipient_id)
 
         # Make API call
         response = self.client.request(
@@ -75,7 +75,7 @@ class Recipients(BaseResource):
         Returns:
             APIResponse with empty data
         """
-        self.logger.debug(f"Deleting recipient: {request.recipient_id}")
+        self.logger.debug("Deleting recipient: %s", request.recipient_id)
 
         # Make API call
         response = self.client.request(
@@ -104,7 +104,7 @@ class Recipients(BaseResource):
         # Extract query parameters
         params = request.to_query_params()
 
-        self.logger.debug(f"Listing blocklist with params: {params}")
+        self.logger.debug("Listing blocklist with params: %s", params)
 
         # Make API call
         response = self.client.request(
@@ -133,7 +133,7 @@ class Recipients(BaseResource):
         # Extract query parameters
         params = request.to_query_params()
 
-        self.logger.debug(f"Listing hard bounces with params: {params}")
+        self.logger.debug("Listing hard bounces with params: %s", params)
 
         # Make API call
         response = self.client.request(
@@ -162,7 +162,7 @@ class Recipients(BaseResource):
         # Extract query parameters
         params = request.to_query_params()
 
-        self.logger.debug(f"Listing spam complaints with params: {params}")
+        self.logger.debug("Listing spam complaints with params: %s", params)
 
         # Make API call
         response = self.client.request(
@@ -191,7 +191,7 @@ class Recipients(BaseResource):
         # Extract query parameters
         params = request.to_query_params()
 
-        self.logger.debug(f"Listing unsubscribes with params: {params}")
+        self.logger.debug("Listing unsubscribes with params: %s", params)
 
         # Make API call
         response = self.client.request(
@@ -220,7 +220,7 @@ class Recipients(BaseResource):
         # Extract query parameters
         params = request.to_query_params()
 
-        self.logger.debug(f"Listing on-hold entries with params: {params}")
+        self.logger.debug("Listing on-hold entries with params: %s", params)
 
         # Make API call
         response = self.client.request(
@@ -241,7 +241,7 @@ class Recipients(BaseResource):
         """
         body = request.model_dump(by_alias=True, exclude_none=True)
 
-        self.logger.debug(f"Adding to blocklist with body: {body}")
+        self.logger.debug("Adding to blocklist with body: %s", body)
 
         # Make API call
         response = self.client.request(
@@ -263,7 +263,7 @@ class Recipients(BaseResource):
         # Build request body
         body = request.model_dump(by_alias=True, exclude_none=True)
 
-        self.logger.debug(f"Adding hard bounces with body: {body}")
+        self.logger.debug("Adding hard bounces with body: %s", body)
 
         # Make API call
         response = self.client.request(
@@ -286,7 +286,7 @@ class Recipients(BaseResource):
         # Build request body
         body = request.model_dump(by_alias=True, exclude_none=True)
 
-        self.logger.debug(f"Adding spam complaints with body: {body}")
+        self.logger.debug("Adding spam complaints with body: %s", body)
 
         # Make API call
         response = self.client.request(
@@ -308,7 +308,7 @@ class Recipients(BaseResource):
         # Build request body
         body = request.model_dump(by_alias=True, exclude_none=True)
 
-        self.logger.debug(f"Adding unsubscribes with body: {body}")
+        self.logger.debug("Adding unsubscribes with body: %s", body)
 
         # Make API call
         response = self.client.request(
@@ -330,7 +330,7 @@ class Recipients(BaseResource):
         # Build request body
         body = request.model_dump(by_alias=True, exclude_none=True)
 
-        self.logger.debug(f"Deleting from blocklist with body: {body}")
+        self.logger.debug("Deleting from blocklist with body: %s", body)
 
         # Make API call
         response = self.client.request(
@@ -356,7 +356,7 @@ class Recipients(BaseResource):
         if request.all is not None:
             body["all"] = request.all
 
-        self.logger.debug(f"Deleting hard bounces with body: {body}")
+        self.logger.debug("Deleting hard bounces with body: %s", body)
 
         # Make API call
         response = self.client.request(
@@ -383,7 +383,7 @@ class Recipients(BaseResource):
         if request.all is not None:
             body["all"] = request.all
 
-        self.logger.debug(f"Deleting spam complaints with body: {body}")
+        self.logger.debug("Deleting spam complaints with body: %s", body)
 
         # Make API call
         response = self.client.request(
@@ -409,7 +409,7 @@ class Recipients(BaseResource):
         if request.all is not None:
             body["all"] = request.all
 
-        self.logger.debug(f"Deleting unsubscribes with body: {body}")
+        self.logger.debug("Deleting unsubscribes with body: %s", body)
 
         # Make API call
         response = self.client.request(
@@ -435,7 +435,7 @@ class Recipients(BaseResource):
         if request.all is not None:
             body["all"] = request.all
 
-        self.logger.debug(f"Deleting from on-hold with body: {body}")
+        self.logger.debug("Deleting from on-hold with body: %s", body)
 
         # Make API call
         response = self.client.request(

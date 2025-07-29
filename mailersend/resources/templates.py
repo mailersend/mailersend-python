@@ -36,12 +36,12 @@ class Templates(BaseResource):
         if request is None:
             request = TemplatesListRequest()
 
-        self.logger.debug(f"Templates list request: {request}")
+        self.logger.debug("Templates list request: %s", request)
 
         # Extract query parameters
         params = request.to_query_params()
 
-        self.logger.debug(f"Fetching templates with params: {params}")
+        self.logger.debug("Fetching templates with params: %s", params)
 
         # Make API call
         response = self.client.request(
@@ -61,7 +61,7 @@ class Templates(BaseResource):
         Returns:
             APIResponse with TemplateResponse data
         """
-        self.logger.debug(f"Template get request: {request}")
+        self.logger.debug("Template get request: %s", request)
 
         # Make API call
         response = self.client.request(
@@ -82,7 +82,7 @@ class Templates(BaseResource):
             APIResponse with empty data
         """
         self.logger.debug("Starting delete_template operation")
-        self.logger.debug(f"Deleting template: {request.template_id}")
+        self.logger.debug("Deleting template: %s", request.template_id)
 
         # Make API call
         response = self.client.request(

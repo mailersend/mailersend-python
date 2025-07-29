@@ -46,7 +46,7 @@ class Tokens(BaseResource):
         Returns:
             APIResponse: API response with token data
         """
-        self.logger.info(f"Getting token: {request.token_id}")
+        self.logger.info("Getting token: %s", request.token_id)
 
         # Make API call
         response = self.client.request(
@@ -65,7 +65,7 @@ class Tokens(BaseResource):
         Returns:
             APIResponse: API response with token creation data
         """
-        self.logger.info(f"Creating token: {request.name} for domain: {request.domain_id}")
+        self.logger.info("Creating token: {request.name} for domain: %s", request.domain_id)
 
         # Make API call
         response = self.client.request(
@@ -84,7 +84,7 @@ class Tokens(BaseResource):
         Returns:
             APIResponse: API response with update confirmation
         """
-        self.logger.info(f"Updating token: {request.token_id} to status: {request.status}")
+        self.logger.info("Updating token: {request.token_id} to status: %s", request.status)
 
         # Make API call
         response = self.client.request(
@@ -105,7 +105,7 @@ class Tokens(BaseResource):
         Returns:
             APIResponse: API response with update confirmation
         """
-        self.logger.info(f"Updating token name: {request.token_id} to: {request.name}")
+        self.logger.info("Updating token name: {request.token_id} to: %s", request.name)
 
         # Make API call
         response = self.client.request(
@@ -124,7 +124,7 @@ class Tokens(BaseResource):
         Returns:
             APIResponse: API response with delete confirmation
         """
-        self.logger.info(f"Deleting token: {request.token_id}")
+        self.logger.info("Deleting token: %s", request.token_id)
 
         # Make API call
         response = self.client.request(

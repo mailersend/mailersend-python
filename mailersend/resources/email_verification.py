@@ -1,4 +1,4 @@
-"""Email Verification resource for MailerSend SDK."""
+"""Email Verification resource"""
 
 import logging
 from typing import Any, Dict, Optional
@@ -49,15 +49,15 @@ class EmailVerification(BaseResource):
             raise ValidationError("EmailVerifyRequest must be provided")
 
         if not isinstance(request, EmailVerifyRequest):
-            logger.error(f"Expected EmailVerifyRequest, got {type(request).__name__}")
+            logger.error("Expected EmailVerifyRequest, got %s", type(request).__name__)
             raise ValidationError("request must be an EmailVerifyRequest instance")
 
-        logger.debug(f"Email verify request: {request}")
+        logger.debug("Email verify request: %s", request)
 
         # Prepare request body
         payload = {"email": request.email}
 
-        logger.info(f"Verifying email address: {request.email}")
+        logger.info("Verifying email address: %s", request.email)
 
         # Make API call
         response = self.client.request(
@@ -92,12 +92,12 @@ class EmailVerification(BaseResource):
             )
             raise ValidationError("request must be an EmailVerifyAsyncRequest instance")
 
-        logger.debug(f"Async email verify request: {request}")
+        logger.debug("Async email verify request: %s", request)
 
         # Prepare request body
         payload = {"email": request.email}
 
-        logger.info(f"Starting async verification for email: {request.email}")
+        logger.info("Starting async verification for email: %s", request.email)
 
         # Make API call
         response = self.client.request(
@@ -138,7 +138,7 @@ class EmailVerification(BaseResource):
                 "request must be an EmailVerificationAsyncStatusRequest instance"
             )
 
-        logger.debug(f"Async status request: {request}")
+        logger.debug("Async status request: %s", request)
 
         # Prepare API call
         url = f"email-verification/verify-async/{request.email_verification_id}"
@@ -179,12 +179,12 @@ class EmailVerification(BaseResource):
                 "request must be an EmailVerificationListsRequest instance"
             )
 
-        logger.debug(f"List verifications request: {request}")
+        logger.debug("List verifications request: %s", request)
 
         # Extract query parameters
         params = request.to_query_params()
 
-        logger.info(f"Listing email verification lists with params: {params}")
+        logger.info("Listing email verification lists with params: %s", params)
 
         # Make API call
         response = self.client.request("GET", "email-verification", params=params)
@@ -219,11 +219,11 @@ class EmailVerification(BaseResource):
                 "request must be an EmailVerificationGetRequest instance"
             )
 
-        logger.debug(f"Get verification request: {request}")
+        logger.debug("Get verification request: %s", request)
 
         # Prepare API call
         url = f"email-verification/{request.email_verification_id}"
-        logger.info(f"Getting email verification list: {request.email_verification_id}")
+        logger.info("Getting email verification list: %s", request.email_verification_id)
 
         # Make API call
         response = self.client.request("GET", url)
@@ -260,7 +260,7 @@ class EmailVerification(BaseResource):
                 "request must be an EmailVerificationCreateRequest instance"
             )
 
-        logger.debug(f"Create verification request: {request}")
+        logger.debug("Create verification request: %s", request)
 
         # Prepare request body
         payload = {"name": request.name, "emails": request.emails}
@@ -302,11 +302,11 @@ class EmailVerification(BaseResource):
                 "request must be an EmailVerificationVerifyRequest instance"
             )
 
-        logger.debug(f"Verify list request: {request}")
+        logger.debug("Verify list request: %s", request)
 
         # Prepare API call
         url = f"email-verification/{request.email_verification_id}/verify"
-        logger.info(f"Starting verification for list: {request.email_verification_id}")
+        logger.info("Starting verification for list: %s", request.email_verification_id)
 
         # Make API call
         response = self.client.request("GET", url)
@@ -341,7 +341,7 @@ class EmailVerification(BaseResource):
                 "request must be an EmailVerificationResultsRequest instance"
             )
 
-        logger.debug(f"Get results request: {request}")
+        logger.debug("Get results request: %s", request)
 
         # Extract query parameters
         params = request.to_query_params()

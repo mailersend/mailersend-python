@@ -1,3 +1,5 @@
+"""Activity resource"""
+
 from .base import BaseResource
 from ..models.activity import ActivityRequest, SingleActivityRequest
 from ..models.base import APIResponse
@@ -23,8 +25,8 @@ class Activity(BaseResource):
         # Convert to query parameters for the API request
         params = request.to_query_params()
 
-        self.logger.debug(f"Getting activity data for domain: {request.domain_id}")
-        self.logger.debug(f"Query params: {params}")
+        self.logger.debug("Getting activity data for domain: %s", request.domain_id)
+        self.logger.debug("Query params: %s", params)
 
         response = self.client.request(
             method='GET', endpoint=f'activity/{request.domain_id}', params=params
@@ -43,8 +45,7 @@ class Activity(BaseResource):
             APIResponse with single activity data
         """
         self.logger.debug("Preparing to get single activity")
-
-        self.logger.debug(f"Getting single activity: {request.activity_id}")
+        self.logger.debug("Getting single activity: %s", request.activity_id)
 
         response = self.client.request(method='GET', endpoint=f'activities/{request.activity_id}')
 

@@ -1,7 +1,6 @@
 """Webhooks resource for MailerSend SDK."""
 
-import logging
-from typing import Optional, Dict, Any
+from typing import Dict, Any
 
 from .base import BaseResource
 from ..models.base import APIResponse
@@ -11,12 +10,8 @@ from ..models.webhooks import (
     WebhookCreateRequest,
     WebhookUpdateRequest,
     WebhookDeleteRequest,
-    WebhooksListResponse,
-    WebhookResponse,
 )
 from ..exceptions import ValidationError
-
-logger = logging.getLogger(__name__)
 
 
 class Webhooks(BaseResource):
@@ -30,27 +25,14 @@ class Webhooks(BaseResource):
 
         Returns:
             APIResponse with WebhooksListResponse data
-
-        Raises:
-            ValidationError: If request validation fails
         """
-        logger.debug("Starting list_webhooks operation")
-
-        # Validate request
-        if not request:
-            logger.error("WebhooksListRequest is required")
-            raise ValidationError("WebhooksListRequest must be provided")
-
-        if not isinstance(request, WebhooksListRequest):
-            logger.error(f"Expected WebhooksListRequest, got {type(request).__name__}")
-            raise ValidationError("request must be a WebhooksListRequest instance")
-
-        logger.debug(f"Webhooks list request: {request}")
+        self.logger.debug("Starting list_webhooks operation")
+        self.logger.debug("Webhooks list request: %s", request)
 
         # Extract query parameters
         params = request.to_query_params()
 
-        logger.info(f"Listing webhooks with params: {params}")
+        self.logger.debug("Listing webhooks with params: %s", params)
 
         # Make API call
         response = self.client.request(method="GET", endpoint="webhooks", params=params)
@@ -66,24 +48,10 @@ class Webhooks(BaseResource):
 
         Returns:
             APIResponse with WebhookResponse data
-
-        Raises:
-            ValidationError: If request validation fails
         """
-        logger.debug("Starting get_webhook operation")
-
-        # Validate request
-        if not request:
-            logger.error("WebhookGetRequest is required")
-            raise ValidationError("WebhookGetRequest must be provided")
-
-        if not isinstance(request, WebhookGetRequest):
-            logger.error(f"Expected WebhookGetRequest, got {type(request).__name__}")
-            raise ValidationError("request must be a WebhookGetRequest instance")
-
-        logger.debug(f"Webhook get request: {request}")
-
-        logger.info(f"Getting webhook: {request.webhook_id}")
+        self.logger.debug("Starting get_webhook operation")
+        self.logger.debug("Webhook get request: %s", request)
+        self.logger.debug("Getting webhook: %s", request.webhook_id)
 
         # Make API call
         response = self.client.request(
@@ -101,22 +69,9 @@ class Webhooks(BaseResource):
 
         Returns:
             APIResponse with WebhookResponse data
-
-        Raises:
-            ValidationError: If request validation fails
         """
-        logger.debug("Starting create_webhook operation")
-
-        # Validate request
-        if not request:
-            logger.error("WebhookCreateRequest is required")
-            raise ValidationError("WebhookCreateRequest must be provided")
-
-        if not isinstance(request, WebhookCreateRequest):
-            logger.error(f"Expected WebhookCreateRequest, got {type(request).__name__}")
-            raise ValidationError("request must be a WebhookCreateRequest instance")
-
-        logger.debug(f"Webhook create request: {request}")
+        self.logger.debug("Starting create_webhook operation")
+        self.logger.debug("Webhook create request: %s", request)
 
         # Prepare request body
         data: Dict[str, Any] = {
@@ -129,7 +84,7 @@ class Webhooks(BaseResource):
         if request.enabled is not None:
             data["enabled"] = request.enabled
 
-        logger.info(f"Creating webhook: {request.name}")
+        self.logger.debug("Creating webhook: %s", request.name)
 
         # Make API call
         response = self.client.request(method="POST", endpoint="webhooks", body=data)
@@ -145,22 +100,9 @@ class Webhooks(BaseResource):
 
         Returns:
             APIResponse with WebhookResponse data
-
-        Raises:
-            ValidationError: If request validation fails
         """
-        logger.debug("Starting update_webhook operation")
-
-        # Validate request
-        if not request:
-            logger.error("WebhookUpdateRequest is required")
-            raise ValidationError("WebhookUpdateRequest must be provided")
-
-        if not isinstance(request, WebhookUpdateRequest):
-            logger.error(f"Expected WebhookUpdateRequest, got {type(request).__name__}")
-            raise ValidationError("request must be a WebhookUpdateRequest instance")
-
-        logger.debug(f"Webhook update request: {request}")
+        self.logger.debug("Starting update_webhook operation")
+        self.logger.debug("Webhook update request: %s", request)
 
         # Prepare request body - only include non-None fields
         data: Dict[str, Any] = {}
@@ -174,7 +116,7 @@ class Webhooks(BaseResource):
         if request.enabled is not None:
             data["enabled"] = request.enabled
 
-        logger.info(f"Updating webhook: {request.webhook_id}")
+        self.logger.debug("Updating webhook: %s", request.webhook_id)
 
         # Make API call
         response = self.client.request(
@@ -192,24 +134,9 @@ class Webhooks(BaseResource):
 
         Returns:
             APIResponse with empty data
-
-        Raises:
-            ValidationError: If request validation fails
         """
-        logger.debug("Starting delete_webhook operation")
-
-        # Validate request
-        if not request:
-            logger.error("WebhookDeleteRequest is required")
-            raise ValidationError("WebhookDeleteRequest must be provided")
-
-        if not isinstance(request, WebhookDeleteRequest):
-            logger.error(f"Expected WebhookDeleteRequest, got {type(request).__name__}")
-            raise ValidationError("request must be a WebhookDeleteRequest instance")
-
-        logger.debug(f"Webhook delete request: {request}")
-
-        logger.info(f"Deleting webhook: {request.webhook_id}")
+        self.logger.debug("Starting delete_webhook operation")
+        self.logger.debug("Webhook delete request: %s", request)
 
         # Make API call
         response = self.client.request(
