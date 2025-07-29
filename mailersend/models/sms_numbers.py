@@ -9,7 +9,7 @@ from .base import BaseModel as BaseMailerSendModel
 
 class SmsNumber(BaseMailerSendModel):
     """SMS Phone Number model."""
-    
+
     id: str
     telephone_number: str
     paused: bool
@@ -18,11 +18,11 @@ class SmsNumber(BaseMailerSendModel):
 
 class SmsNumbersListRequest(BaseMailerSendModel):
     """Request model for listing SMS phone numbers."""
-    
+
     paused: Optional[bool] = None
     page: Optional[int] = None
     limit: Optional[int] = None
-    
+
     def to_query_params(self) -> Dict[str, Any]:
         """Convert to query parameters."""
         params = {}
@@ -37,16 +37,16 @@ class SmsNumbersListRequest(BaseMailerSendModel):
 
 class SmsNumberGetRequest(BaseMailerSendModel):
     """Request model for getting a specific SMS phone number."""
-    
+
     sms_number_id: str = Field(..., min_length=1, description="SMS Number ID")
 
 
 class SmsNumberUpdateRequest(BaseMailerSendModel):
     """Request model for updating an SMS phone number."""
-    
+
     sms_number_id: str = Field(..., min_length=1, description="SMS Number ID")
     paused: Optional[bool] = None
-    
+
     def to_json(self) -> Dict[str, Any]:
         """Convert to JSON payload."""
         payload = {}
@@ -57,17 +57,19 @@ class SmsNumberUpdateRequest(BaseMailerSendModel):
 
 class SmsNumberDeleteRequest(BaseMailerSendModel):
     """Request model for deleting an SMS phone number."""
-    
+
     sms_number_id: str = Field(..., min_length=1, description="SMS Number ID")
 
 
 class SmsNumbersListResponse(BaseMailerSendModel):
     """Response model for SMS phone numbers list."""
-    
+
     data: List[SmsNumber]
+    links: Optional[Dict[str, str]] = Field(None, description="Pagination links")
+    meta: Optional[Dict[str, int]] = Field(None, description="Pagination metadata")
 
 
 class SmsNumberResponse(BaseMailerSendModel):
     """Response model for single SMS phone number."""
-    
+
     data: SmsNumber

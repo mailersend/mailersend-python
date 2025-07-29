@@ -1,4 +1,5 @@
 """Recipients API resource for MailerSend SDK."""
+
 import logging
 from typing import Optional, Dict, Any, Union
 
@@ -28,7 +29,9 @@ logger = logging.getLogger(__name__)
 class Recipients(BaseResource):
     """Recipients API resource for managing recipients and suppression lists."""
 
-    def list_recipients(self, request: Optional[RecipientsListRequest] = None) -> APIResponse:
+    def list_recipients(
+        self, request: Optional[RecipientsListRequest] = None
+    ) -> APIResponse:
         """
         List recipients with optional filtering.
 
@@ -43,11 +46,14 @@ class Recipients(BaseResource):
         """
         # Validate request type if provided
         if request is not None and not isinstance(request, RecipientsListRequest):
-            raise ValidationError("Request must be an instance of RecipientsListRequest or None")
+            raise ValidationError(
+                "Request must be an instance of RecipientsListRequest or None"
+            )
 
         # Use default request if none provided
         if request is None:
             from mailersend.models.recipients import RecipientsListQueryParams
+
             query_params = RecipientsListQueryParams()
             request = RecipientsListRequest(query_params=query_params)
 
@@ -58,9 +64,7 @@ class Recipients(BaseResource):
 
         # Make API call
         response = self.client.request(
-            method='GET',
-            endpoint='/v1/recipients',
-            params=params
+            method="GET", endpoint="/v1/recipients", params=params
         )
 
         logger.info(f"Listed recipients successfully")
@@ -88,8 +92,7 @@ class Recipients(BaseResource):
 
         # Make API call
         response = self.client.request(
-            method='GET',
-            endpoint=f'/v1/recipients/{request.recipient_id}'
+            method="GET", endpoint=f"/v1/recipients/{request.recipient_id}"
         )
 
         logger.info(f"Retrieved recipient {request.recipient_id} successfully")
@@ -117,15 +120,16 @@ class Recipients(BaseResource):
 
         # Make API call
         response = self.client.request(
-            method='DELETE',
-            endpoint=f'/v1/recipients/{request.recipient_id}'
+            method="DELETE", endpoint=f"/v1/recipients/{request.recipient_id}"
         )
 
         logger.info(f"Deleted recipient {request.recipient_id} successfully")
 
         return self._create_response(response)
 
-    def list_blocklist(self, request: Optional[SuppressionListRequest] = None) -> APIResponse:
+    def list_blocklist(
+        self, request: Optional[SuppressionListRequest] = None
+    ) -> APIResponse:
         """
         List blocklist entries.
 
@@ -138,6 +142,7 @@ class Recipients(BaseResource):
         # Use default request if none provided
         if request is None:
             from mailersend.models.recipients import SuppressionListQueryParams
+
             query_params = SuppressionListQueryParams()
             request = SuppressionListRequest(query_params=query_params)
 
@@ -148,16 +153,16 @@ class Recipients(BaseResource):
 
         # Make API call
         response = self.client.request(
-            method='GET',
-            endpoint='/v1/suppressions/blocklist',
-            params=params
+            method="GET", endpoint="/v1/suppressions/blocklist", params=params
         )
 
         logger.info("Listed blocklist successfully")
 
         return self._create_response(response, BlocklistResponse)
 
-    def list_hard_bounces(self, request: Optional[SuppressionListRequest] = None) -> APIResponse:
+    def list_hard_bounces(
+        self, request: Optional[SuppressionListRequest] = None
+    ) -> APIResponse:
         """
         List hard bounces.
 
@@ -170,6 +175,7 @@ class Recipients(BaseResource):
         # Use default request if none provided
         if request is None:
             from mailersend.models.recipients import SuppressionListQueryParams
+
             query_params = SuppressionListQueryParams()
             request = SuppressionListRequest(query_params=query_params)
 
@@ -180,16 +186,16 @@ class Recipients(BaseResource):
 
         # Make API call
         response = self.client.request(
-            method='GET',
-            endpoint='/v1/suppressions/hard-bounces',
-            params=params
+            method="GET", endpoint="/v1/suppressions/hard-bounces", params=params
         )
 
         logger.info("Listed hard bounces successfully")
 
         return self._create_response(response, HardBouncesResponse)
 
-    def list_spam_complaints(self, request: Optional[SuppressionListRequest] = None) -> APIResponse:
+    def list_spam_complaints(
+        self, request: Optional[SuppressionListRequest] = None
+    ) -> APIResponse:
         """
         List spam complaints.
 
@@ -202,6 +208,7 @@ class Recipients(BaseResource):
         # Use default request if none provided
         if request is None:
             from mailersend.models.recipients import SuppressionListQueryParams
+
             query_params = SuppressionListQueryParams()
             request = SuppressionListRequest(query_params=query_params)
 
@@ -212,16 +219,16 @@ class Recipients(BaseResource):
 
         # Make API call
         response = self.client.request(
-            method='GET',
-            endpoint='/v1/suppressions/spam-complaints',
-            params=params
+            method="GET", endpoint="/v1/suppressions/spam-complaints", params=params
         )
 
         logger.info("Listed spam complaints successfully")
 
         return self._create_response(response, SpamComplaintsResponse)
 
-    def list_unsubscribes(self, request: Optional[SuppressionListRequest] = None) -> APIResponse:
+    def list_unsubscribes(
+        self, request: Optional[SuppressionListRequest] = None
+    ) -> APIResponse:
         """
         List unsubscribes.
 
@@ -234,6 +241,7 @@ class Recipients(BaseResource):
         # Use default request if none provided
         if request is None:
             from mailersend.models.recipients import SuppressionListQueryParams
+
             query_params = SuppressionListQueryParams()
             request = SuppressionListRequest(query_params=query_params)
 
@@ -244,16 +252,16 @@ class Recipients(BaseResource):
 
         # Make API call
         response = self.client.request(
-            method='GET',
-            endpoint='/v1/suppressions/unsubscribes',
-            params=params
+            method="GET", endpoint="/v1/suppressions/unsubscribes", params=params
         )
 
         logger.info("Listed unsubscribes successfully")
 
         return self._create_response(response, UnsubscribesResponse)
 
-    def list_on_hold(self, request: Optional[SuppressionListRequest] = None) -> APIResponse:
+    def list_on_hold(
+        self, request: Optional[SuppressionListRequest] = None
+    ) -> APIResponse:
         """
         List on-hold entries.
 
@@ -266,6 +274,7 @@ class Recipients(BaseResource):
         # Use default request if none provided
         if request is None:
             from mailersend.models.recipients import SuppressionListQueryParams
+
             query_params = SuppressionListQueryParams()
             request = SuppressionListRequest(query_params=query_params)
 
@@ -276,9 +285,7 @@ class Recipients(BaseResource):
 
         # Make API call
         response = self.client.request(
-            method='GET',
-            endpoint='/v1/suppressions/on-hold-list',
-            params=params
+            method="GET", endpoint="/v1/suppressions/on-hold-list", params=params
         )
 
         logger.info("Listed on-hold entries successfully")
@@ -309,9 +316,7 @@ class Recipients(BaseResource):
 
         # Make API call
         response = self.client.request(
-            method='POST',
-            endpoint='/v1/suppressions/blocklist',
-            body=body
+            method="POST", endpoint="/v1/suppressions/blocklist", body=body
         )
 
         logger.info("Added to blocklist successfully")
@@ -346,9 +351,7 @@ class Recipients(BaseResource):
 
         # Make API call
         response = self.client.request(
-            method='POST',
-            endpoint='/v1/suppressions/hard-bounces',
-            body=body
+            method="POST", endpoint="/v1/suppressions/hard-bounces", body=body
         )
 
         logger.info("Added hard bounces successfully")
@@ -379,9 +382,7 @@ class Recipients(BaseResource):
 
         # Make API call
         response = self.client.request(
-            method='POST',
-            endpoint='/v1/suppressions/spam-complaints',
-            body=body
+            method="POST", endpoint="/v1/suppressions/spam-complaints", body=body
         )
 
         logger.info("Added spam complaints successfully")
@@ -412,9 +413,7 @@ class Recipients(BaseResource):
 
         # Make API call
         response = self.client.request(
-            method='POST',
-            endpoint='/v1/suppressions/unsubscribes',
-            body=body
+            method="POST", endpoint="/v1/suppressions/unsubscribes", body=body
         )
 
         logger.info("Added unsubscribes successfully")
@@ -445,9 +444,7 @@ class Recipients(BaseResource):
 
         # Make API call
         response = self.client.request(
-            method='DELETE',
-            endpoint='/v1/suppressions/blocklist',
-            body=body
+            method="DELETE", endpoint="/v1/suppressions/blocklist", body=body
         )
 
         logger.info("Deleted from blocklist successfully")
@@ -482,9 +479,7 @@ class Recipients(BaseResource):
 
         # Make API call
         response = self.client.request(
-            method='DELETE',
-            endpoint='/v1/suppressions/hard-bounces',
-            body=body
+            method="DELETE", endpoint="/v1/suppressions/hard-bounces", body=body
         )
 
         logger.info("Deleted hard bounces successfully")
@@ -519,9 +514,7 @@ class Recipients(BaseResource):
 
         # Make API call
         response = self.client.request(
-            method='DELETE',
-            endpoint='/v1/suppressions/spam-complaints',
-            body=body
+            method="DELETE", endpoint="/v1/suppressions/spam-complaints", body=body
         )
 
         logger.info("Deleted spam complaints successfully")
@@ -556,9 +549,7 @@ class Recipients(BaseResource):
 
         # Make API call
         response = self.client.request(
-            method='DELETE',
-            endpoint='/v1/suppressions/unsubscribes',
-            body=body
+            method="DELETE", endpoint="/v1/suppressions/unsubscribes", body=body
         )
 
         logger.info("Deleted unsubscribes successfully")
@@ -593,37 +584,39 @@ class Recipients(BaseResource):
 
         # Make API call
         response = self.client.request(
-            method='DELETE',
-            endpoint='/v1/suppressions/on-hold-list',
-            body=body
+            method="DELETE", endpoint="/v1/suppressions/on-hold-list", body=body
         )
 
         logger.info("Deleted from on-hold successfully")
 
         return self._create_response(response)
 
-    def _build_suppression_add_body(self, request: SuppressionAddRequest) -> Dict[str, Any]:
+    def _build_suppression_add_body(
+        self, request: SuppressionAddRequest
+    ) -> Dict[str, Any]:
         """Build request body for suppression add operations."""
         body = {}
-        
+
         if request.domain_id:
             body["domain_id"] = request.domain_id
         if request.recipients:
             body["recipients"] = request.recipients
         if request.patterns:
             body["patterns"] = request.patterns
-            
+
         return body
 
-    def _build_suppression_delete_body(self, request: SuppressionDeleteRequest) -> Dict[str, Any]:
+    def _build_suppression_delete_body(
+        self, request: SuppressionDeleteRequest
+    ) -> Dict[str, Any]:
         """Build request body for suppression delete operations."""
         body = {}
-        
+
         if request.domain_id:
             body["domain_id"] = request.domain_id
         if request.ids:
             body["ids"] = request.ids
         if request.all is not None:
             body["all"] = request.all
-            
-        return body 
+
+        return body

@@ -40,20 +40,19 @@ class Email(BaseResource):
         self.logger.debug(f"Payload: {payload}")
 
         response = self.client.request("POST", "email", body=payload)
-        
+
         # Create custom data with email ID from headers
         email_data = {"id": response.headers.get("x-message-id")}
-        
+
         return self._create_response(response, email_data)
-    
 
     def send_bulk(self, emails: List[EmailRequest]) -> APIResponse:
         """
         Send multiple emails in one request.
-        
+
         Args:
             emails: List of EmailRequest objects to send
-            
+
         Returns:
             APIResponse with bulk email information and metadata
         """
@@ -64,7 +63,7 @@ class Email(BaseResource):
             if not isinstance(email, EmailRequest):
                 self.logger.error("Invalid EmailRequest object provided")
                 raise ValidationError("EmailRequest must be provided")
-            
+
             # Prepare payload for each email
             email_payload = email.model_dump(by_alias=True, exclude_none=True)
             payload.append(email_payload)
@@ -75,7 +74,7 @@ class Email(BaseResource):
         response = self.client.request("POST", "bulk-email", body=payload)
 
         return self._create_response(response)
-    
+
     def get_bulk_status(self, bulk_email_id: str) -> APIResponse:
         """
         Get the status of a bulk email send request.

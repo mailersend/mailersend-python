@@ -10,7 +10,7 @@ from pydantic import BaseModel, Field, field_validator
 TOKEN_SCOPES = [
     "email_full",
     "domains_read",
-    "domains_full", 
+    "domains_full",
     "activity_read",
     "activity_full",
     "analytics_read",
@@ -32,7 +32,7 @@ TOKEN_SCOPES = [
     "users_read",
     "users_full",
     "smtp_users_read",
-    "smtp_users_full"
+    "smtp_users_full",
 ]
 
 # Token status types
@@ -42,6 +42,7 @@ TokenStatus = Literal["pause", "unpause"]
 # Token models
 class Token(BaseModel):
     """Token data model."""
+
     id: str
     name: str
     status: TokenStatus
@@ -51,6 +52,7 @@ class Token(BaseModel):
 
 class TokenCreate(BaseModel):
     """Token creation response model."""
+
     id: str
     accessToken: str
     name: str
@@ -60,24 +62,26 @@ class TokenCreate(BaseModel):
 # Query parameters models
 class TokensListQueryParams(BaseModel):
     """Query parameters for tokens list request."""
+
     page: int = Field(default=1, ge=1)
     limit: int = Field(default=25, ge=10, le=100)
-    
+
     def to_query_params(self) -> Dict[str, Any]:
         """Convert to query parameters dictionary."""
         params = {}
         if self.page != 1:  # Only include if not default
-            params['page'] = self.page
+            params["page"] = self.page
         if self.limit != 25:  # Only include if not default
-            params['limit'] = self.limit
+            params["limit"] = self.limit
         return params
 
 
 # Request models
 class TokensListRequest(BaseModel):
     """Request model for listing tokens."""
+
     query_params: TokensListQueryParams = Field(default_factory=TokensListQueryParams)
-    
+
     def to_query_params(self) -> Dict[str, Any]:
         """Convert to query parameters dictionary."""
         return self.query_params.to_query_params()
@@ -85,101 +89,105 @@ class TokensListRequest(BaseModel):
 
 class TokenGetRequest(BaseModel):
     """Request model for getting a single token."""
+
     token_id: str
 
 
 class TokenCreateRequest(BaseModel):
     """Request model for creating a token."""
+
     name: str = Field(max_length=50)
     domain_id: str
     scopes: List[str] = Field(min_length=1)
 
-    @field_validator('name')
+    @field_validator("name")
     @classmethod
     def validate_name(cls, v: str) -> str:
         """Validate token name."""
         if not v.strip():
-            raise ValueError('Token name cannot be empty')
+            raise ValueError("Token name cannot be empty")
         return v.strip()
 
-    @field_validator('domain_id')
+    @field_validator("domain_id")
     @classmethod
     def validate_domain_id(cls, v: str) -> str:
         """Validate domain ID."""
         if not v.strip():
-            raise ValueError('Domain ID cannot be empty')
+            raise ValueError("Domain ID cannot be empty")
         return v.strip()
 
-    @field_validator('scopes')
+    @field_validator("scopes")
     @classmethod
     def validate_scopes(cls, v: List[str]) -> List[str]:
         """Validate scopes."""
         if not v:
-            raise ValueError('At least one scope is required')
-        
+            raise ValueError("At least one scope is required")
+
         invalid_scopes = [scope for scope in v if scope not in TOKEN_SCOPES]
         if invalid_scopes:
-            raise ValueError(f'Invalid scopes: {invalid_scopes}. Valid scopes: {TOKEN_SCOPES}')
-        
+            raise ValueError(
+                f"Invalid scopes: {invalid_scopes}. Valid scopes: {TOKEN_SCOPES}"
+            )
+
         return v
 
     def to_json(self) -> Dict[str, Any]:
         """Convert request to JSON data for API call."""
-        return {
-            "name": self.name,
-            "domain_id": self.domain_id,
-            "scopes": self.scopes
-        }
+        return {"name": self.name, "domain_id": self.domain_id, "scopes": self.scopes}
 
 
 class TokenUpdateRequest(BaseModel):
     """Request model for updating a token status."""
+
     token_id: str
     status: TokenStatus
 
     def to_json(self) -> Dict[str, Any]:
         """Convert request to JSON data for API call."""
-        return {
-            "status": self.status
-        }
+        return {"status": self.status}
 
 
 class TokenUpdateNameRequest(BaseModel):
     """Request model for updating a token name."""
+
     token_id: str
     name: str = Field(max_length=50)
 
-    @field_validator('name')
+    @field_validator("name")
     @classmethod
     def validate_name(cls, v: str) -> str:
         """Validate token name."""
         if not v.strip():
-            raise ValueError('Token name cannot be empty')
+            raise ValueError("Token name cannot be empty")
         return v.strip()
 
     def to_json(self) -> Dict[str, Any]:
         """Convert request to JSON data for API call."""
-        return {
-            "name": self.name
-        }
+        return {"name": self.name}
 
 
 class TokenDeleteRequest(BaseModel):
     """Request model for deleting a token."""
+
     token_id: str
 
 
 # Response models
 class TokensListResponse(BaseModel):
     """Response model for tokens list."""
+
     data: List[Token]
+    links: Dict[str, Optional[str]]
+    meta: Dict[str, Any]
 
 
 class TokenResponse(BaseModel):
     """Response model for single token."""
+
     data: Token
 
 
 class TokenCreateResponse(BaseModel):
     """Response model for token creation."""
-    data: TokenCreate 
+
+    data: TokenCreate

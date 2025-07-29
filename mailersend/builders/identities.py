@@ -11,7 +11,7 @@ from ..models.identities import (
     IdentityUpdateRequest,
     IdentityUpdateByEmailRequest,
     IdentityDeleteRequest,
-    IdentityDeleteByEmailRequest
+    IdentityDeleteByEmailRequest,
 )
 
 
@@ -28,7 +28,7 @@ class IdentityBuilder:
         self._domain_id: Optional[str] = None
         self._page: Optional[int] = None
         self._limit: Optional[int] = None
-        
+
         # Identity parameters
         self._identity_id: Optional[str] = None
         self._email: Optional[str] = None
@@ -37,7 +37,7 @@ class IdentityBuilder:
         self._reply_to_name: Optional[str] = None
         self._add_note: Optional[bool] = None
         self._personal_note: Optional[str] = None
-        
+
         return self
 
     def copy(self):
@@ -139,7 +139,7 @@ class IdentityBuilder:
     def build_list_request(self) -> IdentityListRequest:
         """Build a request for listing identities."""
         query_params = IdentityListQueryParams()
-        
+
         # Only set values if they were explicitly set by the user
         if self._page is not None:
             query_params.page = self._page
@@ -147,18 +147,22 @@ class IdentityBuilder:
             query_params.limit = self._limit
         if self._domain_id is not None:
             query_params.domain_id = self._domain_id
-        
+
         return IdentityListRequest(query_params=query_params)
 
     def build_create_request(self) -> IdentityCreateRequest:
         """Build a request for creating an identity."""
         if not self._domain_id:
-            raise MailerSendValidationError("Domain ID is required for creating an identity")
+            raise MailerSendValidationError(
+                "Domain ID is required for creating an identity"
+            )
         if not self._name:
             raise MailerSendValidationError("Name is required for creating an identity")
         if not self._email:
-            raise MailerSendValidationError("Email is required for creating an identity")
-        
+            raise MailerSendValidationError(
+                "Email is required for creating an identity"
+            )
+
         return IdentityCreateRequest(
             domain_id=self._domain_id,
             name=self._name,
@@ -166,69 +170,73 @@ class IdentityBuilder:
             reply_to_email=self._reply_to_email,
             reply_to_name=self._reply_to_name,
             add_note=self._add_note,
-            personal_note=self._personal_note
+            personal_note=self._personal_note,
         )
 
     def build_get_request(self) -> IdentityGetRequest:
         """Build a request for getting an identity by ID."""
         if not self._identity_id:
-            raise MailerSendValidationError("Identity ID is required for getting an identity")
-        
-        return IdentityGetRequest(
-            identity_id=self._identity_id
-        )
+            raise MailerSendValidationError(
+                "Identity ID is required for getting an identity"
+            )
+
+        return IdentityGetRequest(identity_id=self._identity_id)
 
     def build_get_by_email_request(self) -> IdentityGetByEmailRequest:
         """Build a request for getting an identity by email."""
         if not self._email:
-            raise MailerSendValidationError("Email is required for getting an identity by email")
-        
-        return IdentityGetByEmailRequest(
-            email=self._email
-        )
+            raise MailerSendValidationError(
+                "Email is required for getting an identity by email"
+            )
+
+        return IdentityGetByEmailRequest(email=self._email)
 
     def build_update_request(self) -> IdentityUpdateRequest:
         """Build a request for updating an identity by ID."""
         if not self._identity_id:
-            raise MailerSendValidationError("Identity ID is required for updating an identity")
-        
+            raise MailerSendValidationError(
+                "Identity ID is required for updating an identity"
+            )
+
         return IdentityUpdateRequest(
             identity_id=self._identity_id,
             name=self._name,
             reply_to_email=self._reply_to_email,
             reply_to_name=self._reply_to_name,
             add_note=self._add_note,
-            personal_note=self._personal_note
+            personal_note=self._personal_note,
         )
 
     def build_update_by_email_request(self) -> IdentityUpdateByEmailRequest:
         """Build a request for updating an identity by email."""
         if not self._email:
-            raise MailerSendValidationError("Email is required for updating an identity by email")
-        
+            raise MailerSendValidationError(
+                "Email is required for updating an identity by email"
+            )
+
         return IdentityUpdateByEmailRequest(
             email=self._email,
             name=self._name,
             reply_to_email=self._reply_to_email,
             reply_to_name=self._reply_to_name,
             add_note=self._add_note,
-            personal_note=self._personal_note
+            personal_note=self._personal_note,
         )
 
     def build_delete_request(self) -> IdentityDeleteRequest:
         """Build a request for deleting an identity by ID."""
         if not self._identity_id:
-            raise MailerSendValidationError("Identity ID is required for deleting an identity")
-        
-        return IdentityDeleteRequest(
-            identity_id=self._identity_id
-        )
+            raise MailerSendValidationError(
+                "Identity ID is required for deleting an identity"
+            )
+
+        return IdentityDeleteRequest(identity_id=self._identity_id)
 
     def build_delete_by_email_request(self) -> IdentityDeleteByEmailRequest:
         """Build a request for deleting an identity by email."""
         if not self._email:
-            raise MailerSendValidationError("Email is required for deleting an identity by email")
-        
-        return IdentityDeleteByEmailRequest(
-            email=self._email
-        ) 
+            raise MailerSendValidationError(
+                "Email is required for deleting an identity by email"
+            )
+
+        return IdentityDeleteByEmailRequest(email=self._email)

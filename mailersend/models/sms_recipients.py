@@ -125,6 +125,8 @@ class SmsRecipientsListResponse(BaseMailerSendModel):
     """Response model for SMS recipients list."""
     
     data: List[SmsRecipient] = Field(..., description="List of SMS recipients")
+    links: Dict[str, Optional[str]]
+    meta: Dict[str, Any]
 
 
 class SmsRecipientGetResponse(BaseMailerSendModel):

@@ -1,4 +1,5 @@
 """Recipients API models for MailerSend SDK."""
+
 from datetime import datetime
 from typing import Optional, List, Union, Dict, Any
 from pydantic import BaseModel, Field, field_validator
@@ -7,19 +8,19 @@ from pydantic import BaseModel, Field, field_validator
 # Query Parameters Models
 class RecipientsListQueryParams(BaseModel):
     """Query parameters for listing recipients."""
-    
+
     domain_id: Optional[str] = None
     page: int = Field(default=1, ge=1)
     limit: int = Field(default=25, ge=10, le=100)
-    
-    @field_validator('domain_id')
+
+    @field_validator("domain_id")
     @classmethod
     def validate_domain_id(cls, v: Optional[str]) -> Optional[str]:
         """Validate and clean domain_id."""
         if v is not None:
             return v.strip()
         return v
-    
+
     def to_query_params(self) -> Dict[str, Any]:
         """Convert to query parameters dictionary, excluding None values."""
         params = {}
@@ -32,19 +33,19 @@ class RecipientsListQueryParams(BaseModel):
 
 class SuppressionListQueryParams(BaseModel):
     """Query parameters for listing suppression entries."""
-    
+
     domain_id: Optional[str] = None
     page: int = Field(default=1, ge=1)
     limit: int = Field(default=25, ge=10, le=100)
-    
-    @field_validator('domain_id')
+
+    @field_validator("domain_id")
     @classmethod
     def validate_domain_id(cls, v: Optional[str]) -> Optional[str]:
         """Validate and clean domain_id."""
         if v is not None:
             return v.strip()
         return v
-    
+
     def to_query_params(self) -> Dict[str, Any]:
         """Convert to query parameters dictionary, excluding None values."""
         params = {}
@@ -58,9 +59,11 @@ class SuppressionListQueryParams(BaseModel):
 # Request Models
 class RecipientsListRequest(BaseModel):
     """Request model for listing recipients."""
-    
-    query_params: RecipientsListQueryParams = Field(default_factory=RecipientsListQueryParams)
-    
+
+    query_params: RecipientsListQueryParams = Field(
+        default_factory=RecipientsListQueryParams
+    )
+
     def to_query_params(self) -> Dict[str, Any]:
         """Convert to query parameters dictionary."""
         return self.query_params.to_query_params()
@@ -68,10 +71,10 @@ class RecipientsListRequest(BaseModel):
 
 class RecipientGetRequest(BaseModel):
     """Request model for getting a single recipient."""
-    
+
     recipient_id: str
-    
-    @field_validator('recipient_id')
+
+    @field_validator("recipient_id")
     @classmethod
     def validate_recipient_id(cls, v: str) -> str:
         """Validate and clean recipient_id."""
@@ -82,10 +85,10 @@ class RecipientGetRequest(BaseModel):
 
 class RecipientDeleteRequest(BaseModel):
     """Request model for deleting a recipient."""
-    
+
     recipient_id: str
-    
-    @field_validator('recipient_id')
+
+    @field_validator("recipient_id")
     @classmethod
     def validate_recipient_id(cls, v: str) -> str:
         """Validate and clean recipient_id."""
@@ -96,9 +99,11 @@ class RecipientDeleteRequest(BaseModel):
 
 class SuppressionListRequest(BaseModel):
     """Request model for listing suppression entries."""
-    
-    query_params: SuppressionListQueryParams = Field(default_factory=SuppressionListQueryParams)
-    
+
+    query_params: SuppressionListQueryParams = Field(
+        default_factory=SuppressionListQueryParams
+    )
+
     def to_query_params(self) -> Dict[str, Any]:
         """Convert to query parameters dictionary."""
         return self.query_params.to_query_params()
@@ -106,20 +111,20 @@ class SuppressionListRequest(BaseModel):
 
 class SuppressionAddRequest(BaseModel):
     """Request model for adding recipients to suppression lists."""
-    
+
     domain_id: str
     recipients: Optional[List[str]] = None
     patterns: Optional[List[str]] = None
-    
-    @field_validator('domain_id')
+
+    @field_validator("domain_id")
     @classmethod
     def validate_domain_id(cls, v: str) -> str:
         """Validate and clean domain_id."""
         if not v or not v.strip():
             raise ValueError("domain_id cannot be empty")
         return v.strip()
-    
-    @field_validator('recipients')
+
+    @field_validator("recipients")
     @classmethod
     def validate_recipients(cls, v: Optional[List[str]]) -> Optional[List[str]]:
         """Validate recipients list."""
@@ -134,8 +139,8 @@ class SuppressionAddRequest(BaseModel):
                 cleaned.append(email.strip())
             return cleaned
         return v
-    
-    @field_validator('patterns')
+
+    @field_validator("patterns")
     @classmethod
     def validate_patterns(cls, v: Optional[List[str]]) -> Optional[List[str]]:
         """Validate patterns list."""
@@ -154,20 +159,20 @@ class SuppressionAddRequest(BaseModel):
 
 class SuppressionDeleteRequest(BaseModel):
     """Request model for deleting from suppression lists."""
-    
+
     domain_id: Optional[str] = None
     ids: Optional[List[str]] = None
     all: Optional[bool] = None
-    
-    @field_validator('domain_id')
+
+    @field_validator("domain_id")
     @classmethod
     def validate_domain_id(cls, v: Optional[str]) -> Optional[str]:
         """Validate and clean domain_id."""
         if v is not None:
             return v.strip()
         return v
-    
-    @field_validator('ids')
+
+    @field_validator("ids")
     @classmethod
     def validate_ids(cls, v: Optional[List[str]]) -> Optional[List[str]]:
         """Validate ids list."""
@@ -187,7 +192,7 @@ class SuppressionDeleteRequest(BaseModel):
 # Response Models
 class RecipientDomain(BaseModel):
     """Domain information for recipients."""
-    
+
     id: str
     name: str
     created_at: datetime
@@ -208,7 +213,7 @@ class RecipientDomain(BaseModel):
 
 class Recipient(BaseModel):
     """Recipient model."""
-    
+
     id: str
     email: str
     created_at: datetime
@@ -220,7 +225,7 @@ class Recipient(BaseModel):
 
 class BlocklistEntry(BaseModel):
     """Blocklist entry model."""
-    
+
     id: str
     type: str  # "exact" or "pattern"
     pattern: str
@@ -231,7 +236,7 @@ class BlocklistEntry(BaseModel):
 
 class HardBounce(BaseModel):
     """Hard bounce model."""
-    
+
     id: str
     reason: Optional[str] = None
     created_at: datetime
@@ -240,7 +245,7 @@ class HardBounce(BaseModel):
 
 class SpamComplaint(BaseModel):
     """Spam complaint model."""
-    
+
     id: str
     created_at: datetime
     recipient: Recipient
@@ -248,7 +253,7 @@ class SpamComplaint(BaseModel):
 
 class Unsubscribe(BaseModel):
     """Unsubscribe model."""
-    
+
     id: str
     reason: Optional[str] = None
     readable_reason: Optional[str] = None
@@ -258,7 +263,7 @@ class Unsubscribe(BaseModel):
 
 class OnHoldEntry(BaseModel):
     """On hold list entry model."""
-    
+
     id: str
     created_at: datetime
     on_hold_until: datetime
@@ -269,7 +274,7 @@ class OnHoldEntry(BaseModel):
 # Response Wrapper Models
 class RecipientsListResponse(BaseModel):
     """Response model for recipients list."""
-    
+
     data: List[Recipient]
     links: Optional[Dict[str, Optional[str]]] = None
     meta: Optional[Dict[str, Any]] = None
@@ -277,13 +282,13 @@ class RecipientsListResponse(BaseModel):
 
 class RecipientResponse(BaseModel):
     """Response model for single recipient."""
-    
+
     data: Recipient
 
 
 class BlocklistResponse(BaseModel):
     """Response model for blocklist entries."""
-    
+
     data: List[BlocklistEntry]
     links: Optional[Dict[str, Optional[str]]] = None
     meta: Optional[Dict[str, Any]] = None
@@ -291,7 +296,7 @@ class BlocklistResponse(BaseModel):
 
 class HardBouncesResponse(BaseModel):
     """Response model for hard bounces."""
-    
+
     data: List[HardBounce]
     links: Optional[Dict[str, Optional[str]]] = None
     meta: Optional[Dict[str, Any]] = None
@@ -299,7 +304,7 @@ class HardBouncesResponse(BaseModel):
 
 class SpamComplaintsResponse(BaseModel):
     """Response model for spam complaints."""
-    
+
     data: List[SpamComplaint]
     links: Optional[Dict[str, Optional[str]]] = None
     meta: Optional[Dict[str, Any]] = None
@@ -307,7 +312,7 @@ class SpamComplaintsResponse(BaseModel):
 
 class UnsubscribesResponse(BaseModel):
     """Response model for unsubscribes."""
-    
+
     data: List[Unsubscribe]
     links: Optional[Dict[str, Optional[str]]] = None
     meta: Optional[Dict[str, Any]] = None
@@ -315,7 +320,7 @@ class UnsubscribesResponse(BaseModel):
 
 class OnHoldResponse(BaseModel):
     """Response model for on hold entries."""
-    
+
     data: List[OnHoldEntry]
     links: Optional[Dict[str, Optional[str]]] = None
     meta: Optional[Dict[str, Any]] = None
@@ -323,5 +328,5 @@ class OnHoldResponse(BaseModel):
 
 class SuppressionAddResponse(BaseModel):
     """Response model for adding to suppression lists."""
-    
-    data: List[Union[BlocklistEntry, HardBounce, SpamComplaint, Unsubscribe]] 
+
+    data: List[Union[BlocklistEntry, HardBounce, SpamComplaint, Unsubscribe]]

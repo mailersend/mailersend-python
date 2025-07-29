@@ -29,8 +29,8 @@ class SmsWebhooks(BaseResource):
         self.logger.info(f"Listing SMS webhooks for SMS number: {request.query_params.sms_number_id}")
         
         response = self.client.request(
-            method="GET",
-            path="sms-webhooks",
+            method='GET',
+            endpoint='sms-webhooks',
             params=params
         )
         
@@ -49,8 +49,8 @@ class SmsWebhooks(BaseResource):
         self.logger.info(f"Getting SMS webhook: {request.sms_webhook_id}")
         
         response = self.client.request(
-            method="GET",
-            path=f"sms-webhooks/{request.sms_webhook_id}"
+            method='GET',
+            endpoint=f'sms-webhooks/{request.sms_webhook_id}'
         )
         
         return self._create_response(response)
@@ -68,9 +68,9 @@ class SmsWebhooks(BaseResource):
         self.logger.info(f"Creating SMS webhook: {request.name} for SMS number: {request.sms_number_id}")
         
         response = self.client.request(
-            method="POST",
-            path="sms-webhooks",
-            data=request.to_request_body()
+            method='POST',
+            endpoint='sms-webhooks',
+            body=request.to_request_body()
         )
         
         return self._create_response(response)
@@ -88,9 +88,9 @@ class SmsWebhooks(BaseResource):
         self.logger.info(f"Updating SMS webhook: {request.sms_webhook_id}")
         
         response = self.client.request(
-            method="PUT",
-            path=f"sms-webhooks/{request.sms_webhook_id}",
-            data=request.to_request_body()
+            method='PUT',
+            endpoint=f'sms-webhooks/{request.sms_webhook_id}',
+            body=request.to_request_body()
         )
         
         return self._create_response(response)
@@ -108,8 +108,8 @@ class SmsWebhooks(BaseResource):
         self.logger.info(f"Deleting SMS webhook: {request.sms_webhook_id}")
         
         response = self.client.request(
-            method="DELETE",
-            path=f"sms-webhooks/{request.sms_webhook_id}"
+            method='DELETE',
+            endpoint=f'sms-webhooks/{request.sms_webhook_id}'
         )
         
         return self._create_response(response) 
