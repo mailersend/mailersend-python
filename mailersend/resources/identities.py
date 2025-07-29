@@ -1,6 +1,5 @@
 from typing import Union
 
-from ..exceptions import ValidationError as MailerSendValidationError
 from ..models.identities import (
     IdentityListRequest,
     IdentityCreateRequest,
@@ -29,16 +28,7 @@ class IdentitiesResource(BaseResource):
 
         Returns:
             APIResponse containing the identities list response
-
-        Raises:
-            MailerSendValidationError: If the request is invalid or has wrong type
         """
-        # Validation
-        if not isinstance(request, IdentityListRequest):
-            raise MailerSendValidationError(
-                "Request must be an instance of IdentityListRequest"
-            )
-
         self.logger.debug("Preparing to list identities with query parameters")
 
         # Extract query parameters
@@ -64,16 +54,7 @@ class IdentitiesResource(BaseResource):
 
         Returns:
             APIResponse containing the created identity response
-
-        Raises:
-            MailerSendValidationError: If the request is invalid or has wrong type
         """
-        # Validation
-        if not isinstance(request, IdentityCreateRequest):
-            raise MailerSendValidationError(
-                "Request must be an instance of IdentityCreateRequest"
-            )
-
         self.logger.debug("Preparing to create identity")
 
         # Build request body
@@ -97,16 +78,7 @@ class IdentitiesResource(BaseResource):
 
         Returns:
             APIResponse containing the identity data
-
-        Raises:
-            MailerSendValidationError: If the request is invalid or has wrong type
         """
-        # Validation
-        if not isinstance(request, IdentityGetRequest):
-            raise MailerSendValidationError(
-                "Request must be an instance of IdentityGetRequest"
-            )
-
         self.logger.debug(f"Preparing to get identity with ID: {request.identity_id}")
 
         # Make API request
@@ -125,16 +97,7 @@ class IdentitiesResource(BaseResource):
 
         Returns:
             APIResponse containing the identity data
-
-        Raises:
-            MailerSendValidationError: If the request is invalid or has wrong type
         """
-        # Validation
-        if not isinstance(request, IdentityGetByEmailRequest):
-            raise MailerSendValidationError(
-                "Request must be an instance of IdentityGetByEmailRequest"
-            )
-
         self.logger.debug(f"Preparing to get identity by email: {request.email}")
 
         # Make API request
@@ -153,16 +116,7 @@ class IdentitiesResource(BaseResource):
 
         Returns:
             APIResponse containing the updated identity
-
-        Raises:
-            MailerSendValidationError: If the request is invalid or has wrong type
         """
-        # Validation
-        if not isinstance(request, IdentityUpdateRequest):
-            raise MailerSendValidationError(
-                "Request must be an instance of IdentityUpdateRequest"
-            )
-
         self.logger.debug(
             f"Preparing to update identity with ID: {request.identity_id}"
         )
@@ -196,16 +150,7 @@ class IdentitiesResource(BaseResource):
 
         Returns:
             APIResponse containing the updated identity
-
-        Raises:
-            MailerSendValidationError: If the request is invalid or has wrong type
         """
-        # Validation
-        if not isinstance(request, IdentityUpdateByEmailRequest):
-            raise MailerSendValidationError(
-                "Request must be an instance of IdentityUpdateByEmailRequest"
-            )
-
         self.logger.debug(f"Preparing to update identity by email: {request.email}")
 
         # Build request body, excluding email (goes in URL)
@@ -233,16 +178,7 @@ class IdentitiesResource(BaseResource):
 
         Returns:
             APIResponse containing the deletion result
-
-        Raises:
-            MailerSendValidationError: If the request is invalid or has wrong type
         """
-        # Validation
-        if not isinstance(request, IdentityDeleteRequest):
-            raise MailerSendValidationError(
-                "Request must be an instance of IdentityDeleteRequest"
-            )
-
         self.logger.debug(
             f"Preparing to delete identity with ID: {request.identity_id}"
         )
@@ -265,16 +201,7 @@ class IdentitiesResource(BaseResource):
 
         Returns:
             APIResponse containing the deletion result
-
-        Raises:
-            MailerSendValidationError: If the request is invalid or has wrong type
         """
-        # Validation
-        if not isinstance(request, IdentityDeleteByEmailRequest):
-            raise MailerSendValidationError(
-                "Request must be an instance of IdentityDeleteByEmailRequest"
-            )
-
         self.logger.debug(f"Preparing to delete identity by email: {request.email}")
 
         # Make API request
