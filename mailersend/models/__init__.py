@@ -138,9 +138,6 @@ from .sms_recipients import (
     SmsRecipientUpdateRequest,
     SmsRecipient,
     SmsRecipientDetails,
-    SmsRecipientsListResponse,
-    SmsRecipientGetResponse,
-    SmsRecipientUpdateResponse,
 )
 from .sms_webhooks import (
     SmsWebhookEvent,
@@ -281,9 +278,6 @@ __all__ = [
     "SmsRecipientUpdateRequest",
     "SmsRecipient",
     "SmsRecipientDetails",
-    "SmsRecipientsListResponse",
-    "SmsRecipientGetResponse",
-    "SmsRecipientUpdateResponse",
     # SMS Webhooks models
     "SmsWebhookEvent",
     "SmsWebhooksListRequest",
