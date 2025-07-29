@@ -30,7 +30,7 @@ class SmsRecipients(BaseResource):
         )
 
         response = self.client.request(
-            method="GET", endpoint="sms-recipients", params=params
+            method="GET", path="sms-recipients", params=params
         )
 
         return self._create_response(response)
@@ -48,7 +48,7 @@ class SmsRecipients(BaseResource):
         self.logger.debug("Getting SMS recipient: %s", request.sms_recipient_id)
 
         response = self.client.request(
-            method="GET", endpoint=f"sms-recipients/{request.sms_recipient_id}"
+            method="GET", path=f"sms-recipients/{request.sms_recipient_id}"
         )
 
         return self._create_response(response)
@@ -70,7 +70,7 @@ class SmsRecipients(BaseResource):
 
         response = self.client.request(
             method="PUT",
-            endpoint=f"sms-recipients/{request.sms_recipient_id}",
+            path=f"sms-recipients/{request.sms_recipient_id}",
             body=request.to_request_body(),
         )
 

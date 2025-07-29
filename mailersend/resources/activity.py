@@ -30,7 +30,7 @@ class Activity(BaseResource):
         self.logger.debug("Query params: %s", params)
 
         response = self.client.request(
-            method="GET", endpoint=f"activity/{request.domain_id}", params=params
+            method="GET", path=f"activity/{request.domain_id}", params=params
         )
 
         return self._create_response(response)
@@ -49,7 +49,7 @@ class Activity(BaseResource):
         self.logger.debug("Getting single activity: %s", request.activity_id)
 
         response = self.client.request(
-            method="GET", endpoint=f"activities/{request.activity_id}"
+            method="GET", path=f"activities/{request.activity_id}"
         )
 
         return self._create_response(response)

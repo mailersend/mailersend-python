@@ -16,24 +16,17 @@ interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - mailersend-python/2.0.0 (Python/3.9.1; OS/Darwin 24.5.0; Impl/CPython)
+      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
     method: PUT
     uri: https://api.mailersend.com/v1/domains/65qngkdovk8lwr12/settings
   response:
     body:
-      string: !!binary |
-        H4sIAAAAAAAAA4RTwW7bMAz9lYJnpbPdJF2Fopf9Qk/DAEGRGEezLKkSlQwI/O+DHbtx0gT1SeJ7
-        fI+0yCNoSRL4EYwGDuvVh6sb7ffNT3uIZQUMnGwROJjax8etNBYY6Ma0wClmZJDCdjpSlKoxrga+
-        lTYhA5PEHqPZGtQTxyShesVbgHZJSEVmj1/YU/gsPJkJaa0/9Dojpn0rjROJJKW+L/IkLfDlC4OP
-        jLlnFgwSOhoOEf+ioj5aMdBozR5jf1s+dwx2MgnnSZwSRYspyRrTp9cNTCifR+mpEiQyrh6KSei0
-        CDKnWcFDJ0JZo5p08SuFD+huhUQw/9AK7wT5cKWTXcqbpKLZ4GXmDBA7ai1weA1vv3Ii3z7MwIfj
-        cXbrutc/P8Ib3FMR6OTGfulmTgtWGgccvreCu+l3bJR3NDzkqVE1OJxH4zPpNpzy5vREwE960I8D
-        5ehEkLS7wFuSwMC4jc9Oi+gzXRhMc3mFzxVGDBiEiAo1OoVik21zzq6djyh0DtYoSahFRGWCQUfn
-        kUs7fxC6lVGNoY6BijjQJQGHqqhWi2K5KMr3suJPT3xZPhbD9xsY5KCvqetF9fxelnz1wlfrGXVY
-        nGlqx4me70e/HlGLvis17k/yWzoHiq7r/gMAAP//AwDopgJFYAQAAA==
+      string: '{"data":{"id":"65qngkdovk8lwr12","name":"igor.fail","dkim":true,"spf":true,"tracking":false,"is_verified":true,"is_cname_verified":true,"is_dns_active":true,"is_cname_active":false,"is_tracking_allowed":false,"domain_stats":{"total":49,"queued":0,"sent":0,"rejected":2,"delivered":47},"has_not_queued_messages":false,"not_queued_messages_count":0,"domain_settings":{"send_paused":false,"track_clicks":true,"track_opens":true,"track_opens_pixel_on_top":false,"track_unsubscribe":true,"track_unsubscribe_html":"<p>Custom
+        unsubscribe {{unsubscribe}}<\/p>","track_unsubscribe_html_enabled":false,"track_unsubscribe_plain":"Custom
+        unsubscribe {{unsubscribe}}","track_unsubscribe_plain_enabled":false,"track_content":true,"custom_tracking_enabled":true,"custom_tracking_subdomain":"track","return_path_subdomain":"mta","inbound_routing_enabled":false,"inbound_routing_subdomain":"inbound","precedence_bulk":false,"ignore_duplicated_recipients":false,"show_dmarc":false},"created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2025-07-29T12:13:50.000000Z","totals":[]}}'
     headers:
       CF-RAY:
-      - 9564c7f8c9696e94-PRG
+      - 966c88576be5f969-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -43,7 +36,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 27 Jun 2025 11:59:56 GMT
+      - Tue, 29 Jul 2025 12:13:50 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
@@ -55,7 +48,7 @@ interactions:
       x-apiquota-remaining:
       - '-1'
       x-apiquota-reset:
-      - '2025-06-28T00:00:00Z'
+      - '2025-07-30T00:00:00Z'
     status:
       code: 200
       message: OK

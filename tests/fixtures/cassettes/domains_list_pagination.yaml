@@ -11,20 +11,17 @@ interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - mailersend-python/2.0.0 (Python/3.9.1; OS/Darwin 24.5.0; Impl/CPython)
+      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
     method: GET
     uri: https://api.mailersend.com/v1/domains?page=2&limit=10
   response:
     body:
-      string: !!binary |
-        H4sIAAAAAAAAA6yRzU7DQAyEX6WaQ0+rhvS4CPEGiHtTIZM4dMX+ddcbVYry7iiEcEEciDh7xjOf
-        PaIjIejTWcEa/56hR/QmZYHGRSRm3VRNRdEcHBnLKbPvDm1wTTXUTdUFR8bnx0hv/FBDwdJWZ0w8
-        bHN6vgm0L9ZOCo5nnBFtSYm9vMwq6KNCn4JbVEvLr0n9zX0aUZLdiv3Ks3Vv6VrC/e458WBCyVCg
-        VszA0D3ZzJP6h5D6160r3aJ74pvs9umz0Q/LWSGSXP7SZH4Sp/VudwoS1kgJQhb6OE0fAAAA//8D
-        AH88gphRAgAA
+      string: '{"data":[],"links":{"first":"https:\/\/api.mailersend.com\/v1\/domains?page=1","last":"https:\/\/api.mailersend.com\/v1\/domains?page=1","prev":"https:\/\/api.mailersend.com\/v1\/domains?page=1","next":null},"meta":{"current_page":2,"from":null,"last_page":1,"links":[{"url":"https:\/\/api.mailersend.com\/v1\/domains?page=1","label":"&laquo;
+        Previous","active":false},{"url":"https:\/\/api.mailersend.com\/v1\/domains?page=1","label":"1","active":false},{"url":null,"label":"Next
+        &raquo;","active":false}],"path":"https:\/\/api.mailersend.com\/v1\/domains","per_page":10,"to":null,"total":2}}'
     headers:
       CF-RAY:
-      - 9564c7aadc549947-PRG
+      - 966c87cfa9eeb30f-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -34,7 +31,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 27 Jun 2025 11:59:43 GMT
+      - Tue, 29 Jul 2025 12:13:29 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
@@ -46,7 +43,7 @@ interactions:
       x-apiquota-remaining:
       - '-1'
       x-apiquota-reset:
-      - '2025-06-28T00:00:00Z'
+      - '2025-07-30T00:00:00Z'
     status:
       code: 200
       message: OK

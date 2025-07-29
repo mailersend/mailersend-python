@@ -87,7 +87,7 @@ class EmailVerification(BaseResource):
         # Make API call
         response = self.client.request(
             method="GET",
-            endpoint=f"email-verification/verify-async/{request.email_verification_id}",
+            path=f"email-verification/verify-async/{request.email_verification_id}",
         )
 
         # Create standardized response
@@ -111,7 +111,7 @@ class EmailVerification(BaseResource):
 
         # Make API call
         response = self.client.request(
-            method="GET", endpoint="email-verification", params=params
+            method="GET", path="email-verification", params=params
         )
 
         # Create standardized response
@@ -135,7 +135,7 @@ class EmailVerification(BaseResource):
 
         # Make API call
         response = self.client.request(
-            method="GET", endpoint=f"email-verification/{request.email_verification_id}"
+            method="GET", path=f"email-verification/{request.email_verification_id}"
         )
 
         # Create standardized response
@@ -186,7 +186,7 @@ class EmailVerification(BaseResource):
         # Make API call
         response = self.client.request(
             method="GET",
-            endpoint=f"email-verification/{request.email_verification_id}/verify",
+            path=f"email-verification/{request.email_verification_id}/verify",
         )
 
         # Create standardized response
@@ -215,7 +215,7 @@ class EmailVerification(BaseResource):
         # Make API call
         response = self.client.request(
             method="GET",
-            endpoint=f"email-verification/{request.email_verification_id}/results",
+            path=f"email-verification/{request.email_verification_id}/results",
             params=params,
         )
 

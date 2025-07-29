@@ -11,19 +11,15 @@ interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - mailersend-python/2.0.0 (Python/3.9.1; OS/Darwin 24.5.0; Impl/CPython)
+      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
     method: GET
     uri: https://api.mailersend.com/v1/activity/65qngkdovk8lwr12?page=1&limit=25&date_from=1750862891&date_to=1750949291&event%5B0%5D=queued&event%5B1%5D=sent&event%5B2%5D=delivered&event%5B3%5D=soft_bounced&event%5B4%5D=hard_bounced
   response:
     body:
-      string: !!binary |
-        H4sIAAAAAAAAA6SOXQrCMBgE77LPwZBCRQLiQYxIaNM2NH8mX6tSencpVC/g27IwwyxoNWnI643B
-        2TAWyAWdzYUgMRClIhVXXCd78No6k4sJ7aGJXvFZKK4bsrOlt+LH+hH6sY3zeHLPLKpL0r05CzA4
-        vcnC5BxDymb+7mBe+78yeLNVLGimnE2g+0ZDCoYuR/+jNQ1/ZoEhmbzrq5qB4t6wfgAAAP//AwBV
-        tWMHCwEAAA==
+      string: '{"data":[],"links":{"first":"https:\/\/api.mailersend.com\/v1\/activity\/65qngkdovk8lwr12?page=1","last":null,"prev":null,"next":null},"meta":{"current_page":1,"from":null,"path":"https:\/\/api.mailersend.com\/v1\/activity\/65qngkdovk8lwr12","per_page":25,"to":null}}'
     headers:
       CF-RAY:
-      - 955d81120b4d2bd8-SOF
+      - 966d76f04d11562e-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -33,7 +29,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Thu, 26 Jun 2025 14:48:11 GMT
+      - Tue, 29 Jul 2025 14:56:43 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
@@ -45,7 +41,7 @@ interactions:
       x-apiquota-remaining:
       - '-1'
       x-apiquota-reset:
-      - '2025-06-27T00:00:00Z'
+      - '2025-07-30T00:00:00Z'
     status:
       code: 200
       message: OK

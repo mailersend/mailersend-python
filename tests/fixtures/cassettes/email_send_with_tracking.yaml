@@ -16,7 +16,7 @@ interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - mailersend-python/2.0.0 (Python/3.9.1; OS/Darwin 24.3.0; Impl/CPython)
+      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
     method: POST
     uri: https://api.mailersend.com/v1/email
   response:
@@ -24,7 +24,7 @@ interactions:
       string: ''
     headers:
       CF-RAY:
-      - 92b12059988d733c-BUD
+      - 966d6df3ef4955ad-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -32,7 +32,7 @@ interactions:
       Content-Type:
       - text/html; charset=UTF-8
       Date:
-      - Fri, 04 Apr 2025 13:24:30 GMT
+      - Tue, 29 Jul 2025 14:50:35 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
@@ -44,9 +44,11 @@ interactions:
       x-apiquota-remaining:
       - '-1'
       x-apiquota-reset:
-      - '2025-04-05T00:00:00Z'
+      - '2025-07-30T00:00:00Z'
       x-message-id:
-      - 67efdd8ea97fd82e63fd4178
+      - 6888dfbb555eb58cce8aeabe
+      x-send-paused:
+      - 'true'
     status:
       code: 202
       message: Accepted

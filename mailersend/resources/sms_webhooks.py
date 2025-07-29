@@ -32,7 +32,7 @@ class SmsWebhooks(BaseResource):
         )
 
         response = self.client.request(
-            method="GET", endpoint="sms-webhooks", params=params
+            method="GET", path="sms-webhooks", params=params
         )
 
         return self._create_response(response)
@@ -50,7 +50,7 @@ class SmsWebhooks(BaseResource):
         self.logger.debug("Getting SMS webhook: %s", request.sms_webhook_id)
 
         response = self.client.request(
-            method="GET", endpoint=f"sms-webhooks/{request.sms_webhook_id}"
+            method="GET", path=f"sms-webhooks/{request.sms_webhook_id}"
         )
 
         return self._create_response(response)
@@ -71,7 +71,7 @@ class SmsWebhooks(BaseResource):
         )
 
         response = self.client.request(
-            method="POST", endpoint="sms-webhooks", body=request.to_request_body()
+            method="POST", path="sms-webhooks", body=request.to_request_body()
         )
 
         return self._create_response(response)
@@ -90,7 +90,7 @@ class SmsWebhooks(BaseResource):
 
         response = self.client.request(
             method="PUT",
-            endpoint=f"sms-webhooks/{request.sms_webhook_id}",
+            path=f"sms-webhooks/{request.sms_webhook_id}",
             body=request.to_request_body(),
         )
 
@@ -109,7 +109,7 @@ class SmsWebhooks(BaseResource):
         self.logger.debug("Deleting SMS webhook: %s", request.sms_webhook_id)
 
         response = self.client.request(
-            method="DELETE", endpoint=f"sms-webhooks/{request.sms_webhook_id}"
+            method="DELETE", path=f"sms-webhooks/{request.sms_webhook_id}"
         )
 
         return self._create_response(response)

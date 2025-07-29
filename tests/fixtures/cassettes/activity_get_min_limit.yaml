@@ -11,19 +11,15 @@ interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - mailersend-python/2.0.0 (Python/3.9.1; OS/Darwin 24.5.0; Impl/CPython)
+      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
     method: GET
     uri: https://api.mailersend.com/v1/activity/65qngkdovk8lwr12?page=1&limit=10&date_from=1750862892&date_to=1750949292
   response:
     body:
-      string: !!binary |
-        H4sIAAAAAAAAA6SO4QrCIBhF3+X+lsygCCF6kIyQzW0ydabfrBh79xhsvUD/LhfO4UyoNWnI253B
-        2dBnyAmNTZkg0RHFLBVXXEe789o6k7IJ9a4avOJFKK4rssXSR/HT8Rnavh5Kf3avJA7XqFtzEWBw
-        epGF0TmGmEzZdjDv9Z8ZvFkqJlRjSibQY6EhBUOTBv+jNXV/ZoEhmrTp9ww0rA3zFwAA//8DAJ0j
-        LWYLAQAA
+      string: '{"data":[],"links":{"first":"https:\/\/api.mailersend.com\/v1\/activity\/65qngkdovk8lwr12?page=1","last":null,"prev":null,"next":null},"meta":{"current_page":1,"from":null,"path":"https:\/\/api.mailersend.com\/v1\/activity\/65qngkdovk8lwr12","per_page":10,"to":null}}'
     headers:
       CF-RAY:
-      - 955d81162c98d0ff-SOF
+      - 966d76f6baa70a8e-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -33,7 +29,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Thu, 26 Jun 2025 14:48:12 GMT
+      - Tue, 29 Jul 2025 14:56:44 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
@@ -45,7 +41,7 @@ interactions:
       x-apiquota-remaining:
       - '-1'
       x-apiquota-reset:
-      - '2025-06-27T00:00:00Z'
+      - '2025-07-30T00:00:00Z'
     status:
       code: 200
       message: OK

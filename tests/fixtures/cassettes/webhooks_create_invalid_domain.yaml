@@ -1,0 +1,150 @@
+interactions:
+- request:
+    body: '{"url": "https://example.com/webhook", "name": "Test Webhook", "events":
+      ["activity.sent", "activity.delivered"], "domain_id": "invalid-domain-id", "enabled":
+      true}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '164'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+    method: POST
+    uri: https://api.mailersend.com/v1/webhooks
+  response:
+    body:
+      string: "{\n    \"message\": \"You cannot create a resource at the moment. Please
+        wait a while before retrying.\"\n}"
+    headers:
+      CF-RAY:
+      - 966d41ee89240380-BEG
+      Cache-Control:
+      - no-cache, private
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Date:
+      - Tue, 29 Jul 2025 14:20:32 GMT
+      Server:
+      - cloudflare
+      Transfer-Encoding:
+      - chunked
+      cf-cache-status:
+      - DYNAMIC
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-apiquota-remaining:
+      - '-1'
+      x-apiquota-reset:
+      - '2025-07-30T00:00:00Z'
+    status:
+      code: 429
+      message: Too Many Requests
+- request:
+    body: '{"url": "https://example.com/webhook", "name": "Test Webhook", "events":
+      ["activity.sent", "activity.delivered"], "domain_id": "invalid-domain-id", "enabled":
+      true}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '164'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+    method: POST
+    uri: https://api.mailersend.com/v1/webhooks
+  response:
+    body:
+      string: "{\n    \"message\": \"You cannot create a resource at the moment. Please
+        wait a while before retrying.\"\n}"
+    headers:
+      CF-RAY:
+      - 966d41ef8eadf969-BEG
+      Cache-Control:
+      - no-cache, private
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Date:
+      - Tue, 29 Jul 2025 14:20:32 GMT
+      Server:
+      - cloudflare
+      Transfer-Encoding:
+      - chunked
+      cf-cache-status:
+      - DYNAMIC
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-apiquota-remaining:
+      - '-1'
+      x-apiquota-reset:
+      - '2025-07-30T00:00:00Z'
+    status:
+      code: 429
+      message: Too Many Requests
+- request:
+    body: '{"url": "https://example.com/webhook", "name": "Test Webhook", "events":
+      ["activity.sent", "activity.delivered"], "domain_id": "invalid-domain-id", "enabled":
+      true}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '164'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+    method: POST
+    uri: https://api.mailersend.com/v1/webhooks
+  response:
+    body:
+      string: '{"message":"The url has already been taken. (and 1 more error)","errors":{"url":["The
+        url has already been taken."],"domain_id":["The domain id field is required.
+        #MS42209"]}}'
+    headers:
+      CF-RAY:
+      - 966d41f4396ee294-BEG
+      Cache-Control:
+      - no-cache, private
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Date:
+      - Tue, 29 Jul 2025 14:20:33 GMT
+      Server:
+      - cloudflare
+      Transfer-Encoding:
+      - chunked
+      cf-cache-status:
+      - DYNAMIC
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-apiquota-remaining:
+      - '-1'
+      x-apiquota-reset:
+      - '2025-07-30T00:00:00Z'
+    status:
+      code: 422
+      message: Unprocessable Entity
+version: 1

@@ -46,7 +46,7 @@ class Templates(BaseResource):
 
         # Make API call
         response = self.client.request(
-            method="GET", endpoint="templates", params=params
+            method="GET", path="templates", params=params
         )
 
         # Create standardized response
@@ -66,7 +66,7 @@ class Templates(BaseResource):
 
         # Make API call
         response = self.client.request(
-            method="GET", endpoint=f"templates/{request.template_id}"
+            method="GET", path=f"templates/{request.template_id}"
         )
 
         # Create standardized response
@@ -87,7 +87,7 @@ class Templates(BaseResource):
 
         # Make API call
         response = self.client.request(
-            method="DELETE", endpoint=f"templates/{request.template_id}"
+            method="DELETE", path=f"templates/{request.template_id}"
         )
 
         # Create standardized response

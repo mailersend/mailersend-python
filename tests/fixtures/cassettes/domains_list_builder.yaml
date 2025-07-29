@@ -11,30 +11,21 @@ interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - mailersend-python/2.0.0 (Python/3.9.1; OS/Darwin 24.5.0; Impl/CPython)
+      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
     method: GET
     uri: https://api.mailersend.com/v1/domains?page=1&limit=15
   response:
     body:
-      string: !!binary |
-        H4sIAAAAAAAAA9yWTXPbOAyG/4oHh56Y2FLluOWm6WHvO3voaesOh6JgmzFFKvxwPOvRf9+hPmxZ
-        jptNp71UJwp4CYAU8IwOUHDPgX49gCyAwn77qLOkfNxXH7N/Fx8SIKB5iUAhN/ntiksFBIqtLIF6
-        G5CAq1ZAV1w5JOAtF1up10eDdGyHVq4kFr1eOiZixIHjJC60Y1x4ucOhtdX39mOYPhvjSpnnQaDC
-        lFxq5jz3DugBvPFcAZ0ReAoYonBGwKH2zcLiIwrfWQtUcoe2easJbLhj2njW7mMlOsfX6I6ZXvAx
-        YUIXua8DvZd63ZTiUBes4sENym3OwYSSYuv647U2U6F+ycQquUfFjGbeVKM4QbuQO2Fljtc9bONL
-        BRTuq4c/Y97JBi1OvJnc88nG4urTEg6Hgb6ul/AweL9fTvnD/XJaPcC16Aw1z9XFMYeySnGpgcJ5
-        CQMFnYyqgKthrqQTRvvmQ3dWEZw35al1xrvGfhfy9isCBSzb7rfog9Ws4n5z5i89BwJS5yboglkT
-        /EsZxv5hhM4HBCqLAgvUAlke1Pa0e62NRVaESknBPRbMopCVRO1PXek25pkVJbeiM9UEhMVGzj1Q
-        SGfp/GaW3cySL0lK5xlNkttZ8/wDBEJVjKV3N+ldlKZRPZA2k9U3tr+YoDhAtmDxUKIfO7PyA0Nd
-        kw48d/Mnvd4WZrf9oJ5tkp7AI9fGXiXPYDbeDp6jY8idkfoSR2/lTvbxNfCkZ9eWLX45eYZE6cFz
-        NjcdeS5tPxU9zbANB3487z8PMa+m+nVoaS/7e2RpjL8hWd6/p9nrZFl8SRI6X9Bs/r/Jki3GaElf
-        QMs3AkrqbRNlJa2LWTfeV44up8spr+RtJDraOBq3wpTL6S5ZTts7c58rvsZP8f9H8R/dWVncAdVB
-        KQIa975d1wRKjP9cBxDBWtSexR1AEwIra8pmEZOezN0xvh4gWNVHVDzHOEnvFH8K5o/J3xZ30gQH
-        BM6gFRHbbPuxw7dJkkHU2NDHoOe1/IV7P3lnm4Iu6vhGILb2WwqJl4i2v4h57IvmW3doTev6PwAA
-        AP//AwCqjNblwQoAAA==
+      string: '{"data":[{"id":"xkjn41mjxp94z781","name":"bob.fail","dkim":true,"spf":false,"tracking":false,"is_verified":true,"is_cname_verified":false,"is_dns_active":false,"is_cname_active":true,"is_tracking_allowed":false,"domain_stats":{"total":0,"queued":0,"sent":0,"rejected":0,"delivered":0},"has_not_queued_messages":false,"not_queued_messages_count":0,"domain_settings":{"send_paused":false,"track_clicks":true,"track_opens":true,"track_opens_pixel_on_top":false,"track_unsubscribe":false,"track_unsubscribe_html":"<p>Click
+        here to <a href=\"{{unsubscribe}}\">unsubscribe<\/a><\/p>","track_unsubscribe_html_enabled":false,"track_unsubscribe_plain":"Click
+        here to unsubscribe: {{unsubscribe}}","track_unsubscribe_plain_enabled":false,"track_content":false,"custom_tracking_enabled":false,"custom_tracking_subdomain":"email","return_path_subdomain":"mta","inbound_routing_enabled":false,"inbound_routing_subdomain":"inbound","precedence_bulk":false,"ignore_duplicated_recipients":false,"show_dmarc":false},"created_at":"2025-04-01T12:54:11.000000Z","updated_at":"2025-07-28T12:20:46.000000Z","totals":[]},{"id":"65qngkdovk8lwr12","name":"igor.fail","dkim":true,"spf":true,"tracking":false,"is_verified":true,"is_cname_verified":true,"is_dns_active":true,"is_cname_active":false,"is_tracking_allowed":false,"domain_stats":{"total":49,"queued":0,"sent":0,"rejected":2,"delivered":47},"has_not_queued_messages":false,"not_queued_messages_count":0,"domain_settings":{"send_paused":true,"track_clicks":false,"track_opens":false,"track_opens_pixel_on_top":false,"track_unsubscribe":false,"track_unsubscribe_html":"<p>Custom
+        unsubscribe {{unsubscribe}}<\/p>","track_unsubscribe_html_enabled":false,"track_unsubscribe_plain":"Custom
+        unsubscribe {{unsubscribe}}","track_unsubscribe_plain_enabled":false,"track_content":false,"custom_tracking_enabled":true,"custom_tracking_subdomain":"track","return_path_subdomain":"mta","inbound_routing_enabled":false,"inbound_routing_subdomain":"inbound","precedence_bulk":false,"ignore_duplicated_recipients":false,"show_dmarc":false},"created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2025-07-28T12:22:48.000000Z","totals":[]}],"links":{"first":"https:\/\/api.mailersend.com\/v1\/domains?page=1","last":"https:\/\/api.mailersend.com\/v1\/domains?page=1","prev":null,"next":null},"meta":{"current_page":1,"from":1,"last_page":1,"links":[{"url":null,"label":"&laquo;
+        Previous","active":false},{"url":"https:\/\/api.mailersend.com\/v1\/domains?page=1","label":"1","active":true},{"url":null,"label":"Next
+        &raquo;","active":false}],"path":"https:\/\/api.mailersend.com\/v1\/domains","per_page":15,"to":2,"total":2}}'
     headers:
       CF-RAY:
-      - 9564c7adda68f986-PRG
+      - 966c87d2acddc687-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -44,7 +35,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 27 Jun 2025 11:59:44 GMT
+      - Tue, 29 Jul 2025 12:13:29 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
@@ -56,7 +47,7 @@ interactions:
       x-apiquota-remaining:
       - '-1'
       x-apiquota-reset:
-      - '2025-06-28T00:00:00Z'
+      - '2025-07-30T00:00:00Z'
     status:
       code: 200
       message: OK

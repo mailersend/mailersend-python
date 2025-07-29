@@ -1,0 +1,51 @@
+interactions:
+- request:
+    body: '{"email": "test-user@example.com", "role": "member", "permissions": ["email_send"],
+      "templates": [], "domains": [], "requires_periodic_password_change": false}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '159'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+    method: POST
+    uri: https://api.mailersend.com/v1/users
+  response:
+    body:
+      string: '{"message":"The selected role is invalid. (and 2 more errors)","errors":{"role":["The
+        selected role is invalid."],"templates":["Templates require a read own templates
+        permission. #MS42224"],"permissions.0":["The selected permissions.0 is invalid."]}}'
+    headers:
+      CF-RAY:
+      - 966d3dc919930a8e-BEG
+      Cache-Control:
+      - no-cache, private
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Date:
+      - Tue, 29 Jul 2025 14:17:42 GMT
+      Server:
+      - cloudflare
+      Transfer-Encoding:
+      - chunked
+      cf-cache-status:
+      - DYNAMIC
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-apiquota-remaining:
+      - '-1'
+      x-apiquota-reset:
+      - '2025-07-30T00:00:00Z'
+    status:
+      code: 422
+      message: Unprocessable Entity
+version: 1

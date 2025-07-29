@@ -28,7 +28,7 @@ class SmsInbounds(BaseResource):
         self.logger.debug("Listing SMS inbounds with filters: %s", params)
 
         response = self.client.request(
-            method="GET", endpoint="sms-inbounds", params=params
+            method="GET", path="sms-inbounds", params=params
         )
         return self._create_response(response)
 
@@ -44,7 +44,7 @@ class SmsInbounds(BaseResource):
         self.logger.debug("Getting SMS inbound: %s", request.sms_inbound_id)
 
         response = self.client.request(
-            method="GET", endpoint=f"sms-inbounds/{request.sms_inbound_id}"
+            method="GET", path=f"sms-inbounds/{request.sms_inbound_id}"
         )
 
         return self._create_response(response)
@@ -65,7 +65,7 @@ class SmsInbounds(BaseResource):
         )
 
         response = self.client.request(
-            method="POST", endpoint="sms-inbounds", body=request.to_request_body()
+            method="POST", path="sms-inbounds", body=request.to_request_body()
         )
 
         return self._create_response(response)
@@ -83,7 +83,7 @@ class SmsInbounds(BaseResource):
 
         response = self.client.request(
             method="PUT",
-            endpoint=f"sms-inbounds/{request.sms_inbound_id}",
+            path=f"sms-inbounds/{request.sms_inbound_id}",
             body=request.to_request_body(),
         )
 
@@ -101,7 +101,7 @@ class SmsInbounds(BaseResource):
         self.logger.debug("Deleting SMS inbound: %s", request.sms_inbound_id)
 
         response = self.client.request(
-            method="DELETE", endpoint=f"sms-inbounds/{request.sms_inbound_id}"
+            method="DELETE", path=f"sms-inbounds/{request.sms_inbound_id}"
         )
 
         return self._create_response(response)

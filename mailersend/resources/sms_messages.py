@@ -27,7 +27,7 @@ class SmsMessages(BaseResource):
         )
 
         response = self.client.request(
-            method="GET", endpoint="sms-messages", params=params
+            method="GET", path="sms-messages", params=params
         )
 
         return self._create_response(response)
@@ -45,7 +45,7 @@ class SmsMessages(BaseResource):
         self.logger.debug("Getting SMS message: %s", request.sms_message_id)
 
         response = self.client.request(
-            method="GET", endpoint=f"sms-messages/{request.sms_message_id}"
+            method="GET", path=f"sms-messages/{request.sms_message_id}"
         )
 
         return self._create_response(response)

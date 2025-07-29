@@ -44,7 +44,7 @@ class Recipients(BaseResource):
 
         # Make API call
         response = self.client.request(
-            method="GET", endpoint="recipients", params=params
+            method="GET", path="recipients", params=params
         )
 
         return self._create_response(response)
@@ -60,7 +60,7 @@ class Recipients(BaseResource):
 
         # Make API call
         response = self.client.request(
-            method="GET", endpoint=f"recipients/{request.recipient_id}"
+            method="GET", path=f"recipients/{request.recipient_id}"
         )
 
         return self._create_response(response)
@@ -79,7 +79,7 @@ class Recipients(BaseResource):
 
         # Make API call
         response = self.client.request(
-            method="DELETE", endpoint=f"recipients/{request.recipient_id}"
+            method="DELETE", path=f"recipients/{request.recipient_id}"
         )
 
         return self._create_response(response)
@@ -108,7 +108,7 @@ class Recipients(BaseResource):
 
         # Make API call
         response = self.client.request(
-            method="GET", endpoint="suppressions/blocklist", params=params
+            method="GET", path="suppressions/blocklist", params=params
         )
 
         return self._create_response(response)
@@ -137,7 +137,7 @@ class Recipients(BaseResource):
 
         # Make API call
         response = self.client.request(
-            method="GET", endpoint="suppressions/hard-bounces", params=params
+            method="GET", path="suppressions/hard-bounces", params=params
         )
 
         return self._create_response(response)
@@ -166,7 +166,7 @@ class Recipients(BaseResource):
 
         # Make API call
         response = self.client.request(
-            method="GET", endpoint="suppressions/spam-complaints", params=params
+            method="GET", path="suppressions/spam-complaints", params=params
         )
 
         return self._create_response(response)
@@ -195,7 +195,7 @@ class Recipients(BaseResource):
 
         # Make API call
         response = self.client.request(
-            method="GET", endpoint="suppressions/unsubscribes", params=params
+            method="GET", path="suppressions/unsubscribes", params=params
         )
 
         return self._create_response(response)
@@ -224,7 +224,7 @@ class Recipients(BaseResource):
 
         # Make API call
         response = self.client.request(
-            method="GET", endpoint="suppressions/on-hold-list", params=params
+            method="GET", path="suppressions/on-hold-list", params=params
         )
 
         return self._create_response(response)
@@ -245,7 +245,7 @@ class Recipients(BaseResource):
 
         # Make API call
         response = self.client.request(
-            method="POST", endpoint="suppressions/blocklist", body=body
+            method="POST", path="suppressions/blocklist", body=body
         )
 
         return self._create_response(response)
@@ -267,7 +267,7 @@ class Recipients(BaseResource):
 
         # Make API call
         response = self.client.request(
-            method="POST", endpoint="suppressions/hard-bounces", body=body
+            method="POST", path="suppressions/hard-bounces", body=body
         )
 
         return self._create_response(response)
@@ -290,7 +290,7 @@ class Recipients(BaseResource):
 
         # Make API call
         response = self.client.request(
-            method="POST", endpoint="suppressions/spam-complaints", body=body
+            method="POST", path="suppressions/spam-complaints", body=body
         )
 
         return self._create_response(response)
@@ -312,7 +312,7 @@ class Recipients(BaseResource):
 
         # Make API call
         response = self.client.request(
-            method="POST", endpoint="suppressions/unsubscribes", body=body
+            method="POST", path="suppressions/unsubscribes", body=body
         )
 
         return self._create_response(response)
@@ -334,7 +334,7 @@ class Recipients(BaseResource):
 
         # Make API call
         response = self.client.request(
-            method="DELETE", endpoint="suppressions/blocklist", body=body
+            method="DELETE", path="suppressions/blocklist", body=body
         )
 
         return self._create_response(response)
@@ -356,7 +356,7 @@ class Recipients(BaseResource):
 
         # Make API call
         response = self.client.request(
-            method="DELETE", endpoint="suppressions/hard-bounces", body=body
+            method="DELETE", path="suppressions/hard-bounces", body=body
         )
 
         return self._create_response(response)
@@ -379,7 +379,7 @@ class Recipients(BaseResource):
 
         # Make API call
         response = self.client.request(
-            method="DELETE", endpoint="suppressions/spam-complaints", body=body
+            method="DELETE", path="suppressions/spam-complaints", body=body
         )
 
         return self._create_response(response)
@@ -401,7 +401,7 @@ class Recipients(BaseResource):
 
         # Make API call
         response = self.client.request(
-            method="DELETE", endpoint="suppressions/unsubscribes", body=body
+            method="DELETE", path="suppressions/unsubscribes", body=body
         )
 
         return self._create_response(response)
@@ -423,7 +423,7 @@ class Recipients(BaseResource):
 
         # Make API call
         response = self.client.request(
-            method="DELETE", endpoint="suppressions/on-hold-list", body=body
+            method="DELETE", path="suppressions/on-hold-list", body=body
         )
 
         return self._create_response(response)

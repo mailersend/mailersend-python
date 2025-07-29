@@ -97,15 +97,13 @@ class TestEmailSend:
         assert "id" in result
         assert result["id"] is not None
 
-    @vcr.use_cassette("email_send_with_scheduled_time.yaml")
-    def test_send_with_datetime_send_at(self):
-        # Test sending with scheduled datetime
-        # Schedule for 24 hours in the future to avoid test failures
-        send_time = datetime.now().replace(microsecond=0)
-        send_time = datetime.fromtimestamp(send_time.timestamp() + 86400)  # +24 hours
-
+    @vcr.use_cassette("email_send_with_text_priority.yaml")
+    def test_send_with_text_priority(self):
+        # Test sending email with text content and priority settings
         email_request = self.email_request_factory(
-            self.base_email_request, send_at=int(send_time.timestamp())
+            self.base_email_request,
+            text="This is a plain text email for testing.",
+            precedence_bulk=True
         )
 
         result = self.email_client.emails.send(email_request)
@@ -283,19 +281,38 @@ class TestEmailSend:
         assert result["bulk_email_id"] is not None
         assert result.status_code == 202
 
-    @vcr.use_cassette("email_send_bulk_status.yaml")
-    def test_get_bulk_status(self):
-        # Test getting the status of a bulk email send
-        bulk_email_id = os.environ.get("SDK_BULK_EMAIL_ID")
+    @vcr.use_cassette("email_send_bulk_workflow.yaml")
+    def test_bulk_email_workflow(self):
+        """Test the complete bulk email workflow: send bulk emails then check status"""
+        # Step 1: Send bulk emails
+        payload = [
+            self.email_request_factory(
+                self.base_email_request, html="<p>First Email</p>"
+            ),
+            self.email_request_factory(
+                self.base_email_request, html="<p>Second Email</p>"
+            ),
+        ]
 
-        result = self.email_client.emails.get_bulk_status(bulk_email_id)
+        send_result = self.email_client.emails.send_bulk(payload)
 
-        # Verify response structure
-        assert isinstance(result, APIResponse)
-        assert result.success is True
+        # Verify send response structure
+        assert isinstance(send_result, APIResponse)
+        assert send_result.success is True
+        assert "bulk_email_id" in send_result
+        assert send_result["bulk_email_id"] is not None
+        assert send_result.status_code == 202
+        
+        # Step 2: Get bulk status using the ID from the send operation
+        bulk_email_id = send_result["bulk_email_id"]
+        status_result = self.email_client.emails.get_bulk_status(bulk_email_id)
+
+        # Verify status response structure
+        assert isinstance(status_result, APIResponse)
+        assert status_result.success is True
         # The bulk status response has a "data" wrapper
-        assert "data" in result
-        assert "id" in result["data"]
-        assert "messages_id" in result["data"]
-        assert result.status_code == 200
-        assert isinstance(result.headers, dict)
+        assert "data" in status_result
+        assert "id" in status_result["data"]
+        assert "messages_id" in status_result["data"]
+        assert status_result.status_code == 200
+        assert isinstance(status_result.headers, dict)

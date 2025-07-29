@@ -17,15 +17,15 @@ interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - mailersend-python/2.0.0 (Python/3.9.1; OS/Darwin 24.3.0; Impl/CPython)
+      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
     method: POST
     uri: https://api.mailersend.com/v1/bulk-email
   response:
     body:
-      string: '{"message":"The bulk email is being processed.","bulk_email_id":"67efdd8f99b6cb305fe3b0c3"}'
+      string: '{"message":"The bulk email is being processed.","bulk_email_id":"6888dfbc0beb2661ce76f512"}'
     headers:
       CF-RAY:
-      - 92b120600993dc6f-BUD
+      - 966d6dfb6ca1126d-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -33,7 +33,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 04 Apr 2025 13:24:31 GMT
+      - Tue, 29 Jul 2025 14:50:36 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
@@ -45,7 +45,7 @@ interactions:
       x-apiquota-remaining:
       - '-1'
       x-apiquota-reset:
-      - '2025-04-05T00:00:00Z'
+      - '2025-07-30T00:00:00Z'
     status:
       code: 202
       message: Accepted

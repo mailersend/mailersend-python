@@ -37,7 +37,7 @@ class Users(BaseResource):
         params = request.to_query_params()
 
         # Make API call
-        response = self.client.request(method="GET", endpoint="users", params=params)
+        response = self.client.request(method="GET", path="users", params=params)
 
         # Create standardized response
         return self._create_response(response)
@@ -55,7 +55,7 @@ class Users(BaseResource):
 
         # Make API call
         response = self.client.request(
-            method="GET", endpoint=f"users/{request.user_id}"
+            method="GET", path=f"users/{request.user_id}"
         )
 
         # Create standardized response
@@ -76,7 +76,7 @@ class Users(BaseResource):
 
         # Make API call
         response = self.client.request(
-            method="POST", endpoint="users", body=request.to_json()
+            method="POST", path="users", body=request.to_json()
         )
 
         # Create standardized response
@@ -97,7 +97,7 @@ class Users(BaseResource):
 
         # Make API call
         response = self.client.request(
-            method="PUT", endpoint=f"users/{request.user_id}", body=request.to_json()
+            method="PUT", path=f"users/{request.user_id}", body=request.to_json()
         )
 
         # Create standardized response
@@ -116,7 +116,7 @@ class Users(BaseResource):
 
         # Make API call
         response = self.client.request(
-            method="DELETE", endpoint=f"users/{request.user_id}"
+            method="DELETE", path=f"users/{request.user_id}"
         )
 
         # Create standardized response
@@ -141,7 +141,7 @@ class Users(BaseResource):
         params = request.to_query_params()
 
         # Make API call
-        response = self.client.request(method="GET", endpoint="invites", params=params)
+        response = self.client.request(method="GET", path="invites", params=params)
 
         # Create standardized response
         return self._create_response(response)
@@ -159,7 +159,7 @@ class Users(BaseResource):
 
         # Make API call
         response = self.client.request(
-            method="GET", endpoint=f"invites/{request.invite_id}"
+            method="GET", path=f"invites/{request.invite_id}"
         )
 
         # Create standardized response
@@ -178,7 +178,7 @@ class Users(BaseResource):
 
         # Make API call
         response = self.client.request(
-            method="POST", endpoint=f"invites/{request.invite_id}/resend"
+            method="POST", path=f"invites/{request.invite_id}/resend"
         )
 
         # Create standardized response
@@ -197,7 +197,7 @@ class Users(BaseResource):
 
         # Make API call
         response = self.client.request(
-            method="DELETE", endpoint=f"invites/{request.invite_id}"
+            method="DELETE", path=f"invites/{request.invite_id}"
         )
 
         # Create standardized response
