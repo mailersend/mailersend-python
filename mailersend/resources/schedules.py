@@ -31,7 +31,9 @@ class Schedules(BaseResource):
         # Extract query parameters
         params = request.to_query_params()
 
-        self.logger.debug("Making API request to list scheduled messages with params: %s", params)
+        self.logger.debug(
+            "Making API request to list scheduled messages with params: %s", params
+        )
 
         # Make API request
         response = self.client.request(
@@ -52,7 +54,9 @@ class Schedules(BaseResource):
         Returns:
             APIResponse containing the schedule response
         """
-        self.logger.debug("Preparing to get scheduled message with ID: %s", request.message_id)
+        self.logger.debug(
+            "Preparing to get scheduled message with ID: %s", request.message_id
+        )
 
         # Make API request
         response = self.client.request(
@@ -71,7 +75,9 @@ class Schedules(BaseResource):
         Returns:
             APIResponse (204 No Content on success)
         """
-        self.logger.debug("Preparing to delete scheduled message with ID: %s", request.message_id)
+        self.logger.debug(
+            "Preparing to delete scheduled message with ID: %s", request.message_id
+        )
 
         # Make API request
         response = self.client.request(

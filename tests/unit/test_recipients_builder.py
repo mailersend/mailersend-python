@@ -94,7 +94,7 @@ class TestRecipientsBuilder:
     def test_add_recipient(self):
         """Test adding single recipient."""
         builder = RecipientsBuilder()
-        
+
         # Add first recipient
         result = builder.add_recipient("test@example.com")
         assert result is builder
@@ -116,7 +116,7 @@ class TestRecipientsBuilder:
     def test_add_pattern(self):
         """Test adding single pattern."""
         builder = RecipientsBuilder()
-        
+
         # Add first pattern
         result = builder.add_pattern(".*@example.com")
         assert result is builder
@@ -138,7 +138,7 @@ class TestRecipientsBuilder:
     def test_add_id(self):
         """Test adding single id."""
         builder = RecipientsBuilder()
-        
+
         # Add first id
         result = builder.add_id("id1")
         assert result is builder
@@ -151,7 +151,7 @@ class TestRecipientsBuilder:
     def test_all(self):
         """Test setting all flag."""
         builder = RecipientsBuilder()
-        
+
         # Test setting to True
         result = builder.all(True)
         assert result is builder
@@ -190,7 +190,9 @@ class TestRecipientsBuilder:
         # Test without recipient_id
         with pytest.raises(ValueError) as exc_info:
             builder.build_recipient_get_request()
-        assert "recipient_id is required for get_recipient operations" in str(exc_info.value)
+        assert "recipient_id is required for get_recipient operations" in str(
+            exc_info.value
+        )
 
         # Test with recipient_id
         builder.recipient_id("recipient123")
@@ -205,7 +207,9 @@ class TestRecipientsBuilder:
         # Test without recipient_id
         with pytest.raises(ValueError) as exc_info:
             builder.build_recipient_delete_request()
-        assert "recipient_id is required for delete_recipient operations" in str(exc_info.value)
+        assert "recipient_id is required for delete_recipient operations" in str(
+            exc_info.value
+        )
 
         # Test with recipient_id
         builder.recipient_id("recipient123")
@@ -238,13 +242,18 @@ class TestRecipientsBuilder:
         # Test without domain_id
         with pytest.raises(ValueError) as exc_info:
             builder.recipients(["test@example.com"]).build_suppression_add_request()
-        assert "domain_id is required for suppression add operations" in str(exc_info.value)
+        assert "domain_id is required for suppression add operations" in str(
+            exc_info.value
+        )
 
         # Test without recipients or patterns
         builder.reset().domain_id("domain123")
         with pytest.raises(ValueError) as exc_info:
             builder.build_suppression_add_request()
-        assert "Either recipients or patterns must be provided for suppression add operations" in str(exc_info.value)
+        assert (
+            "Either recipients or patterns must be provided for suppression add operations"
+            in str(exc_info.value)
+        )
 
         # Test with recipients only
         builder.recipients(["test@example.com"])
@@ -275,7 +284,10 @@ class TestRecipientsBuilder:
         # Test without ids or all flag
         with pytest.raises(ValueError) as exc_info:
             builder.build_suppression_delete_request()
-        assert "Either ids or all flag must be provided for suppression delete operations" in str(exc_info.value)
+        assert (
+            "Either ids or all flag must be provided for suppression delete operations"
+            in str(exc_info.value)
+        )
 
         # Test with ids only
         builder.ids(["id1", "id2"])
@@ -373,19 +385,20 @@ class TestRecipientsBuilder:
         """Test that all methods return self for chaining."""
         builder = RecipientsBuilder()
 
-        result = (builder
-                  .domain_id("domain123")
-                  .page(2)
-                  .limit(50)
-                  .recipient_id("recipient123")
-                  .recipients(["test@example.com"])
-                  .add_recipient("user@example.com")
-                  .patterns([".*@example.com"])
-                  .add_pattern(".*@test.com")
-                  .ids(["id1"])
-                  .add_id("id2")
-                  .all(True)
-                  .reset())
+        result = (
+            builder.domain_id("domain123")
+            .page(2)
+            .limit(50)
+            .recipient_id("recipient123")
+            .recipients(["test@example.com"])
+            .add_recipient("user@example.com")
+            .patterns([".*@example.com"])
+            .add_pattern(".*@test.com")
+            .ids(["id1"])
+            .add_id("id2")
+            .all(True)
+            .reset()
+        )
 
         assert result is builder
 
@@ -415,4 +428,4 @@ class TestRecipientsBuilder:
 
         # Original requests should be unchanged
         assert list_request.query_params.domain_id == "domain123"
-        assert suppression_request.query_params.domain_id == "domain123" 
+        assert suppression_request.query_params.domain_id == "domain123"

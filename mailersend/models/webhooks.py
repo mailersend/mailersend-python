@@ -160,6 +160,3 @@ class WebhookDeleteRequest(BaseModel):
         if not v or not v.strip():
             raise ValueError("webhook_id cannot be empty")
         return v.strip()
-
-
-

@@ -236,6 +236,3 @@ class IdentityDeleteByEmailRequest(BaseModel):
         if "@" not in v.strip():
             raise ValueError("Invalid email format")
         return v.strip()
-
-
-

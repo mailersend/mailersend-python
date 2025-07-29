@@ -65,7 +65,9 @@ class Tokens(BaseResource):
         Returns:
             APIResponse: API response with token creation data
         """
-        self.logger.info("Creating token: {request.name} for domain: %s", request.domain_id)
+        self.logger.info(
+            "Creating token: {request.name} for domain: %s", request.domain_id
+        )
 
         # Make API call
         response = self.client.request(
@@ -84,7 +86,9 @@ class Tokens(BaseResource):
         Returns:
             APIResponse: API response with update confirmation
         """
-        self.logger.info("Updating token: {request.token_id} to status: %s", request.status)
+        self.logger.info(
+            "Updating token: {request.token_id} to status: %s", request.status
+        )
 
         # Make API call
         response = self.client.request(

@@ -30,9 +30,7 @@ class TestRecipientsListQueryParams:
     def test_custom_values(self):
         """Test custom values."""
         query_params = RecipientsListQueryParams(
-            domain_id="test-domain",
-            page=2,
-            limit=50
+            domain_id="test-domain", page=2, limit=50
         )
         assert query_params.domain_id == "test-domain"
         assert query_params.page == 2
@@ -63,16 +61,10 @@ class TestRecipientsListQueryParams:
     def test_to_query_params(self):
         """Test to_query_params method."""
         query_params = RecipientsListQueryParams(
-            domain_id="test-domain",
-            page=2,
-            limit=50
+            domain_id="test-domain", page=2, limit=50
         )
         result = query_params.to_query_params()
-        expected = {
-            "domain_id": "test-domain",
-            "page": 2,
-            "limit": 50
-        }
+        expected = {"domain_id": "test-domain", "page": 2, "limit": 50}
         assert result == expected
 
     def test_to_query_params_excludes_none(self):
@@ -97,9 +89,7 @@ class TestSuppressionListQueryParams:
     def test_custom_values(self):
         """Test custom values."""
         query_params = SuppressionListQueryParams(
-            domain_id="test-domain",
-            page=3,
-            limit=75
+            domain_id="test-domain", page=3, limit=75
         )
         assert query_params.domain_id == "test-domain"
         assert query_params.page == 3
@@ -108,16 +98,10 @@ class TestSuppressionListQueryParams:
     def test_to_query_params(self):
         """Test to_query_params method."""
         query_params = SuppressionListQueryParams(
-            domain_id="test-domain",
-            page=3,
-            limit=75
+            domain_id="test-domain", page=3, limit=75
         )
         result = query_params.to_query_params()
-        expected = {
-            "domain_id": "test-domain",
-            "page": 3,
-            "limit": 75
-        }
+        expected = {"domain_id": "test-domain", "page": 3, "limit": 75}
         assert result == expected
 
 
@@ -134,9 +118,7 @@ class TestRecipientsListRequest:
     def test_custom_query_params(self):
         """Test request with custom query params."""
         query_params = RecipientsListQueryParams(
-            domain_id="test-domain",
-            page=2,
-            limit=50
+            domain_id="test-domain", page=2, limit=50
         )
         request = RecipientsListRequest(query_params=query_params)
         assert request.query_params == query_params
@@ -144,17 +126,11 @@ class TestRecipientsListRequest:
     def test_to_query_params_delegation(self):
         """Test that to_query_params delegates to query_params."""
         query_params = RecipientsListQueryParams(
-            domain_id="test-domain",
-            page=2,
-            limit=50
+            domain_id="test-domain", page=2, limit=50
         )
         request = RecipientsListRequest(query_params=query_params)
         result = request.to_query_params()
-        expected = {
-            "domain_id": "test-domain",
-            "page": 2,
-            "limit": 50
-        }
+        expected = {"domain_id": "test-domain", "page": 2, "limit": 50}
         assert result == expected
 
 
@@ -215,9 +191,7 @@ class TestSuppressionListRequest:
     def test_custom_query_params(self):
         """Test request with custom query params."""
         query_params = SuppressionListQueryParams(
-            domain_id="test-domain",
-            page=3,
-            limit=75
+            domain_id="test-domain", page=3, limit=75
         )
         request = SuppressionListRequest(query_params=query_params)
         assert request.query_params == query_params
@@ -225,17 +199,11 @@ class TestSuppressionListRequest:
     def test_to_query_params_delegation(self):
         """Test that to_query_params delegates to query_params."""
         query_params = SuppressionListQueryParams(
-            domain_id="test-domain",
-            page=3,
-            limit=75
+            domain_id="test-domain", page=3, limit=75
         )
         request = SuppressionListRequest(query_params=query_params)
         result = request.to_query_params()
-        expected = {
-            "domain_id": "test-domain",
-            "page": 3,
-            "limit": 75
-        }
+        expected = {"domain_id": "test-domain", "page": 3, "limit": 75}
         assert result == expected
 
 
@@ -246,7 +214,7 @@ class TestSuppressionAddRequest:
         """Test valid request with recipients."""
         request = SuppressionAddRequest(
             domain_id="test-domain",
-            recipients=["test@example.com", "test2@example.com"]
+            recipients=["test@example.com", "test2@example.com"],
         )
         assert request.domain_id == "test-domain"
         assert request.recipients == ["test@example.com", "test2@example.com"]
@@ -255,8 +223,7 @@ class TestSuppressionAddRequest:
     def test_valid_request_with_patterns(self):
         """Test valid request with patterns."""
         request = SuppressionAddRequest(
-            domain_id="test-domain",
-            patterns=["@spam.com", "@blocked.net"]
+            domain_id="test-domain", patterns=["@spam.com", "@blocked.net"]
         )
         assert request.domain_id == "test-domain"
         assert request.patterns == ["@spam.com", "@blocked.net"]
@@ -273,37 +240,44 @@ class TestSuppressionAddRequest:
     def test_domain_id_trimming(self):
         """Test domain_id trimming."""
         request = SuppressionAddRequest(
-            domain_id="  test-domain  ",
-            recipients=["test@example.com"]
+            domain_id="  test-domain  ", recipients=["test@example.com"]
         )
         assert request.domain_id == "test-domain"
 
     def test_recipients_validation(self):
         """Test recipients validation."""
         # Empty list
-        with pytest.raises(ValidationError, match="recipients list cannot be empty if provided"):
+        with pytest.raises(
+            ValidationError, match="recipients list cannot be empty if provided"
+        ):
             SuppressionAddRequest(domain_id="test-domain", recipients=[])
 
         # Empty recipient
         with pytest.raises(ValidationError, match="recipient email cannot be empty"):
-            SuppressionAddRequest(domain_id="test-domain", recipients=["test@example.com", ""])
+            SuppressionAddRequest(
+                domain_id="test-domain", recipients=["test@example.com", ""]
+            )
 
         # Whitespace recipient
         with pytest.raises(ValidationError, match="recipient email cannot be empty"):
-            SuppressionAddRequest(domain_id="test-domain", recipients=["test@example.com", "   "])
+            SuppressionAddRequest(
+                domain_id="test-domain", recipients=["test@example.com", "   "]
+            )
 
     def test_recipients_trimming(self):
         """Test recipients trimming."""
         request = SuppressionAddRequest(
             domain_id="test-domain",
-            recipients=["  test@example.com  ", "  test2@example.com  "]
+            recipients=["  test@example.com  ", "  test2@example.com  "],
         )
         assert request.recipients == ["test@example.com", "test2@example.com"]
 
     def test_patterns_validation(self):
         """Test patterns validation."""
         # Empty list
-        with pytest.raises(ValidationError, match="patterns list cannot be empty if provided"):
+        with pytest.raises(
+            ValidationError, match="patterns list cannot be empty if provided"
+        ):
             SuppressionAddRequest(domain_id="test-domain", patterns=[])
 
         # Empty pattern
@@ -312,13 +286,14 @@ class TestSuppressionAddRequest:
 
         # Whitespace pattern
         with pytest.raises(ValidationError, match="pattern cannot be empty"):
-            SuppressionAddRequest(domain_id="test-domain", patterns=["@spam.com", "   "])
+            SuppressionAddRequest(
+                domain_id="test-domain", patterns=["@spam.com", "   "]
+            )
 
     def test_patterns_trimming(self):
         """Test patterns trimming."""
         request = SuppressionAddRequest(
-            domain_id="test-domain",
-            patterns=["  @spam.com  ", "  @blocked.net  "]
+            domain_id="test-domain", patterns=["  @spam.com  ", "  @blocked.net  "]
         )
         assert request.patterns == ["@spam.com", "@blocked.net"]
 
@@ -328,36 +303,29 @@ class TestSuppressionDeleteRequest:
 
     def test_valid_request_with_ids(self):
         """Test valid request with ids."""
-        request = SuppressionDeleteRequest(
-            domain_id="test-domain",
-            ids=["id1", "id2"]
-        )
+        request = SuppressionDeleteRequest(domain_id="test-domain", ids=["id1", "id2"])
         assert request.domain_id == "test-domain"
         assert request.ids == ["id1", "id2"]
         assert request.all is None
 
     def test_valid_request_with_all(self):
         """Test valid request with all flag."""
-        request = SuppressionDeleteRequest(
-            domain_id="test-domain",
-            all=True
-        )
+        request = SuppressionDeleteRequest(domain_id="test-domain", all=True)
         assert request.domain_id == "test-domain"
         assert request.all is True
         assert request.ids is None
 
     def test_domain_id_trimming(self):
         """Test domain_id trimming."""
-        request = SuppressionDeleteRequest(
-            domain_id="  test-domain  ",
-            all=True
-        )
+        request = SuppressionDeleteRequest(domain_id="  test-domain  ", all=True)
         assert request.domain_id == "test-domain"
 
     def test_ids_validation(self):
         """Test ids validation."""
         # Empty list
-        with pytest.raises(ValidationError, match="ids list cannot be empty if provided"):
+        with pytest.raises(
+            ValidationError, match="ids list cannot be empty if provided"
+        ):
             SuppressionDeleteRequest(domain_id="test-domain", ids=[])
 
         # Empty id
@@ -371,7 +339,6 @@ class TestSuppressionDeleteRequest:
     def test_ids_trimming(self):
         """Test ids trimming."""
         request = SuppressionDeleteRequest(
-            domain_id="test-domain",
-            ids=["  id1  ", "  id2  "]
+            domain_id="test-domain", ids=["  id1  ", "  id2  "]
         )
-        assert request.ids == ["id1", "id2"] 
+        assert request.ids == ["id1", "id2"]

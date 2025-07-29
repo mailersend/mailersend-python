@@ -39,9 +39,6 @@ TOKEN_SCOPES = [
 TokenStatus = Literal["pause", "unpause"]
 
 
-
-
-
 # Query parameters models
 class TokensListQueryParams(BaseModel):
     """Query parameters for tokens list request."""
@@ -153,6 +150,3 @@ class TokenDeleteRequest(BaseModel):
     """Request model for deleting a token."""
 
     token_id: str
-
-
-

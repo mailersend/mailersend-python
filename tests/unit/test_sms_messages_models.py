@@ -16,14 +16,14 @@ class TestSmsMessagesListQueryParams:
     def test_default_values(self):
         """Test SmsMessagesListQueryParams with default values."""
         params = SmsMessagesListQueryParams()
-        
+
         assert params.page == 1
         assert params.limit == 25
 
     def test_custom_values(self):
         """Test SmsMessagesListQueryParams with custom values."""
         params = SmsMessagesListQueryParams(page=2, limit=50)
-        
+
         assert params.page == 2
         assert params.limit == 50
 
@@ -44,7 +44,7 @@ class TestSmsMessagesListQueryParams:
         """Test to_query_params with default values excludes them."""
         params = SmsMessagesListQueryParams()
         result = params.to_query_params()
-        
+
         # Default values should be excluded
         assert result == {}
 
@@ -52,7 +52,7 @@ class TestSmsMessagesListQueryParams:
         """Test to_query_params with custom values includes them."""
         params = SmsMessagesListQueryParams(page=3, limit=50)
         result = params.to_query_params()
-        
+
         expected = {"page": 3, "limit": 50}
         assert result == expected
 
@@ -60,13 +60,13 @@ class TestSmsMessagesListQueryParams:
         """Test to_query_params with only some custom values."""
         params = SmsMessagesListQueryParams(page=2)
         result = params.to_query_params()
-        
+
         expected = {"page": 2}
         assert result == expected
 
         params = SmsMessagesListQueryParams(limit=10)
         result = params.to_query_params()
-        
+
         expected = {"limit": 10}
         assert result == expected
 
@@ -77,7 +77,7 @@ class TestSmsMessagesListRequest:
     def test_default_request(self):
         """Test SmsMessagesListRequest with defaults."""
         request = SmsMessagesListRequest()
-        
+
         assert isinstance(request.query_params, SmsMessagesListQueryParams)
         assert request.query_params.page == 1
         assert request.query_params.limit == 25
@@ -86,7 +86,7 @@ class TestSmsMessagesListRequest:
         """Test SmsMessagesListRequest with custom params."""
         query_params = SmsMessagesListQueryParams(page=2, limit=50)
         request = SmsMessagesListRequest(query_params=query_params)
-        
+
         assert request.query_params.page == 2
         assert request.query_params.limit == 50
 
@@ -95,7 +95,7 @@ class TestSmsMessagesListRequest:
         query_params = SmsMessagesListQueryParams(page=3, limit=30)
         request = SmsMessagesListRequest(query_params=query_params)
         result = request.to_query_params()
-        
+
         expected = {"page": 3, "limit": 30}
         assert result == expected
 
@@ -105,9 +105,9 @@ class TestSmsMessageGetRequest:
 
     def test_basic_creation(self):
         """Test basic SmsMessageGetRequest creation."""
-        request = SmsMessageGetRequest(sms_message_id='msg123')
-        
-        assert request.sms_message_id == 'msg123'
+        request = SmsMessageGetRequest(sms_message_id="msg123")
+
+        assert request.sms_message_id == "msg123"
 
     def test_sms_message_id_validation_empty(self):
         """Test SMS message ID validation with empty string."""

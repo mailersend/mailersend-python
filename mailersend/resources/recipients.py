@@ -325,7 +325,7 @@ class Recipients(BaseResource):
             request: Request parameters for deleting from blocklist
 
         Returns:
-            APIResponse with deleted entries            
+            APIResponse with deleted entries
         """
         # Build request body
         body = request.model_dump(by_alias=True, exclude_none=True)

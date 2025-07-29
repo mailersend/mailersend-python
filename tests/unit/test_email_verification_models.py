@@ -81,7 +81,14 @@ class TestEmailVerificationResultsQueryParams:
 
     def test_valid_results_filter(self):
         """Test valid results filter values."""
-        valid_results = ["valid", "catch_all", "mailbox_full", "role_based", "unknown", "failed"]
+        valid_results = [
+            "valid",
+            "catch_all",
+            "mailbox_full",
+            "role_based",
+            "unknown",
+            "failed",
+        ]
         params = EmailVerificationResultsQueryParams(results=valid_results)
         assert params.results == valid_results
 
@@ -168,7 +175,7 @@ class TestEmailVerificationListsRequest:
         """Test creating a valid lists request with defaults."""
         query_params = EmailVerificationListsQueryParams()
         request = EmailVerificationListsRequest(query_params=query_params)
-        
+
         params = request.to_query_params()
         assert params == {"page": 1, "limit": 25}
 
@@ -176,7 +183,7 @@ class TestEmailVerificationListsRequest:
         """Test creating a valid lists request with custom parameters."""
         query_params = EmailVerificationListsQueryParams(page=2, limit=50)
         request = EmailVerificationListsRequest(query_params=query_params)
-        
+
         params = request.to_query_params()
         assert params == {"page": 2, "limit": 50}
 
@@ -234,8 +241,7 @@ class TestEmailVerificationCreateRequest:
     def test_email_trimming(self):
         """Test that emails get trimmed."""
         request = EmailVerificationCreateRequest(
-            name="  Test List  ",
-            emails=["  test1@example.com  ", "test2@example.com"]
+            name="  Test List  ", emails=["  test1@example.com  ", "test2@example.com"]
         )
         assert request.name == "Test List"
         assert request.emails == ["test1@example.com", "test2@example.com"]
@@ -263,24 +269,24 @@ class TestEmailVerificationResultsRequest:
         """Test creating a valid results request with defaults."""
         query_params = EmailVerificationResultsQueryParams()
         request = EmailVerificationResultsRequest(
-            email_verification_id="abc123",
-            query_params=query_params
+            email_verification_id="abc123", query_params=query_params
         )
         assert request.email_verification_id == "abc123"
-        
+
         params = request.to_query_params()
         assert params == {"page": 1, "limit": 25}
 
     def test_valid_request_with_filters(self):
         """Test creating a valid results request with filters."""
         results = ["valid", "catch_all"]
-        query_params = EmailVerificationResultsQueryParams(page=2, limit=50, results=results)
+        query_params = EmailVerificationResultsQueryParams(
+            page=2, limit=50, results=results
+        )
         request = EmailVerificationResultsRequest(
-            email_verification_id="abc123",
-            query_params=query_params
+            email_verification_id="abc123", query_params=query_params
         )
         assert request.email_verification_id == "abc123"
-        
+
         params = request.to_query_params()
         assert params == {"page": 2, "limit": 50, "results": results}
 
@@ -289,7 +295,6 @@ class TestEmailVerificationResultsRequest:
         query_params = EmailVerificationResultsQueryParams()
         with pytest.raises(ValidationError) as excinfo:
             EmailVerificationResultsRequest(
-                email_verification_id="",
-                query_params=query_params
+                email_verification_id="", query_params=query_params
             )
-        assert "email_verification_id cannot be empty" in str(excinfo.value) 
+        assert "email_verification_id cannot be empty" in str(excinfo.value)

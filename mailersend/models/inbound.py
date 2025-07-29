@@ -132,9 +132,6 @@ class InboundForward(BaseModel):
         return v.strip()
 
 
-
-
-
 # Request Models
 class InboundListQueryParams(BaseModel):
     """Model for inbound list query parameters with validation."""

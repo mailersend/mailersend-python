@@ -14,6 +14,7 @@ from ..models.email_verification import (
 )
 from ..exceptions import ValidationError
 
+
 class EmailVerification(BaseResource):
     """Resource for managing email verification through the MailerSend API."""
 
@@ -34,9 +35,7 @@ class EmailVerification(BaseResource):
         self.logger.debug("Verifying email address: %s", body)
 
         # Make API call
-        response = self.client.request(
-            "POST", "email-verification/verify", body=body
-        )
+        response = self.client.request("POST", "email-verification/verify", body=body)
 
         # Create standardized response
         return self._create_response(response)
@@ -80,10 +79,16 @@ class EmailVerification(BaseResource):
         self.logger.debug("Starting get_async_status operation")
 
         # Prepare API call
-        self.logger.debug("Getting async verification status for ID: %s", request.email_verification_id)
+        self.logger.debug(
+            "Getting async verification status for ID: %s",
+            request.email_verification_id,
+        )
 
         # Make API call
-        response = self.client.request(method="GET", endpoint=f"email-verification/verify-async/{request.email_verification_id}")
+        response = self.client.request(
+            method="GET",
+            endpoint=f"email-verification/verify-async/{request.email_verification_id}",
+        )
 
         # Create standardized response
         return self._create_response(response)
@@ -105,7 +110,9 @@ class EmailVerification(BaseResource):
         self.logger.debug("Listing email verification lists with params: %s", params)
 
         # Make API call
-        response = self.client.request(method="GET", endpoint="email-verification", params=params)
+        response = self.client.request(
+            method="GET", endpoint="email-verification", params=params
+        )
 
         # Create standardized response
         return self._create_response(response)
@@ -122,10 +129,14 @@ class EmailVerification(BaseResource):
         self.logger.debug("Starting get_verification operation")
 
         # Prepare API call
-        self.logger.debug("Getting email verification list: %s", request.email_verification_id)
+        self.logger.debug(
+            "Getting email verification list: %s", request.email_verification_id
+        )
 
         # Make API call
-        response = self.client.request(method="GET", endpoint=f"email-verification/{request.email_verification_id}")
+        response = self.client.request(
+            method="GET", endpoint=f"email-verification/{request.email_verification_id}"
+        )
 
         # Create standardized response
         return self._create_response(response)
@@ -146,7 +157,11 @@ class EmailVerification(BaseResource):
         # Prepare request body
         body = request.model_dump(exclude_none=True)
 
-        self.logger.debug("Creating email verification list: %s with %s emails", request.name, len(request.emails))
+        self.logger.debug(
+            "Creating email verification list: %s with %s emails",
+            request.name,
+            len(request.emails),
+        )
 
         # Make API call
         response = self.client.request("POST", "email-verification", body=body)
@@ -164,10 +179,15 @@ class EmailVerification(BaseResource):
             APIResponse with verification result
         """
         self.logger.debug("Starting verify_list operation")
-        self.logger.debug("Starting verification for list: %s", request.email_verification_id)
+        self.logger.debug(
+            "Starting verification for list: %s", request.email_verification_id
+        )
 
         # Make API call
-        response = self.client.request(method="GET", endpoint=f"email-verification/{request.email_verification_id}/verify")
+        response = self.client.request(
+            method="GET",
+            endpoint=f"email-verification/{request.email_verification_id}/verify",
+        )
 
         # Create standardized response
         return self._create_response(response)
@@ -186,10 +206,18 @@ class EmailVerification(BaseResource):
         # Extract query parameters
         params = request.to_query_params()
 
-        self.logger.debug("Getting verification results for list: %s with params: %s", request.email_verification_id, params)
+        self.logger.debug(
+            "Getting verification results for list: %s with params: %s",
+            request.email_verification_id,
+            params,
+        )
 
         # Make API call
-        response = self.client.request(method="GET", endpoint=f"email-verification/{request.email_verification_id}/results", params=params)
+        response = self.client.request(
+            method="GET",
+            endpoint=f"email-verification/{request.email_verification_id}/results",
+            params=params,
+        )
 
         # Create standardized response
         return self._create_response(response)

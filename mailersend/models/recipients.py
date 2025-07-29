@@ -187,6 +187,3 @@ class SuppressionDeleteRequest(BaseModel):
                 cleaned.append(id_val.strip())
             return cleaned
         return v
-
-
-

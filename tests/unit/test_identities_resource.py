@@ -25,7 +25,7 @@ class TestIdentitiesResource:
         self.mock_client = Mock()
         self.resource = IdentitiesResource(self.mock_client)
         self.resource.logger = Mock()
-        
+
         # Mock _create_response method
         self.mock_api_response = MagicMock(spec=APIResponse)
         self.resource._create_response = Mock(return_value=self.mock_api_response)
@@ -41,9 +41,7 @@ class TestIdentitiesResource:
 
         assert result == self.mock_api_response
         self.mock_client.request.assert_called_once_with(
-            method='GET',
-            endpoint='/identities',
-            params={'page': 1, 'limit': 25}
+            method="GET", endpoint="/identities", params={"page": 1, "limit": 25}
         )
         self.resource._create_response.assert_called_once_with(mock_response)
 
@@ -58,9 +56,9 @@ class TestIdentitiesResource:
 
         assert result == self.mock_api_response
         self.mock_client.request.assert_called_once_with(
-            method='GET',
-            endpoint='/identities',
-            params={'page': 2, 'limit': 50, 'domain_id': 'domain123'}
+            method="GET",
+            endpoint="/identities",
+            params={"page": 2, "limit": 50, "domain_id": "domain123"},
         )
         self.resource._create_response.assert_called_once_with(mock_response)
 
@@ -75,18 +73,16 @@ class TestIdentitiesResource:
 
         assert result == self.mock_api_response
         self.mock_client.request.assert_called_once_with(
-            method='GET',
-            endpoint='/identities',
-            params={'page': 1, 'limit': 25, 'domain_id': 'domain123'}
+            method="GET",
+            endpoint="/identities",
+            params={"page": 1, "limit": 25, "domain_id": "domain123"},
         )
         self.resource._create_response.assert_called_once_with(mock_response)
 
     def test_create_identity_minimal_request(self):
         """Test create_identity with minimal required fields."""
         request = IdentityCreateRequest(
-            domain_id="domain123",
-            name="John Doe",
-            email="john@example.com"
+            domain_id="domain123", name="John Doe", email="john@example.com"
         )
         mock_response = {"data": {"id": "identity123"}}
         self.mock_client.request.return_value = mock_response
@@ -95,13 +91,13 @@ class TestIdentitiesResource:
 
         assert result == self.mock_api_response
         self.mock_client.request.assert_called_once_with(
-            method='POST',
-            endpoint='/identities',
+            method="POST",
+            endpoint="/identities",
             body={
-                'domain_id': 'domain123',
-                'name': 'John Doe',
-                'email': 'john@example.com'
-            }
+                "domain_id": "domain123",
+                "name": "John Doe",
+                "email": "john@example.com",
+            },
         )
         self.resource._create_response.assert_called_once_with(mock_response)
 
@@ -114,7 +110,7 @@ class TestIdentitiesResource:
             reply_to_email="reply@example.com",
             reply_to_name="Reply Name",
             add_note=True,
-            personal_note="Personal note content"
+            personal_note="Personal note content",
         )
         mock_response = {"data": {"id": "identity123"}}
         self.mock_client.request.return_value = mock_response
@@ -123,17 +119,17 @@ class TestIdentitiesResource:
 
         assert result == self.mock_api_response
         self.mock_client.request.assert_called_once_with(
-            method='POST',
-            endpoint='/identities',
+            method="POST",
+            endpoint="/identities",
             body={
-                'domain_id': 'domain123',
-                'name': 'John Doe',
-                'email': 'john@example.com',
-                'reply_to_email': 'reply@example.com',
-                'reply_to_name': 'Reply Name',
-                'add_note': True,
-                'personal_note': 'Personal note content'
-            }
+                "domain_id": "domain123",
+                "name": "John Doe",
+                "email": "john@example.com",
+                "reply_to_email": "reply@example.com",
+                "reply_to_name": "Reply Name",
+                "add_note": True,
+                "personal_note": "Personal note content",
+            },
         )
         self.resource._create_response.assert_called_once_with(mock_response)
 
@@ -145,8 +141,8 @@ class TestIdentitiesResource:
             email="john@example.com",
             reply_to_email="reply@example.com",
             reply_to_name=None,  # Should be excluded
-            add_note=None,       # Should be excluded
-            personal_note=None   # Should be excluded
+            add_note=None,  # Should be excluded
+            personal_note=None,  # Should be excluded
         )
         mock_response = {"data": {"id": "identity123"}}
         self.mock_client.request.return_value = mock_response
@@ -155,14 +151,14 @@ class TestIdentitiesResource:
 
         # Verify that None values are excluded via model_dump
         self.mock_client.request.assert_called_once_with(
-            method='POST',
-            endpoint='/identities',
+            method="POST",
+            endpoint="/identities",
             body={
-                'domain_id': 'domain123',
-                'name': 'John Doe',
-                'email': 'john@example.com',
-                'reply_to_email': 'reply@example.com'
-            }
+                "domain_id": "domain123",
+                "name": "John Doe",
+                "email": "john@example.com",
+                "reply_to_email": "reply@example.com",
+            },
         )
         self.resource._create_response.assert_called_once_with(mock_response)
 
@@ -176,8 +172,7 @@ class TestIdentitiesResource:
 
         assert result == self.mock_api_response
         self.mock_client.request.assert_called_once_with(
-            method='GET',
-            endpoint='/identities/identity123'
+            method="GET", endpoint="/identities/identity123"
         )
         self.resource._create_response.assert_called_once_with(mock_response)
 
@@ -191,8 +186,7 @@ class TestIdentitiesResource:
 
         assert result == self.mock_api_response
         self.mock_client.request.assert_called_once_with(
-            method='GET',
-            endpoint='/identities/email/john@example.com'
+            method="GET", endpoint="/identities/email/john@example.com"
         )
         self.resource._create_response.assert_called_once_with(mock_response)
 
@@ -206,9 +200,9 @@ class TestIdentitiesResource:
 
         assert result == self.mock_api_response
         self.mock_client.request.assert_called_once_with(
-            method='PUT',
-            endpoint='/identities/identity123',
-            body={'name': 'Updated Name'}
+            method="PUT",
+            endpoint="/identities/identity123",
+            body={"name": "Updated Name"},
         )
         self.resource._create_response.assert_called_once_with(mock_response)
 
@@ -217,7 +211,7 @@ class TestIdentitiesResource:
         request = IdentityUpdateRequest(
             identity_id="identity123",
             name="Updated Name",
-            reply_to_email="updated@example.com"
+            reply_to_email="updated@example.com",
         )
         mock_response = {"data": {"id": "identity123"}}
         self.mock_client.request.return_value = mock_response
@@ -226,13 +220,11 @@ class TestIdentitiesResource:
 
         # Verify identity_id is not in the JSON body
         expected_data = {
-            'name': 'Updated Name',
-            'reply_to_email': 'updated@example.com'
+            "name": "Updated Name",
+            "reply_to_email": "updated@example.com",
         }
         self.mock_client.request.assert_called_once_with(
-            method='PUT',
-            endpoint='/identities/identity123',
-            body=expected_data
+            method="PUT", endpoint="/identities/identity123", body=expected_data
         )
         self.resource._create_response.assert_called_once_with(mock_response)
 
@@ -241,7 +233,7 @@ class TestIdentitiesResource:
         request = IdentityUpdateByEmailRequest(
             email="john@example.com",
             name="Updated Name",
-            reply_to_email="updated@example.com"
+            reply_to_email="updated@example.com",
         )
         mock_response = {"data": {"email": "john@example.com"}}
         self.mock_client.request.return_value = mock_response
@@ -250,13 +242,13 @@ class TestIdentitiesResource:
 
         # Verify email is not in the JSON body
         expected_data = {
-            'name': 'Updated Name',
-            'reply_to_email': 'updated@example.com'
+            "name": "Updated Name",
+            "reply_to_email": "updated@example.com",
         }
         self.mock_client.request.assert_called_once_with(
-            method='PUT',
-            endpoint='/identities/email/john@example.com',
-            body=expected_data
+            method="PUT",
+            endpoint="/identities/email/john@example.com",
+            body=expected_data,
         )
         self.resource._create_response.assert_called_once_with(mock_response)
 
@@ -270,8 +262,7 @@ class TestIdentitiesResource:
 
         assert result == self.mock_api_response
         self.mock_client.request.assert_called_once_with(
-            method='DELETE',
-            endpoint='/identities/identity123'
+            method="DELETE", endpoint="/identities/identity123"
         )
         self.resource._create_response.assert_called_once_with(mock_response)
 
@@ -285,8 +276,7 @@ class TestIdentitiesResource:
 
         assert result == self.mock_api_response
         self.mock_client.request.assert_called_once_with(
-            method='DELETE',
-            endpoint='/identities/email/john@example.com'
+            method="DELETE", endpoint="/identities/email/john@example.com"
         )
         self.resource._create_response.assert_called_once_with(mock_response)
 
@@ -294,22 +284,41 @@ class TestIdentitiesResource:
         """Test integration workflow with multiple operations."""
         # Setup different requests for different methods
         request_create = IdentityCreateRequest(
-            domain_id="domain123",
-            name="John Doe",
-            email="john@example.com"
+            domain_id="domain123", name="John Doe", email="john@example.com"
         )
         request_get = IdentityGetRequest(identity_id="identity123")
         request_get_email = IdentityGetByEmailRequest(email="john@example.com")
-        request_update = IdentityUpdateRequest(identity_id="identity123", name="Updated")
-        request_update_email = IdentityUpdateByEmailRequest(email="john@example.com", name="Updated")
+        request_update = IdentityUpdateRequest(
+            identity_id="identity123", name="Updated"
+        )
+        request_update_email = IdentityUpdateByEmailRequest(
+            email="john@example.com", name="Updated"
+        )
         request_delete = IdentityDeleteRequest(identity_id="identity123")
         request_delete_email = IdentityDeleteByEmailRequest(email="john@example.com")
 
         # Test that each method returns the expected APIResponse type
-        assert isinstance(self.resource.create_identity(request_create), type(self.mock_api_response))
-        assert isinstance(self.resource.get_identity(request_get), type(self.mock_api_response))
-        assert isinstance(self.resource.get_identity_by_email(request_get_email), type(self.mock_api_response))
-        assert isinstance(self.resource.update_identity(request_update), type(self.mock_api_response))
-        assert isinstance(self.resource.update_identity_by_email(request_update_email), type(self.mock_api_response))
-        assert isinstance(self.resource.delete_identity(request_delete), type(self.mock_api_response))
-        assert isinstance(self.resource.delete_identity_by_email(request_delete_email), type(self.mock_api_response)) 
+        assert isinstance(
+            self.resource.create_identity(request_create), type(self.mock_api_response)
+        )
+        assert isinstance(
+            self.resource.get_identity(request_get), type(self.mock_api_response)
+        )
+        assert isinstance(
+            self.resource.get_identity_by_email(request_get_email),
+            type(self.mock_api_response),
+        )
+        assert isinstance(
+            self.resource.update_identity(request_update), type(self.mock_api_response)
+        )
+        assert isinstance(
+            self.resource.update_identity_by_email(request_update_email),
+            type(self.mock_api_response),
+        )
+        assert isinstance(
+            self.resource.delete_identity(request_delete), type(self.mock_api_response)
+        )
+        assert isinstance(
+            self.resource.delete_identity_by_email(request_delete_email),
+            type(self.mock_api_response),
+        )

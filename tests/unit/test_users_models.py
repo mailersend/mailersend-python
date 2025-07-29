@@ -33,7 +33,7 @@ class TestUserDomain:
             "id": "domain123",
             "name": "example.com",
             "created_at": "2024-01-01T00:00:00Z",
-            "updated_at": "2024-01-01T00:00:00Z"
+            "updated_at": "2024-01-01T00:00:00Z",
         }
         domain = UserDomain(**domain_data)
         assert domain.id == "domain123"
@@ -51,7 +51,7 @@ class TestUserTemplate:
             "id": "template123",
             "name": "My Template",
             "type": "html",
-            "created_at": "2024-01-01T00:00:00Z"
+            "created_at": "2024-01-01T00:00:00Z",
         }
         template = UserTemplate(**template_data)
         assert template.id == "template123"
@@ -70,7 +70,7 @@ class TestUser:
             "email": "user@example.com",
             "created_at": "2024-01-01T00:00:00Z",
             "updated_at": "2024-01-01T00:00:00Z",
-            "role": "Custom User"
+            "role": "Custom User",
         }
         user = User(**user_data)
         assert user.id == "user123"
@@ -102,7 +102,7 @@ class TestUser:
                     "id": "domain123",
                     "name": "example.com",
                     "created_at": "2024-01-01T00:00:00Z",
-                    "updated_at": "2024-01-01T00:00:00Z"
+                    "updated_at": "2024-01-01T00:00:00Z",
                 }
             ],
             "templates": [
@@ -110,9 +110,9 @@ class TestUser:
                     "id": "template123",
                     "name": "My Template",
                     "type": "html",
-                    "created_at": "2024-01-01T00:00:00Z"
+                    "created_at": "2024-01-01T00:00:00Z",
                 }
-            ]
+            ],
         }
         user = User(**user_data)
         assert user.name == "John"
@@ -138,8 +138,7 @@ class TestUserInviteData:
     def test_user_invite_data_with_data(self):
         """Test UserInviteData with data."""
         invite_data = UserInviteData(
-            domains=["domain1", "domain2"],
-            templates=["template1", "template2"]
+            domains=["domain1", "domain2"], templates=["template1", "template2"]
         )
         assert invite_data.domains == ["domain1", "domain2"]
         assert invite_data.templates == ["template1", "template2"]
@@ -155,7 +154,7 @@ class TestUserInvite:
             "email": "invite@example.com",
             "role": "Custom User",
             "created_at": "2024-01-01T00:00:00Z",
-            "updated_at": "2024-01-01T00:00:00Z"
+            "updated_at": "2024-01-01T00:00:00Z",
         }
         invite = UserInvite(**invite_data)
         assert invite.id == "invite123"
@@ -170,15 +169,12 @@ class TestUserInvite:
         invite_data = {
             "id": "invite123",
             "email": "invite@example.com",
-            "data": {
-                "domains": ["domain1"],
-                "templates": ["template1"]
-            },
+            "data": {"domains": ["domain1"], "templates": ["template1"]},
             "role": "Manager",
             "permissions": ["read-templates"],
             "requires_periodic_password_change": True,
             "created_at": "2024-01-01T00:00:00Z",
-            "updated_at": "2024-01-01T00:00:00Z"
+            "updated_at": "2024-01-01T00:00:00Z",
         }
         invite = UserInvite(**invite_data)
         assert invite.role == "Manager"
@@ -226,7 +222,7 @@ class TestUsersListQueryParams:
         """Test to_query_params with custom values."""
         query_params = UsersListQueryParams(page=3, limit=50)
         result = query_params.to_query_params()
-        expected = {'page': 3, 'limit': 50}
+        expected = {"page": 3, "limit": 50}
         assert result == expected
 
 
@@ -272,7 +268,7 @@ class TestUsersListRequest:
         query_params = UsersListQueryParams(page=3, limit=75)
         request = UsersListRequest(query_params=query_params)
         result = request.to_query_params()
-        expected = {'page': 3, 'limit': 75}
+        expected = {"page": 3, "limit": 75}
         assert result == expected
 
 
@@ -295,7 +291,7 @@ class TestUserInviteRequest:
             role="Manager",
             permissions=["read-templates"],
             templates=["template1"],
-            domains=["domain1"]
+            domains=["domain1"],
         )
         assert request.email == "test@example.com"
         assert request.role == "Manager"
@@ -338,7 +334,7 @@ class TestUserInviteRequest:
             permissions=["read-templates"],
             templates=["template1"],
             domains=["domain1"],
-            requires_periodic_password_change=True
+            requires_periodic_password_change=True,
         )
         result = request.to_json()
         expected = {
@@ -347,7 +343,7 @@ class TestUserInviteRequest:
             "permissions": ["read-templates"],
             "templates": ["template1"],
             "domains": ["domain1"],
-            "requires_periodic_password_change": True
+            "requires_periodic_password_change": True,
         }
         assert result == expected
 
@@ -375,7 +371,7 @@ class TestUserUpdateRequest:
             role="Manager",
             permissions=["read-templates"],
             templates=["template1"],
-            domains=["domain1"]
+            domains=["domain1"],
         )
         assert request.user_id == "user123"
         assert request.role == "Manager"
@@ -400,7 +396,7 @@ class TestUserUpdateRequest:
             permissions=["read-templates"],
             templates=["template1"],
             domains=["domain1"],
-            requires_periodic_password_change=False
+            requires_periodic_password_change=False,
         )
         result = request.to_json()
         expected = {
@@ -408,7 +404,7 @@ class TestUserUpdateRequest:
             "permissions": ["read-templates"],
             "templates": ["template1"],
             "domains": ["domain1"],
-            "requires_periodic_password_change": False
+            "requires_periodic_password_change": False,
         }
         assert result == expected
 
@@ -436,7 +432,7 @@ class TestInvitesListRequest:
         query_params = InvitesListQueryParams(page=2, limit=50)
         request = InvitesListRequest(query_params=query_params)
         result = request.to_query_params()
-        expected = {'page': 2, 'limit': 50}
+        expected = {"page": 2, "limit": 50}
         assert result == expected
 
 
@@ -464,4 +460,4 @@ class TestInviteCancelRequest:
     def test_valid_invite_id(self):
         """Test with valid invite ID."""
         request = InviteCancelRequest(invite_id="invite123")
-        assert request.invite_id == "invite123" 
+        assert request.invite_id == "invite123"

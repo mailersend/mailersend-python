@@ -59,6 +59,3 @@ class SmsNumberDeleteRequest(BaseMailerSendModel):
     """Request model for deleting an SMS phone number."""
 
     sms_number_id: str = Field(..., min_length=1, description="SMS Number ID")
-
-
-

@@ -30,7 +30,7 @@ class TestSmsRecipientsListQueryParams:
     def test_default_values(self):
         """Test default values."""
         params = SmsRecipientsListQueryParams()
-        
+
         assert params.status is None
         assert params.sms_number_id is None
         assert params.page == 1
@@ -39,12 +39,9 @@ class TestSmsRecipientsListQueryParams:
     def test_custom_values(self):
         """Test custom values."""
         params = SmsRecipientsListQueryParams(
-            status=SmsRecipientStatus.ACTIVE,
-            sms_number_id="sms123",
-            page=2,
-            limit=50
+            status=SmsRecipientStatus.ACTIVE, sms_number_id="sms123", page=2, limit=50
         )
-        
+
         assert params.status == SmsRecipientStatus.ACTIVE
         assert params.sms_number_id == "sms123"
         assert params.page == 2
@@ -72,25 +69,22 @@ class TestSmsRecipientsListQueryParams:
         """Test to_query_params with default values excludes them."""
         params = SmsRecipientsListQueryParams()
         result = params.to_query_params()
-        
+
         # Default values should be excluded
         assert result == {}
 
     def test_to_query_params_custom(self):
         """Test to_query_params with custom values includes them."""
         params = SmsRecipientsListQueryParams(
-            status=SmsRecipientStatus.OPT_OUT,
-            sms_number_id="sms456",
-            page=3,
-            limit=15
+            status=SmsRecipientStatus.OPT_OUT, sms_number_id="sms456", page=3, limit=15
         )
         result = params.to_query_params()
-        
+
         expected = {
             "status": "opt_out",
             "sms_number_id": "sms456",
             "page": 3,
-            "limit": 15
+            "limit": 15,
         }
         assert result == expected
 
@@ -98,7 +92,7 @@ class TestSmsRecipientsListQueryParams:
         """Test to_query_params with only some custom values."""
         params = SmsRecipientsListQueryParams(status=SmsRecipientStatus.ACTIVE)
         result = params.to_query_params()
-        
+
         expected = {"status": "active"}
         assert result == expected
 
@@ -109,18 +103,17 @@ class TestSmsRecipientsListRequest:
     def test_default_request(self):
         """Test creating request with default query params."""
         request = SmsRecipientsListRequest()
-        
+
         assert isinstance(request.query_params, SmsRecipientsListQueryParams)
         assert request.to_query_params() == {}
 
     def test_custom_request(self):
         """Test creating request with custom query params."""
         query_params = SmsRecipientsListQueryParams(
-            status=SmsRecipientStatus.ACTIVE,
-            page=2
+            status=SmsRecipientStatus.ACTIVE, page=2
         )
         request = SmsRecipientsListRequest(query_params=query_params)
-        
+
         result = request.to_query_params()
         expected = {"status": "active", "page": 2}
         assert result == expected
@@ -132,7 +125,7 @@ class TestSmsRecipientGetRequest:
     def test_valid_request(self):
         """Test creating valid get request."""
         request = SmsRecipientGetRequest(sms_recipient_id="recipient123")
-        
+
         assert request.sms_recipient_id == "recipient123"
 
     def test_id_trimming(self):
@@ -157,28 +150,25 @@ class TestSmsRecipientUpdateRequest:
     def test_valid_request(self):
         """Test creating valid update request."""
         request = SmsRecipientUpdateRequest(
-            sms_recipient_id="recipient123",
-            status=SmsRecipientStatus.OPT_OUT
+            sms_recipient_id="recipient123", status=SmsRecipientStatus.OPT_OUT
         )
-        
+
         assert request.sms_recipient_id == "recipient123"
         assert request.status == SmsRecipientStatus.OPT_OUT
 
     def test_id_trimming(self):
         """Test SMS recipient ID trimming."""
         request = SmsRecipientUpdateRequest(
-            sms_recipient_id="  recipient123  ",
-            status=SmsRecipientStatus.ACTIVE
+            sms_recipient_id="  recipient123  ", status=SmsRecipientStatus.ACTIVE
         )
         assert request.sms_recipient_id == "recipient123"
 
     def test_to_request_body(self):
         """Test converting to request body."""
         request = SmsRecipientUpdateRequest(
-            sms_recipient_id="recipient123",
-            status=SmsRecipientStatus.OPT_OUT
+            sms_recipient_id="recipient123", status=SmsRecipientStatus.OPT_OUT
         )
-        
+
         body = request.to_request_body()
         expected = {"status": "opt_out"}
         assert body == expected
@@ -187,8 +177,7 @@ class TestSmsRecipientUpdateRequest:
         """Test empty ID validation."""
         with pytest.raises(ValidationError):
             SmsRecipientUpdateRequest(
-                sms_recipient_id="",
-                status=SmsRecipientStatus.ACTIVE
+                sms_recipient_id="", status=SmsRecipientStatus.ACTIVE
             )
 
 
@@ -201,11 +190,11 @@ class TestSmsRecipient:
             "id": "recipient123",
             "number": "+1234567890",
             "status": "active",
-            "created_at": "2023-01-01T12:00:00.000000Z"
+            "created_at": "2023-01-01T12:00:00.000000Z",
         }
-        
+
         recipient = SmsRecipient.model_validate(data)
-        
+
         assert recipient.id == "recipient123"
         assert recipient.number == "+1234567890"
         assert recipient.status == "active"
@@ -232,13 +221,13 @@ class TestSmsRecipientDetails:
                     "segment_count": 1,
                     "error_type": None,
                     "error_description": None,
-                    "created_at": "2023-01-01T12:00:00.000000Z"
+                    "created_at": "2023-01-01T12:00:00.000000Z",
                 }
-            ]
+            ],
         }
-        
+
         recipient = SmsRecipientDetails.model_validate(data)
-        
+
         assert recipient.id == "recipient123"
         assert len(recipient.sms) == 1
         assert isinstance(recipient.sms[0], dict)
@@ -251,11 +240,11 @@ class TestSmsRecipientDetails:
             "number": "+1234567890",
             "status": "opt_out",
             "created_at": "2023-01-01T12:00:00.000000Z",
-            "sms": []
+            "sms": [],
         }
-        
+
         recipient = SmsRecipientDetails.model_validate(data)
-        
+
         assert len(recipient.sms) == 0
 
     def test_recipient_details_default_sms_list(self):
@@ -264,9 +253,9 @@ class TestSmsRecipientDetails:
             "id": "recipient789",
             "number": "+1234567890",
             "status": "active",
-            "created_at": "2023-01-01T12:00:00.000000Z"
+            "created_at": "2023-01-01T12:00:00.000000Z",
         }
-        
+
         recipient = SmsRecipientDetails.model_validate(data)
-        
-        assert len(recipient.sms) == 0 
+
+        assert len(recipient.sms) == 0

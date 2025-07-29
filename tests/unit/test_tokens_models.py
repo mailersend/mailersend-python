@@ -76,7 +76,7 @@ class TestTokensListQueryParams:
         """Test to_query_params with custom values."""
         query_params = TokensListQueryParams(page=3, limit=50)
         result = query_params.to_query_params()
-        expected = {'page': 3, 'limit': 50}
+        expected = {"page": 3, "limit": 50}
         assert result == expected
 
     def test_to_query_params_excludes_defaults(self):
@@ -107,7 +107,7 @@ class TestTokensListRequest:
         query_params = TokensListQueryParams(page=3, limit=75)
         request = TokensListRequest(query_params=query_params)
         result = request.to_query_params()
-        expected = {'page': 3, 'limit': 75}
+        expected = {"page": 3, "limit": 75}
         assert result == expected
 
 
@@ -128,7 +128,7 @@ class TestTokenCreateRequest:
         request = TokenCreateRequest(
             name="Test Token",
             domain_id="domain123",
-            scopes=["email_full", "domains_read"]
+            scopes=["email_full", "domains_read"],
         )
         assert request.name == "Test Token"
         assert request.domain_id == "domain123"
@@ -138,26 +138,16 @@ class TestTokenCreateRequest:
         """Test name validation."""
         # Empty name
         with pytest.raises(ValidationError, match="Token name cannot be empty"):
-            TokenCreateRequest(
-                name="",
-                domain_id="domain123",
-                scopes=["email_full"]
-            )
+            TokenCreateRequest(name="", domain_id="domain123", scopes=["email_full"])
 
         # Whitespace-only name
         with pytest.raises(ValidationError, match="Token name cannot be empty"):
-            TokenCreateRequest(
-                name="   ",
-                domain_id="domain123",
-                scopes=["email_full"]
-            )
+            TokenCreateRequest(name="   ", domain_id="domain123", scopes=["email_full"])
 
     def test_name_trimming(self):
         """Test name is trimmed."""
         request = TokenCreateRequest(
-            name="  Test Token  ",
-            domain_id="domain123",
-            scopes=["email_full"]
+            name="  Test Token  ", domain_id="domain123", scopes=["email_full"]
         )
         assert request.name == "Test Token"
 
@@ -165,26 +155,18 @@ class TestTokenCreateRequest:
         """Test domain_id validation."""
         # Empty domain_id
         with pytest.raises(ValidationError, match="Domain ID cannot be empty"):
-            TokenCreateRequest(
-                name="Test Token",
-                domain_id="",
-                scopes=["email_full"]
-            )
+            TokenCreateRequest(name="Test Token", domain_id="", scopes=["email_full"])
 
         # Whitespace-only domain_id
         with pytest.raises(ValidationError, match="Domain ID cannot be empty"):
             TokenCreateRequest(
-                name="Test Token",
-                domain_id="   ",
-                scopes=["email_full"]
+                name="Test Token", domain_id="   ", scopes=["email_full"]
             )
 
     def test_domain_id_trimming(self):
         """Test domain_id is trimmed."""
         request = TokenCreateRequest(
-            name="Test Token",
-            domain_id="  domain123  ",
-            scopes=["email_full"]
+            name="Test Token", domain_id="  domain123  ", scopes=["email_full"]
         )
         assert request.domain_id == "domain123"
 
@@ -192,18 +174,12 @@ class TestTokenCreateRequest:
         """Test scopes validation."""
         # Empty scopes
         with pytest.raises(ValidationError):
-            TokenCreateRequest(
-                name="Test Token",
-                domain_id="domain123",
-                scopes=[]
-            )
+            TokenCreateRequest(name="Test Token", domain_id="domain123", scopes=[])
 
         # Invalid scopes
         with pytest.raises(ValidationError, match="Invalid scopes"):
             TokenCreateRequest(
-                name="Test Token",
-                domain_id="domain123",
-                scopes=["invalid_scope"]
+                name="Test Token", domain_id="domain123", scopes=["invalid_scope"]
             )
 
     def test_to_json(self):
@@ -211,13 +187,13 @@ class TestTokenCreateRequest:
         request = TokenCreateRequest(
             name="Test Token",
             domain_id="domain123",
-            scopes=["email_full", "domains_read"]
+            scopes=["email_full", "domains_read"],
         )
         result = request.to_json()
         expected = {
             "name": "Test Token",
             "domain_id": "domain123",
-            "scopes": ["email_full", "domains_read"]
+            "scopes": ["email_full", "domains_read"],
         }
         assert result == expected
 
@@ -277,4 +253,4 @@ class TestTokenDeleteRequest:
     def test_valid_request(self):
         """Test with valid token ID."""
         request = TokenDeleteRequest(token_id="token123")
-        assert request.token_id == "token123" 
+        assert request.token_id == "token123"

@@ -21,7 +21,7 @@ class TestTemplates:
         self.mock_client = Mock()
         self.resource = Templates(self.mock_client)
         self.resource.logger = Mock()
-        
+
         # Mock _create_response method
         self.mock_api_response = MagicMock(spec=APIResponse)
         self.resource._create_response = Mock(return_value=self.mock_api_response)
@@ -30,7 +30,7 @@ class TestTemplates:
         """Test list_templates method returns APIResponse."""
         query_params = TemplatesListQueryParams()
         request = TemplatesListRequest(query_params=query_params)
-        
+
         mock_response = Mock()
         self.mock_client.request.return_value = mock_response
 
@@ -52,9 +52,7 @@ class TestTemplates:
     def test_list_templates_uses_query_params(self):
         """Test list_templates method uses query params correctly."""
         query_params = TemplatesListQueryParams(
-            domain_id="test-domain",
-            page=2,
-            limit=50
+            domain_id="test-domain", page=2, limit=50
         )
         request = TemplatesListRequest(query_params=query_params)
 
@@ -65,9 +63,9 @@ class TestTemplates:
 
         # Verify client was called correctly
         self.mock_client.request.assert_called_once_with(
-            method='GET',
-            endpoint='templates',
-            params={'domain_id': 'test-domain', 'page': 2, 'limit': 50}
+            method="GET",
+            endpoint="templates",
+            params={"domain_id": "test-domain", "page": 2, "limit": 50},
         )
 
         # Verify _create_response was called
@@ -77,7 +75,7 @@ class TestTemplates:
         """Test list_templates with default query params."""
         query_params = TemplatesListQueryParams()
         request = TemplatesListRequest(query_params=query_params)
-        
+
         mock_response = Mock()
         self.mock_client.request.return_value = mock_response
 
@@ -85,15 +83,13 @@ class TestTemplates:
 
         # Verify client was called with defaults
         self.mock_client.request.assert_called_once_with(
-            method='GET',
-            endpoint='templates',
-            params={'page': 1, 'limit': 25}
+            method="GET", endpoint="templates", params={"page": 1, "limit": 25}
         )
 
     def test_get_template_returns_api_response(self):
         """Test get_template method returns APIResponse."""
         request = TemplateGetRequest(template_id="template123")
-        
+
         mock_response = Mock()
         self.mock_client.request.return_value = mock_response
 
@@ -105,7 +101,7 @@ class TestTemplates:
     def test_get_template_endpoint_construction(self):
         """Test get_template constructs endpoint correctly."""
         request = TemplateGetRequest(template_id="template123")
-        
+
         mock_response = Mock()
         self.mock_client.request.return_value = mock_response
 
@@ -113,14 +109,13 @@ class TestTemplates:
 
         # Verify endpoint construction
         self.mock_client.request.assert_called_once_with(
-            method='GET',
-            endpoint='templates/template123'
+            method="GET", endpoint="templates/template123"
         )
 
     def test_delete_template_returns_api_response(self):
         """Test delete_template method returns APIResponse."""
         request = TemplateDeleteRequest(template_id="template123")
-        
+
         mock_response = Mock()
         self.mock_client.request.return_value = mock_response
 
@@ -132,7 +127,7 @@ class TestTemplates:
     def test_delete_template_endpoint_construction(self):
         """Test delete_template constructs endpoint correctly."""
         request = TemplateDeleteRequest(template_id="template123")
-        
+
         mock_response = Mock()
         self.mock_client.request.return_value = mock_response
 
@@ -140,8 +135,7 @@ class TestTemplates:
 
         # Verify endpoint construction
         self.mock_client.request.assert_called_once_with(
-            method='DELETE',
-            endpoint='templates/template123'
+            method="DELETE", endpoint="templates/template123"
         )
 
     def test_integration_workflow(self):
@@ -153,6 +147,12 @@ class TestTemplates:
         request_delete = TemplateDeleteRequest(template_id="template123")
 
         # Test that each method returns the expected APIResponse type
-        assert isinstance(self.resource.list_templates(request_list), type(self.mock_api_response))
-        assert isinstance(self.resource.get_template(request_get), type(self.mock_api_response))
-        assert isinstance(self.resource.delete_template(request_delete), type(self.mock_api_response)) 
+        assert isinstance(
+            self.resource.list_templates(request_list), type(self.mock_api_response)
+        )
+        assert isinstance(
+            self.resource.get_template(request_get), type(self.mock_api_response)
+        )
+        assert isinstance(
+            self.resource.delete_template(request_delete), type(self.mock_api_response)
+        )

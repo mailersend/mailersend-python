@@ -5,11 +5,15 @@ import base64
 from datetime import datetime
 
 from mailersend.models.email import (
-    EmailContact, EmailAttachment,
-    EmailPersonalization, EmailRequest,
-    EmailTrackingSettings, EmailHeader
+    EmailContact,
+    EmailAttachment,
+    EmailPersonalization,
+    EmailRequest,
+    EmailTrackingSettings,
+    EmailHeader,
 )
 from mailersend.models.base import APIResponse
+
 
 @pytest.fixture
 def base_email_request():
@@ -18,8 +22,9 @@ def base_email_request():
         from_email=EmailContact(email=os.environ.get("SDK_FROM_EMAIL"), name="Sender"),
         to=[EmailContact(email=os.environ.get("SDK_TO_EMAIL"), name="Recipient")],
         subject="Test Email",
-        html="<p>This is a test email</p>"
+        html="<p>This is a test email</p>",
     )
+
 
 def email_request_factory(base: EmailRequest, **overrides) -> EmailRequest:
     """Create a new EmailRequest with the same fields, overridden with kwargs"""
@@ -42,17 +47,17 @@ def inject_common_objects(request, email_client, base_email_request):
         request.cls.base_email_request = base_email_request
         request.cls.email_request_factory = staticmethod(email_request_factory)
 
-class TestEmailSend:   
+
+class TestEmailSend:
     @vcr.use_cassette("email_send_with_base_params.yaml")
     def test_send_with_email_request_object(self):
         # Test sending with a complete EmailRequest object
         email_request = self.email_request_factory(
-            self.base_email_request,
-            html="<p>This is a test email</p>"
+            self.base_email_request, html="<p>This is a test email</p>"
         )
 
         result = self.email_client.emails.send(email_request)
-        
+
         assert isinstance(result, APIResponse)
         assert result.success is True
         assert "id" in result
@@ -60,18 +65,15 @@ class TestEmailSend:
         assert result.status_code == 202
         assert isinstance(result.headers, dict)
 
-
     @vcr.use_cassette("email_send_text_only.yaml")
     def test_send_with_text_only(self):
         # Test sending with text content only (no HTML)
         email_request = self.email_request_factory(
-            self.base_email_request,
-            html=None,
-            text="This is a test email"
+            self.base_email_request, html=None, text="This is a test email"
         )
 
         result = self.email_client.emails.send(email_request)
-        
+
         # Verify response structure
         assert isinstance(result, APIResponse)
         assert result.success is True
@@ -83,16 +85,12 @@ class TestEmailSend:
         # Test sending with CC and BCC recipients
         email_request = self.email_request_factory(
             self.base_email_request,
-            cc=[
-                EmailContact(email=os.environ.get("SDK_CC_EMAIL"), name="Recipient")
-            ],
-            bcc = [
-                EmailContact(email=os.environ.get("SDK_BCC_EMAIL"), name="Recipient")
-            ]
+            cc=[EmailContact(email=os.environ.get("SDK_CC_EMAIL"), name="Recipient")],
+            bcc=[EmailContact(email=os.environ.get("SDK_BCC_EMAIL"), name="Recipient")],
         )
 
         result = self.email_client.emails.send(email_request)
-        
+
         # Verify response structure
         assert isinstance(result, APIResponse)
         assert result.success is True
@@ -107,12 +105,11 @@ class TestEmailSend:
         send_time = datetime.fromtimestamp(send_time.timestamp() + 86400)  # +24 hours
 
         email_request = self.email_request_factory(
-            self.base_email_request,
-            send_at = int(send_time.timestamp())
+            self.base_email_request, send_at=int(send_time.timestamp())
         )
 
         result = self.email_client.emails.send(email_request)
-        
+
         # Verify response structure
         assert isinstance(result, APIResponse)
         assert result.success is True
@@ -124,7 +121,7 @@ class TestEmailSend:
         # Create a test file for attachment
         test_file_path = "tests/fixtures/test_attachment.txt"
         os.makedirs(os.path.dirname(test_file_path), exist_ok=True)
-        
+
         with open(test_file_path, "w") as f:
             f.write("This is a test attachment file.")
 
@@ -137,22 +134,21 @@ class TestEmailSend:
             disposition="attachment",
             filename="test_attachment.txt",
         )
-        
+
         try:
             # Test sending with attachments
             email_request = self.email_request_factory(
-                self.base_email_request,
-                attachments = [attachment]
+                self.base_email_request, attachments=[attachment]
             )
-            
+
             result = self.email_client.emails.send(email_request)
-            
+
             # Verify response structure
             assert isinstance(result, APIResponse)
             assert result.success is True
             assert "id" in result
             assert result["id"] is not None
-        
+
         finally:
             # Clean up the test file
             if os.path.exists(test_file_path):
@@ -162,12 +158,11 @@ class TestEmailSend:
     def test_send_with_tags(self):
         # Test sending with tags
         email_request = self.email_request_factory(
-            self.base_email_request,
-            tags=["test", "automation", "api-test"]
+            self.base_email_request, tags=["test", "automation", "api-test"]
         )
-        
+
         result = self.email_client.emails.send(email_request)
-        
+
         # Verify response structure
         assert isinstance(result, APIResponse)
         assert result.success is True
@@ -179,11 +174,13 @@ class TestEmailSend:
         # Test sending with tracking settings
         email_request = self.email_request_factory(
             self.base_email_request,
-            settings=EmailTrackingSettings(track_clicks=True, track_opens=True, track_content=False)
+            settings=EmailTrackingSettings(
+                track_clicks=True, track_opens=True, track_content=False
+            ),
         )
 
         result = self.email_client.emails.send(email_request)
-        
+
         # Verify response structure
         assert isinstance(result, APIResponse)
         assert result.success is True
@@ -197,13 +194,13 @@ class TestEmailSend:
             self.base_email_request,
             template_id=os.environ.get("SDK_TEMPLATE_ID"),
             personalization=[
-                    EmailPersonalization(
+                EmailPersonalization(
                     email=os.environ.get("SDK_TO_EMAIL"),
-                    data={"name": "Recipient Name"}
+                    data={"name": "Recipient Name"},
                 )
-            ]
+            ],
         )
-        
+
         result = self.email_client.emails.send(email_request)
 
         # Verify response structure
@@ -219,11 +216,11 @@ class TestEmailSend:
             self.base_email_request,
             headers=[
                 EmailHeader(name="X-Custom-Header", value="Custom Value"),
-            ]
+            ],
         )
-        
+
         result = self.email_client.emails.send(email_request)
-        
+
         # Verify response structure
         assert isinstance(result, APIResponse)
         assert result.success is True
@@ -235,11 +232,13 @@ class TestEmailSend:
         # Test sending with reply-to address
         email_request = self.email_request_factory(
             self.base_email_request,
-            reply_to=EmailContact(email=os.environ.get("SDK_REPLY_TO_EMAIL"), name="Reply Handler")
+            reply_to=EmailContact(
+                email=os.environ.get("SDK_REPLY_TO_EMAIL"), name="Reply Handler"
+            ),
         )
-        
+
         result = self.email_client.emails.send(email_request)
-        
+
         # Verify response structure
         assert isinstance(result, APIResponse)
         assert result.success is True
@@ -252,11 +251,11 @@ class TestEmailSend:
         email_request = self.email_request_factory(
             self.base_email_request,
             in_reply_to=os.environ.get("SDK_REPLY_TO_EMAIL"),
-            references=["123456"]
+            references=["123456"],
         )
-        
+
         result = self.email_client.emails.send(email_request)
-        
+
         # Verify response structure
         assert isinstance(result, APIResponse)
         assert result.success is True
@@ -268,12 +267,10 @@ class TestEmailSend:
         # Test sending bulk emails with multiple EmailRequests
         payload = [
             self.email_request_factory(
-                self.base_email_request,
-                html="<p>First Email</p>"
+                self.base_email_request, html="<p>First Email</p>"
             ),
             self.email_request_factory(
-                self.base_email_request,
-                html="<p>Second Email</p>"
+                self.base_email_request, html="<p>Second Email</p>"
             ),
         ]
 
@@ -290,7 +287,7 @@ class TestEmailSend:
     def test_get_bulk_status(self):
         # Test getting the status of a bulk email send
         bulk_email_id = os.environ.get("SDK_BULK_EMAIL_ID")
-        
+
         result = self.email_client.emails.get_bulk_status(bulk_email_id)
 
         # Verify response structure
@@ -302,4 +299,3 @@ class TestEmailSend:
         assert "messages_id" in result["data"]
         assert result.status_code == 200
         assert isinstance(result.headers, dict)
-

@@ -199,6 +199,3 @@ class EmailVerificationResultsRequest(BaseModel):
     def to_query_params(self) -> Dict[str, Any]:
         """Convert to query parameters dictionary."""
         return self.query_params.to_query_params()
-
-
-

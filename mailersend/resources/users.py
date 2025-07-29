@@ -13,6 +13,8 @@ from ..models.users import (
     InviteResendRequest,
     InviteCancelRequest,
 )
+
+
 class Users(BaseResource):
     """Users API resource."""
 
@@ -25,7 +27,11 @@ class Users(BaseResource):
         Returns:
             APIResponse: API response with users list data
         """
-        self.logger.debug("Listing users with pagination: page=%s, limit=%s", request.query_params.page, request.query_params.limit)
+        self.logger.debug(
+            "Listing users with pagination: page=%s, limit=%s",
+            request.query_params.page,
+            request.query_params.limit,
+        )
 
         # Extract query parameters
         params = request.to_query_params()
@@ -64,7 +70,9 @@ class Users(BaseResource):
         Returns:
             APIResponse: API response with invite data
         """
-        self.logger.debug("Inviting user: %s with role: %s", request.email, request.role)
+        self.logger.debug(
+            "Inviting user: %s with role: %s", request.email, request.role
+        )
 
         # Make API call
         response = self.client.request(
@@ -83,7 +91,9 @@ class Users(BaseResource):
         Returns:
             APIResponse: API response with updated user data
         """
-        self.logger.debug("Updating user: %s with role: %s", request.user_id, request.role)
+        self.logger.debug(
+            "Updating user: %s with role: %s", request.user_id, request.role
+        )
 
         # Make API call
         response = self.client.request(
@@ -121,7 +131,11 @@ class Users(BaseResource):
         Returns:
             APIResponse: API response with invites list data
         """
-        self.logger.debug("Listing invites with pagination: page=%s, limit=%s", request.query_params.page, request.query_params.limit)
+        self.logger.debug(
+            "Listing invites with pagination: page=%s, limit=%s",
+            request.query_params.page,
+            request.query_params.limit,
+        )
 
         # Extract query parameters
         params = request.to_query_params()

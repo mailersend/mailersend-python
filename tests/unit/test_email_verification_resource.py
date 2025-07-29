@@ -38,9 +38,7 @@ class TestEmailVerification:
 
         assert isinstance(result, APIResponse)
         self.mock_client.request.assert_called_once_with(
-            "POST",
-            "email-verification/verify",
-            body={"email": "test@example.com"}
+            "POST", "email-verification/verify", body={"email": "test@example.com"}
         )
 
     def test_verify_email_async_valid_request(self):
@@ -49,7 +47,7 @@ class TestEmailVerification:
         self.mock_response.json.return_value = {
             "id": "abc123",
             "address": "test@example.com",
-            "status": "processing"
+            "status": "processing",
         }
 
         result = self.resource.verify_email_async(request)
@@ -58,7 +56,7 @@ class TestEmailVerification:
         self.mock_client.request.assert_called_once_with(
             "POST",
             "email-verification/verify-async",
-            body={"email": "test@example.com"}
+            body={"email": "test@example.com"},
         )
 
     def test_get_async_status_valid_request(self):
@@ -67,15 +65,14 @@ class TestEmailVerification:
         self.mock_response.json.return_value = {
             "id": "abc123",
             "address": "test@example.com",
-            "status": "completed"
+            "status": "completed",
         }
 
         result = self.resource.get_async_status(request)
 
         assert isinstance(result, APIResponse)
         self.mock_client.request.assert_called_once_with(
-            method="GET", 
-            endpoint="email-verification/verify-async/abc123"
+            method="GET", endpoint="email-verification/verify-async/abc123"
         )
 
     def test_list_verifications_with_defaults(self):
@@ -88,24 +85,22 @@ class TestEmailVerification:
                 "first": "https://api.mailersend.com/v1/email-verification?page=1",
                 "last": "https://api.mailersend.com/v1/email-verification?page=1",
                 "prev": None,
-                "next": None
+                "next": None,
             },
             "meta": {
                 "current_page": 1,
                 "from": None,
                 "path": "email-verification",
                 "per_page": "25",
-                "to": None
-            }
+                "to": None,
+            },
         }
 
         result = self.resource.list_verifications(request)
 
         assert isinstance(result, APIResponse)
         self.mock_client.request.assert_called_once_with(
-            method="GET",
-            endpoint="email-verification",
-            params={"page": 1, "limit": 25}
+            method="GET", endpoint="email-verification", params={"page": 1, "limit": 25}
         )
 
     def test_list_verifications_with_custom_params(self):
@@ -118,24 +113,22 @@ class TestEmailVerification:
                 "first": "https://api.mailersend.com/v1/email-verification?page=1",
                 "last": "https://api.mailersend.com/v1/email-verification?page=2",
                 "prev": "https://api.mailersend.com/v1/email-verification?page=1",
-                "next": None
+                "next": None,
             },
             "meta": {
                 "current_page": 2,
                 "from": 51,
                 "path": "email-verification",
                 "per_page": "50",
-                "to": 100
-            }
+                "to": 100,
+            },
         }
 
         result = self.resource.list_verifications(request)
 
         assert isinstance(result, APIResponse)
         self.mock_client.request.assert_called_once_with(
-            method="GET",
-            endpoint="email-verification",
-            params={"page": 2, "limit": 50}
+            method="GET", endpoint="email-verification", params={"page": 2, "limit": 50}
         )
 
     def test_get_verification_valid_request(self):
@@ -151,11 +144,18 @@ class TestEmailVerification:
                 "status": {"name": "completed", "count": 100},
                 "source": "api",
                 "statistics": {
-                    "valid": 50, "catch_all": 10, "mailbox_full": 5,
-                    "role_based": 8, "unknown": 2, "syntax_error": 3,
-                    "typo": 1, "mailbox_not_found": 7, "disposable": 4,
-                    "mailbox_blocked": 6, "failed": 4
-                }
+                    "valid": 50,
+                    "catch_all": 10,
+                    "mailbox_full": 5,
+                    "role_based": 8,
+                    "unknown": 2,
+                    "syntax_error": 3,
+                    "typo": 1,
+                    "mailbox_not_found": 7,
+                    "disposable": 4,
+                    "mailbox_blocked": 6,
+                    "failed": 4,
+                },
             }
         }
 
@@ -163,8 +163,7 @@ class TestEmailVerification:
 
         assert isinstance(result, APIResponse)
         self.mock_client.request.assert_called_once_with(
-            method="GET",
-            endpoint="email-verification/abc123"
+            method="GET", endpoint="email-verification/abc123"
         )
 
     def test_create_verification_valid_request(self):
@@ -181,11 +180,18 @@ class TestEmailVerification:
                 "status": {"name": "pending", "count": 0},
                 "source": "api",
                 "statistics": {
-                    "valid": 0, "catch_all": 0, "mailbox_full": 0,
-                    "role_based": 0, "unknown": 0, "syntax_error": 0,
-                    "typo": 0, "mailbox_not_found": 0, "disposable": 0,
-                    "mailbox_blocked": 0, "failed": 0
-                }
+                    "valid": 0,
+                    "catch_all": 0,
+                    "mailbox_full": 0,
+                    "role_based": 0,
+                    "unknown": 0,
+                    "syntax_error": 0,
+                    "typo": 0,
+                    "mailbox_not_found": 0,
+                    "disposable": 0,
+                    "mailbox_blocked": 0,
+                    "failed": 0,
+                },
             }
         }
 
@@ -193,9 +199,7 @@ class TestEmailVerification:
 
         assert isinstance(result, APIResponse)
         self.mock_client.request.assert_called_once_with(
-            "POST",
-            "email-verification",
-            body={"name": "Test List", "emails": emails}
+            "POST", "email-verification", body={"name": "Test List", "emails": emails}
         )
 
     def test_verify_list_valid_request(self):
@@ -211,11 +215,18 @@ class TestEmailVerification:
                 "status": {"name": "verifying", "count": 0},
                 "source": "api",
                 "statistics": {
-                    "valid": 0, "catch_all": 0, "mailbox_full": 0,
-                    "role_based": 0, "unknown": 0, "syntax_error": 0,
-                    "typo": 0, "mailbox_not_found": 0, "disposable": 0,
-                    "mailbox_blocked": 0, "failed": 0
-                }
+                    "valid": 0,
+                    "catch_all": 0,
+                    "mailbox_full": 0,
+                    "role_based": 0,
+                    "unknown": 0,
+                    "syntax_error": 0,
+                    "typo": 0,
+                    "mailbox_not_found": 0,
+                    "disposable": 0,
+                    "mailbox_blocked": 0,
+                    "failed": 0,
+                },
             }
         }
 
@@ -223,16 +234,14 @@ class TestEmailVerification:
 
         assert isinstance(result, APIResponse)
         self.mock_client.request.assert_called_once_with(
-            method="GET",
-            endpoint="email-verification/abc123/verify"
+            method="GET", endpoint="email-verification/abc123/verify"
         )
 
     def test_get_results_with_defaults(self):
         """Test get_results with default parameters."""
         query_params = EmailVerificationResultsQueryParams()
         request = EmailVerificationResultsRequest(
-            email_verification_id="abc123",
-            query_params=query_params
+            email_verification_id="abc123", query_params=query_params
         )
         self.mock_response.json.return_value = {
             "data": [],
@@ -240,15 +249,15 @@ class TestEmailVerification:
                 "first": "https://api.mailersend.com/v1/email-verification/abc123/results?page=1",
                 "last": "https://api.mailersend.com/v1/email-verification/abc123/results?page=1",
                 "prev": None,
-                "next": None
+                "next": None,
             },
             "meta": {
                 "current_page": 1,
                 "from": None,
                 "path": "email-verification/abc123/results",
                 "per_page": "25",
-                "to": None
-            }
+                "to": None,
+            },
         }
 
         result = self.resource.get_results(request)
@@ -257,7 +266,7 @@ class TestEmailVerification:
         self.mock_client.request.assert_called_once_with(
             method="GET",
             endpoint="email-verification/abc123/results",
-            params={"page": 1, "limit": 25}
+            params={"page": 1, "limit": 25},
         )
 
     def test_get_results_with_filters(self):
@@ -267,8 +276,7 @@ class TestEmailVerification:
             page=2, limit=50, results=results_filter
         )
         request = EmailVerificationResultsRequest(
-            email_verification_id="abc123",
-            query_params=query_params
+            email_verification_id="abc123", query_params=query_params
         )
         self.mock_response.json.return_value = {
             "data": [],
@@ -276,15 +284,15 @@ class TestEmailVerification:
                 "first": "https://api.mailersend.com/v1/email-verification/abc123/results?page=1",
                 "last": "https://api.mailersend.com/v1/email-verification/abc123/results?page=2",
                 "prev": "https://api.mailersend.com/v1/email-verification/abc123/results?page=1",
-                "next": None
+                "next": None,
             },
             "meta": {
                 "current_page": 2,
                 "from": 51,
                 "path": "email-verification/abc123/results",
                 "per_page": "50",
-                "to": 100
-            }
+                "to": 100,
+            },
         }
 
         result = self.resource.get_results(request)
@@ -293,5 +301,5 @@ class TestEmailVerification:
         self.mock_client.request.assert_called_once_with(
             method="GET",
             endpoint="email-verification/abc123/results",
-            params={"page": 2, "limit": 50, "results": results_filter}
-        ) 
+            params={"page": 2, "limit": 50, "results": results_filter},
+        )

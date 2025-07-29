@@ -10,7 +10,7 @@ from mailersend.models.inbound import (
     InboundUpdateRequest,
     InboundDeleteRequest,
     InboundFilterGroup,
-    InboundForward
+    InboundForward,
 )
 
 
@@ -47,12 +47,12 @@ class TestInboundBuilder:
         """Test copy method."""
         builder = InboundBuilder()
         builder.domain_id("test").page(2).name("Test Route")
-        
+
         copy_builder = builder.copy()
         assert copy_builder._domain_id == "test"
         assert copy_builder._page == 2
         assert copy_builder._name == "Test Route"
-        
+
         # Verify it's a separate instance
         copy_builder.domain_id("different")
         assert builder._domain_id == "test"
@@ -90,7 +90,9 @@ class TestInboundBuilder:
     def test_basic_configuration_methods(self):
         """Test basic configuration methods."""
         builder = InboundBuilder()
-        builder.name("Test Route").domain_enabled(True).inbound_domain("inbound.example.com").inbound_priority(50)
+        builder.name("Test Route").domain_enabled(True).inbound_domain(
+            "inbound.example.com"
+        ).inbound_priority(50)
         assert builder._name == "Test Route"
         assert builder._domain_enabled is True
         assert builder._inbound_domain == "inbound.example.com"
@@ -106,19 +108,19 @@ class TestInboundBuilder:
     def test_filter_management_methods(self):
         """Test filter management methods."""
         builder = InboundBuilder()
-        
+
         # Add catch filter
         builder.add_catch_filter("catch_all")
         assert len(builder._catch_filter) == 1
         assert builder._catch_filter[0].type == "catch_all"
-        
+
         # Add match filter with conditions
         filters = [{"comparer": "equal", "value": "test"}]
         builder.add_match_filter("match_sender", filters)
         assert len(builder._match_filter) == 1
         assert builder._match_filter[0].type == "match_sender"
         assert builder._match_filter[0].filters == filters
-        
+
         # Clear filters
         builder.clear_catch_filters()
         builder.clear_match_filters()
@@ -128,27 +130,27 @@ class TestInboundBuilder:
     def test_forward_management_methods(self):
         """Test forward management methods."""
         builder = InboundBuilder()
-        
+
         # Add generic forward
         builder.add_forward("email", "test@example.com", forward_id="id123")
         assert len(builder._forwards) == 1
         assert builder._forwards[0].type == "email"
         assert builder._forwards[0].value == "test@example.com"
         assert builder._forwards[0].id == "id123"
-        
+
         # Add email forward
         builder.add_email_forward("test2@example.com")
         assert len(builder._forwards) == 2
         assert builder._forwards[1].type == "email"
         assert builder._forwards[1].value == "test2@example.com"
-        
+
         # Add webhook forward
         builder.add_webhook_forward("https://example.com/webhook", "secret123")
         assert len(builder._forwards) == 3
         assert builder._forwards[2].type == "webhook"
         assert builder._forwards[2].value == "https://example.com/webhook"
         assert builder._forwards[2].secret == "secret123"
-        
+
         # Clear forwards
         builder.clear_forwards()
         assert builder._forwards == []
@@ -156,36 +158,36 @@ class TestInboundBuilder:
     def test_convenience_filter_methods(self):
         """Test convenience methods for common filter configurations."""
         builder = InboundBuilder()
-        
+
         # Catch all
         builder.catch_all()
         assert len(builder._catch_filter) == 1
         assert builder._catch_filter[0].type == "catch_all"
-        
+
         # Catch recipient
         filters = [{"comparer": "equal", "value": "test"}]
         builder.catch_recipient(filters, "one")
         assert len(builder._catch_filter) == 2  # Added to existing
         assert builder._catch_filter[1].type == "catch_recipient"
         assert builder._catch_type == "one"
-        
+
         # Match all
         builder.match_all()
         assert len(builder._match_filter) == 1
         assert builder._match_filter[0].type == "match_all"
-        
+
         # Match sender
         builder.match_sender(filters, "all")
         assert len(builder._match_filter) == 2
         assert builder._match_filter[1].type == "match_sender"
         assert builder._match_type == "all"
-        
+
         # Match domain
         builder.match_domain(filters, "one")
         assert len(builder._match_filter) == 3
         assert builder._match_filter[2].type == "match_domain"
         assert builder._match_type == "one"
-        
+
         # Match header
         builder.match_header(filters, "all")
         assert len(builder._match_filter) == 4
@@ -195,13 +197,13 @@ class TestInboundBuilder:
     def test_domain_convenience_methods(self):
         """Test convenience methods for domain configuration."""
         builder = InboundBuilder()
-        
+
         # Enable domain
         builder.enable_domain("inbound.example.com", 75)
         assert builder._domain_enabled is True
         assert builder._inbound_domain == "inbound.example.com"
         assert builder._inbound_priority == 75
-        
+
         # Disable domain
         builder.disable_domain()
         assert builder._domain_enabled is False
@@ -212,7 +214,7 @@ class TestInboundBuilder:
         """Test building list request."""
         builder = InboundBuilder()
         builder.domain_id("domain123").page(2).limit(50)
-        
+
         request = builder.build_list_request()
         assert isinstance(request, InboundListRequest)
         assert isinstance(request.query_params, InboundListQueryParams)
@@ -223,7 +225,7 @@ class TestInboundBuilder:
     def test_build_list_request_minimal(self):
         """Test building minimal list request with defaults."""
         builder = InboundBuilder()
-        
+
         request = builder.build_list_request()
         assert isinstance(request, InboundListRequest)
         assert isinstance(request.query_params, InboundListQueryParams)
@@ -236,7 +238,7 @@ class TestInboundBuilder:
         """Test building list request with only some parameters set."""
         builder = InboundBuilder()
         builder.page(3)  # Only set page, leave others as None/default
-        
+
         request = builder.build_list_request()
         assert isinstance(request, InboundListRequest)
         assert request.query_params.page == 3
@@ -247,7 +249,7 @@ class TestInboundBuilder:
         """Test building get request."""
         builder = InboundBuilder()
         builder.inbound_id("inbound123")
-        
+
         request = builder.build_get_request()
         assert isinstance(request, InboundGetRequest)
         assert request.inbound_id == "inbound123"
@@ -265,7 +267,7 @@ class TestInboundBuilder:
         builder.domain_id("domain123").name("Test Route").domain_enabled(False)
         builder.catch_all().match_all()
         builder.add_email_forward("test@example.com")
-        
+
         request = builder.build_create_request()
         assert isinstance(request, InboundCreateRequest)
         assert request.domain_id == "domain123"
@@ -282,7 +284,7 @@ class TestInboundBuilder:
         builder.enable_domain("inbound.example.com", 50)
         builder.catch_all().match_all()
         builder.add_email_forward("test@example.com")
-        
+
         request = builder.build_create_request()
         assert request.domain_enabled is True
         assert request.inbound_domain == "inbound.example.com"
@@ -291,41 +293,49 @@ class TestInboundBuilder:
     def test_build_create_request_missing_required_fields(self):
         """Test building create request with missing required fields."""
         builder = InboundBuilder()
-        
+
         # Missing domain_id
         with pytest.raises(MailerSendValidationError) as exc_info:
             builder.build_create_request()
         assert "Domain ID is required for create request" in str(exc_info.value)
-        
+
         # Missing name
         builder.domain_id("domain123")
         with pytest.raises(MailerSendValidationError) as exc_info:
             builder.build_create_request()
         assert "Name is required for create request" in str(exc_info.value)
-        
+
         # Missing domain_enabled
         builder.name("Test Route")
         with pytest.raises(MailerSendValidationError) as exc_info:
             builder.build_create_request()
-        assert "Domain enabled flag is required for create request" in str(exc_info.value)
-        
+        assert "Domain enabled flag is required for create request" in str(
+            exc_info.value
+        )
+
         # Missing catch_filter
         builder.domain_enabled(False)
         with pytest.raises(MailerSendValidationError) as exc_info:
             builder.build_create_request()
-        assert "At least one catch filter is required for create request" in str(exc_info.value)
-        
+        assert "At least one catch filter is required for create request" in str(
+            exc_info.value
+        )
+
         # Missing match_filter
         builder.catch_all()
         with pytest.raises(MailerSendValidationError) as exc_info:
             builder.build_create_request()
-        assert "At least one match filter is required for create request" in str(exc_info.value)
-        
+        assert "At least one match filter is required for create request" in str(
+            exc_info.value
+        )
+
         # Missing forwards
         builder.match_all()
         with pytest.raises(MailerSendValidationError) as exc_info:
             builder.build_create_request()
-        assert "At least one forward is required for create request" in str(exc_info.value)
+        assert "At least one forward is required for create request" in str(
+            exc_info.value
+        )
 
     def test_build_update_request(self):
         """Test building update request."""
@@ -334,7 +344,7 @@ class TestInboundBuilder:
         builder.enable_domain("inbound.example.com", 75)
         builder.catch_all().match_all()
         builder.add_email_forward("test@example.com")
-        
+
         request = builder.build_update_request()
         assert isinstance(request, InboundUpdateRequest)
         assert request.inbound_id == "inbound123"
@@ -346,29 +356,31 @@ class TestInboundBuilder:
     def test_build_update_request_missing_required_fields(self):
         """Test building update request with missing required fields."""
         builder = InboundBuilder()
-        
+
         # Missing inbound_id
         with pytest.raises(MailerSendValidationError) as exc_info:
             builder.build_update_request()
         assert "Inbound ID is required for update request" in str(exc_info.value)
-        
+
         # Missing name
         builder.inbound_id("inbound123")
         with pytest.raises(MailerSendValidationError) as exc_info:
             builder.build_update_request()
         assert "Name is required for update request" in str(exc_info.value)
-        
+
         # Missing domain_enabled
         builder.name("Test Route")
         with pytest.raises(MailerSendValidationError) as exc_info:
             builder.build_update_request()
-        assert "Domain enabled flag is required for update request" in str(exc_info.value)
+        assert "Domain enabled flag is required for update request" in str(
+            exc_info.value
+        )
 
     def test_build_delete_request(self):
         """Test building delete request."""
         builder = InboundBuilder()
         builder.inbound_id("inbound123")
-        
+
         request = builder.build_delete_request()
         assert isinstance(request, InboundDeleteRequest)
         assert request.inbound_id == "inbound123"
@@ -384,36 +396,36 @@ class TestInboundBuilder:
         """Test building complex filter configurations."""
         builder = InboundBuilder()
         builder.domain_id("domain123").name("Complex Route").domain_enabled(False)
-        
+
         # Complex catch configuration
         catch_filters = [
             {"comparer": "equal", "value": "support"},
-            {"comparer": "contains", "value": "help"}
+            {"comparer": "contains", "value": "help"},
         ]
         builder.catch_recipient(catch_filters, "one")
-        
+
         # Complex match configuration
         match_filters = [
             {"comparer": "starts-with", "value": "urgent"},
-            {"comparer": "ends-with", "value": "priority"}
+            {"comparer": "ends-with", "value": "priority"},
         ]
         builder.match_sender(match_filters, "all")
-        
+
         # Multiple forwards
         builder.add_email_forward("support@example.com")
         builder.add_webhook_forward("https://api.example.com/webhook", "secret123")
-        
+
         request = builder.build_create_request()
         assert len(request.catch_filter) == 1
         assert request.catch_filter[0].type == "catch_recipient"
         assert request.catch_filter[0].filters == catch_filters
         assert request.catch_type == "one"
-        
+
         assert len(request.match_filter) == 1
         assert request.match_filter[0].type == "match_sender"
         assert request.match_filter[0].filters == match_filters
         assert request.match_type == "all"
-        
+
         assert len(request.forwards) == 2
         assert request.forwards[0].type == "email"
         assert request.forwards[1].type == "webhook"
@@ -421,15 +433,15 @@ class TestInboundBuilder:
     def test_state_isolation_between_builds(self):
         """Test that multiple builds don't interfere with each other."""
         builder = InboundBuilder()
-        
+
         # Build list request
         builder.domain_id("domain123").page(1)
         list_request = builder.build_list_request()
-        
+
         # Build get request (should work with same builder)
         builder.inbound_id("inbound123")
         get_request = builder.build_get_request()
-        
+
         # Verify both requests are correct
         assert list_request.query_params.domain_id == "domain123"
         assert list_request.query_params.page == 1
@@ -438,18 +450,18 @@ class TestInboundBuilder:
     def test_builder_reuse_with_reset(self):
         """Test reusing builder after reset."""
         builder = InboundBuilder()
-        
+
         # First configuration
         builder.domain_id("domain1").page(1).name("Route 1")
         first_request = builder.build_list_request()
-        
+
         # Reset and new configuration
         builder.reset()
         builder.domain_id("domain2").page(2).name("Route 2")
         second_request = builder.build_list_request()
-        
+
         # Verify they're different
         assert first_request.query_params.domain_id == "domain1"
         assert first_request.query_params.page == 1
         assert second_request.query_params.domain_id == "domain2"
-        assert second_request.query_params.page == 2 
+        assert second_request.query_params.page == 2

@@ -196,7 +196,7 @@ class SmsInboundDeleteRequest(BaseMailerSendModel):
         return v.strip()
 
 
-# Response Models  
+# Response Models
 class SmsInbound(BaseMailerSendModel):
     """SMS inbound route model."""
 

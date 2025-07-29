@@ -23,9 +23,9 @@ class TestSmsActivity:
             created_at=datetime.fromisoformat("2022-02-21T08:15:46.627000"),
             content="Lorem Ipsum is simply dummy text",
             status="delivered",
-            sms_message_id="62134a2d7de3253bf10d6642"
+            sms_message_id="62134a2d7de3253bf10d6642",
         )
-        
+
         assert activity.from_ == "+18332647501"
         assert activity.to == "+16203221059"
         assert activity.content == "Lorem Ipsum is simply dummy text"
@@ -40,9 +40,9 @@ class TestSmsActivity:
             "created_at": "2022-02-21T08:15:46.627000",
             "content": "Lorem Ipsum is simply dummy text",
             "status": "delivered",
-            "sms_message_id": "62134a2d7de3253bf10d6642"
+            "sms_message_id": "62134a2d7de3253bf10d6642",
         }
-        
+
         activity = SmsActivity(**data)
         assert activity.from_ == "+18332647501"
 
@@ -53,7 +53,7 @@ class TestSmsActivityListRequest:
     def test_empty_request(self):
         """Test creating empty request."""
         request = SmsActivityListRequest()
-        
+
         params = request.to_query_params()
         assert params == {}
 
@@ -65,9 +65,9 @@ class TestSmsActivityListRequest:
             date_to=1443651200,
             status=["delivered", "sent"],
             page=1,
-            limit=25
+            limit=25,
         )
-        
+
         params = request.to_query_params()
         expected = {
             "sms_number_id": "7z3m5jgrogdpyo6n",
@@ -75,30 +75,26 @@ class TestSmsActivityListRequest:
             "date_to": 1443651200,
             "status[]": ["delivered", "sent"],
             "page": 1,
-            "limit": 25
+            "limit": 25,
         }
-        
+
         assert params == expected
 
     def test_partial_request(self):
         """Test creating request with some parameters."""
         request = SmsActivityListRequest(
-            sms_number_id="7z3m5jgrogdpyo6n",
-            status=["delivered"]
+            sms_number_id="7z3m5jgrogdpyo6n", status=["delivered"]
         )
-        
+
         params = request.to_query_params()
-        expected = {
-            "sms_number_id": "7z3m5jgrogdpyo6n",
-            "status[]": ["delivered"]
-        }
-        
+        expected = {"sms_number_id": "7z3m5jgrogdpyo6n", "status[]": ["delivered"]}
+
         assert params == expected
 
     def test_status_array_handling(self):
         """Test that status parameter is correctly converted to array format."""
         request = SmsActivityListRequest(status=["delivered", "sent", "failed"])
-        
+
         params = request.to_query_params()
         assert "status[]" in params
         assert params["status[]"] == ["delivered", "sent", "failed"]
@@ -106,7 +102,7 @@ class TestSmsActivityListRequest:
     def test_single_status_handling(self):
         """Test that single status is correctly handled."""
         request = SmsActivityListRequest(status=["delivered"])
-        
+
         params = request.to_query_params()
         assert "status[]" in params
         assert params["status[]"] == ["delivered"]
@@ -118,7 +114,7 @@ class TestSmsMessageGetRequest:
     def test_valid_request(self):
         """Test creating valid request."""
         request = SmsMessageGetRequest(sms_message_id="62134a2d7de3253bf10d6642")
-        
+
         assert request.sms_message_id == "62134a2d7de3253bf10d6642"
 
     def test_empty_sms_message_id_validation(self):
@@ -139,10 +135,10 @@ class TestSmsMessage:
                 created_at=datetime.fromisoformat("2022-02-21T08:15:46.627000"),
                 content="Lorem Ipsum is simply dummy text",
                 status="delivered",
-                sms_message_id="62134a2d7de3253bf10d6642"
+                sms_message_id="62134a2d7de3253bf10d6642",
             )
         ]
-        
+
         message = SmsMessage(
             id="62134a2d7de3253bf10d6642",
             from_="+18332647501",
@@ -151,9 +147,9 @@ class TestSmsMessage:
             paused=False,
             created_at=datetime.fromisoformat("2022-02-21T08:15:45.627000"),
             sms=[],
-            sms_activity=activities
+            sms_activity=activities,
         )
-        
+
         assert message.id == "62134a2d7de3253bf10d6642"
         assert message.from_ == "+18332647501"
         assert message.to == ["+16203221059"]
@@ -172,8 +168,8 @@ class TestSmsMessage:
             "paused": False,
             "created_at": "2022-02-21T08:15:45.627000",
             "sms": [],
-            "sms_activity": []
+            "sms_activity": [],
         }
-        
+
         message = SmsMessage(**data)
         assert message.from_ == "+18332647501"

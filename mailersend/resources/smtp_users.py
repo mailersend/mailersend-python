@@ -23,7 +23,11 @@ class SmtpUsers(BaseResource):
         Returns:
             APIResponse: API response with SMTP users list data
         """
-        self.logger.debug("Listing SMTP users for domain: %s with limit: %s", request.domain_id, request.query_params.limit)
+        self.logger.debug(
+            "Listing SMTP users for domain: %s with limit: %s",
+            request.domain_id,
+            request.query_params.limit,
+        )
 
         # Extract query parameters
         params = request.to_query_params()
@@ -47,7 +51,11 @@ class SmtpUsers(BaseResource):
         Returns:
             APIResponse: API response with SMTP user data
         """
-        self.logger.debug("Getting SMTP user: %s from domain: %s", request.smtp_user_id, request.domain_id)
+        self.logger.debug(
+            "Getting SMTP user: %s from domain: %s",
+            request.smtp_user_id,
+            request.domain_id,
+        )
 
         # Make API call
         response = self.client.request(
@@ -67,7 +75,9 @@ class SmtpUsers(BaseResource):
         Returns:
             APIResponse: API response with SMTP user creation data
         """
-        self.logger.debug("Creating SMTP user: %s for domain: %s", request.name, request.domain_id)
+        self.logger.debug(
+            "Creating SMTP user: %s for domain: %s", request.name, request.domain_id
+        )
 
         # Make API call
         response = self.client.request(
@@ -88,7 +98,11 @@ class SmtpUsers(BaseResource):
         Returns:
             APIResponse: API response with updated SMTP user data
         """
-        self.logger.debug("Updating SMTP user: %s in domain: %s", request.smtp_user_id, request.domain_id)
+        self.logger.debug(
+            "Updating SMTP user: %s in domain: %s",
+            request.smtp_user_id,
+            request.domain_id,
+        )
 
         # Make API call
         response = self.client.request(
@@ -109,7 +123,11 @@ class SmtpUsers(BaseResource):
         Returns:
             APIResponse: API response with delete confirmation
         """
-        self.logger.debug("Deleting SMTP user: %s from domain: %s", request.smtp_user_id, request.domain_id)
+        self.logger.debug(
+            "Deleting SMTP user: %s from domain: %s",
+            request.smtp_user_id,
+            request.domain_id,
+        )
 
         # Make API call
         response = self.client.request(
