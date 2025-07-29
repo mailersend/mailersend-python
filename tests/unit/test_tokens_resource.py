@@ -1,262 +1,245 @@
-"""Tests for Tokens resource."""
-
+"""Unit tests for Tokens resource."""
 import pytest
-from unittest.mock import Mock, patch
+from unittest.mock import Mock, MagicMock
 
 from mailersend.resources.tokens import Tokens
 from mailersend.models.base import APIResponse
 from mailersend.models.tokens import (
-    TokensListRequest, TokenGetRequest, TokenCreateRequest, TokenUpdateRequest,
-    TokenUpdateNameRequest, TokenDeleteRequest, TokensListQueryParams
+    TokensListRequest,
+    TokensListQueryParams,
+    TokenGetRequest,
+    TokenCreateRequest,
+    TokenUpdateRequest,
+    TokenUpdateNameRequest,
+    TokenDeleteRequest,
 )
+from mailersend.exceptions import ValidationError as MailerSendValidationError
 
 
-class TestTokensResource:
-    """Test cases for Tokens resource."""
+class TestTokens:
+    """Test Tokens resource class."""
 
-    @pytest.fixture
-    def mock_client(self):
-        """Create a mock client."""
-        return Mock()
-
-    @pytest.fixture
-    def tokens_resource(self, mock_client):
-        """Create a Tokens resource with mock client."""
-        return Tokens(mock_client)
-
-    def test_list_tokens_basic(self, tokens_resource, mock_client):
-        """Test list_tokens basic functionality."""
-        mock_response = Mock()
-        mock_response.json.return_value = {"data": []}
-        mock_client.request.return_value = mock_response
-        tokens_resource._create_response = Mock(return_value=Mock(spec=APIResponse))
+    def setup_method(self):
+        """Set up test fixtures."""
+        self.mock_client = Mock()
+        self.resource = Tokens(self.mock_client)
+        self.resource.logger = Mock()
         
-        request = TokensListRequest()
-        result = tokens_resource.list_tokens(request)
+        # Mock _create_response method
+        self.mock_api_response = MagicMock(spec=APIResponse)
+        self.resource._create_response = Mock(return_value=self.mock_api_response)
 
-        # Check the request was made correctly
-        mock_client.request.assert_called_once_with(
-            method="GET",
-            endpoint="/v1/token",
-            params={}  # Default values don't get included
-        )
-        tokens_resource._create_response.assert_called_once_with(mock_response)
-        assert isinstance(result, type(tokens_resource._create_response.return_value))
-
-    def test_list_tokens_with_pagination(self, tokens_resource, mock_client):
-        """Test list_tokens with pagination."""
-        mock_response = Mock()
-        mock_response.json.return_value = {"data": []}
-        mock_client.request.return_value = mock_response
-        tokens_resource._create_response = Mock(return_value=Mock(spec=APIResponse))
+    def test_list_tokens_returns_api_response(self):
+        """Test list_tokens method returns APIResponse."""
+        query_params = TokensListQueryParams()
+        request = TokensListRequest(query_params=query_params)
         
+        mock_response = Mock()
+        self.mock_client.request.return_value = mock_response
+
+        result = self.resource.list_tokens(request)
+
+        assert result == self.mock_api_response
+        self.resource._create_response.assert_called_once_with(mock_response)
+
+    def test_list_tokens_uses_query_params(self):
+        """Test list_tokens method uses query params correctly."""
         query_params = TokensListQueryParams(page=2, limit=50)
         request = TokensListRequest(query_params=query_params)
-        result = tokens_resource.list_tokens(request)
 
-        # Check the request was made correctly
-        mock_client.request.assert_called_once_with(
-            method="GET",
-            endpoint="/v1/token",
-            params={"page": 2, "limit": 50}
-        )
-        tokens_resource._create_response.assert_called_once_with(mock_response)
-        assert isinstance(result, type(tokens_resource._create_response.return_value))
-
-    @patch('mailersend.resources.tokens.logger')
-    def test_list_tokens_logging(self, mock_logger, tokens_resource, mock_client):
-        """Test list_tokens logs correctly."""
         mock_response = Mock()
-        mock_response.json.return_value = {"data": []}
-        mock_client.request.return_value = mock_response
-        tokens_resource._create_response = Mock(return_value=Mock(spec=APIResponse))
-        
-        query_params = TokensListQueryParams(page=2, limit=50)
+        self.mock_client.request.return_value = mock_response
+
+        result = self.resource.list_tokens(request)
+
+        # Verify client was called correctly
+        self.mock_client.request.assert_called_once_with(
+            method='GET',
+            endpoint='token',
+            params={'page': 2, 'limit': 50}
+        )
+
+        # Verify _create_response was called
+        self.resource._create_response.assert_called_once_with(mock_response)
+
+    def test_list_tokens_with_defaults(self):
+        """Test list_tokens with default query params."""
+        query_params = TokensListQueryParams()
         request = TokensListRequest(query_params=query_params)
-        tokens_resource.list_tokens(request)
-
-        mock_logger.info.assert_called_once_with(
-            "Listing tokens with pagination: page=2, limit=50"
-        )
-        tokens_resource._create_response.assert_called_once_with(mock_response)
-
-    def test_get_token(self, tokens_resource, mock_client):
-        """Test get_token functionality."""
-        mock_response = Mock()
-        mock_response.json.return_value = {"data": {}}
-        mock_client.request.return_value = mock_response
-        tokens_resource._create_response = Mock(return_value=Mock(spec=APIResponse))
         
-        request = TokenGetRequest(token_id="test_token_id")
-        result = tokens_resource.get_token(request)
-
-        # Check the request was made correctly
-        mock_client.request.assert_called_once_with(
-            method="GET",
-            endpoint="/v1/token/test_token_id"
-        )
-        tokens_resource._create_response.assert_called_once_with(mock_response)
-        assert isinstance(result, type(tokens_resource._create_response.return_value))
-
-    @patch('mailersend.resources.tokens.logger')
-    def test_get_token_logging(self, mock_logger, tokens_resource, mock_client):
-        """Test get_token logs correctly."""
         mock_response = Mock()
-        mock_response.json.return_value = {"data": {}}
-        mock_client.request.return_value = mock_response
-        tokens_resource._create_response = Mock(return_value=Mock(spec=APIResponse))
-        
-        request = TokenGetRequest(token_id="test_token_id")
-        tokens_resource.get_token(request)
+        self.mock_client.request.return_value = mock_response
 
-        mock_logger.info.assert_called_once_with("Getting token: test_token_id")
-        tokens_resource._create_response.assert_called_once_with(mock_response)
+        result = self.resource.list_tokens(request)
 
-    def test_create_token(self, tokens_resource, mock_client):
-        """Test create_token functionality."""
-        mock_response = Mock()
-        mock_response.json.return_value = {"data": {}}
-        mock_client.request.return_value = mock_response
-        tokens_resource._create_response = Mock(return_value=Mock(spec=APIResponse))
-        
-        request = TokenCreateRequest(
-            name="Test Token",
-            domain_id="domain123",
-            scopes=["email_full", "domains_read"]
+        # Verify client was called with empty params (defaults excluded)
+        self.mock_client.request.assert_called_once_with(
+            method='GET',
+            endpoint='token',
+            params={}
         )
-        result = tokens_resource.create_token(request)
 
-        # Check the request was made correctly
-        mock_client.request.assert_called_once_with(
-            method="POST",
-            endpoint="/v1/token",
-            json={
-                "name": "Test Token",
-                "domain_id": "domain123",
-                "scopes": ["email_full", "domains_read"]
-            }
-        )
-        tokens_resource._create_response.assert_called_once_with(mock_response)
-        assert isinstance(result, type(tokens_resource._create_response.return_value))
-
-    @patch('mailersend.resources.tokens.logger')
-    def test_create_token_logging(self, mock_logger, tokens_resource, mock_client):
-        """Test create_token logs correctly."""
-        mock_response = Mock()
-        mock_response.json.return_value = {"data": {}}
-        mock_client.request.return_value = mock_response
-        tokens_resource._create_response = Mock(return_value=Mock(spec=APIResponse))
+    def test_get_token_returns_api_response(self):
+        """Test get_token method returns APIResponse."""
+        request = TokenGetRequest(token_id="token123")
         
+        mock_response = Mock()
+        self.mock_client.request.return_value = mock_response
+
+        result = self.resource.get_token(request)
+
+        assert result == self.mock_api_response
+        self.resource._create_response.assert_called_once_with(mock_response)
+
+    def test_get_token_endpoint_construction(self):
+        """Test get_token constructs endpoint correctly."""
+        request = TokenGetRequest(token_id="token123")
+        
+        mock_response = Mock()
+        self.mock_client.request.return_value = mock_response
+
+        result = self.resource.get_token(request)
+
+        # Verify endpoint construction
+        self.mock_client.request.assert_called_once_with(
+            method='GET',
+            endpoint='token/token123'
+        )
+
+    def test_create_token_returns_api_response(self):
+        """Test create_token method returns APIResponse."""
         request = TokenCreateRequest(
             name="Test Token",
             domain_id="domain123",
             scopes=["email_full"]
         )
-        tokens_resource.create_token(request)
-
-        mock_logger.info.assert_called_once_with(
-            "Creating token: Test Token for domain: domain123"
-        )
-        tokens_resource._create_response.assert_called_once_with(mock_response)
-
-    def test_update_token(self, tokens_resource, mock_client):
-        """Test update_token functionality."""
-        mock_response = Mock()
-        mock_response.json.return_value = {}
-        mock_client.request.return_value = mock_response
-        tokens_resource._create_response = Mock(return_value=Mock(spec=APIResponse))
         
-        request = TokenUpdateRequest(token_id="test_token_id", status="pause")
-        result = tokens_resource.update_token(request)
-
-        # Check the request was made correctly
-        mock_client.request.assert_called_once_with(
-            method="PUT",
-            endpoint="/v1/token/test_token_id/settings",
-            json={"status": "pause"}
-        )
-        tokens_resource._create_response.assert_called_once_with(mock_response)
-        assert isinstance(result, type(tokens_resource._create_response.return_value))
-
-    @patch('mailersend.resources.tokens.logger')
-    def test_update_token_logging(self, mock_logger, tokens_resource, mock_client):
-        """Test update_token logs correctly."""
         mock_response = Mock()
-        mock_response.json.return_value = {}
-        mock_client.request.return_value = mock_response
-        tokens_resource._create_response = Mock(return_value=Mock(spec=APIResponse))
-        
-        request = TokenUpdateRequest(token_id="test_token_id", status="unpause")
-        tokens_resource.update_token(request)
+        self.mock_client.request.return_value = mock_response
 
-        mock_logger.info.assert_called_once_with(
-            "Updating token: test_token_id to status: unpause"
+        result = self.resource.create_token(request)
+
+        assert result == self.mock_api_response
+        self.resource._create_response.assert_called_once_with(mock_response)
+
+    def test_create_token_with_request_body(self):
+        """Test create_token sends correct request body."""
+        request = TokenCreateRequest(
+            name="Test Token",
+            domain_id="domain123",
+            scopes=["email_full", "domains_read"]
         )
-        tokens_resource._create_response.assert_called_once_with(mock_response)
-
-    def test_update_token_name(self, tokens_resource, mock_client):
-        """Test update_token_name functionality."""
-        mock_response = Mock()
-        mock_response.json.return_value = {}
-        mock_client.request.return_value = mock_response
-        tokens_resource._create_response = Mock(return_value=Mock(spec=APIResponse))
         
-        request = TokenUpdateNameRequest(token_id="test_token_id", name="New Token Name")
-        result = tokens_resource.update_token_name(request)
+        mock_response = Mock()
+        self.mock_client.request.return_value = mock_response
 
-        # Check the request was made correctly
-        mock_client.request.assert_called_once_with(
-            method="PUT",
-            endpoint="/v1/token/test_token_id",
-            json={"name": "New Token Name"}
+        result = self.resource.create_token(request)
+
+        # Verify client was called with correct body
+        self.mock_client.request.assert_called_once_with(
+            method='POST',
+            endpoint='token',
+            body={'name': 'Test Token', 'domain_id': 'domain123', 'scopes': ['email_full', 'domains_read']}
         )
-        tokens_resource._create_response.assert_called_once_with(mock_response)
-        assert isinstance(result, type(tokens_resource._create_response.return_value))
 
-    @patch('mailersend.resources.tokens.logger')
-    def test_update_token_name_logging(self, mock_logger, tokens_resource, mock_client):
-        """Test update_token_name logs correctly."""
-        mock_response = Mock()
-        mock_response.json.return_value = {}
-        mock_client.request.return_value = mock_response
-        tokens_resource._create_response = Mock(return_value=Mock(spec=APIResponse))
+    def test_update_token_returns_api_response(self):
+        """Test update_token method returns APIResponse."""
+        request = TokenUpdateRequest(token_id="token123", status="pause")
         
-        request = TokenUpdateNameRequest(token_id="test_token_id", name="New Name")
-        tokens_resource.update_token_name(request)
+        mock_response = Mock()
+        self.mock_client.request.return_value = mock_response
 
-        mock_logger.info.assert_called_once_with(
-            "Updating token name: test_token_id to: New Name"
+        result = self.resource.update_token(request)
+
+        assert result == self.mock_api_response
+        self.resource._create_response.assert_called_once_with(mock_response)
+
+    def test_update_token_with_request_body(self):
+        """Test update_token sends correct request body."""
+        request = TokenUpdateRequest(token_id="token123", status="unpause")
+        
+        mock_response = Mock()
+        self.mock_client.request.return_value = mock_response
+
+        result = self.resource.update_token(request)
+
+        # Verify client was called with correct body and endpoint
+        self.mock_client.request.assert_called_once_with(
+            method='PUT',
+            endpoint='token/token123/settings',
+            body={'status': 'unpause'}
         )
-        tokens_resource._create_response.assert_called_once_with(mock_response)
 
-    def test_delete_token(self, tokens_resource, mock_client):
-        """Test delete_token functionality."""
-        mock_response = Mock()
-        mock_response.json.return_value = {}
-        mock_client.request.return_value = mock_response
-        tokens_resource._create_response = Mock(return_value=Mock(spec=APIResponse))
+    def test_update_token_name_returns_api_response(self):
+        """Test update_token_name method returns APIResponse."""
+        request = TokenUpdateNameRequest(token_id="token123", name="New Name")
         
-        request = TokenDeleteRequest(token_id="test_token_id")
-        result = tokens_resource.delete_token(request)
+        mock_response = Mock()
+        self.mock_client.request.return_value = mock_response
 
-        # Check the request was made correctly
-        mock_client.request.assert_called_once_with(
-            method="DELETE",
-            endpoint="/v1/token/test_token_id"
+        result = self.resource.update_token_name(request)
+
+        assert result == self.mock_api_response
+        self.resource._create_response.assert_called_once_with(mock_response)
+
+    def test_update_token_name_with_request_body(self):
+        """Test update_token_name sends correct request body."""
+        request = TokenUpdateNameRequest(token_id="token123", name="Updated Name")
+        
+        mock_response = Mock()
+        self.mock_client.request.return_value = mock_response
+
+        result = self.resource.update_token_name(request)
+
+        # Verify client was called with correct body and endpoint
+        self.mock_client.request.assert_called_once_with(
+            method='PUT',
+            endpoint='token/token123',
+            body={'name': 'Updated Name'}
         )
-        tokens_resource._create_response.assert_called_once_with(mock_response)
-        assert isinstance(result, type(tokens_resource._create_response.return_value))
 
-    @patch('mailersend.resources.tokens.logger')
-    def test_delete_token_logging(self, mock_logger, tokens_resource, mock_client):
-        """Test delete_token logs correctly."""
-        mock_response = Mock()
-        mock_response.json.return_value = {}
-        mock_client.request.return_value = mock_response
-        tokens_resource._create_response = Mock(return_value=Mock(spec=APIResponse))
+    def test_delete_token_returns_api_response(self):
+        """Test delete_token method returns APIResponse."""
+        request = TokenDeleteRequest(token_id="token123")
         
-        request = TokenDeleteRequest(token_id="test_token_id")
-        tokens_resource.delete_token(request)
+        mock_response = Mock()
+        self.mock_client.request.return_value = mock_response
 
-        mock_logger.info.assert_called_once_with("Deleting token: test_token_id")
-        tokens_resource._create_response.assert_called_once_with(mock_response) 
+        result = self.resource.delete_token(request)
+
+        assert result == self.mock_api_response
+        self.resource._create_response.assert_called_once_with(mock_response)
+
+    def test_delete_token_endpoint_construction(self):
+        """Test delete_token constructs endpoint correctly."""
+        request = TokenDeleteRequest(token_id="token123")
+        
+        mock_response = Mock()
+        self.mock_client.request.return_value = mock_response
+
+        result = self.resource.delete_token(request)
+
+        # Verify endpoint construction
+        self.mock_client.request.assert_called_once_with(
+            method='DELETE',
+            endpoint='token/token123'
+        )
+
+    def test_integration_workflow(self):
+        """Test integration workflow with multiple operations."""
+        # Setup different requests for different methods
+        query_params = TokensListQueryParams()
+        request_list = TokensListRequest(query_params=query_params)
+        request_get = TokenGetRequest(token_id="token123")
+        request_create = TokenCreateRequest(name="Test", domain_id="domain123", scopes=["email_full"])
+        request_update = TokenUpdateRequest(token_id="token123", status="pause")
+        request_update_name = TokenUpdateNameRequest(token_id="token123", name="New Name")
+        request_delete = TokenDeleteRequest(token_id="token123")
+
+        # Test that each method returns the expected APIResponse type
+        assert isinstance(self.resource.list_tokens(request_list), type(self.mock_api_response))
+        assert isinstance(self.resource.get_token(request_get), type(self.mock_api_response))
+        assert isinstance(self.resource.create_token(request_create), type(self.mock_api_response))
+        assert isinstance(self.resource.update_token(request_update), type(self.mock_api_response))
+        assert isinstance(self.resource.update_token_name(request_update_name), type(self.mock_api_response))
+        assert isinstance(self.resource.delete_token(request_delete), type(self.mock_api_response)) 

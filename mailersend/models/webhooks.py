@@ -162,15 +162,4 @@ class WebhookDeleteRequest(BaseModel):
         return v.strip()
 
 
-# Response Models
-class Webhook(BaseModel):
-    """Webhook response model."""
 
-    id: str = Field(..., description="Webhook ID")
-    url: str = Field(..., description="Webhook URL")
-    name: str = Field(..., description="Webhook name")
-    events: List[str] = Field(..., description="List of subscribed events")
-    enabled: bool = Field(..., description="Whether webhook is enabled")
-    domain_id: str = Field(..., description="Domain ID")
-    created_at: datetime = Field(..., description="Creation timestamp")
-    updated_at: datetime = Field(..., description="Last update timestamp")

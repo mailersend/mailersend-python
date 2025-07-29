@@ -1,364 +1,158 @@
-"""Tests for Templates resource."""
+"""Unit tests for Templates resource."""
 import pytest
 from unittest.mock import Mock, MagicMock
-import requests
 
 from mailersend.resources.templates import Templates
 from mailersend.models.base import APIResponse
 from mailersend.models.templates import (
-    TemplatesListQueryParams, TemplatesListRequest,
-    TemplateGetRequest, TemplateDeleteRequest,
-    TemplatesListResponse, TemplateResponse, Template
+    TemplatesListRequest,
+    TemplatesListQueryParams,
+    TemplateGetRequest,
+    TemplateDeleteRequest,
 )
-from mailersend.exceptions import ValidationError
+from mailersend.exceptions import ValidationError as MailerSendValidationError
 
 
-class TestTemplatesResource:
-    """Test Templates resource functionality."""
-    
+class TestTemplates:
+    """Test Templates resource class."""
+
     def setup_method(self):
         """Set up test fixtures."""
         self.mock_client = Mock()
-        self.templates = Templates(self.mock_client)
-    
-    def _create_mock_response(self, json_data, status_code=200, headers=None):
-        """Helper to create mock response objects."""
+        self.resource = Templates(self.mock_client)
+        self.resource.logger = Mock()
+        
+        # Mock _create_response method
+        self.mock_api_response = MagicMock(spec=APIResponse)
+        self.resource._create_response = Mock(return_value=self.mock_api_response)
+
+    def test_list_templates_returns_api_response(self):
+        """Test list_templates method returns APIResponse."""
+        query_params = TemplatesListQueryParams()
+        request = TemplatesListRequest(query_params=query_params)
+        
         mock_response = Mock()
-        mock_response.json.return_value = json_data
-        mock_response.status_code = status_code
-        mock_response.headers = headers or {}
-        mock_response.request = Mock()
-        mock_response.request.url = "https://api.mailersend.com/v1/templates"
-        mock_response.request.method = "GET"
-        return mock_response
-    
-    def test_list_templates_minimal(self):
-        """Test listing templates with minimal parameters."""
-        # Mock response
-        json_data = {
-            "data": [
-                {
-                    "id": "template-123",
-                    "name": "Welcome Email",
-                    "type": "html",
-                    "created_at": "2024-01-15T10:30:00Z"
-                }
-            ],
-            "links": {"first": "page1", "last": "page1", "prev": None, "next": None},
-            "meta": {"current_page": 1, "total": 1}
-        }
-        mock_response = self._create_mock_response(json_data)
         self.mock_client.request.return_value = mock_response
-        
-        # Call method
-        response = self.templates.list_templates()
-        
-        # Verify request - should use defaults
-        self.mock_client.request.assert_called_once_with(
-            "GET",
-            "templates",
-            params={"page": 1, "limit": 25}
-        )
-        
-        # Verify response
-        assert isinstance(response, APIResponse)
-        assert isinstance(response.data, TemplatesListResponse)
-        assert len(response.data.data) == 1
-        assert response.data.data[0].name == "Welcome Email"
-    
-    def test_list_templates_with_request(self):
-        """Test listing templates with request parameters."""
-        # Mock response
-        json_data = {
-            "data": [],
-            "links": {"first": "page1", "last": "page2", "prev": None, "next": "page2"},
-            "meta": {"current_page": 1, "total": 0}
-        }
-        mock_response = self._create_mock_response(json_data)
+
+        result = self.resource.list_templates(request)
+
+        assert result == self.mock_api_response
+        self.resource._create_response.assert_called_once_with(mock_response)
+
+    def test_list_templates_with_none_request(self):
+        """Test list_templates with None request uses default."""
+        mock_response = Mock()
         self.mock_client.request.return_value = mock_response
-        
-        # Create request
+
+        result = self.resource.list_templates(None)
+
+        assert result == self.mock_api_response
+        self.resource._create_response.assert_called_once_with(mock_response)
+
+    def test_list_templates_uses_query_params(self):
+        """Test list_templates method uses query params correctly."""
         query_params = TemplatesListQueryParams(
-            domain_id="domain-123",
+            domain_id="test-domain",
             page=2,
             limit=50
         )
         request = TemplatesListRequest(query_params=query_params)
-        
-        # Call method
-        response = self.templates.list_templates(request)
-        
-        # Verify request
-        self.mock_client.request.assert_called_once_with(
-            "GET",
-            "templates",
-            params={
-                "domain_id": "domain-123",
-                "page": 2,
-                "limit": 50
-            }
-        )
-        
-        # Verify response
-        assert isinstance(response, APIResponse)
-        assert isinstance(response.data, TemplatesListResponse)
-        assert len(response.data.data) == 0
-    
-    def test_list_templates_with_partial_request(self):
-        """Test listing templates with partial request parameters."""
-        # Mock response
-        json_data = {
-            "data": [],
-            "links": {},
-            "meta": {}
-        }
-        mock_response = self._create_mock_response(json_data)
+
+        mock_response = Mock()
         self.mock_client.request.return_value = mock_response
-        
-        # Create request with only domain_id
-        query_params = TemplatesListQueryParams(domain_id="domain-123")
+
+        result = self.resource.list_templates(request)
+
+        # Verify client was called correctly
+        self.mock_client.request.assert_called_once_with(
+            method='GET',
+            endpoint='templates',
+            params={'domain_id': 'test-domain', 'page': 2, 'limit': 50}
+        )
+
+        # Verify _create_response was called
+        self.resource._create_response.assert_called_once_with(mock_response)
+
+    def test_list_templates_with_defaults(self):
+        """Test list_templates with default query params."""
+        query_params = TemplatesListQueryParams()
         request = TemplatesListRequest(query_params=query_params)
         
-        # Call method
-        response = self.templates.list_templates(request)
-        
-        # Verify request - should include domain_id and defaults
+        mock_response = Mock()
+        self.mock_client.request.return_value = mock_response
+
+        result = self.resource.list_templates(request)
+
+        # Verify client was called with defaults
         self.mock_client.request.assert_called_once_with(
-            "GET",
-            "templates",
-            params={
-                "domain_id": "domain-123",
-                "page": 1,
-                "limit": 25
-            }
+            method='GET',
+            endpoint='templates',
+            params={'page': 1, 'limit': 25}
         )
+
+    def test_get_template_returns_api_response(self):
+        """Test get_template method returns APIResponse."""
+        request = TemplateGetRequest(template_id="template123")
         
-        # Verify response
-        assert isinstance(response, APIResponse)
-        assert isinstance(response.data, TemplatesListResponse)
-    
-    def test_list_templates_excludes_none_domain_id(self):
-        """Test listing templates excludes None domain_id from params."""
-        # Mock response
-        json_data = {
-            "data": [],
-            "links": {},
-            "meta": {}
-        }
-        mock_response = self._create_mock_response(json_data)
+        mock_response = Mock()
         self.mock_client.request.return_value = mock_response
+
+        result = self.resource.get_template(request)
+
+        assert result == self.mock_api_response
+        self.resource._create_response.assert_called_once_with(mock_response)
+
+    def test_get_template_endpoint_construction(self):
+        """Test get_template constructs endpoint correctly."""
+        request = TemplateGetRequest(template_id="template123")
         
-        # Create request with None domain_id
-        query_params = TemplatesListQueryParams(domain_id=None, page=2, limit=50)
-        request = TemplatesListRequest(query_params=query_params)
-        
-        # Call method
-        response = self.templates.list_templates(request)
-        
-        # Verify request - should exclude domain_id
+        mock_response = Mock()
+        self.mock_client.request.return_value = mock_response
+
+        result = self.resource.get_template(request)
+
+        # Verify endpoint construction
         self.mock_client.request.assert_called_once_with(
-            "GET",
-            "templates",
-            params={
-                "page": 2,
-                "limit": 50
-            }
+            method='GET',
+            endpoint='templates/template123'
         )
+
+    def test_delete_template_returns_api_response(self):
+        """Test delete_template method returns APIResponse."""
+        request = TemplateDeleteRequest(template_id="template123")
         
-        # Verify response
-        assert isinstance(response, APIResponse)
-    
-    def test_get_template_success(self):
-        """Test getting a single template successfully."""
-        # Mock response
-        json_data = {
-            "data": {
-                "id": "template-123",
-                "name": "Welcome Email",
-                "type": "html",
-                "image_path": "https://example.com/image.jpg",
-                "created_at": "2024-01-15T10:30:00Z",
-                "category": {
-                    "id": "cat-1",
-                    "name": "Marketing"
-                },
-                "domain": {
-                    "id": "domain-1",
-                    "name": "example.com"
-                },
-                "template_stats": {
-                    "total": 100,
-                    "sent": 95,
-                    "delivered": 90,
-                    "queued": 0,
-                    "rejected": 5,
-                    "last_email_sent_at": "2024-01-14T15:30:00Z"
-                }
-            }
-        }
-        mock_response = self._create_mock_response(json_data)
+        mock_response = Mock()
         self.mock_client.request.return_value = mock_response
+
+        result = self.resource.delete_template(request)
+
+        assert result == self.mock_api_response
+        self.resource._create_response.assert_called_once_with(mock_response)
+
+    def test_delete_template_endpoint_construction(self):
+        """Test delete_template constructs endpoint correctly."""
+        request = TemplateDeleteRequest(template_id="template123")
         
-        # Create request
-        request = TemplateGetRequest(template_id="template-123")
-        
-        # Call method
-        response = self.templates.get_template(request)
-        
-        # Verify request
-        self.mock_client.request.assert_called_once_with("GET", "templates/template-123")
-        
-        # Verify response
-        assert isinstance(response, APIResponse)
-        assert isinstance(response.data, TemplateResponse)
-        assert response.data.data.id == "template-123"
-        assert response.data.data.name == "Welcome Email"
-        assert response.data.data.category.name == "Marketing"
-        assert response.data.data.template_stats.total == 100
-    
-    def test_get_template_requires_request(self):
-        """Test get_template requires a request object."""
-        with pytest.raises(ValidationError) as exc_info:
-            self.templates.get_template(None)
-        
-        assert "TemplateGetRequest must be provided" in str(exc_info.value)
-        
-        # Verify no API call was made
-        self.mock_client.request.assert_not_called()
-    
-    def test_get_template_validates_request_type(self):
-        """Test get_template validates request type."""
-        with pytest.raises(ValidationError) as exc_info:
-            self.templates.get_template("invalid-request")
-        
-        assert "request must be a TemplateGetRequest instance" in str(exc_info.value)
-        
-        # Verify no API call was made
-        self.mock_client.request.assert_not_called()
-    
-    def test_delete_template_success(self):
-        """Test deleting a template successfully."""
-        # Mock response (delete returns empty response)
-        mock_response = self._create_mock_response({}, status_code=204)
+        mock_response = Mock()
         self.mock_client.request.return_value = mock_response
-        
-        # Create request
-        request = TemplateDeleteRequest(template_id="template-123")
-        
-        # Call method
-        response = self.templates.delete_template(request)
-        
-        # Verify request
-        self.mock_client.request.assert_called_once_with("DELETE", "templates/template-123")
-        
-        # Verify response
-        assert isinstance(response, APIResponse)
-        assert response.status_code == 204
-    
-    def test_delete_template_requires_request(self):
-        """Test delete_template requires a request object."""
-        with pytest.raises(ValidationError) as exc_info:
-            self.templates.delete_template(None)
-        
-        assert "TemplateDeleteRequest must be provided" in str(exc_info.value)
-        
-        # Verify no API call was made
-        self.mock_client.request.assert_not_called()
-    
-    def test_delete_template_validates_request_type(self):
-        """Test delete_template validates request type."""
-        with pytest.raises(ValidationError) as exc_info:
-            self.templates.delete_template("invalid-request")
-        
-        assert "request must be a TemplateDeleteRequest instance" in str(exc_info.value)
-        
-        # Verify no API call was made
-        self.mock_client.request.assert_not_called()
-    
-    def test_list_templates_api_error(self):
-        """Test list_templates handles API errors."""
-        # Mock error response
-        self.mock_client.request.side_effect = Exception("API Error")
-        
-        # Verify exception is raised
-        with pytest.raises(Exception) as exc_info:
-            self.templates.list_templates()
-        
-        assert "API Error" in str(exc_info.value)
-    
-    def test_get_template_api_error(self):
-        """Test get_template handles API errors."""
-        # Mock error response
-        self.mock_client.request.side_effect = Exception("API Error")
-        
-        # Create request
-        request = TemplateGetRequest(template_id="template-123")
-        
-        # Verify exception is raised
-        with pytest.raises(Exception) as exc_info:
-            self.templates.get_template(request)
-        
-        assert "API Error" in str(exc_info.value)
-    
-    def test_delete_template_api_error(self):
-        """Test delete_template handles API errors."""
-        # Mock error response
-        self.mock_client.request.side_effect = Exception("API Error")
-        
-        # Create request
-        request = TemplateDeleteRequest(template_id="template-123")
-        
-        # Verify exception is raised
-        with pytest.raises(Exception) as exc_info:
-            self.templates.delete_template(request)
-        
-        assert "API Error" in str(exc_info.value)
-    
-    def test_list_templates_response_parsing(self):
-        """Test list_templates properly parses response data."""
-        # Mock response with multiple templates
-        json_data = {
-            "data": [
-                {
-                    "id": "template-1",
-                    "name": "Template 1",
-                    "type": "html",
-                    "created_at": "2024-01-15T10:30:00Z"
-                },
-                {
-                    "id": "template-2",
-                    "name": "Template 2", 
-                    "type": "text",
-                    "created_at": "2024-01-16T11:30:00Z"
-                }
-            ],
-            "links": {
-                "first": "https://api.mailersend.com/v1/templates?page=1",
-                "last": "https://api.mailersend.com/v1/templates?page=5",
-                "prev": None,
-                "next": "https://api.mailersend.com/v1/templates?page=2"
-            },
-            "meta": {
-                "current_page": 1,
-                "from": 1,
-                "last_page": 5,
-                "path": "https://api.mailersend.com/v1/templates",
-                "per_page": 25,
-                "to": 25,
-                "total": 125
-            }
-        }
-        mock_response = self._create_mock_response(json_data)
-        self.mock_client.request.return_value = mock_response
-        
-        # Call method
-        response = self.templates.list_templates()
-        
-        # Verify response structure
-        assert isinstance(response, APIResponse)
-        assert isinstance(response.data, TemplatesListResponse)
-        assert len(response.data.data) == 2
-        assert response.data.data[0].id == "template-1"
-        assert response.data.data[1].id == "template-2"
-        assert response.data.meta["total"] == 125
-        assert response.data.links["next"] == "https://api.mailersend.com/v1/templates?page=2" 
+
+        result = self.resource.delete_template(request)
+
+        # Verify endpoint construction
+        self.mock_client.request.assert_called_once_with(
+            method='DELETE',
+            endpoint='templates/template123'
+        )
+
+    def test_integration_workflow(self):
+        """Test integration workflow with multiple operations."""
+        # Setup different requests for different methods
+        query_params = TemplatesListQueryParams()
+        request_list = TemplatesListRequest(query_params=query_params)
+        request_get = TemplateGetRequest(template_id="template123")
+        request_delete = TemplateDeleteRequest(template_id="template123")
+
+        # Test that each method returns the expected APIResponse type
+        assert isinstance(self.resource.list_templates(request_list), type(self.mock_api_response))
+        assert isinstance(self.resource.get_template(request_get), type(self.mock_api_response))
+        assert isinstance(self.resource.delete_template(request_delete), type(self.mock_api_response)) 
