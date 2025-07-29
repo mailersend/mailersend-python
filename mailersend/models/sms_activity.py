@@ -65,14 +65,6 @@ class SmsMessageGetRequest(MailerSendBaseModel):
     sms_message_id: str = Field(..., min_length=1)
 
 
-class SmsActivityListResponse(MailerSendBaseModel):
-    """Response model for SMS activity list."""
-
-    data: List[SmsActivity]
-    links: dict
-    meta: dict
-
-
 class SmsMessage(MailerSendBaseModel):
     """SMS Message model."""
 
@@ -84,9 +76,3 @@ class SmsMessage(MailerSendBaseModel):
     created_at: datetime
     sms: List[dict]
     sms_activity: List[SmsActivity]
-
-
-class SmsMessageResponse(MailerSendBaseModel):
-    """Response model for SMS message."""
-
-    data: SmsMessage
