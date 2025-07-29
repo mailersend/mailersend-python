@@ -3,7 +3,6 @@ from typing import Dict, Any, Optional
 from .base import BaseResource
 from ..models.analytics import AnalyticsRequest
 from ..models.base import APIResponse
-from ..exceptions import ValidationError
 
 
 class Analytics(BaseResource):
@@ -23,22 +22,8 @@ class Analytics(BaseResource):
 
         Returns:
             APIResponse with activity data grouped by date
-
-        Raises:
-            ValidationError: If the request is invalid
-            MailerSendError: If the API returns an error
         """
         self.logger.debug("Retrieving analytics data by date")
-
-        if not request:
-            self.logger.error("No AnalyticsRequest object provided")
-            raise ValidationError("AnalyticsRequest must be provided")
-
-        if not request.event:
-            self.logger.error("No events specified for date analytics")
-            raise ValidationError(
-                "At least one event must be specified for date analytics"
-            )
 
         # Convert to query parameters
         params = self._build_query_params(request)
@@ -59,16 +44,8 @@ class Analytics(BaseResource):
 
         Returns:
             APIResponse with opens data grouped by country
-
-        Raises:
-            ValidationError: If the request is invalid
-            MailerSendError: If the API returns an error
         """
         self.logger.debug("Retrieving analytics data by country")
-
-        if not request:
-            self.logger.error("No AnalyticsRequest object provided")
-            raise ValidationError("AnalyticsRequest must be provided")
 
         # Convert to query parameters (exclude event and group_by for country endpoint)
         params = self._build_query_params(request, exclude_fields=["event", "group_by"])
@@ -89,16 +66,8 @@ class Analytics(BaseResource):
 
         Returns:
             APIResponse with opens data grouped by user agent
-
-        Raises:
-            ValidationError: If the request is invalid
-            MailerSendError: If the API returns an error
         """
         self.logger.debug("Retrieving analytics data by user agent")
-
-        if not request:
-            self.logger.error("No AnalyticsRequest object provided")
-            raise ValidationError("AnalyticsRequest must be provided")
 
         # Convert to query parameters (exclude event and group_by for user agent endpoint)
         params = self._build_query_params(request, exclude_fields=["event", "group_by"])
@@ -121,16 +90,8 @@ class Analytics(BaseResource):
 
         Returns:
             APIResponse with opens data grouped by reading environment
-
-        Raises:
-            ValidationError: If the request is invalid
-            MailerSendError: If the API returns an error
         """
         self.logger.debug("Retrieving analytics data by reading environment")
-
-        if not request:
-            self.logger.error("No AnalyticsRequest object provided")
-            raise ValidationError("AnalyticsRequest must be provided")
 
         # Convert to query parameters (exclude event and group_by for reading environment endpoint)
         params = self._build_query_params(request, exclude_fields=["event", "group_by"])

@@ -8,7 +8,6 @@ from ..models.messages import (
     MessageResponse,
 )
 from ..models.base import APIResponse
-from ..exceptions import ValidationError as MailerSendValidationError
 
 
 class Messages(BaseResource):
@@ -27,16 +26,7 @@ class Messages(BaseResource):
 
         Returns:
             APIResponse containing the messages list response
-
-        Raises:
-            MailerSendValidationError: If the request is invalid or has wrong type
         """
-        # Validation
-        if not isinstance(request, MessagesListRequest):
-            raise MailerSendValidationError(
-                "Request must be an instance of MessagesListRequest"
-            )
-
         self.logger.debug("Preparing to list messages with query parameters")
 
         # Extract query parameters
@@ -60,16 +50,7 @@ class Messages(BaseResource):
 
         Returns:
             APIResponse containing the message response
-
-        Raises:
-            MailerSendValidationError: If the request is invalid or has wrong type
         """
-        # Validation
-        if not isinstance(request, MessageGetRequest):
-            raise MailerSendValidationError(
-                "Request must be an instance of MessageGetRequest"
-            )
-
         self.logger.debug(f"Preparing to get message with ID: {request.message_id}")
 
         # Make API request

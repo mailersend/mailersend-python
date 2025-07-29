@@ -1,7 +1,6 @@
 """Templates resource for MailerSend SDK."""
 
 from typing import Optional
-import logging
 
 from .base import BaseResource
 from ..models.base import APIResponse
@@ -9,13 +8,7 @@ from ..models.templates import (
     TemplatesListRequest,
     TemplateGetRequest,
     TemplateDeleteRequest,
-    TemplatesListResponse,
-    TemplateResponse,
 )
-from ..exceptions import ValidationError
-
-logger = logging.getLogger(__name__)
-
 
 class Templates(BaseResource):
     """
@@ -36,23 +29,19 @@ class Templates(BaseResource):
 
         Returns:
             APIResponse with TemplatesListResponse data
-
-        Raises:
-            ValidationError: If the request is invalid
-            MailerSendError: If the API returns an error
         """
-        logger.debug("Starting list_templates operation")
+        self.logger.debug("Starting list_templates operation")
 
         # Validate and prepare request
         if request is None:
             request = TemplatesListRequest()
 
-        logger.debug(f"Templates list request: {request}")
+        self.logger.debug(f"Templates list request: {request}")
 
         # Extract query parameters
         params = request.to_query_params()
 
-        logger.info(f"Fetching templates with params: {params}")
+        self.logger.debug(f"Fetching templates with params: {params}")
 
         # Make API call
         response = self.client.request(
@@ -71,25 +60,8 @@ class Templates(BaseResource):
 
         Returns:
             APIResponse with TemplateResponse data
-
-        Raises:
-            ValidationError: If the request is invalid
-            MailerSendError: If the API returns an error
         """
-        logger.debug("Starting get_template operation")
-
-        # Validate request
-        if not request:
-            logger.error("TemplateGetRequest is required")
-            raise ValidationError("TemplateGetRequest must be provided")
-
-        if not isinstance(request, TemplateGetRequest):
-            logger.error(f"Expected TemplateGetRequest, got {type(request).__name__}")
-            raise ValidationError("request must be a TemplateGetRequest instance")
-
-        logger.debug(f"Template get request: {request}")
-
-        logger.info(f"Fetching template: {request.template_id}")
+        self.logger.debug(f"Template get request: {request}")
 
         # Make API call
         response = self.client.request(
@@ -108,27 +80,9 @@ class Templates(BaseResource):
 
         Returns:
             APIResponse with empty data
-
-        Raises:
-            ValidationError: If the request is invalid
-            MailerSendError: If the API returns an error
         """
-        logger.debug("Starting delete_template operation")
-
-        # Validate request
-        if not request:
-            logger.error("TemplateDeleteRequest is required")
-            raise ValidationError("TemplateDeleteRequest must be provided")
-
-        if not isinstance(request, TemplateDeleteRequest):
-            logger.error(
-                f"Expected TemplateDeleteRequest, got {type(request).__name__}"
-            )
-            raise ValidationError("request must be a TemplateDeleteRequest instance")
-
-        logger.debug(f"Template delete request: {request}")
-
-        logger.info(f"Deleting template: {request.template_id}")
+        self.logger.debug("Starting delete_template operation")
+        self.logger.debug(f"Deleting template: {request.template_id}")
 
         # Make API call
         response = self.client.request(

@@ -1,7 +1,6 @@
 from .base import BaseResource
 from ..models.activity import ActivityRequest, SingleActivityRequest
 from ..models.base import APIResponse
-from ..exceptions import ValidationError
 
 
 class Activity(BaseResource):
@@ -46,11 +45,6 @@ class Activity(BaseResource):
 
         Returns:
             APIResponse with single activity data
-
-        Raises:
-            ValidationError: If the SingleActivityRequest is invalid
-            ResourceNotFoundError: If the activity is not found
-            MailerSendError: If the API returns an error
         """
         self.logger.debug("Preparing to get single activity")
 
