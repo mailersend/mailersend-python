@@ -1,3 +1,5 @@
+"""Analytics resource"""
+
 from typing import Dict, Any, Optional
 
 from .base import BaseResource
@@ -29,7 +31,7 @@ class Analytics(BaseResource):
         params = self._build_query_params(request)
 
         self.logger.info("Requesting analytics data by date")
-        self.logger.debug(f"Query params: {params}")
+        self.logger.debug("Query params: %s", params)
 
         response = self.client.request("GET", "analytics/date", params=params)
 
@@ -51,7 +53,7 @@ class Analytics(BaseResource):
         params = self._build_query_params(request, exclude_fields=["event", "group_by"])
 
         self.logger.info("Requesting analytics data by country")
-        self.logger.debug(f"Query params: {params}")
+        self.logger.debug("Query params: %s", params)
 
         response = self.client.request("GET", "analytics/country", params=params)
 
@@ -73,7 +75,7 @@ class Analytics(BaseResource):
         params = self._build_query_params(request, exclude_fields=["event", "group_by"])
 
         self.logger.info("Requesting analytics data by user agent")
-        self.logger.debug(f"Query params: {params}")
+        self.logger.debug("Query params: %s", params)
 
         response = self.client.request("GET", "analytics/ua-name", params=params)
 
@@ -97,7 +99,7 @@ class Analytics(BaseResource):
         params = self._build_query_params(request, exclude_fields=["event", "group_by"])
 
         self.logger.info("Requesting analytics data by reading environment")
-        self.logger.debug(f"Query params: {params}")
+        self.logger.debug("Query params: %s", params)
 
         response = self.client.request("GET", "analytics/ua-type", params=params)
 

@@ -27,7 +27,7 @@ class SmsActivity(BaseResource):
         # Convert to query parameters
         params = request.to_query_params()
 
-        self.logger.debug(f"Listing SMS activities with params: {params}")
+        self.logger.debug("Listing SMS activities with params: %s", params)
 
         # Make API request
         response = self.client.request(
@@ -46,7 +46,7 @@ class SmsActivity(BaseResource):
         Returns:
             API response with SMS message activity
         """
-        self.logger.debug(f"Getting SMS message activity: {request.sms_message_id}")
+        self.logger.debug("Getting SMS message activity: %s", request.sms_message_id)
 
         # Make API request
         response = self.client.request(

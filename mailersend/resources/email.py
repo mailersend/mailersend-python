@@ -1,3 +1,7 @@
+"""Email resource"""
+
+from typing import List
+
 from .base import BaseResource
 from ..models.email import EmailRequest
 from ..models.base import APIResponse
@@ -23,8 +27,8 @@ class Email(BaseResource):
 
         payload = email.model_dump(by_alias=True, exclude_none=True)
 
-        self.logger.info("Sending email request to MailerSend API")
-        self.logger.debug(f"Payload: {payload}")
+        self.logger.debug("Sending email request to MailerSend API")
+        self.logger.debug("Payload: %s", payload)
 
         response = self.client.request("POST", "email", body=payload)
 
@@ -52,7 +56,7 @@ class Email(BaseResource):
             payload.append(email_payload)
 
         self.logger.info("Sending bulk email request to MailerSend API")
-        self.logger.debug(f"Payload: {payload}")
+        self.logger.debug("Payload: %s", payload)
 
         response = self.client.request("POST", "bulk-email", body=payload)
 

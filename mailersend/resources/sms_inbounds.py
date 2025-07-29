@@ -25,7 +25,7 @@ class SmsInbounds(BaseResource):
         """
         params = request.to_query_params()
         
-        self.logger.debug(f"Listing SMS inbounds with filters: {params}")
+        self.logger.debug("Listing SMS inbounds with filters: %s", params)
         
         response = self.client.request(
             method="GET", endpoint="sms-inbounds", params=params
@@ -41,7 +41,7 @@ class SmsInbounds(BaseResource):
         Returns:
             APIResponse: Response containing SMS inbound route details
         """
-        self.logger.debug(f"Getting SMS inbound: {request.sms_inbound_id}")
+        self.logger.debug("Getting SMS inbound: %s", request.sms_inbound_id)
         
         response = self.client.request(
             method="GET", endpoint=f"sms-inbounds/{request.sms_inbound_id}"
@@ -58,9 +58,7 @@ class SmsInbounds(BaseResource):
         Returns:
             APIResponse: Response containing created SMS inbound route
         """
-        self.logger.debug(
-            f"Creating SMS inbound: {request.name} for SMS number: {request.sms_number_id}"
-        )
+        self.logger.debug("Creating SMS inbound: %s for SMS number: %s", request.name, request.sms_number_id)
 
         response = self.client.request(
             method="POST", endpoint="sms-inbounds", body=request.to_request_body()
@@ -77,7 +75,7 @@ class SmsInbounds(BaseResource):
         Returns:
             APIResponse: Response containing updated SMS inbound route
         """
-        self.logger.debug(f"Updating SMS inbound: {request.sms_inbound_id}")
+        self.logger.debug("Updating SMS inbound: %s", request.sms_inbound_id)
         
         response = self.client.request(
             method="PUT",
@@ -96,7 +94,7 @@ class SmsInbounds(BaseResource):
         Returns:
             APIResponse: Response confirming deletion
         """
-        self.logger.debug(f"Deleting SMS inbound: {request.sms_inbound_id}")
+        self.logger.debug("Deleting SMS inbound: %s", request.sms_inbound_id)
 
         response = self.client.request(
             method="DELETE", endpoint=f"sms-inbounds/{request.sms_inbound_id}"

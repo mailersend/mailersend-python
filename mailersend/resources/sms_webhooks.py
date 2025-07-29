@@ -26,7 +26,7 @@ class SmsWebhooks(BaseResource):
         """
         params = request.to_query_params()
         
-        self.logger.debug(f"Listing SMS webhooks for SMS number: {request.query_params.sms_number_id}")
+        self.logger.debug("Listing SMS webhooks for SMS number: %s", request.query_params.sms_number_id)
         
         response = self.client.request(
             method='GET',
@@ -46,7 +46,7 @@ class SmsWebhooks(BaseResource):
         Returns:
             APIResponse: Response containing SMS webhook details
         """
-        self.logger.debug(f"Getting SMS webhook: {request.sms_webhook_id}")
+        self.logger.debug("Getting SMS webhook: %s", request.sms_webhook_id)
         
         response = self.client.request(
             method='GET',
@@ -65,7 +65,7 @@ class SmsWebhooks(BaseResource):
         Returns:
             APIResponse: Response containing created SMS webhook
         """
-        self.logger.debug(f"Creating SMS webhook: {request.name} for SMS number: {request.sms_number_id}")
+        self.logger.debug("Creating SMS webhook: {request.name} for SMS number: %s", request.sms_number_id)
         
         response = self.client.request(
             method='POST',
@@ -85,7 +85,7 @@ class SmsWebhooks(BaseResource):
         Returns:
             APIResponse: Response containing updated SMS webhook
         """
-        self.logger.debug(f"Updating SMS webhook: {request.sms_webhook_id}")
+        self.logger.debug("Updating SMS webhook: %s", request.sms_webhook_id)
         
         response = self.client.request(
             method='PUT',
@@ -105,7 +105,7 @@ class SmsWebhooks(BaseResource):
         Returns:
             APIResponse: Response confirming deletion
         """
-        self.logger.debug(f"Deleting SMS webhook: {request.sms_webhook_id}")
+        self.logger.debug("Deleting SMS webhook: %s", request.sms_webhook_id)
         
         response = self.client.request(
             method='DELETE',

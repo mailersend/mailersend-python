@@ -1,3 +1,5 @@
+"""Inbound resource"""
+
 from mailersend.models.inbound import (
     InboundListRequest,
     InboundGetRequest,
@@ -27,9 +29,7 @@ class InboundResource(BaseResource):
         # Extract query parameters
         params = request.to_query_params()
 
-        self.logger.debug(
-            f"Making API request to list inbound routes with params: {params}"
-        )
+        self.logger.debug("Making API request to list inbound routes with params: %s", params)
 
         # Make API request
         response = self.client.request(
@@ -48,9 +48,7 @@ class InboundResource(BaseResource):
         Returns:
             APIResponse containing the inbound route data
         """
-        self.logger.debug(
-            f"Preparing to get inbound route with ID: {request.inbound_id}"
-        )
+        self.logger.debug("Preparing to get inbound route with ID: %s", request.inbound_id)
 
         # Make API request
         response = self.client.request(
@@ -74,9 +72,7 @@ class InboundResource(BaseResource):
         # Build request body using model's serialization method
         data = request.to_request_body()
 
-        self.logger.debug(
-            f"Making API request to create inbound route with data keys: {list(data.keys())}"
-        )
+        self.logger.debug("Making API request to create inbound route with data keys: %s", list(data.keys()))
 
         # Make API request
         response = self.client.request(method="POST", endpoint="inbound", body=data)
@@ -93,16 +89,12 @@ class InboundResource(BaseResource):
         Returns:
             APIResponse containing the updated response
         """
-        self.logger.debug(
-            f"Preparing to update inbound route with ID: {request.inbound_id}"
-        )
+        self.logger.debug("Preparing to update inbound route with ID: %s", request.inbound_id)
 
         # Build request body using model's serialization method
         data = request.to_request_body()
 
-        self.logger.debug(
-            f"Making API request to update inbound route with data keys: {list(data.keys())}"
-        )
+        self.logger.debug("Making API request to update inbound route with data keys: %s", list(data.keys()))
 
         # Make API request
         response = self.client.request(
@@ -121,9 +113,7 @@ class InboundResource(BaseResource):
         Returns:
             APIResponse containing the deletion result
         """
-        self.logger.debug(
-            f"Preparing to delete inbound route with ID: {request.inbound_id}"
-        )
+        self.logger.debug("Preparing to delete inbound route with ID: %s", request.inbound_id)
 
         # Make API request
         response = self.client.request(

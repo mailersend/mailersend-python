@@ -1,3 +1,5 @@
+"""SMS Numbers resource"""
+
 from .base import BaseResource
 from ..models.sms_numbers import (
     SmsNumbersListRequest,
@@ -27,7 +29,7 @@ class SmsNumbers(BaseResource):
         # Convert to query parameters
         params = request.to_query_params()
 
-        self.logger.debug(f"Listing SMS phone numbers with params: {params}")
+        self.logger.debug("Listing SMS phone numbers with params: %s", params)
 
         response = self.client.request(
             method="GET", endpoint="sms-numbers", params=params
@@ -45,7 +47,7 @@ class SmsNumbers(BaseResource):
         Returns:
             APIResponse with SMS phone number data and metadata
         """
-        self.logger.debug(f"Getting SMS phone number: {request.sms_number_id}")
+        self.logger.debug("Getting SMS phone number: %s", request.sms_number_id)
 
         response = self.client.request(
             method="GET", endpoint=f"sms-numbers/{request.sms_number_id}"
@@ -68,7 +70,7 @@ class SmsNumbers(BaseResource):
         # Convert to JSON payload
         payload = request.to_json()
 
-        self.logger.debug(f"Updating SMS phone number: {payload}")
+        self.logger.debug("Updating SMS phone number: %s", payload)
 
         response = self.client.request(
             method="PUT", endpoint=f"sms-numbers/{request.sms_number_id}", body=payload
@@ -86,7 +88,7 @@ class SmsNumbers(BaseResource):
         Returns:
             APIResponse with deletion confirmation and metadata
         """
-        self.logger.debug(f"Deleting SMS phone number: {request.sms_number_id}")
+        self.logger.debug("Deleting SMS phone number: %s", request.sms_number_id)
 
         response = self.client.request(
             method="DELETE", endpoint=f"sms-numbers/{request.sms_number_id}"

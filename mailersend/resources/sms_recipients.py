@@ -24,7 +24,7 @@ class SmsRecipients(BaseResource):
         """
         params = request.to_query_params()
         
-        self.logger.debug(f"Listing SMS recipients with page: {request.query_params.page}, limit: {request.query_params.limit}")
+        self.logger.debug("Listing SMS recipients with page: {request.query_params.page}, limit: %s", request.query_params.limit)
         
         response = self.client.request(
             method='GET',
@@ -44,7 +44,7 @@ class SmsRecipients(BaseResource):
         Returns:
             APIResponse: Response containing SMS recipient details
         """
-        self.logger.debug(f"Getting SMS recipient: {request.sms_recipient_id}")
+        self.logger.debug("Getting SMS recipient: %s", request.sms_recipient_id)
         
         response = self.client.request(
             method='GET',
@@ -63,7 +63,7 @@ class SmsRecipients(BaseResource):
         Returns:
             APIResponse: Response containing updated SMS recipient
         """
-        self.logger.debug(f"Updating SMS recipient: {request.sms_recipient_id} to status: {request.status}")
+        self.logger.debug("Updating SMS recipient: {request.sms_recipient_id} to status: %s", request.status)
         
         response = self.client.request(
             method='PUT',

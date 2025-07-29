@@ -1,3 +1,5 @@
+"""Domains resource"""
+
 from typing import Optional
 
 from .base import BaseResource
@@ -42,7 +44,7 @@ class Domains(BaseResource):
         else:
             params = request.to_query_params()
 
-        self.logger.debug(f"Query params: {params}")
+        self.logger.debug("Query params: %s", params)
 
         response = self.client.request("GET", "domains", params=params)
 
@@ -59,7 +61,7 @@ class Domains(BaseResource):
             APIResponse with domain information
         """
         self.logger.debug("Preparing to get domain")
-        self.logger.debug(f"Requesting domain information for: {request.domain_id}")
+        self.logger.debug("Requesting domain information for: %s", request.domain_id)
 
         response = self.client.request("GET", f"domains/{request.domain_id}")
 
@@ -75,12 +77,12 @@ class Domains(BaseResource):
         Returns:
             APIResponse with created domain information
         """
-        self.logger.debug(f"Creating domain: {request.name}")
+        self.logger.debug("Creating domain: %s", request.name)
 
         # Convert to request body
         body = request.model_dump(by_alias=True, exclude_none=True)
 
-        self.logger.debug(f"Request body: {body}")
+        self.logger.debug("Request body: %s", body)
 
         response = self.client.request("POST", "domains", body=body)
 
@@ -97,7 +99,7 @@ class Domains(BaseResource):
             APIResponse (204 No Content on success)
         """
         self.logger.debug("Preparing to delete domain")
-        self.logger.debug(f"Deleting domain: {request.domain_id}")
+        self.logger.debug("Deleting domain: %s", request.domain_id)
 
         response = self.client.request("DELETE", f"domains/{request.domain_id}")
 
@@ -114,12 +116,12 @@ class Domains(BaseResource):
             APIResponse with list of domain recipients
         """
         self.logger.debug("Preparing to get domain recipients")
-        self.logger.debug(f"Retrieving recipients for domain: {request.domain_id}")
+        self.logger.debug("Retrieving recipients for domain: %s", request.domain_id)
 
         # Convert to query parameters
         params = request.to_query_params()
 
-        self.logger.debug(f"Query params: {params}")
+        self.logger.debug("Query params: %s", params)
 
         response = self.client.request(
             "GET", f"domains/{request.domain_id}/recipients", params=params
@@ -140,14 +142,14 @@ class Domains(BaseResource):
             APIResponse with updated domain information
         """
         self.logger.debug("Preparing to update domain settings")
-        self.logger.debug(f"Updating settings for domain: {request.domain_id}")
+        self.logger.debug("Updating settings for domain: %s", request.domain_id)
 
         # Convert to request body, excluding domain_id which goes in URL path
         body = request.model_dump(
             by_alias=True, exclude_none=True, exclude={"domain_id"}
         )
 
-        self.logger.debug(f"Request body: {body}")
+        self.logger.debug("Request body: %s", body)
 
         response = self.client.request(
             "PUT", f"domains/{request.domain_id}/settings", body=body
@@ -166,7 +168,7 @@ class Domains(BaseResource):
             APIResponse with domain DNS records
         """
         self.logger.debug("Preparing to get domain DNS records")
-        self.logger.debug(f"Retrieving DNS records for domain: {request.domain_id}")
+        self.logger.debug("Retrieving DNS records for domain: %s", request.domain_id)
 
         response = self.client.request(
             "GET", f"domains/{request.domain_id}/dns-records"
@@ -187,9 +189,7 @@ class Domains(BaseResource):
             APIResponse with domain verification status
         """
         self.logger.debug("Preparing to get domain verification status")
-        self.logger.debug(
-            f"Retrieving verification status for domain: {request.domain_id}"
-        )
+        self.logger.debug("Retrieving verification status for domain: %s", request.domain_id)
 
         response = self.client.request("GET", f"domains/{request.domain_id}/verify")
 

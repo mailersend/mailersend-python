@@ -1,4 +1,4 @@
-from typing import Union
+"""Messages resource"""
 
 from .base import BaseResource
 from ..models.messages import (
@@ -32,7 +32,7 @@ class Messages(BaseResource):
         # Extract query parameters
         params = request.to_query_params()
 
-        self.logger.debug(f"Making API request to list messages with params: {params}")
+        self.logger.debug("Making API request to list messages with params: %s", params)
 
         # Make API request
         response = self.client.request(
@@ -51,7 +51,7 @@ class Messages(BaseResource):
         Returns:
             APIResponse containing the message response
         """
-        self.logger.debug(f"Preparing to get message with ID: {request.message_id}")
+        self.logger.debug("Preparing to get message with ID: %s", request.message_id)
 
         # Make API request
         response = self.client.request(

@@ -1,4 +1,4 @@
-from typing import Union
+"""Identities resource"""
 
 from ..models.identities import (
     IdentityListRequest,
@@ -34,9 +34,7 @@ class IdentitiesResource(BaseResource):
         # Extract query parameters
         params = request.to_query_params()
 
-        self.logger.debug(
-            f"Making API request to list identities with params: {params}"
-        )
+        self.logger.debug("Making API request to list identities with params: %s", params)
 
         # Make API request
         response = self.client.request(
@@ -60,9 +58,7 @@ class IdentitiesResource(BaseResource):
         # Build request body
         data = request.model_dump(by_alias=True, exclude_none=True)
 
-        self.logger.debug(
-            f"Making API request to create identity with data keys: {list(data.keys())}"
-        )
+        self.logger.debug("Making API request to create identity with data keys: %s", list(data.keys()))
 
         # Make API request
         response = self.client.request(method="POST", endpoint="/identities", body=data)
@@ -79,7 +75,7 @@ class IdentitiesResource(BaseResource):
         Returns:
             APIResponse containing the identity data
         """
-        self.logger.debug(f"Preparing to get identity with ID: {request.identity_id}")
+        self.logger.debug("Preparing to get identity with ID: %s", request.identity_id)
 
         # Make API request
         response = self.client.request(
@@ -98,7 +94,7 @@ class IdentitiesResource(BaseResource):
         Returns:
             APIResponse containing the identity data
         """
-        self.logger.debug(f"Preparing to get identity by email: {request.email}")
+        self.logger.debug("Preparing to get identity by email: %s", request.email)
 
         # Make API request
         response = self.client.request(
@@ -117,18 +113,14 @@ class IdentitiesResource(BaseResource):
         Returns:
             APIResponse containing the updated identity
         """
-        self.logger.debug(
-            f"Preparing to update identity with ID: {request.identity_id}"
-        )
+        self.logger.debug("Preparing to update identity with ID: %s", request.identity_id)
 
         # Build request body, excluding identity_id (goes in URL)
         data = request.model_dump(
             by_alias=True, exclude_none=True, exclude={"identity_id"}
         )
 
-        self.logger.debug(
-            f"Making API request to update identity with data keys: {list(data.keys())}"
-        )
+        self.logger.debug("Making API request to update identity with data keys: %s", list(data.keys()))
 
         # Make API request
         response = self.client.request(
@@ -151,14 +143,12 @@ class IdentitiesResource(BaseResource):
         Returns:
             APIResponse containing the updated identity
         """
-        self.logger.debug(f"Preparing to update identity by email: {request.email}")
+        self.logger.debug("Preparing to update identity by email: %s", request.email)
 
         # Build request body, excluding email (goes in URL)
         data = request.model_dump(by_alias=True, exclude_none=True, exclude={"email"})
 
-        self.logger.debug(
-            f"Making API request to update identity by email with data keys: {list(data.keys())}"
-        )
+        self.logger.debug("Making API request to update identity by email with data keys: %s", list(data.keys()))
 
         # Make API request
         response = self.client.request(
@@ -179,9 +169,7 @@ class IdentitiesResource(BaseResource):
         Returns:
             APIResponse containing the deletion result
         """
-        self.logger.debug(
-            f"Preparing to delete identity with ID: {request.identity_id}"
-        )
+        self.logger.debug("Preparing to delete identity with ID: %s", request.identity_id)
 
         # Make API request
         response = self.client.request(
@@ -202,7 +190,7 @@ class IdentitiesResource(BaseResource):
         Returns:
             APIResponse containing the deletion result
         """
-        self.logger.debug(f"Preparing to delete identity by email: {request.email}")
+        self.logger.debug("Preparing to delete identity by email: %s", request.email)
 
         # Make API request
         response = self.client.request(

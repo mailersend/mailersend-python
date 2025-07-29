@@ -1,3 +1,5 @@
+"""SMS Sending resource"""
+
 from .base import BaseResource
 from ..models.sms_sending import SmsSendRequest
 from ..models.base import APIResponse
@@ -23,7 +25,7 @@ class SmsSending(BaseResource):
         # Convert to JSON payload
         payload = request.to_json()
 
-        self.logger.debug(f"SMS payload: {payload}")
+        self.logger.debug("SMS payload: %s", payload)
 
         response = self.client.request(method="POST", endpoint="sms", body=payload)
 
