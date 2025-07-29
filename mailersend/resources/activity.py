@@ -3,6 +3,7 @@
 from .base import BaseResource
 from ..models.activity import ActivityRequest, SingleActivityRequest
 from ..models.base import APIResponse
+from ..exceptions import ValidationError
 
 
 class Activity(BaseResource):

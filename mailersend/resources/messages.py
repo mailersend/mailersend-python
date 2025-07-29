@@ -4,8 +4,6 @@ from .base import BaseResource
 from ..models.messages import (
     MessagesListRequest,
     MessageGetRequest,
-    MessagesListResponse,
-    MessageResponse,
 )
 from ..models.base import APIResponse
 
@@ -39,7 +37,7 @@ class Messages(BaseResource):
             method="GET", endpoint="messages", params=params if params else None
         )
 
-        return self._create_response(response, MessagesListResponse)
+        return self._create_response(response)
 
     def get_message(self, request: MessageGetRequest) -> APIResponse:
         """
@@ -58,4 +56,4 @@ class Messages(BaseResource):
             method="GET", endpoint=f"messages/{request.message_id}"
         )
 
-        return self._create_response(response, MessageResponse)
+        return self._create_response(response)

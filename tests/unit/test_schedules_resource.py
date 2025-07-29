@@ -7,8 +7,6 @@ from mailersend.models.schedules import (
     SchedulesListQueryParams,
     ScheduleGetRequest,
     ScheduleDeleteRequest,
-    SchedulesListResponse,
-    ScheduleResponse
 )
 from mailersend.models.base import APIResponse
 from mailersend.exceptions import ValidationError as MailerSendValidationError
@@ -73,7 +71,7 @@ class TestSchedules:
         )
         
         # Verify _create_response was called with correct params
-        resource._create_response.assert_called_once_with(mock_response, SchedulesListResponse)
+        resource._create_response.assert_called_once_with(mock_response)
 
     def test_list_schedules_with_default_query_params(self, resource):
         """Test list_schedules with default query params."""
@@ -138,7 +136,7 @@ class TestSchedules:
         )
         
         # Verify _create_response was called
-        resource._create_response.assert_called_once_with(mock_response, ScheduleResponse)
+        resource._create_response.assert_called_once_with(mock_response)
 
     def test_delete_schedule_returns_api_response(self, resource):
         """Test delete_schedule method returns APIResponse."""

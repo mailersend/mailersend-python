@@ -95,17 +95,3 @@ class ScheduledMessage(MailerSendBaseModel):
     created_at: str
     domain: Optional[ScheduleDomain] = None
     message: Optional[ScheduleMessage] = None
-
-
-class SchedulesListResponse(MailerSendBaseModel):
-    """Response model for scheduled messages list."""
-
-    data: List[ScheduledMessage]
-    links: Optional[dict] = None
-    meta: Optional[dict] = None
-
-
-class ScheduleResponse(MailerSendBaseModel):
-    """Response model for single scheduled message."""
-
-    data: ScheduledMessage
