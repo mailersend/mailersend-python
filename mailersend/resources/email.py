@@ -1,12 +1,6 @@
-from datetime import datetime
-from typing import Dict, Any, List
-
 from .base import BaseResource
 from ..models.email import EmailRequest
 from ..models.base import APIResponse
-from ..exceptions import ValidationError
-from ..utils.files import process_file_attachments
-from ..utils.validators import validate_email_requirements
 
 
 class Email(BaseResource):
@@ -24,15 +18,8 @@ class Email(BaseResource):
         Returns:
             APIResponse with email ID and metadata
 
-        Raises:
-            ValidationError: If the EmailRequest is invalid
-            MailerSendError: If the API returns an error
         """
         self.logger.debug("Preparing to send email")
-
-        if not email:
-            self.logger.error("No EmailRequest object provided")
-            raise ValidationError("EmailRequest must be provided")
 
         payload = email.model_dump(by_alias=True, exclude_none=True)
 
@@ -60,10 +47,6 @@ class Email(BaseResource):
 
         payload = []
         for email in emails:
-            if not isinstance(email, EmailRequest):
-                self.logger.error("Invalid EmailRequest object provided")
-                raise ValidationError("EmailRequest must be provided")
-
             # Prepare payload for each email
             email_payload = email.model_dump(by_alias=True, exclude_none=True)
             payload.append(email_payload)
@@ -86,10 +69,6 @@ class Email(BaseResource):
             APIResponse with bulk email status and metadata
         """
         self.logger.debug("Getting bulk email status")
-
-        if not bulk_email_id:
-            self.logger.error("No bulk email ID provided")
-            raise ValidationError("Bulk email ID must be provided")
 
         response = self.client.request("GET", f"bulk-email/{bulk_email_id}")
 

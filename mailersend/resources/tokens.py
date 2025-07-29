@@ -1,7 +1,5 @@
 """Tokens API resource."""
 
-import logging
-
 from .base import BaseResource
 from ..models.base import APIResponse
 from ..models.tokens import (
@@ -12,9 +10,6 @@ from ..models.tokens import (
     TokenUpdateNameRequest,
     TokenDeleteRequest,
 )
-
-
-logger = logging.getLogger(__name__)
 
 
 class Tokens(BaseResource):
@@ -29,7 +24,7 @@ class Tokens(BaseResource):
         Returns:
             APIResponse: API response with tokens list data
         """
-        logger.info(
+        self.logger.info(
             f"Listing tokens with pagination: page={request.query_params.page}, limit={request.query_params.limit}"
         )
 
@@ -51,7 +46,7 @@ class Tokens(BaseResource):
         Returns:
             APIResponse: API response with token data
         """
-        logger.info(f"Getting token: {request.token_id}")
+        self.logger.info(f"Getting token: {request.token_id}")
 
         # Make API call
         response = self.client.request(
@@ -70,7 +65,7 @@ class Tokens(BaseResource):
         Returns:
             APIResponse: API response with token creation data
         """
-        logger.info(f"Creating token: {request.name} for domain: {request.domain_id}")
+        self.logger.info(f"Creating token: {request.name} for domain: {request.domain_id}")
 
         # Make API call
         response = self.client.request(
@@ -89,7 +84,7 @@ class Tokens(BaseResource):
         Returns:
             APIResponse: API response with update confirmation
         """
-        logger.info(f"Updating token: {request.token_id} to status: {request.status}")
+        self.logger.info(f"Updating token: {request.token_id} to status: {request.status}")
 
         # Make API call
         response = self.client.request(
@@ -110,7 +105,7 @@ class Tokens(BaseResource):
         Returns:
             APIResponse: API response with update confirmation
         """
-        logger.info(f"Updating token name: {request.token_id} to: {request.name}")
+        self.logger.info(f"Updating token name: {request.token_id} to: {request.name}")
 
         # Make API call
         response = self.client.request(
@@ -129,7 +124,7 @@ class Tokens(BaseResource):
         Returns:
             APIResponse: API response with delete confirmation
         """
-        logger.info(f"Deleting token: {request.token_id}")
+        self.logger.info(f"Deleting token: {request.token_id}")
 
         # Make API call
         response = self.client.request(

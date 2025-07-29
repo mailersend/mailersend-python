@@ -28,7 +28,7 @@ class Users(BaseResource):
         Returns:
             APIResponse: API response with users list data
         """
-        self.logger.info(
+        self.logger.debug(
             f"Listing users with pagination: page={request.query_params.page}, limit={request.query_params.limit}"
         )
 
@@ -50,7 +50,7 @@ class Users(BaseResource):
         Returns:
             APIResponse: API response with user data
         """
-        self.logger.info(f"Getting user: {request.user_id}")
+        self.logger.debug(f"Getting user: {request.user_id}")
 
         # Make API call
         response = self.client.request(
@@ -69,7 +69,7 @@ class Users(BaseResource):
         Returns:
             APIResponse: API response with invite data
         """
-        self.logger.info(f"Inviting user: {request.email} with role: {request.role}")
+        self.logger.debug(f"Inviting user: {request.email} with role: {request.role}")
 
         # Make API call
         response = self.client.request(
@@ -88,7 +88,7 @@ class Users(BaseResource):
         Returns:
             APIResponse: API response with updated user data
         """
-        self.logger.info(f"Updating user: {request.user_id} with role: {request.role}")
+        self.logger.debug(f"Updating user: {request.user_id} with role: {request.role}")
 
         # Make API call
         response = self.client.request(
@@ -107,7 +107,7 @@ class Users(BaseResource):
         Returns:
             APIResponse: API response with delete confirmation
         """
-        self.logger.info(f"Deleting user: {request.user_id}")
+        self.logger.debug(f"Deleting user: {request.user_id}")
 
         # Make API call
         response = self.client.request(
@@ -126,7 +126,7 @@ class Users(BaseResource):
         Returns:
             APIResponse: API response with invites list data
         """
-        self.logger.info(
+        self.logger.debug(
             f"Listing invites with pagination: page={request.query_params.page}, limit={request.query_params.limit}"
         )
 
@@ -148,7 +148,7 @@ class Users(BaseResource):
         Returns:
             APIResponse: API response with invite data
         """
-        self.logger.info(f"Getting invite: {request.invite_id}")
+        self.logger.debug(f"Getting invite: {request.invite_id}")
 
         # Make API call
         response = self.client.request(
@@ -167,7 +167,7 @@ class Users(BaseResource):
         Returns:
             APIResponse: API response with resent invite data
         """
-        self.logger.info(f"Resending invite: {request.invite_id}")
+        self.logger.debug(f"Resending invite: {request.invite_id}")
 
         # Make API call
         response = self.client.request(
@@ -186,7 +186,7 @@ class Users(BaseResource):
         Returns:
             APIResponse: API response with cancel confirmation
         """
-        self.logger.info(f"Canceling invite: {request.invite_id}")
+        self.logger.debug(f"Canceling invite: {request.invite_id}")
 
         # Make API call
         response = self.client.request(

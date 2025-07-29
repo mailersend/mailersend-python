@@ -1,7 +1,5 @@
 """SMTP Users API resource."""
 
-import logging
-
 from .base import BaseResource
 from ..models.base import APIResponse
 from ..models.smtp_users import (
@@ -11,9 +9,6 @@ from ..models.smtp_users import (
     SmtpUserUpdateRequest,
     SmtpUserDeleteRequest,
 )
-
-
-logger = logging.getLogger(__name__)
 
 
 class SmtpUsers(BaseResource):
@@ -28,7 +23,7 @@ class SmtpUsers(BaseResource):
         Returns:
             APIResponse: API response with SMTP users list data
         """
-        logger.info(
+        self.logger.debug(
             f"Listing SMTP users for domain: {request.domain_id} with limit: {request.query_params.limit}"
         )
 
@@ -54,7 +49,7 @@ class SmtpUsers(BaseResource):
         Returns:
             APIResponse: API response with SMTP user data
         """
-        logger.info(
+        self.logger.debug(
             f"Getting SMTP user: {request.smtp_user_id} from domain: {request.domain_id}"
         )
 
@@ -76,7 +71,7 @@ class SmtpUsers(BaseResource):
         Returns:
             APIResponse: API response with SMTP user creation data
         """
-        logger.info(
+        self.logger.debug(
             f"Creating SMTP user: {request.name} for domain: {request.domain_id}"
         )
 
@@ -99,7 +94,7 @@ class SmtpUsers(BaseResource):
         Returns:
             APIResponse: API response with updated SMTP user data
         """
-        logger.info(
+        self.logger.debug(
             f"Updating SMTP user: {request.smtp_user_id} in domain: {request.domain_id}"
         )
 
@@ -122,7 +117,7 @@ class SmtpUsers(BaseResource):
         Returns:
             APIResponse: API response with delete confirmation
         """
-        logger.info(
+        self.logger.debug(
             f"Deleting SMTP user: {request.smtp_user_id} from domain: {request.domain_id}"
         )
 
