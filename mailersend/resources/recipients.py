@@ -1,9 +1,7 @@
 """Recipients API resource for MailerSend SDK."""
 
-import logging
-from typing import Optional, Dict, Any, Union
+from typing import Optional
 
-from mailersend.exceptions import ValidationError
 from mailersend.models.base import APIResponse
 from mailersend.models.recipients import (
     RecipientsListRequest,
@@ -12,18 +10,10 @@ from mailersend.models.recipients import (
     SuppressionListRequest,
     SuppressionAddRequest,
     SuppressionDeleteRequest,
-    RecipientsListResponse,
-    RecipientResponse,
-    BlocklistResponse,
-    HardBouncesResponse,
-    SpamComplaintsResponse,
-    UnsubscribesResponse,
-    OnHoldResponse,
-    SuppressionAddResponse,
+    RecipientsListQueryParams,
+    SuppressionListQueryParams,
 )
 from mailersend.resources.base import BaseResource
-
-logger = logging.getLogger(__name__)
 
 
 class Recipients(BaseResource):
@@ -39,37 +29,25 @@ class Recipients(BaseResource):
             request: Request parameters for listing recipients (optional)
 
         Returns:
-            APIResponse containing RecipientsListResponse data
-
-        Raises:
-            ValidationError: If request validation fails
+            APIResponse with recipients list
         """
-        # Validate request type if provided
-        if request is not None and not isinstance(request, RecipientsListRequest):
-            raise ValidationError(
-                "Request must be an instance of RecipientsListRequest or None"
-            )
 
         # Use default request if none provided
         if request is None:
-            from mailersend.models.recipients import RecipientsListQueryParams
-
             query_params = RecipientsListQueryParams()
             request = RecipientsListRequest(query_params=query_params)
 
         # Extract query parameters
         params = request.to_query_params()
 
-        logger.debug(f"Listing recipients with params: {params}")
+        self.logger.debug(f"Listing recipients with params: {params}")
 
         # Make API call
         response = self.client.request(
             method="GET", endpoint="/v1/recipients", params=params
         )
 
-        logger.info(f"Listed recipients successfully")
-
-        return self._create_response(response, RecipientsListResponse)
+        return self._create_response(response)
 
     def get_recipient(self, request: RecipientGetRequest) -> APIResponse:
         """
@@ -77,27 +55,15 @@ class Recipients(BaseResource):
 
         Args:
             request: Request parameters for getting recipient
-
-        Returns:
-            APIResponse containing RecipientResponse data
-
-        Raises:
-            ValidationError: If request validation fails
         """
-        # Validate request
-        if not isinstance(request, RecipientGetRequest):
-            raise ValidationError("Request is required for get_recipient")
-
-        logger.debug(f"Getting recipient: {request.recipient_id}")
+        self.logger.debug(f"Getting recipient: {request.recipient_id}")
 
         # Make API call
         response = self.client.request(
             method="GET", endpoint=f"/v1/recipients/{request.recipient_id}"
         )
 
-        logger.info(f"Retrieved recipient {request.recipient_id} successfully")
-
-        return self._create_response(response, RecipientResponse)
+        return self._create_response(response)
 
     def delete_recipient(self, request: RecipientDeleteRequest) -> APIResponse:
         """
@@ -108,22 +74,13 @@ class Recipients(BaseResource):
 
         Returns:
             APIResponse with empty data
-
-        Raises:
-            ValidationError: If request validation fails
         """
-        # Validate request
-        if not isinstance(request, RecipientDeleteRequest):
-            raise ValidationError("Request is required for delete_recipient")
-
-        logger.debug(f"Deleting recipient: {request.recipient_id}")
+        self.logger.debug(f"Deleting recipient: {request.recipient_id}")
 
         # Make API call
         response = self.client.request(
             method="DELETE", endpoint=f"/v1/recipients/{request.recipient_id}"
         )
-
-        logger.info(f"Deleted recipient {request.recipient_id} successfully")
 
         return self._create_response(response)
 
@@ -137,28 +94,24 @@ class Recipients(BaseResource):
             request: Request parameters for listing blocklist entries (optional)
 
         Returns:
-            APIResponse containing BlocklistResponse data
+            APIResponse with blocklist entries
         """
         # Use default request if none provided
         if request is None:
-            from mailersend.models.recipients import SuppressionListQueryParams
-
             query_params = SuppressionListQueryParams()
             request = SuppressionListRequest(query_params=query_params)
 
         # Extract query parameters
         params = request.to_query_params()
 
-        logger.debug(f"Listing blocklist with params: {params}")
+        self.logger.debug(f"Listing blocklist with params: {params}")
 
         # Make API call
         response = self.client.request(
             method="GET", endpoint="/v1/suppressions/blocklist", params=params
         )
 
-        logger.info("Listed blocklist successfully")
-
-        return self._create_response(response, BlocklistResponse)
+        return self._create_response(response)
 
     def list_hard_bounces(
         self, request: Optional[SuppressionListRequest] = None
@@ -170,28 +123,24 @@ class Recipients(BaseResource):
             request: Request parameters for listing hard bounces (optional)
 
         Returns:
-            APIResponse containing HardBouncesResponse data
+            APIResponse with hard bounces
         """
         # Use default request if none provided
         if request is None:
-            from mailersend.models.recipients import SuppressionListQueryParams
-
             query_params = SuppressionListQueryParams()
             request = SuppressionListRequest(query_params=query_params)
 
         # Extract query parameters
         params = request.to_query_params()
 
-        logger.debug(f"Listing hard bounces with params: {params}")
+        self.logger.debug(f"Listing hard bounces with params: {params}")
 
         # Make API call
         response = self.client.request(
             method="GET", endpoint="/v1/suppressions/hard-bounces", params=params
         )
 
-        logger.info("Listed hard bounces successfully")
-
-        return self._create_response(response, HardBouncesResponse)
+        return self._create_response(response)
 
     def list_spam_complaints(
         self, request: Optional[SuppressionListRequest] = None
@@ -203,28 +152,24 @@ class Recipients(BaseResource):
             request: Request parameters for listing spam complaints (optional)
 
         Returns:
-            APIResponse containing SpamComplaintsResponse data
+            APIResponse with spam complaints
         """
         # Use default request if none provided
         if request is None:
-            from mailersend.models.recipients import SuppressionListQueryParams
-
             query_params = SuppressionListQueryParams()
             request = SuppressionListRequest(query_params=query_params)
 
         # Extract query parameters
         params = request.to_query_params()
 
-        logger.debug(f"Listing spam complaints with params: {params}")
+        self.logger.debug(f"Listing spam complaints with params: {params}")
 
         # Make API call
         response = self.client.request(
             method="GET", endpoint="/v1/suppressions/spam-complaints", params=params
         )
 
-        logger.info("Listed spam complaints successfully")
-
-        return self._create_response(response, SpamComplaintsResponse)
+        return self._create_response(response)
 
     def list_unsubscribes(
         self, request: Optional[SuppressionListRequest] = None
@@ -236,28 +181,24 @@ class Recipients(BaseResource):
             request: Request parameters for listing unsubscribes (optional)
 
         Returns:
-            APIResponse containing UnsubscribesResponse data
+            APIResponse with unsubscribes
         """
         # Use default request if none provided
         if request is None:
-            from mailersend.models.recipients import SuppressionListQueryParams
-
             query_params = SuppressionListQueryParams()
             request = SuppressionListRequest(query_params=query_params)
 
         # Extract query parameters
         params = request.to_query_params()
 
-        logger.debug(f"Listing unsubscribes with params: {params}")
+        self.logger.debug(f"Listing unsubscribes with params: {params}")
 
         # Make API call
         response = self.client.request(
             method="GET", endpoint="/v1/suppressions/unsubscribes", params=params
         )
 
-        logger.info("Listed unsubscribes successfully")
-
-        return self._create_response(response, UnsubscribesResponse)
+        return self._create_response(response)
 
     def list_on_hold(
         self, request: Optional[SuppressionListRequest] = None
@@ -269,28 +210,24 @@ class Recipients(BaseResource):
             request: Request parameters for listing on-hold entries (optional)
 
         Returns:
-            APIResponse containing OnHoldResponse data
+            APIResponse with on-hold entries
         """
         # Use default request if none provided
         if request is None:
-            from mailersend.models.recipients import SuppressionListQueryParams
-
             query_params = SuppressionListQueryParams()
             request = SuppressionListRequest(query_params=query_params)
 
         # Extract query parameters
         params = request.to_query_params()
 
-        logger.debug(f"Listing on-hold entries with params: {params}")
+        self.logger.debug(f"Listing on-hold entries with params: {params}")
 
         # Make API call
         response = self.client.request(
             method="GET", endpoint="/v1/suppressions/on-hold-list", params=params
         )
 
-        logger.info("Listed on-hold entries successfully")
-
-        return self._create_response(response, OnHoldResponse)
+        return self._create_response(response)
 
     def add_to_blocklist(self, request: SuppressionAddRequest) -> APIResponse:
         """
@@ -300,28 +237,18 @@ class Recipients(BaseResource):
             request: Request parameters for adding to blocklist
 
         Returns:
-            APIResponse containing SuppressionAddResponse data
-
-        Raises:
-            ValidationError: If request validation fails
+            APIResponse with added entries
         """
-        # Validate request
-        if not isinstance(request, SuppressionAddRequest):
-            raise ValidationError("Request is required for add_to_blocklist")
+        body = request.model_dump(by_alias=True, exclude_none=True)
 
-        # Build request body
-        body = self._build_suppression_add_body(request)
-
-        logger.debug(f"Adding to blocklist with body: {body}")
+        self.logger.debug(f"Adding to blocklist with body: {body}")
 
         # Make API call
         response = self.client.request(
             method="POST", endpoint="/v1/suppressions/blocklist", body=body
         )
 
-        logger.info("Added to blocklist successfully")
-
-        return self._create_response(response, SuppressionAddResponse)
+        return self._create_response(response)
 
     def add_hard_bounces(self, request: SuppressionAddRequest) -> APIResponse:
         """
@@ -331,32 +258,19 @@ class Recipients(BaseResource):
             request: Request parameters for adding hard bounces
 
         Returns:
-            APIResponse containing SuppressionAddResponse data
-
-        Raises:
-            ValidationError: If request validation fails
+            APIResponse with added entries
         """
-        # Validate request
-        if not isinstance(request, SuppressionAddRequest):
-            raise ValidationError("Request is required for add_hard_bounces")
-
-        # Validate recipients are provided
-        if not request.recipients:
-            raise ValidationError("Recipients are required for add_hard_bounces")
-
         # Build request body
-        body = self._build_suppression_add_body(request)
+        body = request.model_dump(by_alias=True, exclude_none=True)
 
-        logger.debug(f"Adding hard bounces with body: {body}")
+        self.logger.debug(f"Adding hard bounces with body: {body}")
 
         # Make API call
         response = self.client.request(
             method="POST", endpoint="/v1/suppressions/hard-bounces", body=body
         )
 
-        logger.info("Added hard bounces successfully")
-
-        return self._create_response(response, SuppressionAddResponse)
+        return self._create_response(response)
 
     def add_spam_complaints(self, request: SuppressionAddRequest) -> APIResponse:
         """
@@ -366,28 +280,20 @@ class Recipients(BaseResource):
             request: Request parameters for adding spam complaints
 
         Returns:
-            APIResponse containing SuppressionAddResponse data
+            APIResponse with added entries
 
-        Raises:
-            ValidationError: If request validation fails
         """
-        # Validate request
-        if not isinstance(request, SuppressionAddRequest):
-            raise ValidationError("Request is required for add_spam_complaints")
-
         # Build request body
-        body = self._build_suppression_add_body(request)
+        body = request.model_dump(by_alias=True, exclude_none=True)
 
-        logger.debug(f"Adding spam complaints with body: {body}")
+        self.logger.debug(f"Adding spam complaints with body: {body}")
 
         # Make API call
         response = self.client.request(
             method="POST", endpoint="/v1/suppressions/spam-complaints", body=body
         )
 
-        logger.info("Added spam complaints successfully")
-
-        return self._create_response(response, SuppressionAddResponse)
+        return self._create_response(response)
 
     def add_unsubscribes(self, request: SuppressionAddRequest) -> APIResponse:
         """
@@ -397,28 +303,19 @@ class Recipients(BaseResource):
             request: Request parameters for adding unsubscribes
 
         Returns:
-            APIResponse containing SuppressionAddResponse data
-
-        Raises:
-            ValidationError: If request validation fails
+            APIResponse with added entries
         """
-        # Validate request
-        if not isinstance(request, SuppressionAddRequest):
-            raise ValidationError("Request is required for add_unsubscribes")
-
         # Build request body
-        body = self._build_suppression_add_body(request)
+        body = request.model_dump(by_alias=True, exclude_none=True)
 
-        logger.debug(f"Adding unsubscribes with body: {body}")
+        self.logger.debug(f"Adding unsubscribes with body: {body}")
 
         # Make API call
         response = self.client.request(
             method="POST", endpoint="/v1/suppressions/unsubscribes", body=body
         )
 
-        logger.info("Added unsubscribes successfully")
-
-        return self._create_response(response, SuppressionAddResponse)
+        return self._create_response(response)
 
     def delete_from_blocklist(self, request: SuppressionDeleteRequest) -> APIResponse:
         """
@@ -428,26 +325,17 @@ class Recipients(BaseResource):
             request: Request parameters for deleting from blocklist
 
         Returns:
-            APIResponse with empty data
-
-        Raises:
-            ValidationError: If request validation fails
+            APIResponse with deleted entries            
         """
-        # Validate request
-        if not isinstance(request, SuppressionDeleteRequest):
-            raise ValidationError("Request is required for delete_from_blocklist")
-
         # Build request body
-        body = self._build_suppression_delete_body(request)
+        body = request.model_dump(by_alias=True, exclude_none=True)
 
-        logger.debug(f"Deleting from blocklist with body: {body}")
+        self.logger.debug(f"Deleting from blocklist with body: {body}")
 
         # Make API call
         response = self.client.request(
             method="DELETE", endpoint="/v1/suppressions/blocklist", body=body
         )
-
-        logger.info("Deleted from blocklist successfully")
 
         return self._create_response(response)
 
@@ -459,15 +347,8 @@ class Recipients(BaseResource):
             request: Request parameters for deleting hard bounces
 
         Returns:
-            APIResponse with empty data
-
-        Raises:
-            ValidationError: If request validation fails
+            APIResponse with deleted entries
         """
-        # Validate request
-        if not isinstance(request, SuppressionDeleteRequest):
-            raise ValidationError("Request is required for delete_hard_bounces")
-
         # Build request body (without domain_id for hard bounces)
         body = {}
         if request.ids:
@@ -475,14 +356,12 @@ class Recipients(BaseResource):
         if request.all is not None:
             body["all"] = request.all
 
-        logger.debug(f"Deleting hard bounces with body: {body}")
+        self.logger.debug(f"Deleting hard bounces with body: {body}")
 
         # Make API call
         response = self.client.request(
             method="DELETE", endpoint="/v1/suppressions/hard-bounces", body=body
         )
-
-        logger.info("Deleted hard bounces successfully")
 
         return self._create_response(response)
 
@@ -494,14 +373,8 @@ class Recipients(BaseResource):
             request: Request parameters for deleting spam complaints
 
         Returns:
-            APIResponse with empty data
-
-        Raises:
-            ValidationError: If request validation fails
+            APIResponse with deleted entries
         """
-        # Validate request
-        if not isinstance(request, SuppressionDeleteRequest):
-            raise ValidationError("Request is required for delete_spam_complaints")
 
         # Build request body (without domain_id for spam complaints)
         body = {}
@@ -510,14 +383,12 @@ class Recipients(BaseResource):
         if request.all is not None:
             body["all"] = request.all
 
-        logger.debug(f"Deleting spam complaints with body: {body}")
+        self.logger.debug(f"Deleting spam complaints with body: {body}")
 
         # Make API call
         response = self.client.request(
             method="DELETE", endpoint="/v1/suppressions/spam-complaints", body=body
         )
-
-        logger.info("Deleted spam complaints successfully")
 
         return self._create_response(response)
 
@@ -529,15 +400,8 @@ class Recipients(BaseResource):
             request: Request parameters for deleting unsubscribes
 
         Returns:
-            APIResponse with empty data
-
-        Raises:
-            ValidationError: If request validation fails
+            APIResponse with deleted entries
         """
-        # Validate request
-        if not isinstance(request, SuppressionDeleteRequest):
-            raise ValidationError("Request is required for delete_unsubscribes")
-
         # Build request body (without domain_id for unsubscribes)
         body = {}
         if request.ids:
@@ -545,14 +409,12 @@ class Recipients(BaseResource):
         if request.all is not None:
             body["all"] = request.all
 
-        logger.debug(f"Deleting unsubscribes with body: {body}")
+        self.logger.debug(f"Deleting unsubscribes with body: {body}")
 
         # Make API call
         response = self.client.request(
             method="DELETE", endpoint="/v1/suppressions/unsubscribes", body=body
         )
-
-        logger.info("Deleted unsubscribes successfully")
 
         return self._create_response(response)
 
@@ -564,15 +426,8 @@ class Recipients(BaseResource):
             request: Request parameters for deleting from on-hold
 
         Returns:
-            APIResponse with empty data
-
-        Raises:
-            ValidationError: If request validation fails
+            APIResponse with deleted entries
         """
-        # Validate request
-        if not isinstance(request, SuppressionDeleteRequest):
-            raise ValidationError("Request is required for delete_from_on_hold")
-
         # Build request body (without domain_id for on-hold)
         body = {}
         if request.ids:
@@ -580,43 +435,11 @@ class Recipients(BaseResource):
         if request.all is not None:
             body["all"] = request.all
 
-        logger.debug(f"Deleting from on-hold with body: {body}")
+        self.logger.debug(f"Deleting from on-hold with body: {body}")
 
         # Make API call
         response = self.client.request(
             method="DELETE", endpoint="/v1/suppressions/on-hold-list", body=body
         )
 
-        logger.info("Deleted from on-hold successfully")
-
         return self._create_response(response)
-
-    def _build_suppression_add_body(
-        self, request: SuppressionAddRequest
-    ) -> Dict[str, Any]:
-        """Build request body for suppression add operations."""
-        body = {}
-
-        if request.domain_id:
-            body["domain_id"] = request.domain_id
-        if request.recipients:
-            body["recipients"] = request.recipients
-        if request.patterns:
-            body["patterns"] = request.patterns
-
-        return body
-
-    def _build_suppression_delete_body(
-        self, request: SuppressionDeleteRequest
-    ) -> Dict[str, Any]:
-        """Build request body for suppression delete operations."""
-        body = {}
-
-        if request.domain_id:
-            body["domain_id"] = request.domain_id
-        if request.ids:
-            body["ids"] = request.ids
-        if request.all is not None:
-            body["all"] = request.all
-
-        return body

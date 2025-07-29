@@ -1,4 +1,4 @@
-from typing import List, Optional, Union
+from typing import Dict, List, Optional, Union
 from pydantic import Field, field_validator, model_validator
 from mailersend.models.base import BaseModel
 
@@ -269,6 +269,19 @@ class InboundCreateRequest(BaseModel):
 
         return self
 
+    def to_request_body(self) -> dict:
+        """Convert to API request body with proper serialization."""
+        data = self.model_dump(by_alias=True, exclude_none=True)
+        
+        # Exclude 'id' from forwards for creation
+        if "forwards" in data and data["forwards"]:
+            data["forwards"] = [
+                {k: v for k, v in forward.items() if k != "id"}
+                for forward in data["forwards"]
+            ]
+        
+        return data
+
 
 class InboundUpdateRequest(BaseModel):
     """Request model for updating an inbound route."""
@@ -353,6 +366,19 @@ class InboundUpdateRequest(BaseModel):
                 raise ValueError("Inbound priority is required when domain is enabled")
 
         return self
+
+    def to_request_body(self) -> dict:
+        """Convert to API request body with proper serialization."""
+        data = self.model_dump(by_alias=True, exclude_none=True, exclude={"inbound_id"})
+        
+        # Exclude 'id' from forwards for update
+        if "forwards" in data and data["forwards"]:
+            data["forwards"] = [
+                {k: v for k, v in forward.items() if k != "id"}
+                for forward in data["forwards"]
+            ]
+        
+        return data
 
 
 class InboundDeleteRequest(BaseModel):

@@ -3,8 +3,7 @@ from ..models.schedules import (
     SchedulesListRequest,
     ScheduleGetRequest,
     ScheduleDeleteRequest,
-    SchedulesListResponse,
-    ScheduleResponse,
+    SchedulesListResponse
 )
 from ..models.base import APIResponse
 
@@ -63,7 +62,7 @@ class Schedules(BaseResource):
             method="GET", endpoint=f"message-schedules/{request.message_id}"
         )
 
-        return self._create_response(response, ScheduleResponse)
+        return self._create_response(response)
 
     def delete_schedule(self, request: ScheduleDeleteRequest) -> APIResponse:
         """

@@ -17,17 +17,13 @@ class Activity(BaseResource):
 
         Returns:
             APIResponse with activity data and metadata
-
-        Raises:
-            ValidationError: If the ActivityRequest is invalid
-            MailerSendError: If the API returns an error
         """
         self.logger.debug("Preparing to get activity data")
 
         # Convert to query parameters for the API request
         params = request.to_query_params()
 
-        self.logger.info(f"Getting activity data for domain: {request.domain_id}")
+        self.logger.debug(f"Getting activity data for domain: {request.domain_id}")
         self.logger.debug(f"Query params: {params}")
 
         response = self.client.request(
@@ -48,7 +44,7 @@ class Activity(BaseResource):
         """
         self.logger.debug("Preparing to get single activity")
 
-        self.logger.info(f"Getting single activity: {request.activity_id}")
+        self.logger.debug(f"Getting single activity: {request.activity_id}")
 
         response = self.client.request(method='GET', endpoint=f'activities/{request.activity_id}')
 

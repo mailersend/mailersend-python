@@ -1,13 +1,9 @@
-from typing import Union
-
 from mailersend.models.inbound import (
     InboundListRequest,
     InboundGetRequest,
     InboundCreateRequest,
     InboundUpdateRequest,
     InboundDeleteRequest,
-    InboundListResponse,
-    InboundResponse,
 )
 from mailersend.models.base import APIResponse
 from mailersend.resources.base import BaseResource
@@ -40,7 +36,7 @@ class InboundResource(BaseResource):
             method="GET", endpoint="inbound", params=params if params else None
         )
 
-        return self._create_response(response, InboundListResponse)
+        return self._create_response(response)
 
     def get(self, request: InboundGetRequest) -> APIResponse:
         """
@@ -61,7 +57,7 @@ class InboundResource(BaseResource):
             method="GET", endpoint=f"inbound/{request.inbound_id}"
         )
 
-        return self._create_response(response, InboundResponse)
+        return self._create_response(response)
 
     def create(self, request: InboundCreateRequest) -> APIResponse:
         """
@@ -75,24 +71,8 @@ class InboundResource(BaseResource):
         """
         self.logger.debug("Preparing to create inbound route")
 
-        # Build request body with special handling for complex fields
-        data = request.model_dump(by_alias=True, exclude_none=True)
-
-        # Handle complex nested objects that need special serialization
-        if "catch_filter" in data:
-            data["catch_filter"] = [
-                filter_group for filter_group in data["catch_filter"]
-            ]
-        if "match_filter" in data:
-            data["match_filter"] = [
-                filter_group for filter_group in data["match_filter"]
-            ]
-        if "forwards" in data:
-            # Exclude 'id' from forwards for creation
-            data["forwards"] = [
-                {k: v for k, v in forward.items() if k != "id"}
-                for forward in data["forwards"]
-            ]
+        # Build request body using model's serialization method
+        data = request.to_request_body()
 
         self.logger.debug(
             f"Making API request to create inbound route with data keys: {list(data.keys())}"
@@ -101,7 +81,7 @@ class InboundResource(BaseResource):
         # Make API request
         response = self.client.request(method="POST", endpoint="inbound", body=data)
 
-        return self._create_response(response, InboundResponse)
+        return self._create_response(response)
 
     def update(self, request: InboundUpdateRequest) -> APIResponse:
         """
@@ -111,32 +91,14 @@ class InboundResource(BaseResource):
             request: The inbound update request with inbound ID and update data
 
         Returns:
-            APIResponse containing the updated inbound route response
+            APIResponse containing the updated response
         """
         self.logger.debug(
             f"Preparing to update inbound route with ID: {request.inbound_id}"
         )
 
-        # Build request body, excluding inbound_id (goes in URL)
-        data = request.model_dump(
-            by_alias=True, exclude_none=True, exclude={"inbound_id"}
-        )
-
-        # Handle complex nested objects that need special serialization
-        if "catch_filter" in data:
-            data["catch_filter"] = [
-                filter_group for filter_group in data["catch_filter"]
-            ]
-        if "match_filter" in data:
-            data["match_filter"] = [
-                filter_group for filter_group in data["match_filter"]
-            ]
-        if "forwards" in data:
-            # Exclude 'id' from forwards for update
-            data["forwards"] = [
-                {k: v for k, v in forward.items() if k != "id"}
-                for forward in data["forwards"]
-            ]
+        # Build request body using model's serialization method
+        data = request.to_request_body()
 
         self.logger.debug(
             f"Making API request to update inbound route with data keys: {list(data.keys())}"
@@ -147,7 +109,7 @@ class InboundResource(BaseResource):
             method="PUT", endpoint=f"inbound/{request.inbound_id}", body=data
         )
 
-        return self._create_response(response, InboundResponse)
+        return self._create_response(response)
 
     def delete(self, request: InboundDeleteRequest) -> APIResponse:
         """
