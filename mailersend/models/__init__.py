@@ -124,8 +124,6 @@ from .sms_numbers import (
     SmsNumberGetRequest,
     SmsNumberUpdateRequest,
     SmsNumberDeleteRequest,
-    SmsNumbersListResponse,
-    SmsNumberResponse,
 )
 from .sms_activity import (
     SmsActivity,
@@ -166,7 +164,6 @@ from .sms_inbounds import (
     SmsInboundCreateRequest,
     SmsInboundUpdateRequest,
     SmsInboundDeleteRequest,
-    SmsNumber,
     SmsInbound,
 )
 
@@ -272,8 +269,6 @@ __all__ = [
     "SmsNumberGetRequest",
     "SmsNumberUpdateRequest",
     "SmsNumberDeleteRequest",
-    "SmsNumbersListResponse",
-    "SmsNumberResponse",
     # SMS Activity models
     "SmsActivity",
     "SmsActivityListRequest",
@@ -310,11 +305,6 @@ __all__ = [
     "SmsInboundCreateRequest",
     "SmsInboundUpdateRequest",
     "SmsInboundDeleteRequest",
-    "SmsNumber",
     "SmsInbound",
-    "SmsInboundsListResponse",
-    "SmsInboundGetResponse",
-    "SmsInboundCreateResponse",
-    "SmsInboundUpdateResponse",
-    "SmsInboundDeleteResponse",
+
 ]

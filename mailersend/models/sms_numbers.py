@@ -61,15 +61,4 @@ class SmsNumberDeleteRequest(BaseMailerSendModel):
     sms_number_id: str = Field(..., min_length=1, description="SMS Number ID")
 
 
-class SmsNumbersListResponse(BaseMailerSendModel):
-    """Response model for SMS phone numbers list."""
 
-    data: List[SmsNumber]
-    links: Optional[Dict[str, str]] = Field(None, description="Pagination links")
-    meta: Optional[Dict[str, int]] = Field(None, description="Pagination metadata")
-
-
-class SmsNumberResponse(BaseMailerSendModel):
-    """Response model for single SMS phone number."""
-
-    data: SmsNumber

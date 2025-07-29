@@ -3,8 +3,9 @@ from tests.test_helpers import vcr, email_client
 import os
 
 from mailersend.models.sms_messages import (
-    SmsMessagesListRequest, SmsMessageGetRequest,
-    SmsMessagesQueryParams
+    SmsMessagesListRequest,
+    SmsMessageGetRequest,
+    SmsMessagesListQueryParams,
 )
 from mailersend.models.base import APIResponse
 
@@ -13,7 +14,7 @@ from mailersend.models.base import APIResponse
 def basic_sms_list_request():
     """Basic SMS messages list request"""
     return SmsMessagesListRequest(
-        query_params=SmsMessagesQueryParams(
+        query_params=SmsMessagesListQueryParams(
             page=1,
             limit=10
         )
@@ -59,7 +60,7 @@ class TestSmsMessagesIntegration:
     def test_list_sms_messages_with_pagination(self, email_client):
         """Test listing SMS messages with pagination."""
         request = SmsMessagesListRequest(
-            query_params=SmsMessagesQueryParams(
+            query_params=SmsMessagesListQueryParams(
                 page=1,
                 limit=5
             )
@@ -135,7 +136,7 @@ class TestSmsMessagesIntegration:
         # You may need to adjust based on the actual model implementation
         
         request = SmsMessagesListRequest(
-            query_params=SmsMessagesQueryParams(
+            query_params=SmsMessagesListQueryParams(
                 page=1,
                 limit=25
             )
@@ -198,7 +199,7 @@ class TestSmsMessagesIntegration:
         
         # Step 1: List SMS messages
         list_request = SmsMessagesListRequest(
-            query_params=SmsMessagesQueryParams(
+            query_params=SmsMessagesListQueryParams(
                 page=1,
                 limit=5
             )

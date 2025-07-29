@@ -196,16 +196,7 @@ class SmsInboundDeleteRequest(BaseMailerSendModel):
         return v.strip()
 
 
-# Response Models
-class SmsNumber(BaseMailerSendModel):
-    """SMS number model."""
-
-    id: str = Field(..., description="SMS number ID")
-    telephone_number: str = Field(..., description="Telephone number")
-    paused: bool = Field(..., description="Whether SMS number is paused")
-    created_at: datetime = Field(..., description="Creation timestamp")
-
-
+# Response Models  
 class SmsInbound(BaseMailerSendModel):
     """SMS inbound route model."""
 
@@ -220,42 +211,6 @@ class SmsInbound(BaseMailerSendModel):
         default=None, description="Secret key for webhook verification"
     )
     created_at: datetime = Field(..., description="Creation timestamp")
-    sms_number: Optional[SmsNumber] = Field(
+    sms_number: Optional[Dict[str, Any]] = Field(
         default=None, description="Associated SMS number"
     )
-
-
-class SmsInboundsListResponse(BaseMailerSendModel):
-    """Response model for SMS inbounds list."""
-
-    data: List[SmsInbound] = Field(..., description="List of SMS inbound routes")
-    links: Optional[Dict[str, str]] = Field(
-        default=None, description="Pagination links"
-    )
-    meta: Optional[Dict[str, int]] = Field(
-        default=None, description="Pagination metadata"
-    )
-
-
-class SmsInboundGetResponse(BaseMailerSendModel):
-    """Response model for SMS inbound get."""
-
-    data: SmsInbound = Field(..., description="SMS inbound route details")
-
-
-class SmsInboundCreateResponse(BaseMailerSendModel):
-    """Response model for SMS inbound create."""
-
-    data: SmsInbound = Field(..., description="Created SMS inbound route")
-
-
-class SmsInboundUpdateResponse(BaseMailerSendModel):
-    """Response model for SMS inbound update."""
-
-    data: SmsInbound = Field(..., description="Updated SMS inbound route")
-
-
-class SmsInboundDeleteResponse(BaseMailerSendModel):
-    """Response model for SMS inbound delete."""
-
-    message: str = Field(..., description="Delete confirmation message")
