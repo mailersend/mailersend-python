@@ -232,48 +232,4 @@ class InviteCancelRequest(BaseModel):
     invite_id: str
 
 
-# Response models
-class UsersListResponse(BaseModel):
-    """Response model for users list."""
 
-    data: List[User]
-    links: Dict[str, Optional[str]]
-    meta: Dict[str, Any]
-
-
-class UserResponse(BaseModel):
-    """Response model for single user."""
-
-    data: User
-
-
-class UserInviteResponse(BaseModel):
-    """Response model for user invite creation."""
-
-    data: UserInvite
-
-
-class UserUpdateResponse(BaseModel):
-    """Response model for user update."""
-
-    data: User
-
-
-class InvitesListResponse(BaseModel):
-    """Response model for invites list."""
-
-    data: List[UserInvite]
-    links: Dict[str, Optional[str]]
-    meta: Dict[str, Any]
-
-
-class InviteResponse(BaseModel):
-    """Response model for single invite."""
-
-    data: UserInvite
-
-
-class InviteResendResponse(BaseModel):
-    """Response model for invite resend."""
-
-    data: UserInvite

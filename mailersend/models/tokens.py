@@ -39,24 +39,7 @@ TOKEN_SCOPES = [
 TokenStatus = Literal["pause", "unpause"]
 
 
-# Token models
-class Token(BaseModel):
-    """Token data model."""
 
-    id: str
-    name: str
-    status: TokenStatus
-    created_at: datetime
-    scopes: List[str] = Field(default_factory=list)
-
-
-class TokenCreate(BaseModel):
-    """Token creation response model."""
-
-    id: str
-    accessToken: str
-    name: str
-    created_at: datetime
 
 
 # Query parameters models
@@ -172,22 +155,4 @@ class TokenDeleteRequest(BaseModel):
     token_id: str
 
 
-# Response models
-class TokensListResponse(BaseModel):
-    """Response model for tokens list."""
 
-    data: List[Token]
-    links: Dict[str, Optional[str]]
-    meta: Dict[str, Any]
-
-
-class TokenResponse(BaseModel):
-    """Response model for single token."""
-
-    data: Token
-
-
-class TokenCreateResponse(BaseModel):
-    """Response model for token creation."""
-
-    data: TokenCreate

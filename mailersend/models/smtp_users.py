@@ -153,36 +153,4 @@ class SmtpUserDeleteRequest(BaseModel):
         return v.strip()
 
 
-# Response Models
-class SmtpUser(BaseMailerSendModel):
-    """SMTP User model."""
 
-    id: str = Field(..., description="SMTP User ID")
-    name: str = Field(..., description="SMTP User name")
-    username: str = Field(..., description="SMTP username")
-    password: str = Field(..., description="SMTP password")
-    enabled: bool = Field(..., description="Whether the SMTP user is enabled")
-    accessed_at: Optional[datetime] = Field(None, description="Last access time")
-    server: str = Field(..., description="SMTP server")
-    port: int = Field(..., description="SMTP port")
-    domain_id: str = Field(..., description="Domain ID")
-
-
-class SmtpUsersListResponse(BaseMailerSendModel):
-    """Response model for SMTP users list."""
-
-    data: List[SmtpUser] = Field(..., description="List of SMTP users")
-    links: Optional[Dict[str, str]] = Field(None, description="Pagination links")
-    meta: Optional[Dict[str, int]] = Field(None, description="Pagination metadata")
-
-
-class SmtpUserResponse(BaseMailerSendModel):
-    """Response model for single SMTP user."""
-
-    data: SmtpUser = Field(..., description="SMTP user data")
-
-
-class SmtpUserCreateResponse(BaseMailerSendModel):
-    """Response model for SMTP user creation."""
-
-    data: SmtpUser = Field(..., description="Created SMTP user data")
