@@ -6,9 +6,6 @@ from mailersend.models.schedules import (
     SchedulesListQueryParams,
     ScheduleGetRequest,
     ScheduleDeleteRequest,
-    ScheduleDomain,
-    ScheduleMessage,
-    ScheduledMessage,
 )
 
 

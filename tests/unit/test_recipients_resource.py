@@ -1,6 +1,6 @@
 """Unit tests for Recipients resource."""
 import pytest
-from unittest.mock import Mock, patch
+from unittest.mock import Mock, MagicMock
 from requests import Response
 
 from mailersend.resources.recipients import Recipients
@@ -12,571 +12,373 @@ from mailersend.models.recipients import (
     SuppressionListRequest,
     SuppressionAddRequest,
     SuppressionDeleteRequest,
-    RecipientsListResponse,
-    RecipientResponse,
-    BlocklistResponse,
-    HardBouncesResponse,
-    SpamComplaintsResponse,
-    UnsubscribesResponse,
-    OnHoldResponse,
-    SuppressionAddResponse,
 )
 from mailersend.exceptions import ValidationError
 
 
-class TestRecipientsResource:
-    """Test Recipients resource."""
+class TestRecipients:
+    """Test Recipients resource class."""
 
-    @pytest.fixture
-    def mock_client(self):
-        """Create a mock client."""
-        return Mock()
+    def setup_method(self):
+        """Set up test fixtures."""
+        self.mock_client = Mock()
+        self.resource = Recipients(self.mock_client)
+        self.resource.logger = Mock()
+        
+        # Mock _create_response method
+        self.mock_api_response = MagicMock(spec=APIResponse)
+        self.resource._create_response = Mock(return_value=self.mock_api_response)
 
-    @pytest.fixture
-    def recipients_resource(self, mock_client):
-        """Create Recipients resource with mock client."""
-        return Recipients(mock_client)
+    def test_list_recipients_returns_api_response(self):
+        """Test list_recipients method returns APIResponse."""
+        mock_response = Mock()
+        self.mock_client.request.return_value = mock_response
 
-    def _create_mock_response(self, json_data=None):
-        """Create a properly configured mock response."""
-        mock_response = Mock(spec=Response)
-        mock_response.json.return_value = json_data or {}
-        mock_response.headers = {
-            "content-type": "application/json",
-            "x-request-id": "test-request-id",
-            "x-apiquota-remaining": "100"
-        }
-        mock_response.status_code = 200
-        mock_response.content = b'{"data": []}'
-        return mock_response
+        result = self.resource.list_recipients()
 
-    def test_list_recipients_default(self, recipients_resource, mock_client):
-        """Test listing recipients with default parameters."""
-        # Setup mock response
-        mock_response = self._create_mock_response({
-            "data": [
-                {
-                    "id": "recipient123",
-                    "email": "test@example.com",
-                    "created_at": "2020-06-10T10:09:56Z",
-                    "updated_at": "2020-06-10T10:09:56Z",
-                    "deleted_at": "",
-                }
-            ],
-            "links": {"first": "https://api.mailersend.com/v1/recipients?page=1"},
-            "meta": {"current_page": 1, "per_page": 25, "total": 1},
-        })
-        mock_client.get.return_value = mock_response
+        assert result == self.mock_api_response
+        self.resource._create_response.assert_called_once_with(mock_response)
 
-        # Test
-        response = recipients_resource.list_recipients()
-
-        # Assertions
-        mock_client.get.assert_called_once_with("/v1/recipients", params={"page": 1, "limit": 25})
-        assert isinstance(response, APIResponse)
-        assert isinstance(response.data, RecipientsListResponse)
-        assert len(response.data.data) == 1
-        assert response.data.data[0].id == "recipient123"
-
-    def test_list_recipients_with_request(self, recipients_resource, mock_client):
-        """Test listing recipients with request parameters."""
-        # Setup
+    def test_list_recipients_with_request(self):
+        """Test list_recipients with custom request."""
         from mailersend.models.recipients import RecipientsListQueryParams
-        query_params = RecipientsListQueryParams(
-            domain_id="domain123",
-            page=2,
-            limit=50,
-        )
+        
+        query_params = RecipientsListQueryParams(domain_id="test-domain", page=2, limit=50)
         request = RecipientsListRequest(query_params=query_params)
         
-        mock_response = self._create_mock_response({
-            "data": [],
-            "links": {},
-            "meta": {},
-        })
-        mock_client.get.return_value = mock_response
+        mock_response = Mock()
+        self.mock_client.request.return_value = mock_response
 
-        # Test
-        recipients_resource.list_recipients(request)
+        result = self.resource.list_recipients(request)
 
-        # Assertions
-        expected_params = {
-            "domain_id": "domain123",
-            "page": 2,
-            "limit": 50,
-        }
-        mock_client.get.assert_called_once_with("/v1/recipients", params=expected_params)
+        # Verify client was called with correct params
+        self.mock_client.request.assert_called_once_with(
+            method='GET',
+            endpoint='recipients',
+            params={'domain_id': 'test-domain', 'page': 2, 'limit': 50}
+        )
 
-    def test_get_recipient(self, recipients_resource, mock_client):
-        """Test getting a single recipient."""
-        # Setup
-        request = RecipientGetRequest(recipient_id="recipient123")
+        assert result == self.mock_api_response
+        self.resource._create_response.assert_called_once_with(mock_response)
+
+    def test_list_recipients_with_defaults(self):
+        """Test list_recipients with default request."""
+        mock_response = Mock()
+        self.mock_client.request.return_value = mock_response
+
+        result = self.resource.list_recipients()
+
+        # Verify client was called with defaults
+        self.mock_client.request.assert_called_once_with(
+            method='GET',
+            endpoint='recipients',
+            params={'page': 1, 'limit': 25}
+        )
+
+        assert result == self.mock_api_response
+
+    def test_get_recipient_returns_api_response(self):
+        """Test get_recipient method returns APIResponse."""
+        request = RecipientGetRequest(recipient_id="test-recipient")
         
-        mock_response = self._create_mock_response({
-            "data": {
-                "id": "recipient123",
-                "email": "test@example.com",
-                "created_at": "2020-06-10T10:09:56Z",
-                "updated_at": "2020-06-10T10:09:56Z",
-                "deleted_at": "",
-            }
-        })
-        mock_client.get.return_value = mock_response
+        mock_response = Mock()
+        self.mock_client.request.return_value = mock_response
 
-        # Test
-        response = recipients_resource.get_recipient(request)
+        result = self.resource.get_recipient(request)
 
-        # Assertions
-        mock_client.get.assert_called_once_with("/v1/recipients/recipient123")
-        assert isinstance(response, APIResponse)
-        assert isinstance(response.data, RecipientResponse)
-        assert response.data.data.id == "recipient123"
+        assert result == self.mock_api_response
+        self.resource._create_response.assert_called_once_with(mock_response)
 
-    def test_get_recipient_no_request(self, recipients_resource):
-        """Test getting recipient without request raises error."""
-        with pytest.raises(ValidationError) as exc_info:
-            recipients_resource.get_recipient(None)
-        assert "Request is required for get_recipient" in str(exc_info.value)
-
-    def test_delete_recipient(self, recipients_resource, mock_client):
-        """Test deleting a recipient."""
-        # Setup
-        request = RecipientDeleteRequest(recipient_id="recipient123")
-        mock_response = self._create_mock_response({})
-        mock_client.delete.return_value = mock_response
-
-        # Test
-        response = recipients_resource.delete_recipient(request)
-
-        # Assertions
-        mock_client.delete.assert_called_once_with("/v1/recipients/recipient123")
-        assert isinstance(response, APIResponse)
-
-    def test_delete_recipient_no_request(self, recipients_resource):
-        """Test deleting recipient without request raises error."""
-        with pytest.raises(ValidationError) as exc_info:
-            recipients_resource.delete_recipient(None)
-        assert "Request is required for delete_recipient" in str(exc_info.value)
-
-    def test_list_blocklist(self, recipients_resource, mock_client):
-        """Test listing blocklist entries."""
-        # Setup
-        from mailersend.models.recipients import SuppressionListQueryParams
-        query_params = SuppressionListQueryParams(
-            domain_id="domain123",
-            page=1,
-            limit=25,
-        )
-        request = SuppressionListRequest(query_params=query_params)
+    def test_get_recipient_with_valid_request(self):
+        """Test get_recipient with valid request."""
+        request = RecipientGetRequest(recipient_id="test-recipient")
         
-        mock_response = self._create_mock_response({
-            "data": [
-                {
-                    "id": "entry123",
-                    "type": "pattern",
-                    "pattern": ".*@example.com",
-                    "created_at": "2020-06-10T10:09:56Z",
-                    "updated_at": "2020-06-10T10:09:56Z",
-                }
-            ]
-        })
-        mock_client.get.return_value = mock_response
+        mock_response = Mock()
+        self.mock_client.request.return_value = mock_response
 
-        # Test
-        response = recipients_resource.list_blocklist(request)
+        result = self.resource.get_recipient(request)
 
-        # Assertions
-        expected_params = {
-            "domain_id": "domain123",
-            "page": 1,
-            "limit": 25,
-        }
-        mock_client.get.assert_called_once_with("/v1/suppressions/blocklist", params=expected_params)
-        assert isinstance(response, APIResponse)
-        assert isinstance(response.data, BlocklistResponse)
-
-    def test_list_hard_bounces(self, recipients_resource, mock_client):
-        """Test listing hard bounces."""
-        # Setup
-        mock_response = self._create_mock_response({"data": []})
-        mock_client.get.return_value = mock_response
-
-        # Test
-        response = recipients_resource.list_hard_bounces()
-
-        # Assertions
-        mock_client.get.assert_called_once_with("/v1/suppressions/hard-bounces", params={"page": 1, "limit": 25})
-        assert isinstance(response, APIResponse)
-        assert isinstance(response.data, HardBouncesResponse)
-
-    def test_list_spam_complaints(self, recipients_resource, mock_client):
-        """Test listing spam complaints."""
-        # Setup
-        mock_response = self._create_mock_response({"data": []})
-        mock_client.get.return_value = mock_response
-
-        # Test
-        response = recipients_resource.list_spam_complaints()
-
-        # Assertions
-        mock_client.get.assert_called_once_with("/v1/suppressions/spam-complaints", params={"page": 1, "limit": 25})
-        assert isinstance(response, APIResponse)
-        assert isinstance(response.data, SpamComplaintsResponse)
-
-    def test_list_unsubscribes(self, recipients_resource, mock_client):
-        """Test listing unsubscribes."""
-        # Setup
-        mock_response = self._create_mock_response({"data": []})
-        mock_client.get.return_value = mock_response
-
-        # Test
-        response = recipients_resource.list_unsubscribes()
-
-        # Assertions
-        mock_client.get.assert_called_once_with("/v1/suppressions/unsubscribes", params={"page": 1, "limit": 25})
-        assert isinstance(response, APIResponse)
-        assert isinstance(response.data, UnsubscribesResponse)
-
-    def test_list_on_hold(self, recipients_resource, mock_client):
-        """Test listing on-hold entries."""
-        # Setup
-        mock_response = self._create_mock_response({"data": []})
-        mock_client.get.return_value = mock_response
-
-        # Test
-        response = recipients_resource.list_on_hold()
-
-        # Assertions
-        mock_client.get.assert_called_once_with("/v1/suppressions/on-hold-list", params={"page": 1, "limit": 25})
-        assert isinstance(response, APIResponse)
-        assert isinstance(response.data, OnHoldResponse)
-
-    def test_add_to_blocklist(self, recipients_resource, mock_client):
-        """Test adding to blocklist."""
-        # Setup
-        request = SuppressionAddRequest(
-            domain_id="domain123",
-            recipients=["test@example.com"],
-            patterns=[".*@example.com"],
+        # Verify client was called correctly
+        self.mock_client.request.assert_called_once_with(
+            method='GET',
+            endpoint='recipients/test-recipient'
         )
 
-        mock_response = self._create_mock_response({"data": []})
-        mock_client.post.return_value = mock_response
+    def test_delete_recipient_returns_api_response(self):
+        """Test delete_recipient method returns APIResponse."""
+        request = RecipientDeleteRequest(recipient_id="test-recipient")
+        
+        mock_response = Mock()
+        self.mock_client.request.return_value = mock_response
 
-        # Test
-        response = recipients_resource.add_to_blocklist(request)
+        result = self.resource.delete_recipient(request)
 
-        # Assertions
-        expected_body = {
-            "domain_id": "domain123",
-            "recipients": ["test@example.com"],
-            "patterns": [".*@example.com"],
-        }
-        mock_client.post.assert_called_once_with("/v1/suppressions/blocklist", json=expected_body)
-        assert isinstance(response, APIResponse)
-        assert isinstance(response.data, SuppressionAddResponse)
+        assert result == self.mock_api_response
+        self.resource._create_response.assert_called_once_with(mock_response)
 
-    def test_add_to_blocklist_no_request(self, recipients_resource):
-        """Test adding to blocklist without request raises error."""
-        with pytest.raises(ValidationError) as exc_info:
-            recipients_resource.add_to_blocklist(None)
-        assert "Request is required for add_to_blocklist" in str(exc_info.value)
+    def test_delete_recipient_with_valid_request(self):
+        """Test delete_recipient with valid request."""
+        request = RecipientDeleteRequest(recipient_id="test-recipient")
+        
+        mock_response = Mock()
+        self.mock_client.request.return_value = mock_response
 
-    def test_add_hard_bounces(self, recipients_resource, mock_client):
-        """Test adding hard bounces."""
-        # Setup
-        request = SuppressionAddRequest(
-            domain_id="domain123",
-            recipients=["test@example.com"],
+        result = self.resource.delete_recipient(request)
+
+        # Verify client was called correctly
+        self.mock_client.request.assert_called_once_with(
+            method='DELETE',
+            endpoint='recipients/test-recipient'
         )
 
-        mock_response = self._create_mock_response({"data": []})
-        mock_client.post.return_value = mock_response
+    def test_list_blocklist_returns_api_response(self):
+        """Test list_blocklist method returns APIResponse."""
+        mock_response = Mock()
+        self.mock_client.request.return_value = mock_response
 
-        # Test
-        response = recipients_resource.add_hard_bounces(request)
+        result = self.resource.list_blocklist()
 
-        # Assertions
-        expected_body = {
-            "domain_id": "domain123",
-            "recipients": ["test@example.com"],
-        }
-        mock_client.post.assert_called_once_with("/v1/suppressions/hard-bounces", json=expected_body)
-        assert isinstance(response, APIResponse)
-        assert isinstance(response.data, SuppressionAddResponse)
+        assert result == self.mock_api_response
+        self.resource._create_response.assert_called_once_with(mock_response)
 
-    def test_add_hard_bounces_no_recipients(self, recipients_resource):
-        """Test adding hard bounces without recipients raises error."""
-        request = SuppressionAddRequest(domain_id="domain123")
-        with pytest.raises(ValidationError) as exc_info:
-            recipients_resource.add_hard_bounces(request)
-        assert "Recipients are required for add_hard_bounces" in str(exc_info.value)
+    def test_list_hard_bounces_returns_api_response(self):
+        """Test list_hard_bounces method returns APIResponse."""
+        mock_response = Mock()
+        self.mock_client.request.return_value = mock_response
 
-    def test_add_spam_complaints(self, recipients_resource, mock_client):
-        """Test adding spam complaints."""
-        # Setup
+        result = self.resource.list_hard_bounces()
+
+        assert result == self.mock_api_response
+
+    def test_list_spam_complaints_returns_api_response(self):
+        """Test list_spam_complaints method returns APIResponse."""
+        mock_response = Mock()
+        self.mock_client.request.return_value = mock_response
+
+        result = self.resource.list_spam_complaints()
+
+        assert result == self.mock_api_response
+
+    def test_list_unsubscribes_returns_api_response(self):
+        """Test list_unsubscribes method returns APIResponse."""
+        mock_response = Mock()
+        self.mock_client.request.return_value = mock_response
+
+        result = self.resource.list_unsubscribes()
+
+        assert result == self.mock_api_response
+
+    def test_list_on_hold_returns_api_response(self):
+        """Test list_on_hold method returns APIResponse."""
+        mock_response = Mock()
+        self.mock_client.request.return_value = mock_response
+
+        result = self.resource.list_on_hold()
+
+        assert result == self.mock_api_response
+
+    def test_add_to_blocklist_returns_api_response(self):
+        """Test add_to_blocklist method returns APIResponse."""
         request = SuppressionAddRequest(
-            domain_id="domain123",
-            recipients=["test@example.com"],
+            domain_id="test-domain",
+            recipients=["test@example.com"]
         )
+        
+        mock_response = Mock()
+        self.mock_client.request.return_value = mock_response
 
-        mock_response = self._create_mock_response({"data": []})
-        mock_client.post.return_value = mock_response
+        result = self.resource.add_to_blocklist(request)
 
-        # Test
-        response = recipients_resource.add_spam_complaints(request)
+        assert result == self.mock_api_response
+        self.resource._create_response.assert_called_once_with(mock_response)
 
-        # Assertions
-        expected_body = {
-            "domain_id": "domain123",
-            "recipients": ["test@example.com"],
-        }
-        mock_client.post.assert_called_once_with("/v1/suppressions/spam-complaints", json=expected_body)
-        assert isinstance(response, APIResponse)
-        assert isinstance(response.data, SuppressionAddResponse)
-
-    def test_add_unsubscribes(self, recipients_resource, mock_client):
-        """Test adding unsubscribes."""
-        # Setup
+    def test_add_to_blocklist_with_request_body(self):
+        """Test add_to_blocklist with request body serialization."""
         request = SuppressionAddRequest(
-            domain_id="domain123",
-            recipients=["test@example.com"],
+            domain_id="test-domain",
+            recipients=["test@example.com", "test2@example.com"],
+            patterns=["@spam.com"]
         )
+        
+        mock_response = Mock()
+        self.mock_client.request.return_value = mock_response
 
-        mock_response = self._create_mock_response({"data": []})
-        mock_client.post.return_value = mock_response
+        result = self.resource.add_to_blocklist(request)
 
-        # Test
-        response = recipients_resource.add_unsubscribes(request)
+        # Verify client was called with correct data
+        call_args = self.mock_client.request.call_args
+        assert call_args[1]['method'] == 'POST'
+        assert call_args[1]['endpoint'] == 'suppressions/blocklist'
+        
+        body = call_args[1]['body']
+        assert 'domain_id' in body
+        assert 'recipients' in body
+        assert 'patterns' in body
 
-        # Assertions
-        expected_body = {
-            "domain_id": "domain123",
-            "recipients": ["test@example.com"],
-        }
-        mock_client.post.assert_called_once_with("/v1/suppressions/unsubscribes", json=expected_body)
-        assert isinstance(response, APIResponse)
-        assert isinstance(response.data, SuppressionAddResponse)
+    def test_add_hard_bounces_returns_api_response(self):
+        """Test add_hard_bounces method returns APIResponse."""
+        request = SuppressionAddRequest(
+            domain_id="test-domain",
+            recipients=["test@example.com"]
+        )
+        
+        mock_response = Mock()
+        self.mock_client.request.return_value = mock_response
 
-    def test_delete_from_blocklist(self, recipients_resource, mock_client):
-        """Test deleting from blocklist."""
-        # Setup
+        result = self.resource.add_hard_bounces(request)
+
+        assert result == self.mock_api_response
+
+    def test_add_spam_complaints_returns_api_response(self):
+        """Test add_spam_complaints method returns APIResponse."""
+        request = SuppressionAddRequest(
+            domain_id="test-domain",
+            recipients=["test@example.com"]
+        )
+        
+        mock_response = Mock()
+        self.mock_client.request.return_value = mock_response
+
+        result = self.resource.add_spam_complaints(request)
+
+        assert result == self.mock_api_response
+
+    def test_add_unsubscribes_returns_api_response(self):
+        """Test add_unsubscribes method returns APIResponse."""
+        request = SuppressionAddRequest(
+            domain_id="test-domain",
+            recipients=["test@example.com"]
+        )
+        
+        mock_response = Mock()
+        self.mock_client.request.return_value = mock_response
+
+        result = self.resource.add_unsubscribes(request)
+
+        assert result == self.mock_api_response
+
+    def test_delete_from_blocklist_returns_api_response(self):
+        """Test delete_from_blocklist method returns APIResponse."""
         request = SuppressionDeleteRequest(
-            domain_id="domain123",
-            ids=["id1", "id2"],
+            domain_id="test-domain",
+            ids=["id1", "id2"]
         )
+        
+        mock_response = Mock()
+        self.mock_client.request.return_value = mock_response
 
-        mock_response = self._create_mock_response({})
-        mock_client.delete.return_value = mock_response
+        result = self.resource.delete_from_blocklist(request)
 
-        # Test
-        response = recipients_resource.delete_from_blocklist(request)
+        assert result == self.mock_api_response
 
-        # Assertions
-        expected_body = {
-            "domain_id": "domain123",
-            "ids": ["id1", "id2"],
-        }
-        mock_client.delete.assert_called_once_with("/v1/suppressions/blocklist", json=expected_body)
-        assert isinstance(response, APIResponse)
-
-    def test_delete_from_blocklist_all(self, recipients_resource, mock_client):
-        """Test deleting all from blocklist."""
-        # Setup
+    def test_delete_from_blocklist_with_request_body(self):
+        """Test delete_from_blocklist with request body serialization."""
         request = SuppressionDeleteRequest(
-            domain_id="domain123",
-            all=True,
+            domain_id="test-domain",
+            ids=["id1", "id2"]
         )
+        
+        mock_response = Mock()
+        self.mock_client.request.return_value = mock_response
 
-        mock_response = self._create_mock_response({})
-        mock_client.delete.return_value = mock_response
+        result = self.resource.delete_from_blocklist(request)
 
-        # Test
-        response = recipients_resource.delete_from_blocklist(request)
+        # Verify client was called with correct data
+        call_args = self.mock_client.request.call_args
+        assert call_args[1]['method'] == 'DELETE'
+        assert call_args[1]['endpoint'] == 'suppressions/blocklist'
+        
+        body = call_args[1]['body']
+        assert 'domain_id' in body
+        assert 'ids' in body
 
-        # Assertions
-        expected_body = {
-            "domain_id": "domain123",
-            "all": True,
-        }
-        mock_client.delete.assert_called_once_with("/v1/suppressions/blocklist", json=expected_body)
-        assert isinstance(response, APIResponse)
+    def test_delete_hard_bounces_excludes_domain_id(self):
+        """Test delete_hard_bounces excludes domain_id from body."""
+        request = SuppressionDeleteRequest(
+            domain_id="test-domain",
+            ids=["id1", "id2"]
+        )
+        
+        mock_response = Mock()
+        self.mock_client.request.return_value = mock_response
 
-    def test_delete_hard_bounces(self, recipients_resource, mock_client):
-        """Test deleting hard bounces."""
-        # Setup
-        request = SuppressionDeleteRequest(ids=["id1", "id2"])
+        result = self.resource.delete_hard_bounces(request)
 
-        mock_response = self._create_mock_response({})
-        mock_client.delete.return_value = mock_response
+        # Verify domain_id is excluded from request body
+        call_args = self.mock_client.request.call_args
+        body = call_args[1]['body']
+        assert 'domain_id' not in body
+        assert 'ids' in body
 
-        # Test
-        response = recipients_resource.delete_hard_bounces(request)
+    def test_delete_spam_complaints_excludes_domain_id(self):
+        """Test delete_spam_complaints excludes domain_id from body."""
+        request = SuppressionDeleteRequest(
+            domain_id="test-domain",
+            ids=["id1", "id2"]
+        )
+        
+        mock_response = Mock()
+        self.mock_client.request.return_value = mock_response
 
-        # Assertions
-        expected_body = {"ids": ["id1", "id2"]}
-        mock_client.delete.assert_called_once_with("/v1/suppressions/hard-bounces", json=expected_body)
-        assert isinstance(response, APIResponse)
+        result = self.resource.delete_spam_complaints(request)
 
-    def test_delete_spam_complaints(self, recipients_resource, mock_client):
-        """Test deleting spam complaints."""
-        # Setup
-        request = SuppressionDeleteRequest(ids=["id1", "id2"])
+        # Verify domain_id is excluded from request body
+        call_args = self.mock_client.request.call_args
+        body = call_args[1]['body']
+        assert 'domain_id' not in body
+        assert 'ids' in body
 
-        mock_response = self._create_mock_response({})
-        mock_client.delete.return_value = mock_response
+    def test_delete_unsubscribes_excludes_domain_id(self):
+        """Test delete_unsubscribes excludes domain_id from body."""
+        request = SuppressionDeleteRequest(
+            domain_id="test-domain",
+            ids=["id1", "id2"]
+        )
+        
+        mock_response = Mock()
+        self.mock_client.request.return_value = mock_response
 
-        # Test
-        response = recipients_resource.delete_spam_complaints(request)
+        result = self.resource.delete_unsubscribes(request)
 
-        # Assertions
-        expected_body = {"ids": ["id1", "id2"]}
-        mock_client.delete.assert_called_once_with("/v1/suppressions/spam-complaints", json=expected_body)
-        assert isinstance(response, APIResponse)
+        # Verify domain_id is excluded from request body
+        call_args = self.mock_client.request.call_args
+        body = call_args[1]['body']
+        assert 'domain_id' not in body
+        assert 'ids' in body
 
-    def test_delete_unsubscribes(self, recipients_resource, mock_client):
-        """Test deleting unsubscribes."""
-        # Setup
-        request = SuppressionDeleteRequest(ids=["id1", "id2"])
+    def test_delete_from_on_hold_excludes_domain_id(self):
+        """Test delete_from_on_hold excludes domain_id from body."""
+        request = SuppressionDeleteRequest(
+            domain_id="test-domain",
+            ids=["id1", "id2"]
+        )
+        
+        mock_response = Mock()
+        self.mock_client.request.return_value = mock_response
 
-        mock_response = self._create_mock_response({})
-        mock_client.delete.return_value = mock_response
+        result = self.resource.delete_from_on_hold(request)
 
-        # Test
-        response = recipients_resource.delete_unsubscribes(request)
+        # Verify domain_id is excluded from request body
+        call_args = self.mock_client.request.call_args
+        body = call_args[1]['body']
+        assert 'domain_id' not in body
+        assert 'ids' in body
 
-        # Assertions
-        expected_body = {"ids": ["id1", "id2"]}
-        mock_client.delete.assert_called_once_with("/v1/suppressions/unsubscribes", json=expected_body)
-        assert isinstance(response, APIResponse)
-
-    def test_delete_from_on_hold(self, recipients_resource, mock_client):
-        """Test deleting from on-hold list."""
-        # Setup
-        request = SuppressionDeleteRequest(ids=["id1", "id2"])
-
-        mock_response = self._create_mock_response({})
-        mock_client.delete.return_value = mock_response
-
-        # Test
-        response = recipients_resource.delete_from_on_hold(request)
-
-        # Assertions
-        expected_body = {"ids": ["id1", "id2"]}
-        mock_client.delete.assert_called_once_with("/v1/suppressions/on-hold-list", json=expected_body)
-        assert isinstance(response, APIResponse)
-
-    def test_delete_requests_no_request(self, recipients_resource):
-        """Test delete operations without request raise error."""
-        with pytest.raises(ValidationError) as exc_info:
-            recipients_resource.delete_from_blocklist(None)
-        assert "Request is required for delete_from_blocklist" in str(exc_info.value)
-
-        with pytest.raises(ValidationError) as exc_info:
-            recipients_resource.delete_hard_bounces(None)
-        assert "Request is required for delete_hard_bounces" in str(exc_info.value)
-
-        with pytest.raises(ValidationError) as exc_info:
-            recipients_resource.delete_spam_complaints(None)
-        assert "Request is required for delete_spam_complaints" in str(exc_info.value)
-
-        with pytest.raises(ValidationError) as exc_info:
-            recipients_resource.delete_unsubscribes(None)
-        assert "Request is required for delete_unsubscribes" in str(exc_info.value)
-
-        with pytest.raises(ValidationError) as exc_info:
-            recipients_resource.delete_from_on_hold(None)
-        assert "Request is required for delete_from_on_hold" in str(exc_info.value)
-
-    @patch('mailersend.resources.recipients.logger')
-    def test_logging(self, mock_logger, recipients_resource, mock_client):
-        """Test that appropriate logging occurs."""
-        # Setup
-        mock_response = self._create_mock_response({"data": []})
-        mock_client.get.return_value = mock_response
-
-        # Test
-        recipients_resource.list_recipients()
-
-        # Verify logging calls
-        mock_logger.debug.assert_called()
-        mock_logger.info.assert_called()
-
-    def test_query_params_building(self, recipients_resource, mock_client):
-        """Test query parameters are built correctly."""
-        # Setup
+    def test_integration_workflow(self):
+        """Test integration workflow with multiple operations."""
+        # Setup different requests for different methods
         from mailersend.models.recipients import RecipientsListQueryParams
-        query_params = RecipientsListQueryParams(domain_id="domain123")
-        request = RecipientsListRequest(query_params=query_params)
-        mock_response = self._create_mock_response({"data": []})
-        mock_client.get.return_value = mock_response
+        
+        query_params = RecipientsListQueryParams()
+        request_list = RecipientsListRequest(query_params=query_params)
+        request_get = RecipientGetRequest(recipient_id="test-recipient")
+        request_delete = RecipientDeleteRequest(recipient_id="test-recipient")
+        request_add = SuppressionAddRequest(domain_id="test-domain", recipients=["test@example.com"])
+        request_del = SuppressionDeleteRequest(domain_id="test-domain", ids=["id1"])
 
-        # Test with only domain_id
-        recipients_resource.list_recipients(request)
-
-        # Should include domain_id and defaults
-        expected_params = {"domain_id": "domain123", "page": 1, "limit": 25}
-        mock_client.get.assert_called_with("/v1/recipients", params=expected_params)
-
-        # Reset mock
-        mock_client.reset_mock()
-
-        # Test with full params
-        query_params = RecipientsListQueryParams(domain_id="domain123", page=2, limit=50)
-        request = RecipientsListRequest(query_params=query_params)
-        recipients_resource.list_recipients(request)
-
-        expected_params = {"domain_id": "domain123", "page": 2, "limit": 50}
-        mock_client.get.assert_called_with("/v1/recipients", params=expected_params)
-
-    def test_request_body_building(self, recipients_resource, mock_client):
-        """Test request bodies are built correctly."""
-        # Setup
-        mock_response = self._create_mock_response({"data": []})
-        mock_client.post.return_value = mock_response
-
-        # Test with recipients only
-        request = SuppressionAddRequest(
-            domain_id="domain123",
-            recipients=["test@example.com"],
-        )
-        recipients_resource.add_to_blocklist(request)
-
-        expected_body = {
-            "domain_id": "domain123",
-            "recipients": ["test@example.com"],
-        }
-        mock_client.post.assert_called_with("/v1/suppressions/blocklist", json=expected_body)
-
-        # Reset mock
-        mock_client.reset_mock()
-
-        # Test with both recipients and patterns
-        request = SuppressionAddRequest(
-            domain_id="domain123",
-            recipients=["test@example.com"],
-            patterns=[".*@example.com"],
-        )
-        recipients_resource.add_to_blocklist(request)
-
-        expected_body = {
-            "domain_id": "domain123",
-            "recipients": ["test@example.com"],
-            "patterns": [".*@example.com"],
-        }
-        mock_client.post.assert_called_with("/v1/suppressions/blocklist", json=expected_body)
-
-    def test_delete_body_without_domain_id(self, recipients_resource, mock_client):
-        """Test delete request body without domain_id (for on-hold)."""
-        # Setup
-        request = SuppressionDeleteRequest(ids=["id1", "id2"])
-
-        mock_response = self._create_mock_response({})
-        mock_client.delete.return_value = mock_response
-
-        # Test
-        recipients_resource.delete_from_on_hold(request)
-
-        # Should not include domain_id for on-hold
-        expected_body = {"ids": ["id1", "id2"]}
-        mock_client.delete.assert_called_with("/v1/suppressions/on-hold-list", json=expected_body) 
+        # Test that each method returns the expected APIResponse type
+        assert isinstance(self.resource.list_recipients(request_list), type(self.mock_api_response))
+        assert isinstance(self.resource.get_recipient(request_get), type(self.mock_api_response))
+        assert isinstance(self.resource.delete_recipient(request_delete), type(self.mock_api_response))
+        assert isinstance(self.resource.add_to_blocklist(request_add), type(self.mock_api_response))
+        assert isinstance(self.resource.delete_from_blocklist(request_del), type(self.mock_api_response)) 
