@@ -95,7 +95,7 @@ class TestWebhookCreateRequest:
             url="https://example.com/webhook",
             name="Test Webhook",
             events=["activity.sent", "activity.delivered"],
-            domain_id="domain123"
+            domain_id="domain123",
         )
         assert request.url == "https://example.com/webhook"
         assert request.name == "Test Webhook"
@@ -110,7 +110,7 @@ class TestWebhookCreateRequest:
             name="Test Webhook",
             events=["activity.sent"],
             domain_id="domain123",
-            enabled=True
+            enabled=True,
         )
         assert request.enabled is True
 
@@ -122,7 +122,7 @@ class TestWebhookCreateRequest:
                 url="",
                 name="Test Webhook",
                 events=["activity.sent"],
-                domain_id="domain123"
+                domain_id="domain123",
             )
 
         # URL too long
@@ -132,7 +132,7 @@ class TestWebhookCreateRequest:
                 url=long_url,
                 name="Test Webhook",
                 events=["activity.sent"],
-                domain_id="domain123"
+                domain_id="domain123",
             )
 
     def test_url_trimming(self):
@@ -141,7 +141,7 @@ class TestWebhookCreateRequest:
             url="  https://example.com/webhook  ",
             name="Test Webhook",
             events=["activity.sent"],
-            domain_id="domain123"
+            domain_id="domain123",
         )
         assert request.url == "https://example.com/webhook"
 
@@ -153,7 +153,7 @@ class TestWebhookCreateRequest:
                 url="https://example.com/webhook",
                 name="",
                 events=["activity.sent"],
-                domain_id="domain123"
+                domain_id="domain123",
             )
 
         # Name too long
@@ -163,7 +163,7 @@ class TestWebhookCreateRequest:
                 url="https://example.com/webhook",
                 name=long_name,
                 events=["activity.sent"],
-                domain_id="domain123"
+                domain_id="domain123",
             )
 
     def test_name_trimming(self):
@@ -172,7 +172,7 @@ class TestWebhookCreateRequest:
             url="https://example.com/webhook",
             name="  Test Webhook  ",
             events=["activity.sent"],
-            domain_id="domain123"
+            domain_id="domain123",
         )
         assert request.name == "Test Webhook"
 
@@ -184,7 +184,7 @@ class TestWebhookCreateRequest:
                 url="https://example.com/webhook",
                 name="Test Webhook",
                 events=[],
-                domain_id="domain123"
+                domain_id="domain123",
             )
 
     def test_domain_id_validation(self):
@@ -195,7 +195,7 @@ class TestWebhookCreateRequest:
                 url="https://example.com/webhook",
                 name="Test Webhook",
                 events=["activity.sent"],
-                domain_id=""
+                domain_id="",
             )
 
     def test_domain_id_trimming(self):
@@ -204,7 +204,7 @@ class TestWebhookCreateRequest:
             url="https://example.com/webhook",
             name="Test Webhook",
             events=["activity.sent"],
-            domain_id="  domain123  "
+            domain_id="  domain123  ",
         )
         assert request.domain_id == "domain123"
 
@@ -228,7 +228,7 @@ class TestWebhookUpdateRequest:
             url="https://example.com/webhook",
             name="Updated Webhook",
             events=["activity.opened"],
-            enabled=False
+            enabled=False,
         )
         assert request.webhook_id == "webhook123"
         assert request.url == "https://example.com/webhook"
@@ -261,8 +261,7 @@ class TestWebhookUpdateRequest:
     def test_url_trimming(self):
         """Test URL is trimmed when provided."""
         request = WebhookUpdateRequest(
-            webhook_id="webhook123",
-            url="  https://example.com/webhook  "
+            webhook_id="webhook123", url="  https://example.com/webhook  "
         )
         assert request.url == "https://example.com/webhook"
 
@@ -280,15 +279,16 @@ class TestWebhookUpdateRequest:
     def test_name_trimming(self):
         """Test name is trimmed when provided."""
         request = WebhookUpdateRequest(
-            webhook_id="webhook123",
-            name="  Updated Webhook  "
+            webhook_id="webhook123", name="  Updated Webhook  "
         )
         assert request.name == "Updated Webhook"
 
     def test_events_validation(self):
         """Test events validation when provided."""
         # Empty events when provided
-        with pytest.raises(ValidationError, match="events cannot be empty when provided"):
+        with pytest.raises(
+            ValidationError, match="events cannot be empty when provided"
+        ):
             WebhookUpdateRequest(webhook_id="webhook123", events=[])
 
 
@@ -313,4 +313,4 @@ class TestWebhookDeleteRequest:
     def test_webhook_id_trimming(self):
         """Test webhook_id is trimmed."""
         request = WebhookDeleteRequest(webhook_id="  webhook123  ")
-        assert request.webhook_id == "webhook123" 
+        assert request.webhook_id == "webhook123"

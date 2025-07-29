@@ -12,7 +12,7 @@ from mailersend.models.inbound import (
     InboundUpdateRequest,
     InboundDeleteRequest,
     InboundFilterGroup,
-    InboundForward
+    InboundForward,
 )
 
 
@@ -24,7 +24,7 @@ class TestInboundResource:
         self.mock_client = Mock()
         self.resource = InboundResource(self.mock_client)
         self.resource.logger = Mock()
-        
+
         # Mock _create_response method
         self.mock_api_response = MagicMock(spec=APIResponse)
         self.resource._create_response = Mock(return_value=self.mock_api_response)
@@ -33,7 +33,7 @@ class TestInboundResource:
         """Test list method returns APIResponse."""
         query_params = InboundListQueryParams()
         request = InboundListRequest(query_params=query_params)
-        
+
         mock_response = Mock()
         self.mock_client.request.return_value = mock_response
 
@@ -54,9 +54,9 @@ class TestInboundResource:
 
         # Verify client was called correctly
         self.mock_client.request.assert_called_once_with(
-            method='GET',
-            endpoint='inbound',
-            params={'page': 2, 'limit': 50, 'domain_id': 'domain123'}
+            method="GET",
+            endpoint="inbound",
+            params={"page": 2, "limit": 50, "domain_id": "domain123"},
         )
 
         # Verify _create_response was called
@@ -66,7 +66,7 @@ class TestInboundResource:
         """Test list with default query params."""
         query_params = InboundListQueryParams()
         request = InboundListRequest(query_params=query_params)
-        
+
         mock_response = Mock()
         self.mock_client.request.return_value = mock_response
 
@@ -74,16 +74,14 @@ class TestInboundResource:
 
         # Verify client was called with defaults
         self.mock_client.request.assert_called_once_with(
-            method='GET',
-            endpoint='inbound',
-            params={'page': 1, 'limit': 25}
+            method="GET", endpoint="inbound", params={"page": 1, "limit": 25}
         )
 
     def test_list_excludes_none_values(self):
         """Test list excludes None values from params."""
         query_params = InboundListQueryParams(page=1, limit=25)  # domain_id is None
         request = InboundListRequest(query_params=query_params)
-        
+
         mock_response = Mock()
         self.mock_client.request.return_value = mock_response
 
@@ -91,13 +89,13 @@ class TestInboundResource:
 
         # Verify None values are excluded
         call_args = self.mock_client.request.call_args
-        params = call_args[1]['params']
-        assert 'domain_id' not in params
+        params = call_args[1]["params"]
+        assert "domain_id" not in params
 
     def test_get_returns_api_response(self):
         """Test get method returns APIResponse."""
         request = InboundGetRequest(inbound_id="test-id")
-        
+
         mock_response = Mock()
         self.mock_client.request.return_value = mock_response
 
@@ -109,7 +107,7 @@ class TestInboundResource:
     def test_get_with_valid_request(self):
         """Test get with valid request."""
         request = InboundGetRequest(inbound_id="test-id")
-        
+
         mock_response = Mock()
         self.mock_client.request.return_value = mock_response
 
@@ -117,8 +115,7 @@ class TestInboundResource:
 
         # Verify client was called correctly
         self.mock_client.request.assert_called_once_with(
-            method='GET',
-            endpoint='inbound/test-id'
+            method="GET", endpoint="inbound/test-id"
         )
 
     def test_create_returns_api_response(self):
@@ -133,9 +130,9 @@ class TestInboundResource:
             domain_enabled=False,
             catch_filter=catch_filter,
             match_filter=match_filter,
-            forwards=forwards
+            forwards=forwards,
         )
-        
+
         mock_response = Mock()
         self.mock_client.request.return_value = mock_response
 
@@ -148,7 +145,9 @@ class TestInboundResource:
         """Test create request body is serialized correctly."""
         catch_filter = [InboundFilterGroup(type="catch_all")]
         match_filter = [InboundFilterGroup(type="match_all")]
-        forwards = [InboundForward(id="forward-id", type="email", value="test@example.com")]
+        forwards = [
+            InboundForward(id="forward-id", type="email", value="test@example.com")
+        ]
 
         request = InboundCreateRequest(
             domain_id="domain123",
@@ -156,7 +155,7 @@ class TestInboundResource:
             domain_enabled=False,
             catch_filter=catch_filter,
             match_filter=match_filter,
-            forwards=forwards
+            forwards=forwards,
         )
 
         mock_response = Mock()
@@ -166,21 +165,21 @@ class TestInboundResource:
 
         # Verify the request was made with correct data structure
         call_args = self.mock_client.request.call_args
-        assert call_args[1]['method'] == 'POST'
-        assert call_args[1]['endpoint'] == 'inbound'
+        assert call_args[1]["method"] == "POST"
+        assert call_args[1]["endpoint"] == "inbound"
 
         # Verify data structure
-        data = call_args[1]['body']
-        assert 'domain_id' in data
-        assert 'name' in data
-        assert 'domain_enabled' in data
-        assert 'catch_filter' in data
-        assert 'match_filter' in data
-        assert 'forwards' in data
+        data = call_args[1]["body"]
+        assert "domain_id" in data
+        assert "name" in data
+        assert "domain_enabled" in data
+        assert "catch_filter" in data
+        assert "match_filter" in data
+        assert "forwards" in data
 
         # Verify 'id' is excluded from forwards
-        for forward in data['forwards']:
-            assert 'id' not in forward
+        for forward in data["forwards"]:
+            assert "id" not in forward
 
     def test_update_returns_api_response(self):
         """Test update method returns APIResponse."""
@@ -194,9 +193,9 @@ class TestInboundResource:
             domain_enabled=False,
             catch_filter=catch_filter,
             match_filter=match_filter,
-            forwards=forwards
+            forwards=forwards,
         )
-        
+
         mock_response = Mock()
         self.mock_client.request.return_value = mock_response
 
@@ -217,7 +216,7 @@ class TestInboundResource:
             domain_enabled=False,
             catch_filter=catch_filter,
             match_filter=match_filter,
-            forwards=forwards
+            forwards=forwards,
         )
 
         mock_response = Mock()
@@ -227,18 +226,18 @@ class TestInboundResource:
 
         # Verify the request structure
         call_args = self.mock_client.request.call_args
-        assert call_args[1]['method'] == 'PUT'
-        assert call_args[1]['endpoint'] == 'inbound/test-id'
+        assert call_args[1]["method"] == "PUT"
+        assert call_args[1]["endpoint"] == "inbound/test-id"
 
         # Verify inbound_id is not in the request body
-        data = call_args[1]['body']
-        assert 'inbound_id' not in data
-        assert 'name' in data
+        data = call_args[1]["body"]
+        assert "inbound_id" not in data
+        assert "name" in data
 
     def test_delete_returns_api_response(self):
         """Test delete method returns APIResponse."""
         request = InboundDeleteRequest(inbound_id="test-id")
-        
+
         mock_response = Mock()
         self.mock_client.request.return_value = mock_response
 
@@ -250,7 +249,7 @@ class TestInboundResource:
     def test_delete_with_valid_request(self):
         """Test delete with valid request."""
         request = InboundDeleteRequest(inbound_id="test-id")
-        
+
         mock_response = Mock()
         self.mock_client.request.return_value = mock_response
 
@@ -258,8 +257,7 @@ class TestInboundResource:
 
         # Verify client was called correctly
         self.mock_client.request.assert_called_once_with(
-            method='DELETE',
-            endpoint='inbound/test-id'
+            method="DELETE", endpoint="inbound/test-id"
         )
 
     def test_integration_workflow(self):
@@ -268,34 +266,42 @@ class TestInboundResource:
         query_params = InboundListQueryParams()
         request_list = InboundListRequest(query_params=query_params)
         request_get = InboundGetRequest(inbound_id="test-id")
-        
+
         catch_filter = [InboundFilterGroup(type="catch_all")]
         match_filter = [InboundFilterGroup(type="match_all")]
         forwards = [InboundForward(type="email", value="test@example.com")]
-        
+
         request_create = InboundCreateRequest(
             domain_id="domain123",
             name="Test Route",
             domain_enabled=False,
             catch_filter=catch_filter,
             match_filter=match_filter,
-            forwards=forwards
+            forwards=forwards,
         )
-        
+
         request_update = InboundUpdateRequest(
             inbound_id="test-id",
             name="Updated Route",
             domain_enabled=False,
             catch_filter=catch_filter,
             match_filter=match_filter,
-            forwards=forwards
+            forwards=forwards,
         )
-        
+
         request_delete = InboundDeleteRequest(inbound_id="test-id")
 
         # Test that each method returns the expected APIResponse type
-        assert isinstance(self.resource.list(request_list), type(self.mock_api_response))
+        assert isinstance(
+            self.resource.list(request_list), type(self.mock_api_response)
+        )
         assert isinstance(self.resource.get(request_get), type(self.mock_api_response))
-        assert isinstance(self.resource.create(request_create), type(self.mock_api_response))
-        assert isinstance(self.resource.update(request_update), type(self.mock_api_response))
-        assert isinstance(self.resource.delete(request_delete), type(self.mock_api_response)) 
+        assert isinstance(
+            self.resource.create(request_create), type(self.mock_api_response)
+        )
+        assert isinstance(
+            self.resource.update(request_update), type(self.mock_api_response)
+        )
+        assert isinstance(
+            self.resource.delete(request_delete), type(self.mock_api_response)
+        )

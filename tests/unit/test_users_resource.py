@@ -28,7 +28,7 @@ class TestUsers:
         self.mock_client = Mock()
         self.resource = Users(self.mock_client)
         self.resource.logger = Mock()
-        
+
         # Mock _create_response method
         self.mock_api_response = MagicMock(spec=APIResponse)
         self.resource._create_response = Mock(return_value=self.mock_api_response)
@@ -37,7 +37,7 @@ class TestUsers:
         """Test list_users method returns APIResponse."""
         query_params = UsersListQueryParams()
         request = UsersListRequest(query_params=query_params)
-        
+
         mock_response = Mock()
         self.mock_client.request.return_value = mock_response
 
@@ -50,31 +50,28 @@ class TestUsers:
         """Test list_users with custom pagination parameters."""
         query_params = UsersListQueryParams(page=2, limit=50)
         request = UsersListRequest(query_params=query_params)
-        
+
         mock_response = Mock()
         self.mock_client.request.return_value = mock_response
 
         result = self.resource.list_users(request)
 
         self.mock_client.request.assert_called_once_with(
-            method="GET",
-            endpoint="users",
-            params={"page": 2, "limit": 50}
+            method="GET", endpoint="users", params={"page": 2, "limit": 50}
         )
         assert result == self.mock_api_response
 
     def test_get_user_returns_api_response(self):
         """Test get_user method returns APIResponse."""
         request = UserGetRequest(user_id="user123")
-        
+
         mock_response = Mock()
         self.mock_client.request.return_value = mock_response
 
         result = self.resource.get_user(request)
 
         self.mock_client.request.assert_called_once_with(
-            method="GET",
-            endpoint="users/user123"
+            method="GET", endpoint="users/user123"
         )
         assert result == self.mock_api_response
         self.resource._create_response.assert_called_once_with(mock_response)
@@ -86,9 +83,9 @@ class TestUsers:
             role="Manager",
             permissions=["read-templates"],
             templates=["template1"],
-            domains=["domain1"]
+            domains=["domain1"],
         )
-        
+
         mock_response = Mock()
         self.mock_client.request.return_value = mock_response
 
@@ -99,13 +96,11 @@ class TestUsers:
             "role": "Manager",
             "permissions": ["read-templates"],
             "templates": ["template1"],
-            "domains": ["domain1"]
+            "domains": ["domain1"],
         }
-        
+
         self.mock_client.request.assert_called_once_with(
-            method="POST",
-            endpoint="users",
-            body=expected_body
+            method="POST", endpoint="users", body=expected_body
         )
         assert result == self.mock_api_response
         self.resource._create_response.assert_called_once_with(mock_response)
@@ -117,9 +112,9 @@ class TestUsers:
             role="Manager",
             permissions=["read-templates"],
             templates=["template1"],
-            domains=["domain1"]
+            domains=["domain1"],
         )
-        
+
         mock_response = Mock()
         self.mock_client.request.return_value = mock_response
 
@@ -129,13 +124,11 @@ class TestUsers:
             "role": "Manager",
             "permissions": ["read-templates"],
             "templates": ["template1"],
-            "domains": ["domain1"]
+            "domains": ["domain1"],
         }
-        
+
         self.mock_client.request.assert_called_once_with(
-            method="PUT",
-            endpoint="users/user123",
-            body=expected_body
+            method="PUT", endpoint="users/user123", body=expected_body
         )
         assert result == self.mock_api_response
         self.resource._create_response.assert_called_once_with(mock_response)
@@ -143,15 +136,14 @@ class TestUsers:
     def test_delete_user_returns_api_response(self):
         """Test delete_user method returns APIResponse."""
         request = UserDeleteRequest(user_id="user123")
-        
+
         mock_response = Mock()
         self.mock_client.request.return_value = mock_response
 
         result = self.resource.delete_user(request)
 
         self.mock_client.request.assert_called_once_with(
-            method="DELETE",
-            endpoint="users/user123"
+            method="DELETE", endpoint="users/user123"
         )
         assert result == self.mock_api_response
         self.resource._create_response.assert_called_once_with(mock_response, None)
@@ -160,7 +152,7 @@ class TestUsers:
         """Test list_invites method returns APIResponse."""
         query_params = InvitesListQueryParams()
         request = InvitesListRequest(query_params=query_params)
-        
+
         mock_response = Mock()
         self.mock_client.request.return_value = mock_response
 
@@ -172,15 +164,14 @@ class TestUsers:
     def test_get_invite_returns_api_response(self):
         """Test get_invite method returns APIResponse."""
         request = InviteGetRequest(invite_id="invite123")
-        
+
         mock_response = Mock()
         self.mock_client.request.return_value = mock_response
 
         result = self.resource.get_invite(request)
 
         self.mock_client.request.assert_called_once_with(
-            method="GET",
-            endpoint="invites/invite123"
+            method="GET", endpoint="invites/invite123"
         )
         assert result == self.mock_api_response
         self.resource._create_response.assert_called_once_with(mock_response)
@@ -188,15 +179,14 @@ class TestUsers:
     def test_resend_invite_returns_api_response(self):
         """Test resend_invite method returns APIResponse."""
         request = InviteResendRequest(invite_id="invite123")
-        
+
         mock_response = Mock()
         self.mock_client.request.return_value = mock_response
 
         result = self.resource.resend_invite(request)
 
         self.mock_client.request.assert_called_once_with(
-            method="POST",
-            endpoint="invites/invite123/resend"
+            method="POST", endpoint="invites/invite123/resend"
         )
         assert result == self.mock_api_response
         self.resource._create_response.assert_called_once_with(mock_response)
@@ -204,15 +194,14 @@ class TestUsers:
     def test_cancel_invite_returns_api_response(self):
         """Test cancel_invite method returns APIResponse."""
         request = InviteCancelRequest(invite_id="invite123")
-        
+
         mock_response = Mock()
         self.mock_client.request.return_value = mock_response
 
         result = self.resource.cancel_invite(request)
 
         self.mock_client.request.assert_called_once_with(
-            method="DELETE",
-            endpoint="invites/invite123"
+            method="DELETE", endpoint="invites/invite123"
         )
         assert result == self.mock_api_response
-        self.resource._create_response.assert_called_once_with(mock_response, None) 
+        self.resource._create_response.assert_called_once_with(mock_response, None)

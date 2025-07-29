@@ -4,7 +4,6 @@ from pydantic import field_validator, Field
 from .base import BaseModel as MailerSendBaseModel
 
 
-
 class MessagesListQueryParams(MailerSendBaseModel):
     """Model for messages list query parameters with validation."""
 
@@ -39,6 +38,3 @@ class MessageGetRequest(MailerSendBaseModel):
         if not v or not v.strip():
             raise ValueError("Message ID is required")
         return v.strip()
-
-
-

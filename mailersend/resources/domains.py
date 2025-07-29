@@ -189,7 +189,9 @@ class Domains(BaseResource):
             APIResponse with domain verification status
         """
         self.logger.debug("Preparing to get domain verification status")
-        self.logger.debug("Retrieving verification status for domain: %s", request.domain_id)
+        self.logger.debug(
+            "Retrieving verification status for domain: %s", request.domain_id
+        )
 
         response = self.client.request("GET", f"domains/{request.domain_id}/verify")
 

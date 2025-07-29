@@ -85,27 +85,3 @@ class SmsSendRequest(MailerSendBaseModel):
             ]
 
         return data
-
-
-class SmsSendResponse(MailerSendBaseModel):
-    """
-    Response model for SMS send requests.
-    """
-
-    message_id: Optional[str] = None
-    send_paused: bool = False
-    status: str = "queued"
-
-    model_config = {"validate_by_name": True}
-
-    @classmethod
-    def from_headers(cls, headers: Dict[str, str]) -> "SmsSendResponse":
-        """Create response from HTTP headers."""
-        message_id = headers.get("X-SMS-Message-Id")
-        send_paused = headers.get("X-SMS-Send-Paused", "").lower() == "true"
-
-        return cls(
-            message_id=message_id,
-            send_paused=send_paused,
-            status="paused" if send_paused else "queued",
-        )

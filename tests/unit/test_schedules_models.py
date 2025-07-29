@@ -23,10 +23,7 @@ class TestSchedulesListQueryParams:
     def test_custom_values(self):
         """Test setting custom values."""
         query_params = SchedulesListQueryParams(
-            domain_id="test-domain",
-            status="scheduled",
-            page=2,
-            limit=50
+            domain_id="test-domain", status="scheduled", page=2, limit=50
         )
         assert query_params.domain_id == "test-domain"
         assert query_params.status == "scheduled"
@@ -78,23 +75,20 @@ class TestSchedulesListQueryParams:
         """Test to_query_params with default values."""
         query_params = SchedulesListQueryParams()
         result = query_params.to_query_params()
-        expected = {'page': 1, 'limit': 25}
+        expected = {"page": 1, "limit": 25}
         assert result == expected
 
     def test_to_query_params_with_all_values(self):
         """Test to_query_params with all values set."""
         query_params = SchedulesListQueryParams(
-            domain_id="test-domain",
-            status="scheduled",
-            page=3,
-            limit=50
+            domain_id="test-domain", status="scheduled", page=3, limit=50
         )
         result = query_params.to_query_params()
         expected = {
-            'domain_id': 'test-domain',
-            'status': 'scheduled',
-            'page': 3,
-            'limit': 50
+            "domain_id": "test-domain",
+            "status": "scheduled",
+            "page": 3,
+            "limit": 50,
         }
         assert result == expected
 
@@ -102,11 +96,11 @@ class TestSchedulesListQueryParams:
         """Test to_query_params excludes None values."""
         query_params = SchedulesListQueryParams(page=2, limit=30)
         result = query_params.to_query_params()
-        expected = {'page': 2, 'limit': 30}
+        expected = {"page": 2, "limit": 30}
         assert result == expected
         # Verify no None values are included
-        assert 'domain_id' not in result
-        assert 'status' not in result
+        assert "domain_id" not in result
+        assert "status" not in result
 
 
 class TestSchedulesListRequest:
@@ -115,10 +109,7 @@ class TestSchedulesListRequest:
     def test_create_request_with_query_params(self):
         """Test creating request with query params object."""
         query_params = SchedulesListQueryParams(
-            domain_id="test-domain",
-            status="scheduled",
-            page=2,
-            limit=50
+            domain_id="test-domain", status="scheduled", page=2, limit=50
         )
         request = SchedulesListRequest(query_params=query_params)
         assert request.query_params == query_params
@@ -135,18 +126,15 @@ class TestSchedulesListRequest:
     def test_to_query_params_delegation(self):
         """Test that to_query_params delegates to query_params object."""
         query_params = SchedulesListQueryParams(
-            domain_id="test-domain",
-            status="sent",
-            page=3,
-            limit=75
+            domain_id="test-domain", status="sent", page=3, limit=75
         )
         request = SchedulesListRequest(query_params=query_params)
         result = request.to_query_params()
         expected = {
-            'domain_id': 'test-domain',
-            'status': 'sent',
-            'page': 3,
-            'limit': 75
+            "domain_id": "test-domain",
+            "status": "sent",
+            "page": 3,
+            "limit": 75,
         }
         assert result == expected
 
@@ -155,7 +143,7 @@ class TestSchedulesListRequest:
         query_params = SchedulesListQueryParams()
         request = SchedulesListRequest(query_params=query_params)
         result = request.to_query_params()
-        expected = {'page': 1, 'limit': 25}
+        expected = {"page": 1, "limit": 25}
         assert result == expected
 
 

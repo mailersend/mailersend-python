@@ -10,6 +10,7 @@ from ..models.webhooks import (
     WebhookDeleteRequest,
 )
 
+
 class Webhooks(BaseResource):
     """Webhooks API resource for managing webhooks."""
 

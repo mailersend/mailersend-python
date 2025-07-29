@@ -6,6 +6,7 @@ from .base import BaseResource
 from ..models.sms_activity import SmsActivityListRequest, SmsMessageGetRequest
 from ..models.base import APIResponse
 
+
 class SmsActivity(BaseResource):
     """Resource for SMS Activity API endpoints."""
 

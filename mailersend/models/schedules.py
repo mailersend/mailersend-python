@@ -65,6 +65,3 @@ class ScheduleDeleteRequest(MailerSendBaseModel):
         if not v or not v.strip():
             raise ValueError("Message ID is required")
         return v.strip()
-
-
-

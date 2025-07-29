@@ -10,6 +10,7 @@ from ..models.templates import (
     TemplateDeleteRequest,
 )
 
+
 class Templates(BaseResource):
     """
     Client for interacting with the MailerSend Templates API.

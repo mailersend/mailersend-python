@@ -21,41 +21,32 @@ def base_activity_request(test_domain_id):
     # Use fixed timestamps for VCR consistency
     # These represent a realistic 24-hour window for testing
     date_from = 1750862833  # Fixed timestamp
-    date_to = 1750949233    # Fixed timestamp (24 hours later)
-    
+    date_to = 1750949233  # Fixed timestamp (24 hours later)
+
     query_params = ActivityQueryParams(
-        date_from=date_from,
-        date_to=date_to,
-        page=1,
-        limit=25
+        date_from=date_from, date_to=date_to, page=1, limit=25
     )
-    
-    return ActivityRequest(
-        domain_id=test_domain_id,
-        query_params=query_params
-    )
+
+    return ActivityRequest(domain_id=test_domain_id, query_params=query_params)
 
 
 def activity_request_factory(base: ActivityRequest, **overrides) -> ActivityRequest:
     """Create a new ActivityRequest with the same fields, overridden with kwargs"""
     # Extract current values
-    domain_id = overrides.get('domain_id', base.domain_id)
-    
+    domain_id = overrides.get("domain_id", base.domain_id)
+
     # Build new query params
     query_data = base.query_params.model_dump()
     for key, value in overrides.items():
-        if key != 'domain_id':  # domain_id is handled separately
+        if key != "domain_id":  # domain_id is handled separately
             if value is None:
                 query_data.pop(key, None)
             else:
                 query_data[key] = value
-    
+
     new_query_params = ActivityQueryParams(**query_data)
-    
-    return ActivityRequest(
-        domain_id=domain_id,
-        query_params=new_query_params
-    )
+
+    return ActivityRequest(domain_id=domain_id, query_params=new_query_params)
 
 
 @pytest.fixture(autouse=True)
@@ -68,21 +59,20 @@ def inject_common_objects(request, email_client, base_activity_request, test_dom
 
 
 class TestActivityGet:
-    
     @vcr.use_cassette("activity_get_basic.yaml")
     def test_get_activities_basic(self):
         """Test getting activities with basic parameters"""
         result = self.email_client.activities.get(self.base_activity_request)
-        
+
         assert isinstance(result, APIResponse)
         assert result.success is True
         assert result.status_code == 200
         assert isinstance(result.headers, dict)
-        
+
         # Check response structure
         assert "data" in result
         assert isinstance(result["data"], list)
-        
+
         # Check pagination metadata if present
         if "links" in result:
             assert isinstance(result["links"], dict)
@@ -97,15 +87,15 @@ class TestActivityGet:
             page=2,
             limit=10,
             date_from=1750862844,
-            date_to=1750949244
+            date_to=1750949244,
         )
-        
+
         result = self.email_client.activities.get(request)
-        
+
         assert isinstance(result, APIResponse)
         assert result.success is True
         assert result.status_code == 200
-        
+
         # Verify pagination was applied
         assert "data" in result
         assert isinstance(result["data"], list)
@@ -117,19 +107,19 @@ class TestActivityGet:
             self.base_activity_request,
             event=["sent", "delivered", "opened"],
             date_from=1750862861,
-            date_to=1750949261
+            date_to=1750949261,
         )
-        
+
         result = self.email_client.activities.get(request)
-        
+
         assert isinstance(result, APIResponse)
         assert result.success is True
         assert result.status_code == 200
-        
+
         # Check that activities match the requested event types
         assert "data" in result
         activities = result["data"]
-        
+
         if activities:  # Only check if there are activities
             for activity in activities:
                 assert "type" in activity
@@ -142,19 +132,19 @@ class TestActivityGet:
             self.base_activity_request,
             event=["sent"],
             date_from=1750862870,
-            date_to=1750949270
+            date_to=1750949270,
         )
-        
+
         result = self.email_client.activities.get(request)
-        
+
         assert isinstance(result, APIResponse)
         assert result.success is True
         assert result.status_code == 200
-        
+
         # Check that all activities are of the requested type
         assert "data" in result
         activities = result["data"]
-        
+
         if activities:  # Only check if there are activities
             for activity in activities:
                 assert activity["type"] == "sent"
@@ -166,15 +156,15 @@ class TestActivityGet:
             self.base_activity_request,
             event=["queued", "sent", "delivered", "soft_bounced", "hard_bounced"],
             date_from=1750862891,
-            date_to=1750949291
+            date_to=1750949291,
         )
-        
+
         result = self.email_client.activities.get(request)
-        
+
         assert isinstance(result, APIResponse)
         assert result.success is True
         assert result.status_code == 200
-        
+
         assert "data" in result
         assert isinstance(result["data"], list)
 
@@ -185,15 +175,15 @@ class TestActivityGet:
             self.base_activity_request,
             event=["opened", "clicked", "unsubscribed", "spam_complaints"],
             date_from=1750862891,
-            date_to=1750949291
+            date_to=1750949291,
         )
-        
+
         result = self.email_client.activities.get(request)
-        
+
         assert isinstance(result, APIResponse)
         assert result.success is True
         assert result.status_code == 200
-        
+
         assert "data" in result
         assert isinstance(result["data"], list)
 
@@ -202,20 +192,18 @@ class TestActivityGet:
         """Test getting activities using datetime objects"""
         # Use fixed timestamps for VCR consistency
         date_from = 1750927692  # Fixed timestamp
-        date_to = 1750949292    # Fixed timestamp (6 hours later)
-        
+        date_to = 1750949292  # Fixed timestamp (6 hours later)
+
         request = self.activity_request_factory(
-            self.base_activity_request,
-            date_from=date_from,
-            date_to=date_to
+            self.base_activity_request, date_from=date_from, date_to=date_to
         )
-        
+
         result = self.email_client.activities.get(request)
-        
+
         assert isinstance(result, APIResponse)
         assert result.success is True
         assert result.status_code == 200
-        
+
         assert "data" in result
 
     @vcr.use_cassette("activity_get_max_limit.yaml")
@@ -225,18 +213,18 @@ class TestActivityGet:
             self.base_activity_request,
             limit=100,  # Maximum allowed limit
             date_from=1750862870,
-            date_to=1750949270
+            date_to=1750949270,
         )
-        
+
         result = self.email_client.activities.get(request)
-        
+
         assert isinstance(result, APIResponse)
         assert result.success is True
         assert result.status_code == 200
-        
+
         assert "data" in result
         activities = result["data"]
-        
+
         # Should return up to 100 activities
         assert len(activities) <= 100
 
@@ -247,18 +235,18 @@ class TestActivityGet:
             self.base_activity_request,
             limit=10,  # Minimum allowed limit
             date_from=1750862892,
-            date_to=1750949292
+            date_to=1750949292,
         )
-        
+
         result = self.email_client.activities.get(request)
-        
+
         assert isinstance(result, APIResponse)
         assert result.success is True
         assert result.status_code == 200
-        
+
         assert "data" in result
         activities = result["data"]
-        
+
         # Should return up to 10 activities
         assert len(activities) <= 10
 
@@ -267,45 +255,46 @@ class TestActivityGet:
         """Test getting activities when no activities match the criteria"""
         # Use fixed timestamps for VCR consistency - a narrow time range
         date_from = 1750949232  # Fixed timestamp
-        date_to = 1750949292    # Fixed timestamp (1 minute later)
-        
+        date_to = 1750949292  # Fixed timestamp (1 minute later)
+
         request = self.activity_request_factory(
             self.base_activity_request,
             date_from=date_from,
             date_to=date_to,
-            event=["survey_opened"]  # Rare event type
+            event=["survey_opened"],  # Rare event type
         )
-        
+
         result = self.email_client.activities.get(request)
-        
+
         assert isinstance(result, APIResponse)
         assert result.success is True
         assert result.status_code == 200
-        
+
         assert "data" in result
         # Should return empty list if no activities found
         assert isinstance(result["data"], list)
 
 
 class TestActivityBuilder:
-    
     @vcr.use_cassette("activity_builder_basic.yaml")
     def test_activity_builder_basic_usage(self):
         """Test using ActivityBuilder to construct requests"""
         # Use fixed timestamps for VCR consistency
         date_from = 1750945671  # Fixed timestamp
-        date_to = 1750949271    # Fixed timestamp (1 hour later)
-        
-        request = (ActivityBuilder()
-                  .domain_id(self.test_domain_id)
-                  .date_from(date_from)
-                  .date_to(date_to)
-                  .page(1)
-                  .limit(25)
-                  .build())
-        
+        date_to = 1750949271  # Fixed timestamp (1 hour later)
+
+        request = (
+            ActivityBuilder()
+            .domain_id(self.test_domain_id)
+            .date_from(date_from)
+            .date_to(date_to)
+            .page(1)
+            .limit(25)
+            .build()
+        )
+
         result = self.email_client.activities.get(request)
-        
+
         assert isinstance(result, APIResponse)
         assert result.success is True
         assert result.status_code == 200
@@ -316,20 +305,22 @@ class TestActivityBuilder:
         """Test using ActivityBuilder with event filtering"""
         # Use fixed timestamps for VCR consistency
         date_from = 1750942092  # Fixed timestamp
-        date_to = 1750949292    # Fixed timestamp (2 hours later)
-        
-        request = (ActivityBuilder()
-                  .domain_id(self.test_domain_id)
-                  .date_from(date_from)
-                  .date_to(date_to)
-                  .event("sent")
-                  .event("delivered")
-                  .event("opened")
-                  .limit(50)
-                  .build())
-        
+        date_to = 1750949292  # Fixed timestamp (2 hours later)
+
+        request = (
+            ActivityBuilder()
+            .domain_id(self.test_domain_id)
+            .date_from(date_from)
+            .date_to(date_to)
+            .event("sent")
+            .event("delivered")
+            .event("opened")
+            .limit(50)
+            .build()
+        )
+
         result = self.email_client.activities.get(request)
-        
+
         assert isinstance(result, APIResponse)
         assert result.success is True
         assert result.status_code == 200
@@ -340,57 +331,56 @@ class TestActivityBuilder:
         """Test ActivityBuilder automatic datetime to timestamp conversion"""
         # Use fixed datetime objects for VCR consistency
         date_from = datetime.fromtimestamp(1750938493)  # Fixed datetime
-        date_to = datetime.fromtimestamp(1750949293)    # Fixed datetime (3 hours later)
-        
-        request = (ActivityBuilder()
-                  .domain_id(self.test_domain_id)
-                  .date_from(date_from)  # Pass datetime object
-                  .date_to(date_to)      # Pass datetime object
-                  .build())
-        
+        date_to = datetime.fromtimestamp(1750949293)  # Fixed datetime (3 hours later)
+
+        request = (
+            ActivityBuilder()
+            .domain_id(self.test_domain_id)
+            .date_from(date_from)  # Pass datetime object
+            .date_to(date_to)  # Pass datetime object
+            .build()
+        )
+
         result = self.email_client.activities.get(request)
-        
+
         assert isinstance(result, APIResponse)
         assert result.success is True
         assert result.status_code == 200
         assert "data" in result
-        
+
         # Verify the builder converted datetime to timestamps
         assert isinstance(request.query_params.date_from, int)
         assert isinstance(request.query_params.date_to, int)
 
 
 class TestActivityGetSingle:
-    
     @vcr.use_cassette("activity_get_single_not_found.yaml")
     def test_get_single_activity_not_found_with_builder(self):
         """Test getting a single activity by ID that doesn't exist - generates proper VCR cassette"""
         # Use a non-existent activity ID to demonstrate the model-based approach
         activity_id = "5ee0b166b251345e407c9207"  # This ID likely doesn't exist
         request = SingleActivityBuilder().activity_id(activity_id).build()
-        
+
         from mailersend.exceptions import ResourceNotFoundError
-        
+
         with pytest.raises(ResourceNotFoundError):
             self.email_client.activities.get_single(request)
-
-
 
     def test_get_single_activity_validation_error(self):
         """Test that validation errors are raised for invalid input"""
         from mailersend.exceptions import ValidationError
-        
+
         # Test None request
         with pytest.raises(ValidationError) as exc_info:
             self.email_client.activities.get_single(None)
         assert "SingleActivityRequest must be provided" in str(exc_info.value)
-        
+
         # Test invalid request type
         with pytest.raises(ValidationError) as exc_info:
             self.email_client.activities.get_single("invalid_request")
         assert "SingleActivityRequest must be provided" in str(exc_info.value)
-        
+
         # Test empty activity_id at model level
         with pytest.raises(ValueError) as exc_info:
             SingleActivityBuilder().activity_id("").build()
-        assert "activity_id cannot be empty" in str(exc_info.value) 
+        assert "activity_id cannot be empty" in str(exc_info.value)

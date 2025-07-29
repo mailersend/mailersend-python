@@ -19,10 +19,7 @@ class TestMessagesListQueryParams:
 
     def test_custom_values(self):
         """Test setting custom values."""
-        query_params = MessagesListQueryParams(
-            page=2,
-            limit=50
-        )
+        query_params = MessagesListQueryParams(page=2, limit=50)
         assert query_params.page == 2
         assert query_params.limit == 50
 
@@ -30,7 +27,7 @@ class TestMessagesListQueryParams:
         """Test page validation (must be >= 1)."""
         with pytest.raises(ValidationError):
             MessagesListQueryParams(page=0)
-        
+
         with pytest.raises(ValidationError):
             MessagesListQueryParams(page=-1)
 
@@ -38,7 +35,7 @@ class TestMessagesListQueryParams:
         """Test limit validation (10-100)."""
         with pytest.raises(ValidationError):
             MessagesListQueryParams(limit=9)
-        
+
         with pytest.raises(ValidationError):
             MessagesListQueryParams(limit=101)
 
@@ -46,33 +43,21 @@ class TestMessagesListQueryParams:
         """Test to_query_params with default values."""
         query_params = MessagesListQueryParams()
         result = query_params.to_query_params()
-        expected = {
-            'page': 1,
-            'limit': 25
-        }
+        expected = {"page": 1, "limit": 25}
         assert result == expected
 
     def test_to_query_params_with_custom_values(self):
         """Test to_query_params with custom values."""
-        query_params = MessagesListQueryParams(
-            page=3,
-            limit=50
-        )
+        query_params = MessagesListQueryParams(page=3, limit=50)
         result = query_params.to_query_params()
-        expected = {
-            'page': 3,
-            'limit': 50
-        }
+        expected = {"page": 3, "limit": 50}
         assert result == expected
 
     def test_to_query_params_excludes_none(self):
         """Test to_query_params excludes None values."""
         query_params = MessagesListQueryParams(page=2, limit=30)
         result = query_params.to_query_params()
-        expected = {
-            'page': 2,
-            'limit': 30
-        }
+        expected = {"page": 2, "limit": 30}
         assert result == expected
         # Verify no None values are included
         for key, value in result.items():
@@ -100,10 +85,7 @@ class TestMessagesListRequest:
         query_params = MessagesListQueryParams(page=3, limit=75)
         request = MessagesListRequest(query_params=query_params)
         result = request.to_query_params()
-        expected = {
-            'page': 3,
-            'limit': 75
-        }
+        expected = {"page": 3, "limit": 75}
         assert result == expected
 
     def test_to_query_params_with_defaults(self):
@@ -111,10 +93,7 @@ class TestMessagesListRequest:
         query_params = MessagesListQueryParams()
         request = MessagesListRequest(query_params=query_params)
         result = request.to_query_params()
-        expected = {
-            'page': 1,
-            'limit': 25
-        }
+        expected = {"page": 1, "limit": 25}
         assert result == expected
 
     def test_serialization(self):
@@ -140,7 +119,7 @@ class TestMessageGetRequest:
         # Empty message ID
         with pytest.raises(ValidationError, match="Message ID is required"):
             MessageGetRequest(message_id="")
-        
+
         # Whitespace-only message ID
         with pytest.raises(ValidationError, match="Message ID is required"):
             MessageGetRequest(message_id="   ")
@@ -154,4 +133,4 @@ class TestMessageGetRequest:
         """Test model serialization."""
         request = MessageGetRequest(message_id="message123")
         data = request.model_dump()
-        assert data == {"message_id": "message123"} 
+        assert data == {"message_id": "message123"}

@@ -20,10 +20,7 @@ class TestInboundFilter:
     def test_create_valid_filter(self):
         """Test creating a valid inbound filter."""
         filter_obj = InboundFilter(
-            type="catch_all",
-            key=None,
-            comparer=None,
-            value=None
+            type="catch_all", key=None, comparer=None, value=None
         )
         assert filter_obj.type == "catch_all"
         assert filter_obj.key is None
@@ -36,7 +33,7 @@ class TestInboundFilter:
             type="match_header",
             key="X-Custom-Header",
             comparer="equal",
-            value="test-value"
+            value="test-value",
         )
         assert filter_obj.type == "match_header"
         assert filter_obj.key == "X-Custom-Header"
@@ -58,11 +55,19 @@ class TestInboundFilter:
     def test_valid_comparers(self):
         """Test all valid comparers."""
         valid_comparers = [
-            'equal', 'not-equal', 'contains', 'not-contains',
-            'starts-with', 'ends-with', 'not-starts-with', 'not-ends-with'
+            "equal",
+            "not-equal",
+            "contains",
+            "not-contains",
+            "starts-with",
+            "ends-with",
+            "not-starts-with",
+            "not-ends-with",
         ]
         for comparer in valid_comparers:
-            filter_obj = InboundFilter(type="catch_recipient", comparer=comparer, value="test")
+            filter_obj = InboundFilter(
+                type="catch_recipient", comparer=comparer, value="test"
+            )
             assert filter_obj.comparer == comparer
 
     def test_value_length_limit(self):
@@ -114,7 +119,9 @@ class TestInboundFilterGroup:
 
     def test_filters_limit(self):
         """Test filters count limit."""
-        filters = [{"comparer": "equal", "value": f"test{i}"} for i in range(6)]  # 6 filters, exceeds limit
+        filters = [
+            {"comparer": "equal", "value": f"test{i}"} for i in range(6)
+        ]  # 6 filters, exceeds limit
         with pytest.raises(ValidationError) as exc_info:
             InboundFilterGroup(type="catch_recipient", filters=filters)
         assert "Maximum 5 filters allowed" in str(exc_info.value)
@@ -134,9 +141,7 @@ class TestInboundForward:
     def test_create_webhook_forward(self):
         """Test creating a webhook forward."""
         forward = InboundForward(
-            type="webhook",
-            value="https://example.com/webhook",
-            secret="secret123"
+            type="webhook", value="https://example.com/webhook", secret="secret123"
         )
         assert forward.type == "webhook"
         assert forward.value == "https://example.com/webhook"
@@ -184,4 +189,4 @@ class TestInboundDeleteRequest:
     def test_validate_inbound_id_trimmed(self):
         """Test that inbound_id is trimmed."""
         request = InboundDeleteRequest(inbound_id="  test-id  ")
-        assert request.inbound_id == "test-id" 
+        assert request.inbound_id == "test-id"

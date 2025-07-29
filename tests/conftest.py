@@ -17,7 +17,7 @@ vcr = VCR(
     match_on=["method", "scheme", "host", "port", "path", "query", "body"],
     filter_headers=["authorization"],
     filter_post_data_parameters=["api_key", "token"],
-    serializer="yaml"
+    serializer="yaml",
 )
 
 # Create a pytest fixture for the API key
@@ -26,12 +26,13 @@ def api_key():
     """Return the test API key."""
     return TEST_API_KEY
 
+
 # Create a fixture for the client
 @pytest.fixture
 def email_client(api_key):
     """Create and return an Email client instance."""
     from mailersend.client import MailerSendClient
-    
+
     client = MailerSendClient(api_key=api_key)
 
     return client

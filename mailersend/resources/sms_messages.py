@@ -20,7 +20,11 @@ class SmsMessages(BaseResource):
         """
         params = request.to_query_params()
 
-        self.logger.debug("Listing SMS messages with page: %s, limit: %s", request.query_params.page, request.query_params.limit)
+        self.logger.debug(
+            "Listing SMS messages with page: %s, limit: %s",
+            request.query_params.page,
+            request.query_params.limit,
+        )
 
         response = self.client.request(
             method="GET", endpoint="sms-messages", params=params

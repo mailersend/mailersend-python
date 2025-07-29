@@ -6,7 +6,7 @@ from ..models.sms_inbounds import (
     SmsInboundGetRequest,
     SmsInboundCreateRequest,
     SmsInboundUpdateRequest,
-    SmsInboundDeleteRequest
+    SmsInboundDeleteRequest,
 )
 from ..models.base import APIResponse
 
@@ -24,9 +24,9 @@ class SmsInbounds(BaseResource):
             APIResponse: Response containing list of SMS inbound routes
         """
         params = request.to_query_params()
-        
+
         self.logger.debug("Listing SMS inbounds with filters: %s", params)
-        
+
         response = self.client.request(
             method="GET", endpoint="sms-inbounds", params=params
         )
@@ -42,11 +42,11 @@ class SmsInbounds(BaseResource):
             APIResponse: Response containing SMS inbound route details
         """
         self.logger.debug("Getting SMS inbound: %s", request.sms_inbound_id)
-        
+
         response = self.client.request(
             method="GET", endpoint=f"sms-inbounds/{request.sms_inbound_id}"
         )
-        
+
         return self._create_response(response)
 
     def create_sms_inbound(self, request: SmsInboundCreateRequest) -> APIResponse:
@@ -58,7 +58,11 @@ class SmsInbounds(BaseResource):
         Returns:
             APIResponse: Response containing created SMS inbound route
         """
-        self.logger.debug("Creating SMS inbound: %s for SMS number: %s", request.name, request.sms_number_id)
+        self.logger.debug(
+            "Creating SMS inbound: %s for SMS number: %s",
+            request.name,
+            request.sms_number_id,
+        )
 
         response = self.client.request(
             method="POST", endpoint="sms-inbounds", body=request.to_request_body()
@@ -76,13 +80,13 @@ class SmsInbounds(BaseResource):
             APIResponse: Response containing updated SMS inbound route
         """
         self.logger.debug("Updating SMS inbound: %s", request.sms_inbound_id)
-        
+
         response = self.client.request(
             method="PUT",
             endpoint=f"sms-inbounds/{request.sms_inbound_id}",
             body=request.to_request_body(),
         )
-        
+
         return self._create_response(response)
 
     def delete_sms_inbound(self, request: SmsInboundDeleteRequest) -> APIResponse:

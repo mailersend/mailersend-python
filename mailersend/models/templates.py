@@ -75,6 +75,3 @@ class TemplateDeleteRequest(MailerSendBaseModel):
         if not v or not v.strip():
             raise ValueError("Template ID is required")
         return v.strip()
-
-
-

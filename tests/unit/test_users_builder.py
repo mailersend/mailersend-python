@@ -4,9 +4,15 @@ import pytest
 
 from mailersend.builders.users import UsersBuilder
 from mailersend.models.users import (
-    UsersListRequest, UserGetRequest, UserInviteRequest, UserUpdateRequest,
-    UserDeleteRequest, InvitesListRequest, InviteGetRequest,
-    InviteResendRequest, InviteCancelRequest
+    UsersListRequest,
+    UserGetRequest,
+    UserInviteRequest,
+    UserUpdateRequest,
+    UserDeleteRequest,
+    InvitesListRequest,
+    InviteGetRequest,
+    InviteResendRequest,
+    InviteCancelRequest,
 )
 
 
@@ -70,7 +76,7 @@ class TestUsersBuilder:
         result = builder.add_permission("read-templates")
         assert result is builder  # method chaining
         assert "read-templates" in builder._permissions
-        
+
         # Test adding duplicate permission
         builder.add_permission("read-templates")
         assert builder._permissions.count("read-templates") == 1
@@ -90,7 +96,7 @@ class TestUsersBuilder:
         result = builder.add_template("template1")
         assert result is builder  # method chaining
         assert "template1" in builder._templates
-        
+
         # Test adding duplicate template
         builder.add_template("template1")
         assert builder._templates.count("template1") == 1
@@ -110,7 +116,7 @@ class TestUsersBuilder:
         result = builder.add_domain("domain1")
         assert result is builder  # method chaining
         assert "domain1" in builder._domains
-        
+
         # Test adding duplicate domain
         builder.add_domain("domain1")
         assert builder._domains.count("domain1") == 1
@@ -139,24 +145,24 @@ class TestUsersBuilder:
     def test_role_helper_methods(self):
         """Test role helper methods."""
         builder = UsersBuilder()
-        
+
         # Test admin_role
         result = builder.admin_role()
         assert result is builder
         assert builder._role == "Admin"
-        
+
         # Test manager_role
         builder.reset().manager_role()
         assert builder._role == "Manager"
-        
+
         # Test designer_role
         builder.reset().designer_role()
         assert builder._role == "Designer"
-        
+
         # Test accountant_role
         builder.reset().accountant_role()
         assert builder._role == "Accountant"
-        
+
         # Test custom_user_role
         builder.reset().custom_user_role()
         assert builder._role == "Custom User"
@@ -164,7 +170,7 @@ class TestUsersBuilder:
     def test_permission_helper_methods(self):
         """Test permission helper methods."""
         builder = UsersBuilder()
-        
+
         # Test template_permissions
         result = builder.template_permissions()
         assert result is builder
@@ -172,21 +178,21 @@ class TestUsersBuilder:
         assert "read-own-templates" in builder._permissions
         assert "manage-template" in builder._permissions
         assert "read-filemanager" in builder._permissions
-        
+
         # Test domain_permissions
         builder.reset().domain_permissions()
         assert "manage-domain" in builder._permissions
         assert "manage-inbound" in builder._permissions
         assert "manage-webhook" in builder._permissions
         assert "control-sendings" in builder._permissions
-        
+
         # Test analytics_permissions
         builder.reset().analytics_permissions()
         assert "read-recipient" in builder._permissions
         assert "read-activity" in builder._permissions
         assert "read-email" in builder._permissions
         assert "read-analytics" in builder._permissions
-        
+
         # Test account_permissions
         builder.reset().account_permissions()
         assert "manage-account" in builder._permissions
@@ -209,7 +215,7 @@ class TestUsersBuilder:
         builder.permissions(["read-templates"]).templates(["template1"])
         builder.requires_periodic_password_change(True)
         builder.page(2).limit(50)
-        
+
         result = builder.reset()
         assert result is builder  # method chaining
         assert builder._user_id is None
@@ -229,36 +235,42 @@ class TestUsersBuilder:
         builder.permissions(["read-templates"]).templates(["template1"])
         builder.domains(["domain1"]).requires_periodic_password_change(True)
         builder.page(3).limit(25)
-        
+
         copy_builder = builder.copy()
-        
+
         # Test independence
         assert copy_builder is not builder
         assert copy_builder._user_id == builder._user_id
         assert copy_builder._email == builder._email
         assert copy_builder._role == builder._role
         assert copy_builder._permissions == builder._permissions
-        assert copy_builder._permissions is not builder._permissions  # should be separate lists
+        assert (
+            copy_builder._permissions is not builder._permissions
+        )  # should be separate lists
         assert copy_builder._templates == builder._templates
         assert copy_builder._templates is not builder._templates
         assert copy_builder._domains == builder._domains
         assert copy_builder._domains is not builder._domains
-        assert copy_builder._requires_periodic_password_change == builder._requires_periodic_password_change
+        assert (
+            copy_builder._requires_periodic_password_change
+            == builder._requires_periodic_password_change
+        )
         assert copy_builder._page == builder._page
         assert copy_builder._limit == builder._limit
 
     def test_method_chaining(self):
         """Test method chaining works correctly."""
         builder = UsersBuilder()
-        result = (builder
-                  .user_id("user123")
-                  .email("user@example.com")
-                  .role("Custom User")
-                  .add_permission("read-templates")
-                  .add_template("template1")
-                  .add_domain("domain1")
-                  .requires_periodic_password_change(True))
-        
+        result = (
+            builder.user_id("user123")
+            .email("user@example.com")
+            .role("Custom User")
+            .add_permission("read-templates")
+            .add_template("template1")
+            .add_domain("domain1")
+            .requires_periodic_password_change(True)
+        )
+
         assert result is builder
         assert builder._user_id == "user123"
         assert builder._email == "user@example.com"
@@ -304,15 +316,16 @@ class TestUsersBuilderBuildMethods:
     def test_build_user_invite_success(self):
         """Test build_user_invite method with valid data."""
         builder = UsersBuilder()
-        request = (builder
-                   .email("user@example.com")
-                   .role("Admin")
-                   .permissions(["read-templates"])
-                   .templates(["template1"])
-                   .domains(["domain1"])
-                   .requires_periodic_password_change(True)
-                   .build_user_invite())
-        
+        request = (
+            builder.email("user@example.com")
+            .role("Admin")
+            .permissions(["read-templates"])
+            .templates(["template1"])
+            .domains(["domain1"])
+            .requires_periodic_password_change(True)
+            .build_user_invite()
+        )
+
         assert isinstance(request, UserInviteRequest)
         assert request.email == "user@example.com"
         assert request.role == "Admin"
@@ -336,15 +349,16 @@ class TestUsersBuilderBuildMethods:
     def test_build_user_update_success(self):
         """Test build_user_update method with valid data."""
         builder = UsersBuilder()
-        request = (builder
-                   .user_id("user123")
-                   .role("Manager")
-                   .permissions(["read-templates"])
-                   .templates(["template1"])
-                   .domains(["domain1"])
-                   .requires_periodic_password_change(False)
-                   .build_user_update())
-        
+        request = (
+            builder.user_id("user123")
+            .role("Manager")
+            .permissions(["read-templates"])
+            .templates(["template1"])
+            .domains(["domain1"])
+            .requires_periodic_password_change(False)
+            .build_user_update()
+        )
+
         assert isinstance(request, UserUpdateRequest)
         assert request.user_id == "user123"
         assert request.role == "Manager"
@@ -404,7 +418,9 @@ class TestUsersBuilderBuildMethods:
     def test_build_invite_get_missing_invite_id(self):
         """Test build_invite_get method without invite_id."""
         builder = UsersBuilder()
-        with pytest.raises(ValueError, match="invite_id is required for getting an invite"):
+        with pytest.raises(
+            ValueError, match="invite_id is required for getting an invite"
+        ):
             builder.build_invite_get()
 
     def test_build_invite_resend_success(self):
@@ -417,7 +433,9 @@ class TestUsersBuilderBuildMethods:
     def test_build_invite_resend_missing_invite_id(self):
         """Test build_invite_resend method without invite_id."""
         builder = UsersBuilder()
-        with pytest.raises(ValueError, match="invite_id is required for resending an invite"):
+        with pytest.raises(
+            ValueError, match="invite_id is required for resending an invite"
+        ):
             builder.build_invite_resend()
 
     def test_build_invite_cancel_success(self):
@@ -430,7 +448,9 @@ class TestUsersBuilderBuildMethods:
     def test_build_invite_cancel_missing_invite_id(self):
         """Test build_invite_cancel method without invite_id."""
         builder = UsersBuilder()
-        with pytest.raises(ValueError, match="invite_id is required for canceling an invite"):
+        with pytest.raises(
+            ValueError, match="invite_id is required for canceling an invite"
+        ):
             builder.build_invite_cancel()
 
 
@@ -440,22 +460,24 @@ class TestUsersBuilderComplexScenarios:
     def test_builder_reuse_after_reset(self):
         """Test builder can be reused after reset."""
         builder = UsersBuilder()
-        
+
         # First use
-        request1 = (builder
-                    .user_id("user1")
-                    .email("user1@example.com")
-                    .role("Admin")
-                    .build_user_invite())
+        request1 = (
+            builder.user_id("user1")
+            .email("user1@example.com")
+            .role("Admin")
+            .build_user_invite()
+        )
         assert request1.email == "user1@example.com"
-        
+
         # Reset and reuse
-        request2 = (builder
-                    .reset()
-                    .user_id("user2")
-                    .email("user2@example.com")
-                    .role("Manager")
-                    .build_user_invite())
+        request2 = (
+            builder.reset()
+            .user_id("user2")
+            .email("user2@example.com")
+            .role("Manager")
+            .build_user_invite()
+        )
         assert request2.email == "user2@example.com"
         assert request2.role == "Manager"
 
@@ -463,15 +485,15 @@ class TestUsersBuilderComplexScenarios:
         """Test copied builder is independent."""
         builder1 = UsersBuilder()
         builder1.user_id("user1").email("user1@example.com").role("Admin")
-        
+
         builder2 = builder1.copy()
         builder2.user_id("user2").email("user2@example.com").role("Manager")
-        
+
         # Original should be unchanged
         assert builder1._user_id == "user1"
         assert builder1._email == "user1@example.com"
         assert builder1._role == "Admin"
-        
+
         # Copy should have new values
         assert builder2._user_id == "user2"
         assert builder2._email == "user2@example.com"
@@ -481,12 +503,12 @@ class TestUsersBuilderComplexScenarios:
         """Test combining multiple permission helpers."""
         builder = UsersBuilder()
         builder.template_permissions().domain_permissions().analytics_permissions()
-        
+
         # Should have permissions from all categories
         assert "read-all-templates" in builder._permissions  # from template_permissions
         assert "manage-domain" in builder._permissions  # from domain_permissions
         assert "read-analytics" in builder._permissions  # from analytics_permissions
-        
+
         # Should not have duplicates
         all_permissions = builder._permissions
         assert len(all_permissions) == len(set(all_permissions))
@@ -495,16 +517,16 @@ class TestUsersBuilderComplexScenarios:
         """Test build methods don't modify builder state."""
         builder = UsersBuilder()
         builder.user_id("user123").email("user@example.com").role("Admin")
-        
+
         # Build request
         request = builder.build_user_invite()
-        
+
         # State should be preserved
         assert builder._user_id == "user123"
         assert builder._email == "user@example.com"
         assert builder._role == "Admin"
-        
+
         # Can build again with same state
         request2 = builder.build_user_invite()
         assert request2.email == request.email
-        assert request2.role == request.role 
+        assert request2.role == request.role

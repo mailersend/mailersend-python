@@ -176,35 +176,3 @@ class SmsWebhook(BaseMailerSendModel):
     )
     created_at: datetime = Field(..., description="Creation timestamp")
     updated_at: Optional[datetime] = Field(None, description="Last update timestamp")
-
-
-class SmsWebhooksListResponse(BaseMailerSendModel):
-    """Response model for SMS webhooks list."""
-
-    data: List[SmsWebhook] = Field(..., description="List of SMS webhooks")
-    links: Dict[str, Optional[str]]
-    meta: Dict[str, Any]
-
-
-class SmsWebhookGetResponse(BaseMailerSendModel):
-    """Response model for single SMS webhook."""
-
-    data: SmsWebhook = Field(..., description="SMS webhook details")
-
-
-class SmsWebhookCreateResponse(BaseMailerSendModel):
-    """Response model for SMS webhook creation."""
-
-    data: SmsWebhook = Field(..., description="Created SMS webhook")
-
-
-class SmsWebhookUpdateResponse(BaseMailerSendModel):
-    """Response model for SMS webhook update."""
-
-    data: SmsWebhook = Field(..., description="Updated SMS webhook")
-
-
-class SmsWebhookDeleteResponse(BaseMailerSendModel):
-    """Response model for SMS webhook deletion."""
-
-    message: str = Field(..., description="Deletion confirmation message")

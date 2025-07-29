@@ -24,9 +24,7 @@ class TestTemplatesListQueryParams:
     def test_custom_values(self):
         """Test setting custom values."""
         query_params = TemplatesListQueryParams(
-            domain_id="test-domain",
-            page=2,
-            limit=50
+            domain_id="test-domain", page=2, limit=50
         )
         assert query_params.domain_id == "test-domain"
         assert query_params.page == 2
@@ -57,32 +55,26 @@ class TestTemplatesListQueryParams:
         """Test to_query_params with default values."""
         query_params = TemplatesListQueryParams()
         result = query_params.to_query_params()
-        expected = {'page': 1, 'limit': 25}
+        expected = {"page": 1, "limit": 25}
         assert result == expected
 
     def test_to_query_params_with_all_values(self):
         """Test to_query_params with all values set."""
         query_params = TemplatesListQueryParams(
-            domain_id="test-domain",
-            page=3,
-            limit=50
+            domain_id="test-domain", page=3, limit=50
         )
         result = query_params.to_query_params()
-        expected = {
-            'domain_id': 'test-domain',
-            'page': 3,
-            'limit': 50
-        }
+        expected = {"domain_id": "test-domain", "page": 3, "limit": 50}
         assert result == expected
 
     def test_to_query_params_excludes_none(self):
         """Test to_query_params excludes None values."""
         query_params = TemplatesListQueryParams(page=2, limit=30)
         result = query_params.to_query_params()
-        expected = {'page': 2, 'limit': 30}
+        expected = {"page": 2, "limit": 30}
         assert result == expected
         # Verify no None values are included
-        assert 'domain_id' not in result or result['domain_id'] is not None
+        assert "domain_id" not in result or result["domain_id"] is not None
 
 
 class TestTemplatesListRequest:
@@ -91,9 +83,7 @@ class TestTemplatesListRequest:
     def test_create_request_with_query_params(self):
         """Test creating request with query params object."""
         query_params = TemplatesListQueryParams(
-            domain_id="test-domain",
-            page=2,
-            limit=50
+            domain_id="test-domain", page=2, limit=50
         )
         request = TemplatesListRequest(query_params=query_params)
         assert request.query_params == query_params
@@ -108,24 +98,18 @@ class TestTemplatesListRequest:
     def test_to_query_params_delegation(self):
         """Test that to_query_params delegates to query_params object."""
         query_params = TemplatesListQueryParams(
-            domain_id="test-domain",
-            page=3,
-            limit=75
+            domain_id="test-domain", page=3, limit=75
         )
         request = TemplatesListRequest(query_params=query_params)
         result = request.to_query_params()
-        expected = {
-            'domain_id': 'test-domain',
-            'page': 3,
-            'limit': 75
-        }
+        expected = {"domain_id": "test-domain", "page": 3, "limit": 75}
         assert result == expected
 
     def test_to_query_params_with_defaults(self):
         """Test to_query_params with default values."""
         request = TemplatesListRequest()
         result = request.to_query_params()
-        expected = {'page': 1, 'limit': 25}
+        expected = {"page": 1, "limit": 25}
         assert result == expected
 
 
@@ -174,4 +158,4 @@ class TestTemplateDeleteRequest:
     def test_template_id_trimming(self):
         """Test template ID is trimmed."""
         request = TemplateDeleteRequest(template_id="  template123  ")
-        assert request.template_id == "template123" 
+        assert request.template_id == "template123"

@@ -52,6 +52,3 @@ class SmsMessageGetRequest(BaseModel):
         if not v or not v.strip():
             raise ValueError("SMS message ID cannot be empty")
         return v.strip()
-
-
-

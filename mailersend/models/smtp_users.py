@@ -151,6 +151,3 @@ class SmtpUserDeleteRequest(BaseModel):
         if not v or not v.strip():
             raise ValueError("ID cannot be empty")
         return v.strip()
-
-
-

@@ -230,6 +230,3 @@ class InviteCancelRequest(BaseModel):
     """Request model for canceling an invite."""
 
     invite_id: str
-
-
-

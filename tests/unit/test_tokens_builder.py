@@ -57,7 +57,7 @@ class TestTokensBuilderBuildMethods:
         """Test build_tokens_list method."""
         builder = TokensBuilder()
         request = builder.build_tokens_list()
-        
+
         assert isinstance(request, TokensListRequest)
         assert request.query_params.page == 1  # Default from model
         assert request.query_params.limit == 25  # Default from model
@@ -66,19 +66,20 @@ class TestTokensBuilderBuildMethods:
         """Test build_token_get method success."""
         builder = TokensBuilder()
         request = builder.token_id("test_token").build_token_get()
-        
+
         assert isinstance(request, TokenGetRequest)
         assert request.token_id == "test_token"
 
     def test_build_token_create_success(self):
         """Test build_token_create method success."""
         builder = TokensBuilder()
-        request = (builder
-                  .name("Test Token")
-                  .domain_id("domain123")
-                  .add_scope("email_full")
-                  .build_token_create())
-        
+        request = (
+            builder.name("Test Token")
+            .domain_id("domain123")
+            .add_scope("email_full")
+            .build_token_create()
+        )
+
         assert isinstance(request, TokenCreateRequest)
         assert request.name == "Test Token"
         assert request.domain_id == "domain123"
@@ -88,7 +89,7 @@ class TestTokensBuilderBuildMethods:
         """Test build_token_create with missing name."""
         builder = TokensBuilder()
         builder.domain_id("domain123").add_scope("email_full")
-        
+
         with pytest.raises(ValueError, match="name is required for creating a token"):
             builder.build_token_create()
 
@@ -96,6 +97,6 @@ class TestTokensBuilderBuildMethods:
         """Test build_token_delete method success."""
         builder = TokensBuilder()
         request = builder.token_id("test_token").build_token_delete()
-        
+
         assert isinstance(request, TokenDeleteRequest)
-        assert request.token_id == "test_token" 
+        assert request.token_id == "test_token"
