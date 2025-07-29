@@ -1,0 +1,49 @@
+interactions:
+- request:
+    body: '{"domain_id": "test-domain-id", "ids": ["test-id"]}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '51'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+    method: DELETE
+    uri: https://api.mailersend.com/v1/suppressions/blocklist
+  response:
+    body:
+      string: '{"message":"The selected domain id is invalid. (and 1 more error)","errors":{"domain_id":["The
+        selected domain id is invalid."],"ids.0":["The selected ids.0 is invalid."]}}'
+    headers:
+      CF-RAY:
+      - 966ca7f45aeac0d0-VIE
+      Cache-Control:
+      - no-cache, private
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Date:
+      - Tue, 29 Jul 2025 12:35:25 GMT
+      Server:
+      - cloudflare
+      Transfer-Encoding:
+      - chunked
+      cf-cache-status:
+      - DYNAMIC
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-apiquota-remaining:
+      - '-1'
+      x-apiquota-reset:
+      - '2025-07-30T00:00:00Z'
+    status:
+      code: 422
+      message: Unprocessable Entity
+version: 1

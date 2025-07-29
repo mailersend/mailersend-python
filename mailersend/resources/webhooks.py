@@ -32,7 +32,7 @@ class Webhooks(BaseResource):
         self.logger.debug("Listing webhooks with params: %s", params)
 
         # Make API call
-        response = self.client.request(method="GET", endpoint="webhooks", params=params)
+        response = self.client.request(method="GET", path="webhooks", params=params)
 
         # Create standardized response
         return self._create_response(response)
@@ -51,7 +51,7 @@ class Webhooks(BaseResource):
 
         # Make API call
         response = self.client.request(
-            method="GET", endpoint=f"webhooks/{request.webhook_id}"
+            method="GET", path=f"webhooks/{request.webhook_id}"
         )
 
         # Create standardized response
@@ -74,7 +74,7 @@ class Webhooks(BaseResource):
         self.logger.debug("Creating webhook: %s", request.name)
 
         # Make API call
-        response = self.client.request(method="POST", endpoint="webhooks", body=data)
+        response = self.client.request(method="POST", path="webhooks", body=data)
 
         # Create standardized response
         return self._create_response(response)
@@ -98,7 +98,7 @@ class Webhooks(BaseResource):
 
         # Make API call
         response = self.client.request(
-            method="PUT", endpoint=f"webhooks/{request.webhook_id}", body=data
+            method="PUT", path=f"webhooks/{request.webhook_id}", body=data
         )
 
         # Create standardized response
@@ -118,7 +118,7 @@ class Webhooks(BaseResource):
 
         # Make API call
         response = self.client.request(
-            method="DELETE", endpoint=f"webhooks/{request.webhook_id}"
+            method="DELETE", path=f"webhooks/{request.webhook_id}"
         )
 
         # Create standardized response

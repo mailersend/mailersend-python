@@ -1,0 +1,57 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      User-Agent:
+      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+    method: GET
+    uri: https://api.mailersend.com/v1/users?limit=10
+  response:
+    body:
+      string: '{"data":[{"id":"6vywj2lpnmg7oqzd","avatar":"https:\/\/www.gravatar.com\/avatar\/c73820b36111c4206a6d6e171863578e?d=","email":"nikola@mailerlite.com","last_name":"Milojevi\u0107","name":"Nikola","2fa":true,"created_at":"2020-10-01T15:33:09.000000Z","updated_at":"2025-06-18T12:23:36.000000Z","role":"Admin","permissions":[],"domains":[{"id":"xkjn41mjxp94z781","name":"bob.fail","created_at":"2025-04-01T12:54:11.000000Z","updated_at":"2025-07-29T12:20:45.000000Z"},{"id":"65qngkdovk8lwr12","name":"igor.fail","created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2025-07-29T12:20:49.000000Z"}],"templates":[{"id":"neqvygmmmkjg0p7w","name":"Template","description":null,"type":"dd","created_at":"2024-10-29T05:19:09.000000Z"},{"id":"0r83ql3mwxmgzw1j","name":"Template","description":null,"type":"rt","created_at":"2025-03-27T11:49:37.000000Z"},{"id":"z3m5jgrk1wxldpyo","name":"Template","description":null,"type":"gh","created_at":"2024-11-04T13:05:39.000000Z"},{"id":"351ndgwkr8xgzqx8","name":"SDK
+        Test Template","description":"DO NOT REMOVE!","type":"rt","created_at":"2025-04-04T12:33:42.000000Z"}]},{"id":"oynrw7gymjg2k8e3","avatar":"https:\/\/storage.googleapis.com\/sso-avatars-prod\/avatars\/caFrrQXipgbxkdd6zZF8vijiVwQ4Pphq0Irchjql.jpg","email":"robert@mailerlite.com","last_name":"Gordon","name":"Robert","2fa":true,"created_at":"2020-09-30T12:04:49.000000Z","updated_at":"2025-07-23T07:09:26.000000Z","role":"Admin","permissions":[],"domains":[{"id":"xkjn41mjxp94z781","name":"bob.fail","created_at":"2025-04-01T12:54:11.000000Z","updated_at":"2025-07-29T12:20:45.000000Z"},{"id":"65qngkdovk8lwr12","name":"igor.fail","created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2025-07-29T12:20:49.000000Z"}],"templates":[{"id":"neqvygmmmkjg0p7w","name":"Template","description":null,"type":"dd","created_at":"2024-10-29T05:19:09.000000Z"},{"id":"0r83ql3mwxmgzw1j","name":"Template","description":null,"type":"rt","created_at":"2025-03-27T11:49:37.000000Z"},{"id":"z3m5jgrk1wxldpyo","name":"Template","description":null,"type":"gh","created_at":"2024-11-04T13:05:39.000000Z"},{"id":"351ndgwkr8xgzqx8","name":"SDK
+        Test Template","description":"DO NOT REMOVE!","type":"rt","created_at":"2025-04-04T12:33:42.000000Z"}]},{"id":"3vz9dlem7514kj50","avatar":null,"email":"sre@remotecompany.com","last_name":"SRE","name":"Monitoring","2fa":false,"created_at":"2022-02-04T13:11:35.000000Z","updated_at":"2023-10-03T07:23:01.000000Z","role":"Admin","permissions":[],"domains":[{"id":"xkjn41mjxp94z781","name":"bob.fail","created_at":"2025-04-01T12:54:11.000000Z","updated_at":"2025-07-29T12:20:45.000000Z"},{"id":"65qngkdovk8lwr12","name":"igor.fail","created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2025-07-29T12:20:49.000000Z"}],"templates":[{"id":"neqvygmmmkjg0p7w","name":"Template","description":null,"type":"dd","created_at":"2024-10-29T05:19:09.000000Z"},{"id":"0r83ql3mwxmgzw1j","name":"Template","description":null,"type":"rt","created_at":"2025-03-27T11:49:37.000000Z"},{"id":"z3m5jgrk1wxldpyo","name":"Template","description":null,"type":"gh","created_at":"2024-11-04T13:05:39.000000Z"},{"id":"351ndgwkr8xgzqx8","name":"SDK
+        Test Template","description":"DO NOT REMOVE!","type":"rt","created_at":"2025-04-04T12:33:42.000000Z"}]},{"id":"z86org8rek4ew137","avatar":"https:\/\/www.gravatar.com\/avatar\/d1a4d0a3e07ec27d64aed5c2534045e9?d=https:\/\/dashboard.mailerlite.com\/images\/user-default.png","email":"dino@mailerlite.com","last_name":"User","name":"Dino","2fa":false,"created_at":"2021-04-13T08:22:51.000000Z","updated_at":"2025-06-23T11:36:10.000000Z","role":"Admin","permissions":[],"domains":[{"id":"xkjn41mjxp94z781","name":"bob.fail","created_at":"2025-04-01T12:54:11.000000Z","updated_at":"2025-07-29T12:20:45.000000Z"},{"id":"65qngkdovk8lwr12","name":"igor.fail","created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2025-07-29T12:20:49.000000Z"}],"templates":[{"id":"neqvygmmmkjg0p7w","name":"Template","description":null,"type":"dd","created_at":"2024-10-29T05:19:09.000000Z"},{"id":"0r83ql3mwxmgzw1j","name":"Template","description":null,"type":"rt","created_at":"2025-03-27T11:49:37.000000Z"},{"id":"z3m5jgrk1wxldpyo","name":"Template","description":null,"type":"gh","created_at":"2024-11-04T13:05:39.000000Z"},{"id":"351ndgwkr8xgzqx8","name":"SDK
+        Test Template","description":"DO NOT REMOVE!","type":"rt","created_at":"2025-04-04T12:33:42.000000Z"}]},{"id":"pxkjn41z5n9lz781","avatar":"https:\/\/storage.googleapis.com\/mailerlite-avatars-prod\/avatar\/avatars\/7Da4L5Z8xnZtQOYupNYN7J0nqbzR5llX66te7W5O.jpg","email":"igor@mailerlite.com","last_name":"Hrcek","name":"Igor","2fa":false,"created_at":"2022-06-15T11:29:45.000000Z","updated_at":"2024-12-19T15:51:25.000000Z","role":"Admin","permissions":[],"domains":[{"id":"xkjn41mjxp94z781","name":"bob.fail","created_at":"2025-04-01T12:54:11.000000Z","updated_at":"2025-07-29T12:20:45.000000Z"},{"id":"65qngkdovk8lwr12","name":"igor.fail","created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2025-07-29T12:20:49.000000Z"}],"templates":[{"id":"neqvygmmmkjg0p7w","name":"Template","description":null,"type":"dd","created_at":"2024-10-29T05:19:09.000000Z"},{"id":"0r83ql3mwxmgzw1j","name":"Template","description":null,"type":"rt","created_at":"2025-03-27T11:49:37.000000Z"},{"id":"z3m5jgrk1wxldpyo","name":"Template","description":null,"type":"gh","created_at":"2024-11-04T13:05:39.000000Z"},{"id":"351ndgwkr8xgzqx8","name":"SDK
+        Test Template","description":"DO NOT REMOVE!","type":"rt","created_at":"2025-04-04T12:33:42.000000Z"}]},{"id":"3vz9dleyw374kj50","avatar":"https:\/\/www.gravatar.com\/avatar\/c44d3a63d59a4e4aaf084e2355bfa13f?d=https%3A%2F%2Fassets.mlcdn.com%2Fms%2Fimages%2Favatar.png","email":"yusuf@mailerlite.com","last_name":"Celebi","name":"Yusuf
+        Cemal Celebi","2fa":false,"created_at":"2024-08-09T12:38:07.000000Z","updated_at":"2025-02-13T10:29:38.000000Z","role":"Admin","permissions":[],"domains":[{"id":"xkjn41mjxp94z781","name":"bob.fail","created_at":"2025-04-01T12:54:11.000000Z","updated_at":"2025-07-29T12:20:45.000000Z"},{"id":"65qngkdovk8lwr12","name":"igor.fail","created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2025-07-29T12:20:49.000000Z"}],"templates":[{"id":"neqvygmmmkjg0p7w","name":"Template","description":null,"type":"dd","created_at":"2024-10-29T05:19:09.000000Z"},{"id":"0r83ql3mwxmgzw1j","name":"Template","description":null,"type":"rt","created_at":"2025-03-27T11:49:37.000000Z"},{"id":"z3m5jgrk1wxldpyo","name":"Template","description":null,"type":"gh","created_at":"2024-11-04T13:05:39.000000Z"},{"id":"351ndgwkr8xgzqx8","name":"SDK
+        Test Template","description":"DO NOT REMOVE!","type":"rt","created_at":"2025-04-04T12:33:42.000000Z"}]},{"id":"x2p0347mv7k4zdrn","avatar":"http:\/\/www.gravatar.com\/avatar\/525f9bc42472046db81568740061e61a?d=https%3A%2F%2Fassets.mlcdn.com%2Fms%2Fimages%2Favatar.png","email":"marta.parra@mailerlite.com","last_name":"MailerLite","name":"Marta","2fa":false,"created_at":"2023-12-19T11:09:07.000000Z","updated_at":"2025-06-19T13:13:28.000000Z","role":"Admin","permissions":["read-activity","read-email","read-suppressions","manage-suppressions","read-recipient"],"domains":[{"id":"xkjn41mjxp94z781","name":"bob.fail","created_at":"2025-04-01T12:54:11.000000Z","updated_at":"2025-07-29T12:20:45.000000Z"},{"id":"65qngkdovk8lwr12","name":"igor.fail","created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2025-07-29T12:20:49.000000Z"}],"templates":[{"id":"neqvygmmmkjg0p7w","name":"Template","description":null,"type":"dd","created_at":"2024-10-29T05:19:09.000000Z"},{"id":"0r83ql3mwxmgzw1j","name":"Template","description":null,"type":"rt","created_at":"2025-03-27T11:49:37.000000Z"},{"id":"z3m5jgrk1wxldpyo","name":"Template","description":null,"type":"gh","created_at":"2024-11-04T13:05:39.000000Z"},{"id":"351ndgwkr8xgzqx8","name":"SDK
+        Test Template","description":"DO NOT REMOVE!","type":"rt","created_at":"2025-04-04T12:33:42.000000Z"}]},{"id":"jpzkmgqmxmvl059v","avatar":null,"email":"roc@mailerlite.com","last_name":"Ribera","name":"Roc","2fa":false,"created_at":"2024-08-19T09:59:53.000000Z","updated_at":"2025-05-14T10:57:53.000000Z","role":"Admin","permissions":[],"domains":[{"id":"xkjn41mjxp94z781","name":"bob.fail","created_at":"2025-04-01T12:54:11.000000Z","updated_at":"2025-07-29T12:20:45.000000Z"},{"id":"65qngkdovk8lwr12","name":"igor.fail","created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2025-07-29T12:20:49.000000Z"}],"templates":[{"id":"neqvygmmmkjg0p7w","name":"Template","description":null,"type":"dd","created_at":"2024-10-29T05:19:09.000000Z"},{"id":"0r83ql3mwxmgzw1j","name":"Template","description":null,"type":"rt","created_at":"2025-03-27T11:49:37.000000Z"},{"id":"z3m5jgrk1wxldpyo","name":"Template","description":null,"type":"gh","created_at":"2024-11-04T13:05:39.000000Z"},{"id":"351ndgwkr8xgzqx8","name":"SDK
+        Test Template","description":"DO NOT REMOVE!","type":"rt","created_at":"2025-04-04T12:33:42.000000Z"}]}]}'
+    headers:
+      CF-RAY:
+      - 966d3ce4bb69dfc0-BEG
+      Cache-Control:
+      - no-cache, private
+      Connection:
+      - keep-alive
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/json
+      Date:
+      - Tue, 29 Jul 2025 14:17:06 GMT
+      Server:
+      - cloudflare
+      Transfer-Encoding:
+      - chunked
+      cf-cache-status:
+      - DYNAMIC
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-apiquota-remaining:
+      - '-1'
+      x-apiquota-reset:
+      - '2025-07-30T00:00:00Z'
+    status:
+      code: 200
+      message: OK
+version: 1

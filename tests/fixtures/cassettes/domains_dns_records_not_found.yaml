@@ -11,17 +11,15 @@ interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - mailersend-python/2.0.0 (Python/3.9.1; OS/Darwin 24.5.0; Impl/CPython)
+      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
     method: GET
     uri: https://api.mailersend.com/v1/domains/non-existent-domain-id/dns-records
   response:
     body:
-      string: !!binary |
-        H4sIAAAAAAAAA6rmUlBQUFDKTS0uTkxPVbJSUApKLc4vLUpOVcjLL1FIyy/NS9FT4qoFAAAA//8D
-        AC9hLe8oAAAA
+      string: "{\n    \"message\": \"Resource not found.\"\n}"
     headers:
       CF-RAY:
-      - 9564c8004ffc27bc-PRG
+      - 966c885c3be6f339-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -31,7 +29,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 27 Jun 2025 11:59:57 GMT
+      - Tue, 29 Jul 2025 12:13:51 GMT
       Server:
       - cloudflare
       Transfer-Encoding:

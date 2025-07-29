@@ -32,7 +32,7 @@ class Tokens(BaseResource):
         params = request.to_query_params()
 
         # Make API call
-        response = self.client.request(method="GET", endpoint="token", params=params)
+        response = self.client.request(method="GET", path="token", params=params)
 
         # Create standardized response
         return self._create_response(response)
@@ -50,7 +50,7 @@ class Tokens(BaseResource):
 
         # Make API call
         response = self.client.request(
-            method="GET", endpoint=f"token/{request.token_id}"
+            method="GET", path=f"token/{request.token_id}"
         )
 
         # Create standardized response
@@ -71,7 +71,7 @@ class Tokens(BaseResource):
 
         # Make API call
         response = self.client.request(
-            method="POST", endpoint="token", body=request.to_json()
+            method="POST", path="token", body=request.to_json()
         )
 
         # Create standardized response
@@ -93,7 +93,7 @@ class Tokens(BaseResource):
         # Make API call
         response = self.client.request(
             method="PUT",
-            endpoint=f"token/{request.token_id}/settings",
+            path=f"token/{request.token_id}/settings",
             body=request.to_json(),
         )
 
@@ -113,7 +113,7 @@ class Tokens(BaseResource):
 
         # Make API call
         response = self.client.request(
-            method="PUT", endpoint=f"token/{request.token_id}", body=request.to_json()
+            method="PUT", path=f"token/{request.token_id}", body=request.to_json()
         )
 
         # Create standardized response
@@ -132,7 +132,7 @@ class Tokens(BaseResource):
 
         # Make API call
         response = self.client.request(
-            method="DELETE", endpoint=f"token/{request.token_id}"
+            method="DELETE", path=f"token/{request.token_id}"
         )
 
         # Create standardized response

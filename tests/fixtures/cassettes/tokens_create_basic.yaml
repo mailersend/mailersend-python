@@ -1,0 +1,54 @@
+interactions:
+- request:
+    body: '{"name": "Test Token", "domain_id": "65qngkdovk8lwr12", "scopes": ["email_full",
+      "domains_read"]}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '97'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+    method: POST
+    uri: https://api.mailersend.com/v1/token
+  response:
+    body:
+      string: '{"data":{"id":"89611933a2d5374a5b9750f0e72ed6805640c66e17305c563e57bf62f7ed0a16ca279893d5d5fb25","accessToken":"***REMOVED***","name":"Test
+        Token","created_at":"2025-07-29T14:14:33.000000Z","scopes":["email_full","domains_read"],"has_full":false,"domain":{"id":"65qngkdovk8lwr12","name":"igor.fail","dkim":true,"spf":true,"mx":true,"tracking":false,"is_verified":true,"is_dns_active":true,"is_trial_domain":false,"domain_settings":{"send_paused":true,"track_clicks":false,"track_opens":false,"track_opens_pixel_on_top":false,"track_unsubscribe":false,"track_unsubscribe_html":"<p>Custom
+        unsubscribe {{unsubscribe}}<\/p>","track_unsubscribe_html_enabled":false,"track_unsubscribe_plain":"Custom
+        unsubscribe {{unsubscribe}}","track_unsubscribe_plain_enabled":false,"track_content":false,"custom_tracking_enabled":true,"custom_tracking_subdomain":"track","return_path_subdomain":"mta","inbound_routing_enabled":false,"inbound_routing_subdomain":"inbound","precedence_bulk":false,"ignore_duplicated_recipients":false,"show_dmarc":false},"can":{"manage":true},"totals":[],"is_dkim_txt":false,"show_dkim_info":false,"is_being_verified":true},"preview":"mlsn.bb9ee6","expires_at":null}}'
+    headers:
+      CF-RAY:
+      - 966d392b99f5b01e-BEG
+      Cache-Control:
+      - no-cache, private
+      Connection:
+      - keep-alive
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/json
+      Date:
+      - Tue, 29 Jul 2025 14:14:33 GMT
+      Server:
+      - cloudflare
+      Transfer-Encoding:
+      - chunked
+      cf-cache-status:
+      - DYNAMIC
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-apiquota-remaining:
+      - '-1'
+      x-apiquota-reset:
+      - '2025-07-30T00:00:00Z'
+    status:
+      code: 200
+      message: OK
+version: 1

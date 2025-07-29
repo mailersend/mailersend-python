@@ -14,24 +14,17 @@ interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - mailersend-python/2.0.0 (Python/3.9.1; OS/Darwin 24.5.0; Impl/CPython)
+      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
     method: PUT
     uri: https://api.mailersend.com/v1/domains/65qngkdovk8lwr12/settings
   response:
     body:
-      string: !!binary |
-        H4sIAAAAAAAAA4RTy27jMAz8lYJnpWu7SR9C0cv+Qk+LBQRZYhytZUmVqGSBwP++sGM3TptgfZI4
-        wxnSIo+gJUngRzAaODxuPlzTar9vn+0hlhUwcLJD4GAaH++30lhgoFvTAaeYkUEK2/lIUarWuAb4
-        VtqEDEwSe4xma1DPHJOEGhSvAdolIRWZPX5jz+Gz8GwmpLX+MOhMmPadNE4kkpSGvsiTtMDXLww+
-        MuaBWTBI6Gg8RPyDioZoxUCjNXuMw2391DPYySScJ3FKFB2mJBtMn15XMKF8nqTnSpDIuGYsJqHT
-        IsicFgWPnQhljWrTxa8UPqC7FhLB/EUrvBPkwxed7FKuk4qmxsvMBSB21Fng8BrefuZEvrtbgHfH
-        4+LW96+/f4Q3uKUi0MnafutmSQtWGgcc/m8FN9Nv2CjvaHzIU6NqdDiPxmfSdTjl+vREwE96MIwD
-        5ehEkLS7wDuSwMC42menRfSZLgzmufyCLxUmDBiEiAo1OoWizrY9ZzfORxQ6B2uUJNQiojLBoKPz
-        yKWdPwjdyaimUM9ARRzpkoBDVVSbVbFeFeV7WfGHB74u74vx+wUMctBfqY+r6um9LPnmhW+eF9Rx
-        ceapnSZ6uR/DekQthq7UtD/Jb+kcKPq+/wcAAP//AwCZPBsqYAQAAA==
+      string: '{"data":{"id":"65qngkdovk8lwr12","name":"igor.fail","dkim":true,"spf":true,"tracking":false,"is_verified":true,"is_cname_verified":true,"is_dns_active":true,"is_cname_active":false,"is_tracking_allowed":false,"domain_stats":{"total":49,"queued":0,"sent":0,"rejected":2,"delivered":47},"has_not_queued_messages":false,"not_queued_messages_count":0,"domain_settings":{"send_paused":false,"track_clicks":true,"track_opens":true,"track_opens_pixel_on_top":false,"track_unsubscribe":true,"track_unsubscribe_html":"<p>Custom
+        unsubscribe {{unsubscribe}}<\/p>","track_unsubscribe_html_enabled":false,"track_unsubscribe_plain":"Custom
+        unsubscribe {{unsubscribe}}","track_unsubscribe_plain_enabled":false,"track_content":true,"custom_tracking_enabled":true,"custom_tracking_subdomain":"track","return_path_subdomain":"mta","inbound_routing_enabled":false,"inbound_routing_subdomain":"inbound","precedence_bulk":false,"ignore_duplicated_recipients":false,"show_dmarc":false},"created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2025-07-29T12:13:52.000000Z","totals":[]}}'
     headers:
       CF-RAY:
-      - 9564c813ff1cb391-PRG
+      - 966c886c28ec562e-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -41,7 +34,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 27 Jun 2025 12:00:00 GMT
+      - Tue, 29 Jul 2025 12:13:54 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
@@ -53,7 +46,7 @@ interactions:
       x-apiquota-remaining:
       - '-1'
       x-apiquota-reset:
-      - '2025-06-28T00:00:00Z'
+      - '2025-07-30T00:00:00Z'
     status:
       code: 200
       message: OK
@@ -69,24 +62,17 @@ interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - mailersend-python/2.0.0 (Python/3.9.1; OS/Darwin 24.5.0; Impl/CPython)
+      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
     method: GET
     uri: https://api.mailersend.com/v1/domains/65qngkdovk8lwr12
   response:
     body:
-      string: !!binary |
-        H4sIAAAAAAAAA4RTy27jMAz8lYJnpWu7SR9C0cv+Qk+LBQRZYhytZUmVqGSBwP++sGM3TptgfZI4
-        wxnSIo+gJUngRzAaODxuPlzTar9vn+0hlhUwcLJD4GAaH++30lhgoFvTAaeYkUEK2/lIUarWuAb4
-        VtqEDEwSe4xma1DPHJOEGhSvAdolIRWZPX5jz+Gz8GwmpLX+MOhMmPadNE4kkpSGvsiTtMDXLww+
-        MuaBWTBI6Gg8RPyDioZoxUCjNXuMw2391DPYySScJ3FKFB2mJBtMn15XMKF8nqTnSpDIuGYsJqHT
-        IsicFgWPnQhljWrTxa8UPqC7FhLB/EUrvBPkwxed7FKuk4qmxsvMBSB21Fng8BrefuZEvrtbgHfH
-        4+LW96+/f4Q3uKUi0MnafutmSQtWGgcc/m8FN9Nv2CjvaHzIU6NqdDiPxmfSdTjl+vREwE96MIwD
-        5ehEkLS7wDuSwMC42menRfSZLgzmufyCLxUmDBiEiAo1OoWizrY9ZzfORxQ6B2uUJNQiojLBoKPz
-        yKWdPwjdyaimUM9ARRzpkoBDVVSbVbFeFeV7WfGHB74u74vx+wUMctBfqY+r6um9LPnmhW+eF9Rx
-        ceapnSZ6uR/DekQthq7UtD/Jb+kcKPq+/wcAAP//AwCZPBsqYAQAAA==
+      string: '{"data":{"id":"65qngkdovk8lwr12","name":"igor.fail","dkim":true,"spf":true,"tracking":false,"is_verified":true,"is_cname_verified":true,"is_dns_active":true,"is_cname_active":false,"is_tracking_allowed":false,"domain_stats":{"total":49,"queued":0,"sent":0,"rejected":2,"delivered":47},"has_not_queued_messages":false,"not_queued_messages_count":0,"domain_settings":{"send_paused":false,"track_clicks":true,"track_opens":true,"track_opens_pixel_on_top":false,"track_unsubscribe":true,"track_unsubscribe_html":"<p>Custom
+        unsubscribe {{unsubscribe}}<\/p>","track_unsubscribe_html_enabled":false,"track_unsubscribe_plain":"Custom
+        unsubscribe {{unsubscribe}}","track_unsubscribe_plain_enabled":false,"track_content":true,"custom_tracking_enabled":true,"custom_tracking_subdomain":"track","return_path_subdomain":"mta","inbound_routing_enabled":false,"inbound_routing_subdomain":"inbound","precedence_bulk":false,"ignore_duplicated_recipients":false,"show_dmarc":false},"created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2025-07-29T12:13:52.000000Z","totals":{"sent":0,"delivered":47,"hard_bounced":2,"soft_bounced":0}}}'
     headers:
       CF-RAY:
-      - 9564c815690cb391-PRG
+      - 966c886d5f429857-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -96,7 +82,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 27 Jun 2025 12:00:00 GMT
+      - Tue, 29 Jul 2025 12:13:54 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
@@ -108,7 +94,7 @@ interactions:
       x-apiquota-remaining:
       - '-1'
       x-apiquota-reset:
-      - '2025-06-28T00:00:00Z'
+      - '2025-07-30T00:00:00Z'
     status:
       code: 200
       message: OK
@@ -127,24 +113,17 @@ interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - mailersend-python/2.0.0 (Python/3.9.1; OS/Darwin 24.5.0; Impl/CPython)
+      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
     method: PUT
     uri: https://api.mailersend.com/v1/domains/65qngkdovk8lwr12/settings
   response:
     body:
-      string: !!binary |
-        H4sIAAAAAAAAA4RT227bMAz9lYLPSue4absJRV/2C3saBgiyxDiaZUmVqGRA4H8ffKvdNEH9JJ1z
-        eCia5Bm0JAn8DEYDh6fHN1c32h+b7/YUtyUwcLJF4GBqH+/30lhgoBvTAqeYkUEK+/lIUarGuBr4
-        XtqEDEwSR4xmb1DPGpOE6h2vEdolIRWZI35Sz/BiPCcT0lp/6n0mTvtWGicSSUp9XeRJWuC7Hwze
-        MuZeWTBI6Gg4RPyLinq0ZKDRmiPG/rZ77hgcZBLOkxgDRYspyRrTe64rnFA+T9bzS5DIuHp4TEKn
-        RZA5LYUPhQhljWoW4xH0Ad1VTATzD63wTpAPF4LsUq6SiqbC24w4UGuBw0t4/ZkT+fZuRd6dz6tb
-        1738+RZe4ZaLQCcru2rAZ1mw0jjg8HUquBl+I43yjoZWTqgaUizT8R41/uxLOuVq7BLw0RD6iaAc
-        nQiSDh/4liQwMK7y2WkRfaYPCebRvODXDhMHDEJEhRqdQlFl2yzRtfMRhc7BGiUJtYioTDDoaBmE
-        dPAnoVsZ1QR1DFTEQS4JOJRF+bgpdpti+2tb8ocHvtveF8P3GxjkoC+lT5vyuZcWBS/W0mF35sGd
-        hnq9Iv2GRC36qtS0QsnvaQGKruv+AwAA//8DADrRmPJjBAAA
+      string: '{"data":{"id":"65qngkdovk8lwr12","name":"igor.fail","dkim":true,"spf":true,"tracking":false,"is_verified":true,"is_cname_verified":true,"is_dns_active":true,"is_cname_active":false,"is_tracking_allowed":false,"domain_stats":{"total":49,"queued":0,"sent":0,"rejected":2,"delivered":47},"has_not_queued_messages":false,"not_queued_messages_count":0,"domain_settings":{"send_paused":true,"track_clicks":false,"track_opens":false,"track_opens_pixel_on_top":false,"track_unsubscribe":false,"track_unsubscribe_html":"<p>Custom
+        unsubscribe {{unsubscribe}}<\/p>","track_unsubscribe_html_enabled":false,"track_unsubscribe_plain":"Custom
+        unsubscribe {{unsubscribe}}","track_unsubscribe_plain_enabled":false,"track_content":false,"custom_tracking_enabled":true,"custom_tracking_subdomain":"track","return_path_subdomain":"mta","inbound_routing_enabled":false,"inbound_routing_subdomain":"inbound","precedence_bulk":false,"ignore_duplicated_recipients":false,"show_dmarc":false},"created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2025-07-29T12:13:54.000000Z","totals":[]}}'
     headers:
       CF-RAY:
-      - 9564c8166a50b391-PRG
+      - 966c886e597a96e0-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -154,7 +133,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 27 Jun 2025 12:00:01 GMT
+      - Tue, 29 Jul 2025 12:13:54 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
@@ -166,7 +145,7 @@ interactions:
       x-apiquota-remaining:
       - '-1'
       x-apiquota-reset:
-      - '2025-06-28T00:00:00Z'
+      - '2025-07-30T00:00:00Z'
     status:
       code: 200
       message: OK
@@ -182,24 +161,17 @@ interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - mailersend-python/2.0.0 (Python/3.9.1; OS/Darwin 24.5.0; Impl/CPython)
+      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
     method: GET
     uri: https://api.mailersend.com/v1/domains/65qngkdovk8lwr12
   response:
     body:
-      string: !!binary |
-        H4sIAAAAAAAAA4RT227bMAz9lYLPSue4absJRV/2C3saBgiyxDiaZUmVqGRA4H8ffKvdNEH9JJ1z
-        eCia5Bm0JAn8DEYDh6fHN1c32h+b7/YUtyUwcLJF4GBqH+/30lhgoBvTAqeYkUEK+/lIUarGuBr4
-        XtqEDEwSR4xmb1DPGpOE6h2vEdolIRWZI35Sz/BiPCcT0lp/6n0mTvtWGicSSUp9XeRJWuC7Hwze
-        MuZeWTBI6Gg4RPyLinq0ZKDRmiPG/rZ77hgcZBLOkxgDRYspyRrTe64rnFA+T9bzS5DIuHp4TEKn
-        RZA5LYUPhQhljWoW4xH0Ad1VTATzD63wTpAPF4LsUq6SiqbC24w4UGuBw0t4/ZkT+fZuRd6dz6tb
-        1738+RZe4ZaLQCcru2rAZ1mw0jjg8HUquBl+I43yjoZWTqgaUizT8R41/uxLOuVq7BLw0RD6iaAc
-        nQiSDh/4liQwMK7y2WkRfaYPCebRvODXDhMHDEJEhRqdQlFl2yzRtfMRhc7BGiUJtYioTDDoaBmE
-        dPAnoVsZ1QR1DFTEQS4JOJRF+bgpdpti+2tb8ocHvtveF8P3GxjkoC+lT5vyuZcWBS/W0mF35sGd
-        hnq9Iv2GRC36qtS0QsnvaQGKruv+AwAA//8DADrRmPJjBAAA
+      string: '{"data":{"id":"65qngkdovk8lwr12","name":"igor.fail","dkim":true,"spf":true,"tracking":false,"is_verified":true,"is_cname_verified":true,"is_dns_active":true,"is_cname_active":false,"is_tracking_allowed":false,"domain_stats":{"total":49,"queued":0,"sent":0,"rejected":2,"delivered":47},"has_not_queued_messages":false,"not_queued_messages_count":0,"domain_settings":{"send_paused":true,"track_clicks":false,"track_opens":false,"track_opens_pixel_on_top":false,"track_unsubscribe":false,"track_unsubscribe_html":"<p>Custom
+        unsubscribe {{unsubscribe}}<\/p>","track_unsubscribe_html_enabled":false,"track_unsubscribe_plain":"Custom
+        unsubscribe {{unsubscribe}}","track_unsubscribe_plain_enabled":false,"track_content":false,"custom_tracking_enabled":true,"custom_tracking_subdomain":"track","return_path_subdomain":"mta","inbound_routing_enabled":false,"inbound_routing_subdomain":"inbound","precedence_bulk":false,"ignore_duplicated_recipients":false,"show_dmarc":false},"created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2025-07-29T12:13:54.000000Z","totals":{"sent":0,"delivered":47,"hard_bounced":2,"soft_bounced":0}}}'
     headers:
       CF-RAY:
-      - 9564c8179bc1b391-PRG
+      - 966c886f3875e296-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -209,7 +181,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 27 Jun 2025 12:00:01 GMT
+      - Tue, 29 Jul 2025 12:13:54 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
@@ -221,7 +193,7 @@ interactions:
       x-apiquota-remaining:
       - '-1'
       x-apiquota-reset:
-      - '2025-06-28T00:00:00Z'
+      - '2025-07-30T00:00:00Z'
     status:
       code: 200
       message: OK

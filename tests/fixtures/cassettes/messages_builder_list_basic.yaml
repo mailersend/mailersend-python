@@ -1,0 +1,48 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      User-Agent:
+      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+    method: GET
+    uri: https://api.mailersend.com/v1/messages?page=1&limit=10
+  response:
+    body:
+      string: '{"data":[{"id":"6888bb9efa41a66318120533","created_at":"2025-07-29T12:16:30.000000Z","updated_at":"2025-07-29T12:16:30.000000Z"},{"id":"6888bb9ee6a7f64df5de96ad","created_at":"2025-07-29T12:16:30.000000Z","updated_at":"2025-07-29T12:16:30.000000Z"},{"id":"6888bc42dbd40844151919b7","created_at":"2025-07-29T12:19:14.000000Z","updated_at":"2025-07-29T12:19:14.000000Z"},{"id":"6888bb59bbd49a78d3334484","created_at":"2025-07-29T12:15:21.000000Z","updated_at":"2025-07-29T12:15:21.000000Z"},{"id":"6888bbb9b713a022b0acd094","created_at":"2025-07-29T12:16:57.000000Z","updated_at":"2025-07-29T12:16:57.000000Z"}],"links":{"first":"https:\/\/api.mailersend.com\/v1\/messages?page=1","last":null,"prev":null,"next":null},"meta":{"current_page":1,"from":1,"path":"https:\/\/api.mailersend.com\/v1\/messages","per_page":10,"to":5}}'
+    headers:
+      CF-RAY:
+      - 966d281a0b580db0-BEG
+      Cache-Control:
+      - no-cache, private
+      Connection:
+      - keep-alive
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/json
+      Date:
+      - Tue, 29 Jul 2025 14:02:54 GMT
+      Server:
+      - cloudflare
+      Transfer-Encoding:
+      - chunked
+      cf-cache-status:
+      - DYNAMIC
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-apiquota-remaining:
+      - '-1'
+      x-apiquota-reset:
+      - '2025-07-30T00:00:00Z'
+    status:
+      code: 200
+      message: OK
+version: 1

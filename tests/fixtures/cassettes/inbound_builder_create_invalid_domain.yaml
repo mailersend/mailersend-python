@@ -1,0 +1,54 @@
+interactions:
+- request:
+    body: '{"domain_id": "invalid-domain-id", "name": "Test Route", "domain_enabled":
+      false, "catch_filter": [{"type": "catch_all"}], "match_filter": [{"type": "match_all"}],
+      "forwards": [{"type": "email", "value": "test@example.com"}]}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '225'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+    method: POST
+    uri: https://api.mailersend.com/v1/inbound
+  response:
+    body:
+      string: '{"message":"The match filter.type field is required. #MS42209 (and
+        2 more errors)","errors":{"match_filter.type":["The match filter.type field
+        is required. #MS42209"],"match_filter.filters":["The match filter.filters
+        field is required. #MS42209"],"domain_id":["The domain id field is required.
+        #MS42209"]}}'
+    headers:
+      CF-RAY:
+      - 966cbd32586ce28f-BEG
+      Cache-Control:
+      - no-cache, private
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Date:
+      - Tue, 29 Jul 2025 12:49:55 GMT
+      Server:
+      - cloudflare
+      Transfer-Encoding:
+      - chunked
+      cf-cache-status:
+      - DYNAMIC
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-apiquota-remaining:
+      - '-1'
+      x-apiquota-reset:
+      - '2025-07-30T00:00:00Z'
+    status:
+      code: 422
+      message: Unprocessable Entity
+version: 1

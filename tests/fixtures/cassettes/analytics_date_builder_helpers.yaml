@@ -11,18 +11,15 @@ interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - mailersend-python/2.0.0 (Python/3.9.1; OS/Darwin 24.5.0; Impl/CPython)
+      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
     method: GET
     uri: https://api.mailersend.com/v1/analytics/date?date_from=1748131200&date_to=1748736000&group_by=days&event%5B%5D=sent&event%5B%5D=delivered
   response:
     body:
-      string: !!binary |
-        H4sIAAAAAAAAA4zPSwoCMRAE0LvUOov8zKevIjJEEkVQI0kUhiF3l2Hc6EKyaqh+FNSCGFoALetN
-        06nkGwjCaieUkJyDbY+WP7GTUnkPhnPJz8d0nEGIYa5gqC20CtpvXb81Nd0biDPEdL28UkkRxDv7
-        wlJYM4wV13wc+1UPYm2NG8Y7o8YHGu3HB1pl/g089P4GAAD//wMANtD8gb4BAAA=
+      string: '{"data":{"date_from":"1748131200","date_to":"1748822399","group_by":"days","stats":[{"date":"1748131200","sent":0,"delivered":0},{"date":"1748217600","sent":0,"delivered":0},{"date":"1748304000","sent":0,"delivered":0},{"date":"1748390400","sent":0,"delivered":0},{"date":"1748476800","sent":0,"delivered":0},{"date":"1748563200","sent":0,"delivered":0},{"date":"1748649600","sent":0,"delivered":0},{"date":"1748736000","sent":0,"delivered":0}]}}'
     headers:
       CF-RAY:
-      - 95643631a99b8b99-PRG
+      - 966c83ec5fdfe295-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -32,7 +29,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 27 Jun 2025 10:20:25 GMT
+      - Tue, 29 Jul 2025 12:10:49 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
@@ -44,7 +41,7 @@ interactions:
       x-apiquota-remaining:
       - '-1'
       x-apiquota-reset:
-      - '2025-06-28T00:00:00Z'
+      - '2025-07-30T00:00:00Z'
     status:
       code: 200
       message: OK
@@ -60,19 +57,15 @@ interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - mailersend-python/2.0.0 (Python/3.9.1; OS/Darwin 24.5.0; Impl/CPython)
+      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
     method: GET
     uri: https://api.mailersend.com/v1/analytics/date?date_from=1747526400&date_to=1748736000&group_by=days&event%5B%5D=opened&event%5B%5D=clicked
   response:
     body:
-      string: !!binary |
-        H4sIAAAAAAAAA4zPzQrDIAzA8XfJ2UPUqNFXGaO4thtjH5bVHUrpu4/SU3coOUXin8Bvhi7XDGle
-        Z99cP+UFCXSg4IwnRFDbRy3bmtkYGyMouH3Kd2guEyTo8jSCgrHmOkI6bbf+z5Shf/cdJKOgfd7b
-        x/rGRe1irw3vYjyKYzTiOLDz4piDQXEcHZM0ZiQSA1lbLQay0UEMZIuE8jiiHEjBy4HOWznQU5QD
-        g/VHwPOy/AAAAP//AwAVTUgb+QIAAA==
+      string: '{"data":{"date_from":"1747526400","date_to":"1748822399","group_by":"days","stats":[{"date":"1747526400","opened":2,"clicked":0},{"date":"1747612800","opened":0,"clicked":0},{"date":"1747699200","opened":0,"clicked":0},{"date":"1747785600","opened":0,"clicked":0},{"date":"1747872000","opened":0,"clicked":0},{"date":"1747958400","opened":0,"clicked":0},{"date":"1748044800","opened":0,"clicked":0},{"date":"1748131200","opened":0,"clicked":0},{"date":"1748217600","opened":0,"clicked":0},{"date":"1748304000","opened":0,"clicked":0},{"date":"1748390400","opened":0,"clicked":0},{"date":"1748476800","opened":0,"clicked":0},{"date":"1748563200","opened":0,"clicked":0},{"date":"1748649600","opened":0,"clicked":0},{"date":"1748736000","opened":0,"clicked":0}]}}'
     headers:
       CF-RAY:
-      - 95643632bcc88b99-PRG
+      - 966c83ed6f6fe297-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -82,7 +75,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 27 Jun 2025 10:20:25 GMT
+      - Tue, 29 Jul 2025 12:10:49 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
@@ -94,7 +87,7 @@ interactions:
       x-apiquota-remaining:
       - '-1'
       x-apiquota-reset:
-      - '2025-06-28T00:00:00Z'
+      - '2025-07-30T00:00:00Z'
     status:
       code: 200
       message: OK

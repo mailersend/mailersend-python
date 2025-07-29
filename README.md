@@ -1572,7 +1572,7 @@ request = (TokensBuilder()
           .name("My API Token")
           .scopes(["email_full", "analytics_read"])
           .domain_id("domain-id")
-          .build_create_request())
+          .build_token_create())
 
 response = ms.tokens.create_token(request)
 print(f"Token: {response.data.accessToken}")  # Save this token securely!
@@ -1589,16 +1589,16 @@ ms = MailerSend()
 # Pause token
 request = (TokensBuilder()
           .token_id("token-id")
-          .pause(True)
-          .build_update_request())
+          .pause()
+          .build_token_update())
 
 response = ms.tokens.update_token(request)
 
 # Unpause token
 request = (TokensBuilder()
           .token_id("token-id")
-          .pause(False)
-          .build_update_request())
+          .unpause()
+          .build_token_update())
 
 response = ms.tokens.update_token(request)
 ```
@@ -1613,7 +1613,7 @@ ms = MailerSend()
 
 request = (TokensBuilder()
           .token_id("token-id")
-          .build_delete_request())
+          .build_token_delete())
 
 response = ms.tokens.delete_token(request)
 print("Token deleted")
@@ -1684,7 +1684,7 @@ ms = MailerSend()
 
 request = (WebhooksBuilder()
           .domain_id("domain-id")
-          .build_list_request())
+          .build_webhooks_list_request())
 
 response = ms.webhooks.list_webhooks(request)
 for webhook in response.data:
@@ -1701,7 +1701,7 @@ ms = MailerSend()
 
 request = (WebhooksBuilder()
           .webhook_id("webhook-id")
-          .build_get_request())
+          .build_webhook_get_request())
 
 response = ms.webhooks.get_webhook(request)
 print(f"Webhook: {response.data.name}")
@@ -1721,7 +1721,7 @@ request = (WebhooksBuilder()
           .name("My Webhook")
           .events(["activity.sent", "activity.delivered", "activity.opened"])
           .enabled(True)
-          .build_create_request())
+          .build_webhook_create_request())
 
 response = ms.webhooks.create_webhook(request)
 print(f"Created webhook with ID: {response.data.id}")
@@ -1741,7 +1741,7 @@ request = (WebhooksBuilder()
           .name("Disabled Webhook")
           .events(["activity.sent", "activity.delivered"])
           .enabled(False)  # Create disabled
-          .build_create_request())
+          .build_webhook_create_request())
 
 response = ms.webhooks.create_webhook(request)
 ```
@@ -1759,7 +1759,7 @@ request = (WebhooksBuilder()
           .name("Updated Webhook Name")
           .url("https://new-webhook.example.com")
           .enabled(True)
-          .build_update_request())
+          .build_webhook_update_request())
 
 response = ms.webhooks.update_webhook(request)
 ```
@@ -1776,7 +1776,7 @@ ms = MailerSend()
 request = (WebhooksBuilder()
           .webhook_id("webhook-id")
           .enabled(False)
-          .build_update_request())
+          .build_webhook_update_request())
 
 response = ms.webhooks.update_webhook(request)
 
@@ -1784,7 +1784,7 @@ response = ms.webhooks.update_webhook(request)
 request = (WebhooksBuilder()
           .webhook_id("webhook-id")
           .enabled(True)
-          .build_update_request())
+          .build_webhook_update_request())
 
 response = ms.webhooks.update_webhook(request)
 ```
@@ -1799,7 +1799,7 @@ ms = MailerSend()
 
 request = (WebhooksBuilder()
           .webhook_id("webhook-id")
-          .build_delete_request())
+          .build_webhook_delete_request())
 
 response = ms.webhooks.delete_webhook(request)
 print("Webhook deleted")
@@ -1869,9 +1869,9 @@ request = (SmsActivityBuilder()
           .limit(25)
           .build_list_request())
 
-response = ms.sms_activity.list_activities(request)
+response = ms.sms_activity.list(request)
 for activity in response.data:
-    print(f"SMS to {activity.phone_number}: {activity.status}")
+    print(f"SMS to {activity.to}: {activity.status}")
 ```
 
 ### Get activity of a single SMS message
@@ -1886,7 +1886,7 @@ request = (SmsActivityBuilder()
           .sms_message_id("sms-message-id")
           .build_get_request())
 
-response = ms.sms_activity.get_activity(request)
+response = ms.sms_activity.get(request)
 print(f"SMS status: {response.data.status}")
 ```
 

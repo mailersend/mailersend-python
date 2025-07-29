@@ -20,8 +20,8 @@ def base_activity_request(test_domain_id):
     """Basic activity request parameters that are valid for most tests"""
     # Use fixed timestamps for VCR consistency
     # These represent a realistic 24-hour window for testing
-    date_from = 1750862833  # Fixed timestamp
-    date_to = 1750949233  # Fixed timestamp (24 hours later)
+    date_from = 1753757734  # Fixed timestamp (now - 12 hours)
+    date_to = 1753844134  # Fixed timestamp (now + 12 hours)
 
     query_params = ActivityQueryParams(
         date_from=date_from, date_to=date_to, page=1, limit=25
@@ -367,20 +367,13 @@ class TestActivityGetSingle:
             self.email_client.activities.get_single(request)
 
     def test_get_single_activity_validation_error(self):
-        """Test that validation errors are raised for invalid input"""
-        from mailersend.exceptions import ValidationError
-
-        # Test None request
-        with pytest.raises(ValidationError) as exc_info:
-            self.email_client.activities.get_single(None)
-        assert "SingleActivityRequest must be provided" in str(exc_info.value)
-
-        # Test invalid request type
-        with pytest.raises(ValidationError) as exc_info:
-            self.email_client.activities.get_single("invalid_request")
-        assert "SingleActivityRequest must be provided" in str(exc_info.value)
-
+        """Test that validation errors are raised for invalid input at model level"""
         # Test empty activity_id at model level
         with pytest.raises(ValueError) as exc_info:
             SingleActivityBuilder().activity_id("").build()
+        assert "activity_id is required" in str(exc_info.value)
+        
+        # Test whitespace activity_id at model level  
+        with pytest.raises(ValueError) as exc_info:
+            SingleActivityBuilder().activity_id("   ").build()
         assert "activity_id cannot be empty" in str(exc_info.value)

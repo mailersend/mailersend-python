@@ -1,0 +1,52 @@
+interactions:
+- request:
+    body: '{"name": "Test Token", "domain_id": "invalid-domain-id", "scopes": ["email_full",
+      "domains_read"]}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '98'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+    method: POST
+    uri: https://api.mailersend.com/v1/token
+  response:
+    body:
+      string: '{"data":{"id":"bad90d810661a91a3bf5fb89e54446966a84d75c0c1df8bac734de3eacc4626b213b12515d7b2e54","accessToken":"***REMOVED***","name":"Test
+        Token","created_at":"2025-07-29T14:13:41.000000Z","scopes":["email_full","domains_read"],"has_full":false,"domain":null,"preview":"mlsn.35b04f","expires_at":null}}'
+    headers:
+      CF-RAY:
+      - 966d37e75e3a076b-BEG
+      Cache-Control:
+      - no-cache, private
+      Connection:
+      - keep-alive
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/json
+      Date:
+      - Tue, 29 Jul 2025 14:13:41 GMT
+      Server:
+      - cloudflare
+      Transfer-Encoding:
+      - chunked
+      cf-cache-status:
+      - DYNAMIC
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-apiquota-remaining:
+      - '-1'
+      x-apiquota-reset:
+      - '2025-07-30T00:00:00Z'
+    status:
+      code: 200
+      message: OK
+version: 1

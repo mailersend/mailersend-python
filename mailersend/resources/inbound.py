@@ -35,7 +35,7 @@ class InboundResource(BaseResource):
 
         # Make API request
         response = self.client.request(
-            method="GET", endpoint="inbound", params=params if params else None
+            method="GET", path="inbound", params=params if params else None
         )
 
         return self._create_response(response)
@@ -56,7 +56,7 @@ class InboundResource(BaseResource):
 
         # Make API request
         response = self.client.request(
-            method="GET", endpoint=f"inbound/{request.inbound_id}"
+            method="GET", path=f"inbound/{request.inbound_id}"
         )
 
         return self._create_response(response)
@@ -82,7 +82,7 @@ class InboundResource(BaseResource):
         )
 
         # Make API request
-        response = self.client.request(method="POST", endpoint="inbound", body=data)
+        response = self.client.request(method="POST", path="inbound", body=data)
 
         return self._create_response(response)
 
@@ -110,7 +110,7 @@ class InboundResource(BaseResource):
 
         # Make API request
         response = self.client.request(
-            method="PUT", endpoint=f"inbound/{request.inbound_id}", body=data
+            method="PUT", path=f"inbound/{request.inbound_id}", body=data
         )
 
         return self._create_response(response)
@@ -131,7 +131,7 @@ class InboundResource(BaseResource):
 
         # Make API request
         response = self.client.request(
-            method="DELETE", endpoint=f"inbound/{request.inbound_id}"
+            method="DELETE", path=f"inbound/{request.inbound_id}"
         )
 
         return self._create_response(response)

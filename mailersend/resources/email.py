@@ -30,7 +30,7 @@ class Email(BaseResource):
         self.logger.debug("Sending email request to MailerSend API")
         self.logger.debug("Payload: %s", payload)
 
-        response = self.client.request(method="POST", endpoint="email", body=payload)
+        response = self.client.request(method="POST", path="email", body=payload)
 
         # Create custom data with email ID from headers
         email_data = {"id": response.headers.get("x-message-id")}
@@ -59,7 +59,7 @@ class Email(BaseResource):
         self.logger.debug("Payload: %s", payload)
 
         response = self.client.request(
-            method="POST", endpoint="bulk-email", body=payload
+            method="POST", path="bulk-email", body=payload
         )
 
         return self._create_response(response)
@@ -77,7 +77,7 @@ class Email(BaseResource):
         self.logger.debug("Getting bulk email status")
 
         response = self.client.request(
-            method="GET", endpoint=f"bulk-email/{bulk_email_id}"
+            method="GET", path=f"bulk-email/{bulk_email_id}"
         )
 
         return self._create_response(response)

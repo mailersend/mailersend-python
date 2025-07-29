@@ -34,7 +34,7 @@ class Messages(BaseResource):
 
         # Make API request
         response = self.client.request(
-            method="GET", endpoint="messages", params=params if params else None
+            method="GET", path="messages", params=params if params else None
         )
 
         return self._create_response(response)
@@ -53,7 +53,7 @@ class Messages(BaseResource):
 
         # Make API request
         response = self.client.request(
-            method="GET", endpoint=f"messages/{request.message_id}"
+            method="GET", path=f"messages/{request.message_id}"
         )
 
         return self._create_response(response)

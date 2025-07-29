@@ -32,7 +32,7 @@ class SmsActivity(BaseResource):
 
         # Make API request
         response = self.client.request(
-            method="GET", endpoint="sms-activity", params=params
+            method="GET", path="sms-activity", params=params
         )
 
         return self._create_response(response)
@@ -51,7 +51,7 @@ class SmsActivity(BaseResource):
 
         # Make API request
         response = self.client.request(
-            method="GET", endpoint=f"sms-messages/{request.sms_message_id}"
+            method="GET", path=f"sms-messages/{request.sms_message_id}"
         )
 
         return self._create_response(response)

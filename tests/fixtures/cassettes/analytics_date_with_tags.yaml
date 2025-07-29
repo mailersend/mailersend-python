@@ -11,18 +11,15 @@ interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - mailersend-python/2.0.0 (Python/3.9.1; OS/Darwin 24.5.0; Impl/CPython)
+      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
     method: GET
     uri: https://api.mailersend.com/v1/analytics/date?date_from=1746144000&date_to=1748736000&tags%5B%5D=newsletter&tags%5B%5D=marketing&group_by=weeks&event%5B%5D=sent&event%5B%5D=delivered&event%5B%5D=opened&event%5B%5D=clicked
   response:
     body:
-      string: !!binary |
-        H4sIAAAAAAAAA6TMQQ6CMBAF0Lv8dRfTUtvSqxhDEEZDQEpo1RjC3Y3UhVvDav78ybwFbZ1q+OUz
-        ubrM4QYPabWRWhMRRD6kkGvnlCrKEgLXOdyn6vyCx5O5jxCIqU4R/pix/HCwpdObE3lM8CTQ8tA9
-        eOZ228LE4zc2Q9f0W17Fr2E0FWqnYYkc7TWMVG6n4ZS05n/jtK5vAAAA//8DALehFHerAQAA
+      string: '{"data":{"date_from":"1746144000","date_to":"1748822399","group_by":"weeks","stats":[{"date":"1745798400","sent":0,"delivered":0,"opened":0,"clicked":0},{"date":"1746403200","sent":0,"delivered":0,"opened":0,"clicked":0},{"date":"1747008000","sent":0,"delivered":0,"opened":0,"clicked":0},{"date":"1747612800","sent":0,"delivered":0,"opened":0,"clicked":0},{"date":"1748217600","sent":0,"delivered":0,"opened":0,"clicked":0}]}}'
     headers:
       CF-RAY:
-      - 95643623d82ff976-PRG
+      - 966c83df2f9e126d-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -32,7 +29,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 27 Jun 2025 10:20:23 GMT
+      - Tue, 29 Jul 2025 12:10:47 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
@@ -44,7 +41,7 @@ interactions:
       x-apiquota-remaining:
       - '-1'
       x-apiquota-reset:
-      - '2025-06-28T00:00:00Z'
+      - '2025-07-30T00:00:00Z'
     status:
       code: 200
       message: OK

@@ -11,20 +11,17 @@ interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - mailersend-python/2.0.0 (Python/3.9.1; OS/Darwin 24.5.0; Impl/CPython)
+      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
     method: GET
     uri: https://api.mailersend.com/v1/domains/65qngkdovk8lwr12/dns-records
   response:
     body:
-      string: !!binary |
-        H4sIAAAAAAAAA4yPzWrDMBCEXyXs2Yg60FIMPZTSY3rKITezlWRH6LfSyo0J7rMXuy2kig857s7O
-        NztnEEgIzRmUgAYe7j9cr4Uf9KP5jPUWKkihm+WjT+TQSmhA9T6yDpWBCmgM82p/2EMFA5o8T8NT
-        Cl29UY6bLGTTptAxi8rImKQTzEkqNEMyEeO+WJ8YNz6LzmCUiws39lRaFyT3dvOFxsBUgdDKFh//
-        XG1ZK7xF5bQc2UqJl7fn3etFjRXX/xZzWpSUo2sD0rEMJbwp5QrJcyJvW4rItXJ9gV3Wt4CNcjqt
-        fKzcu89OtNFnusb/qmsBu8MF/e+u4FcQovJR0QgN1HcwTdM3AAAA//8DAMA2Yy5jAgAA
+      string: '{"data":{"id":"65qngkdovk8lwr12","spf":{"hostname":"igor.fail","type":"TXT","value":"v=spf1
+        include:_spf.mailersend.net include:_spf.mltest.co include:_spf.mx.cloudflare.net
+        a mx include:_spf.mlsend.com ~all"},"dkim":{"hostname":"mlsend2._domainkey.igor.fail","type":"CNAME","value":"mlsend2._domainkey.mailersend.net"},"return_path":{"hostname":"mta.igor.fail","type":"CNAME","value":"mailersend.net"},"custom_tracking":{"hostname":"track.igor.fail","type":"CNAME","value":"links.mailersend.net"},"inbound_routing":{"hostname":"inbound.igor.fail","type":"MX","value":"inbound.mailersend.net","priority":"10"}}}'
     headers:
       CF-RAY:
-      - 9564c7fd8bb3e68c-PRG
+      - 966c885aa96be297-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -34,7 +31,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 27 Jun 2025 11:59:57 GMT
+      - Tue, 29 Jul 2025 12:13:51 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
@@ -46,7 +43,7 @@ interactions:
       x-apiquota-remaining:
       - '-1'
       x-apiquota-reset:
-      - '2025-06-28T00:00:00Z'
+      - '2025-07-30T00:00:00Z'
     status:
       code: 200
       message: OK
