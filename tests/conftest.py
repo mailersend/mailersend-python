@@ -16,7 +16,7 @@ vcr = VCR(
     record_mode="once",
     match_on=["method", "scheme", "host", "port", "path", "query", "body"],
     filter_headers=["authorization"],
-    filter_post_data_parameters=["api_key", "token"],
+    filter_post_data_parameters=["api_key", "token", "accessToken"],
     serializer="yaml",
 )
 
