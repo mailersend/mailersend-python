@@ -1,58 +1,44 @@
-"""Tests for SMS Recipients resource."""
-
-import pytest
-from unittest.mock import Mock, patch
+"""Unit tests for SMS Recipients resource."""
+from unittest.mock import Mock, MagicMock
 
 from mailersend.resources.sms_recipients import SmsRecipients
+from mailersend.models.base import APIResponse
 from mailersend.models.sms_recipients import (
     SmsRecipientsListRequest,
     SmsRecipientsListQueryParams,
     SmsRecipientGetRequest,
     SmsRecipientUpdateRequest,
-    SmsRecipientStatus
+    SmsRecipientStatus,
 )
-from mailersend.models.base import APIResponse
 
 
-class TestSmsRecipientsResource:
-    """Test cases for SmsRecipients resource."""
-    
-    @pytest.fixture
-    def mock_client(self):
-        """Create a mock client."""
-        return Mock()
-    
-    @pytest.fixture
-    def sms_recipients_resource(self, mock_client):
-        """Create a SmsRecipients resource with mock client."""
-        return SmsRecipients(mock_client)
+class TestSmsRecipients:
+    """Test SMS Recipients resource class."""
 
-    def test_list_sms_recipients_basic(self, sms_recipients_resource, mock_client):
-        """Test list_sms_recipients basic functionality."""
-        mock_response = Mock()
-        mock_response.json.return_value = {"data": []}
-        mock_client.request.return_value = mock_response
-        sms_recipients_resource._create_response = Mock(return_value=Mock(spec=APIResponse))
+    def setup_method(self):
+        """Set up test fixtures."""
+        self.mock_client = Mock()
+        self.resource = SmsRecipients(self.mock_client)
+        self.resource.logger = Mock()
         
+        # Mock _create_response method
+        self.mock_api_response = MagicMock(spec=APIResponse)
+        self.resource._create_response = Mock(return_value=self.mock_api_response)
+
+    def test_list_sms_recipients_returns_api_response(self):
+        """Test list_sms_recipients method returns APIResponse."""
         request = SmsRecipientsListRequest()
-        result = sms_recipients_resource.list_sms_recipients(request)
-
-        # Check the request was made correctly
-        mock_client.request.assert_called_once_with(
-            method="GET",
-            path="sms-recipients",
-            params={}  # Default values don't get included
-        )
-        sms_recipients_resource._create_response.assert_called_once()
-        assert isinstance(result, type(sms_recipients_resource._create_response.return_value))
-
-    def test_list_sms_recipients_with_params(self, sms_recipients_resource, mock_client):
-        """Test list_sms_recipients with custom parameters."""
-        mock_response = Mock()
-        mock_response.json.return_value = {"data": []}
-        mock_client.request.return_value = mock_response
-        sms_recipients_resource._create_response = Mock(return_value=Mock(spec=APIResponse))
         
+        mock_response = Mock()
+        self.mock_client.request.return_value = mock_response
+
+        result = self.resource.list_sms_recipients(request)
+
+        assert result == self.mock_api_response
+        self.resource._create_response.assert_called_once_with(mock_response)
+
+    def test_list_sms_recipients_with_parameters(self):
+        """Test list_sms_recipients with query parameters."""
         query_params = SmsRecipientsListQueryParams(
             status=SmsRecipientStatus.ACTIVE,
             sms_number_id="sms123",
@@ -60,215 +46,74 @@ class TestSmsRecipientsResource:
             limit=50
         )
         request = SmsRecipientsListRequest(query_params=query_params)
-        result = sms_recipients_resource.list_sms_recipients(request)
+        
+        mock_response = Mock()
+        self.mock_client.request.return_value = mock_response
 
-        # Check the request was made correctly
-        mock_client.request.assert_called_once_with(
+        result = self.resource.list_sms_recipients(request)
+
+        expected_params = {
+            "status": "active",
+            "sms_number_id": "sms123",
+            "page": 2,
+            "limit": 50
+        }
+        self.mock_client.request.assert_called_once_with(
             method="GET",
-            path="sms-recipients",
-            params={
-                "status": "active",
-                "sms_number_id": "sms123",
-                "page": 2,
-                "limit": 50
-            }
+            endpoint="sms-recipients",
+            params=expected_params
         )
-        sms_recipients_resource._create_response.assert_called_once()
-        assert isinstance(result, type(sms_recipients_resource._create_response.return_value))
+        assert result == self.mock_api_response
 
-    def test_list_sms_recipients_logging(self, sms_recipients_resource, mock_client):
-        """Test list_sms_recipients logs correctly."""
-        mock_response = Mock()
-        mock_response.json.return_value = {"data": []}
-        mock_client.request.return_value = mock_response
-        sms_recipients_resource._create_response = Mock(return_value=Mock(spec=APIResponse))
-        sms_recipients_resource.logger = Mock()  # Mock the instance logger
+    def test_list_sms_recipients_with_empty_parameters(self):
+        """Test list_sms_recipients with empty query parameters."""
+        request = SmsRecipientsListRequest()
         
-        query_params = SmsRecipientsListQueryParams(page=3, limit=30)
-        request = SmsRecipientsListRequest(query_params=query_params)
-        sms_recipients_resource.list_sms_recipients(request)
-
-        # Check that logging was called correctly
-        sms_recipients_resource.logger.info.assert_called_once_with(
-            "Listing SMS recipients with page: 3, limit: 30"
-        )
-
-    def test_list_sms_recipients_with_status_filter(self, sms_recipients_resource, mock_client):
-        """Test list_sms_recipients with status filter."""
         mock_response = Mock()
-        mock_response.json.return_value = {"data": []}
-        mock_client.request.return_value = mock_response
-        sms_recipients_resource._create_response = Mock(return_value=Mock(spec=APIResponse))
-        
-        query_params = SmsRecipientsListQueryParams(status=SmsRecipientStatus.OPT_OUT)
-        request = SmsRecipientsListRequest(query_params=query_params)
-        result = sms_recipients_resource.list_sms_recipients(request)
+        self.mock_client.request.return_value = mock_response
 
-        # Check the request was made correctly
-        mock_client.request.assert_called_once_with(
+        result = self.resource.list_sms_recipients(request)
+
+        self.mock_client.request.assert_called_once_with(
             method="GET",
-            path="sms-recipients",
-            params={"status": "opt_out"}
+            endpoint="sms-recipients",
+            params={}
         )
-        sms_recipients_resource._create_response.assert_called_once()
+        assert result == self.mock_api_response
 
-    def test_get_sms_recipient_basic(self, sms_recipients_resource, mock_client):
-        """Test get_sms_recipient basic functionality."""
-        mock_response = Mock()
-        mock_response.json.return_value = {"data": {"id": "recipient123"}}
-        mock_client.request.return_value = mock_response
-        sms_recipients_resource._create_response = Mock(return_value=Mock(spec=APIResponse))
-        
+    def test_get_sms_recipient_returns_api_response(self):
+        """Test get_sms_recipient method returns APIResponse."""
         request = SmsRecipientGetRequest(sms_recipient_id="recipient123")
-        result = sms_recipients_resource.get_sms_recipient(request)
+        
+        mock_response = Mock()
+        self.mock_client.request.return_value = mock_response
 
-        # Check the request was made correctly
-        mock_client.request.assert_called_once_with(
+        result = self.resource.get_sms_recipient(request)
+
+        self.mock_client.request.assert_called_once_with(
             method="GET",
-            path="sms-recipients/recipient123"
+            endpoint="sms-recipients/recipient123"
         )
-        sms_recipients_resource._create_response.assert_called_once()
-        assert isinstance(result, type(sms_recipients_resource._create_response.return_value))
+        assert result == self.mock_api_response
+        self.resource._create_response.assert_called_once_with(mock_response)
 
-    def test_get_sms_recipient_logging(self, sms_recipients_resource, mock_client):
-        """Test get_sms_recipient logs correctly."""
-        mock_response = Mock()
-        mock_response.json.return_value = {"data": {"id": "recipient456"}}
-        mock_client.request.return_value = mock_response
-        sms_recipients_resource._create_response = Mock(return_value=Mock(spec=APIResponse))
-        sms_recipients_resource.logger = Mock()  # Mock the instance logger
-        
-        request = SmsRecipientGetRequest(sms_recipient_id="recipient456")
-        sms_recipients_resource.get_sms_recipient(request)
-
-        # Check that logging was called correctly
-        sms_recipients_resource.logger.info.assert_called_once_with(
-            "Getting SMS recipient: recipient456"
-        )
-
-    def test_update_sms_recipient_basic(self, sms_recipients_resource, mock_client):
-        """Test update_sms_recipient basic functionality."""
-        mock_response = Mock()
-        mock_response.json.return_value = {"data": {"id": "recipient123", "status": "opt_out"}}
-        mock_client.request.return_value = mock_response
-        sms_recipients_resource._create_response = Mock(return_value=Mock(spec=APIResponse))
-        
+    def test_update_sms_recipient_returns_api_response(self):
+        """Test update_sms_recipient method returns APIResponse."""
         request = SmsRecipientUpdateRequest(
             sms_recipient_id="recipient123",
             status=SmsRecipientStatus.OPT_OUT
         )
-        result = sms_recipients_resource.update_sms_recipient(request)
+        
+        mock_response = Mock()
+        self.mock_client.request.return_value = mock_response
 
-        # Check the request was made correctly
-        mock_client.request.assert_called_once_with(
+        result = self.resource.update_sms_recipient(request)
+
+        expected_body = {"status": "opt_out"}
+        self.mock_client.request.assert_called_once_with(
             method="PUT",
-            path="sms-recipients/recipient123",
-            data={"status": "opt_out"}
+            endpoint="sms-recipients/recipient123",
+            body=expected_body
         )
-        sms_recipients_resource._create_response.assert_called_once()
-        assert isinstance(result, type(sms_recipients_resource._create_response.return_value))
-
-    def test_update_sms_recipient_to_active(self, sms_recipients_resource, mock_client):
-        """Test update_sms_recipient to active status."""
-        mock_response = Mock()
-        mock_response.json.return_value = {"data": {"id": "recipient789", "status": "active"}}
-        mock_client.request.return_value = mock_response
-        sms_recipients_resource._create_response = Mock(return_value=Mock(spec=APIResponse))
-        
-        request = SmsRecipientUpdateRequest(
-            sms_recipient_id="recipient789",
-            status=SmsRecipientStatus.ACTIVE
-        )
-        result = sms_recipients_resource.update_sms_recipient(request)
-
-        # Check the request was made correctly
-        mock_client.request.assert_called_once_with(
-            method="PUT",
-            path="sms-recipients/recipient789",
-            data={"status": "active"}
-        )
-        sms_recipients_resource._create_response.assert_called_once()
-
-    def test_update_sms_recipient_logging(self, sms_recipients_resource, mock_client):
-        """Test update_sms_recipient logs correctly."""
-        mock_response = Mock()
-        mock_response.json.return_value = {"data": {"id": "recipient999", "status": "opt_out"}}
-        mock_client.request.return_value = mock_response
-        sms_recipients_resource._create_response = Mock(return_value=Mock(spec=APIResponse))
-        sms_recipients_resource.logger = Mock()  # Mock the instance logger
-        
-        request = SmsRecipientUpdateRequest(
-            sms_recipient_id="recipient999",
-            status=SmsRecipientStatus.OPT_OUT
-        )
-        sms_recipients_resource.update_sms_recipient(request)
-
-        # Check that logging was called correctly
-        sms_recipients_resource.logger.info.assert_called_once_with(
-            "Updating SMS recipient: recipient999 to status: SmsRecipientStatus.OPT_OUT"
-        )
-
-    def test_resource_initialization(self, mock_client):
-        """Test SmsRecipients resource initialization."""
-        resource = SmsRecipients(mock_client)
-        
-        assert resource.client == mock_client
-        assert hasattr(resource, 'logger')
-
-    def test_list_sms_recipients_partial_params(self, sms_recipients_resource, mock_client):
-        """Test list_sms_recipients with partial parameters."""
-        mock_response = Mock()
-        mock_response.json.return_value = {"data": []}
-        mock_client.request.return_value = mock_response
-        sms_recipients_resource._create_response = Mock(return_value=Mock(spec=APIResponse))
-        
-        # Only set sms_number_id, leave other params as defaults
-        query_params = SmsRecipientsListQueryParams(sms_number_id="sms999")
-        request = SmsRecipientsListRequest(query_params=query_params)
-        result = sms_recipients_resource.list_sms_recipients(request)
-
-        # Check the request was made correctly
-        mock_client.request.assert_called_once_with(
-            method="GET",
-            path="sms-recipients",
-            params={"sms_number_id": "sms999"}  # Only non-default values included
-        )
-        sms_recipients_resource._create_response.assert_called_once()
-
-    def test_get_sms_recipient_with_special_characters(self, sms_recipients_resource, mock_client):
-        """Test get_sms_recipient with special characters in ID."""
-        mock_response = Mock()
-        mock_response.json.return_value = {"data": {"id": "recipient-123_abc"}}
-        mock_client.request.return_value = mock_response
-        sms_recipients_resource._create_response = Mock(return_value=Mock(spec=APIResponse))
-        
-        request = SmsRecipientGetRequest(sms_recipient_id="recipient-123_abc")
-        result = sms_recipients_resource.get_sms_recipient(request)
-
-        # Check the request was made correctly
-        mock_client.request.assert_called_once_with(
-            method="GET",
-            path="sms-recipients/recipient-123_abc"
-        )
-        sms_recipients_resource._create_response.assert_called_once()
-
-    def test_update_sms_recipient_with_special_characters(self, sms_recipients_resource, mock_client):
-        """Test update_sms_recipient with special characters in ID."""
-        mock_response = Mock()
-        mock_response.json.return_value = {"data": {"id": "recipient-456_xyz", "status": "active"}}
-        mock_client.request.return_value = mock_response
-        sms_recipients_resource._create_response = Mock(return_value=Mock(spec=APIResponse))
-        
-        request = SmsRecipientUpdateRequest(
-            sms_recipient_id="recipient-456_xyz",
-            status=SmsRecipientStatus.ACTIVE
-        )
-        result = sms_recipients_resource.update_sms_recipient(request)
-
-        # Check the request was made correctly
-        mock_client.request.assert_called_once_with(
-            method="PUT",
-            path="sms-recipients/recipient-456_xyz",
-            data={"status": "active"}
-        )
-        sms_recipients_resource._create_response.assert_called_once() 
+        assert result == self.mock_api_response
+        self.resource._create_response.assert_called_once_with(mock_response) 

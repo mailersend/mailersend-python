@@ -99,22 +99,6 @@ class SmsRecipientUpdateRequest(BaseModel):
 
 
 # Response Models
-class SmsMessage(BaseMailerSendModel):
-    """SMS message model for recipient details."""
-
-    id: str = Field(..., description="SMS message ID")
-    from_: str = Field(..., alias="from", description="Sender phone number")
-    to: str = Field(..., description="Recipient phone number")
-    text: str = Field(..., description="SMS message text")
-    status: str = Field(..., description="SMS message status")
-    segment_count: int = Field(..., description="Number of SMS segments")
-    error_type: Optional[str] = Field(None, description="Error type if any")
-    error_description: Optional[str] = Field(
-        None, description="Error description if any"
-    )
-    created_at: datetime = Field(..., description="Creation timestamp")
-
-
 class SmsRecipient(BaseMailerSendModel):
     """SMS recipient model."""
 
@@ -127,26 +111,6 @@ class SmsRecipient(BaseMailerSendModel):
 class SmsRecipientDetails(SmsRecipient):
     """SMS recipient with detailed information including SMS history."""
 
-    sms: List[SmsMessage] = Field(
+    sms: List[Dict[str, Any]] = Field(
         default_factory=list, description="SMS messages sent to this recipient"
     )
-
-
-class SmsRecipientsListResponse(BaseMailerSendModel):
-    """Response model for SMS recipients list."""
-
-    data: List[SmsRecipient] = Field(..., description="List of SMS recipients")
-    links: Dict[str, Optional[str]]
-    meta: Dict[str, Any]
-
-
-class SmsRecipientGetResponse(BaseMailerSendModel):
-    """Response model for single SMS recipient."""
-
-    data: SmsRecipientDetails = Field(..., description="SMS recipient details")
-
-
-class SmsRecipientUpdateResponse(BaseMailerSendModel):
-    """Response model for SMS recipient update."""
-
-    data: SmsRecipient = Field(..., description="Updated SMS recipient")
