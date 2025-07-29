@@ -174,17 +174,3 @@ class Webhook(BaseModel):
     domain_id: str = Field(..., description="Domain ID")
     created_at: datetime = Field(..., description="Creation timestamp")
     updated_at: datetime = Field(..., description="Last update timestamp")
-
-
-class WebhooksListResponse(BaseModel):
-    """Response model for webhooks list."""
-
-    data: List[Webhook] = Field(..., description="List of webhooks")
-    links: Dict[str, Optional[str]]
-    meta: Dict[str, Any]
-
-
-class WebhookResponse(BaseModel):
-    """Response model for single webhook."""
-
-    data: Webhook = Field(..., description="Webhook data")

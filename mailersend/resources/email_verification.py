@@ -1,8 +1,5 @@
 """Email Verification resource"""
 
-import logging
-from typing import Any, Dict, Optional
-
 from .base import BaseResource
 from ..models.base import APIResponse
 from ..models.email_verification import (
@@ -14,17 +11,8 @@ from ..models.email_verification import (
     EmailVerificationCreateRequest,
     EmailVerificationVerifyRequest,
     EmailVerificationResultsRequest,
-    EmailVerifyResponse,
-    EmailVerifyAsyncResponse,
-    EmailVerificationAsyncStatusResponse,
-    EmailVerificationListsResponse,
-    EmailVerificationResponse,
-    EmailVerificationResultsResponse,
 )
 from ..exceptions import ValidationError
-
-logger = logging.getLogger(__name__)
-
 
 class EmailVerification(BaseResource):
     """Resource for managing email verification through the MailerSend API."""
@@ -36,36 +24,22 @@ class EmailVerification(BaseResource):
             request: The email verification request data.
 
         Returns:
-            APIResponse with EmailVerifyResponse data
-
-        Raises:
-            ValidationError: If request validation fails
+            APIResponse with verification result
         """
-        logger.debug("Starting verify_email operation")
-
-        # Validate request
-        if not request:
-            logger.error("EmailVerifyRequest is required")
-            raise ValidationError("EmailVerifyRequest must be provided")
-
-        if not isinstance(request, EmailVerifyRequest):
-            logger.error("Expected EmailVerifyRequest, got %s", type(request).__name__)
-            raise ValidationError("request must be an EmailVerifyRequest instance")
-
-        logger.debug("Email verify request: %s", request)
+        self.logger.debug("Starting verify_email operation")
 
         # Prepare request body
-        payload = {"email": request.email}
+        body = request.model_dump(exclude_none=True)
 
-        logger.info("Verifying email address: %s", request.email)
+        self.logger.debug("Verifying email address: %s", body)
 
         # Make API call
         response = self.client.request(
-            "POST", "email-verification/verify", body=payload
+            "POST", "email-verification/verify", body=body
         )
 
         # Create standardized response
-        return self._create_response(response, EmailVerifyResponse)
+        return self._create_response(response)
 
     def verify_email_async(self, request: EmailVerifyAsyncRequest) -> APIResponse:
         """Verify a single email address (asynchronous).
@@ -74,38 +48,23 @@ class EmailVerification(BaseResource):
             request: The async email verification request data.
 
         Returns:
-            APIResponse with EmailVerifyAsyncResponse data
-
-        Raises:
-            ValidationError: If request validation fails
+            APIResponse with verification result
         """
-        logger.debug("Starting verify_email_async operation")
-
-        # Validate request
-        if not request:
-            logger.error("EmailVerifyAsyncRequest is required")
-            raise ValidationError("EmailVerifyAsyncRequest must be provided")
-
-        if not isinstance(request, EmailVerifyAsyncRequest):
-            logger.error(
-                f"Expected EmailVerifyAsyncRequest, got {type(request).__name__}"
-            )
-            raise ValidationError("request must be an EmailVerifyAsyncRequest instance")
-
-        logger.debug("Async email verify request: %s", request)
+        self.logger.debug("Starting verify_email_async operation")
+        self.logger.debug("Async email verify request: %s", request)
 
         # Prepare request body
-        payload = {"email": request.email}
+        body = request.model_dump(exclude_none=True)
 
-        logger.info("Starting async verification for email: %s", request.email)
+        self.logger.debug("Starting async verification for email: %s", body)
 
         # Make API call
         response = self.client.request(
-            "POST", "email-verification/verify-async", body=payload
+            "POST", "email-verification/verify-async", body=body
         )
 
         # Create standardized response
-        return self._create_response(response, EmailVerifyAsyncResponse)
+        return self._create_response(response)
 
     def get_async_status(
         self, request: EmailVerificationAsyncStatusRequest
@@ -117,40 +76,17 @@ class EmailVerification(BaseResource):
 
         Returns:
             APIResponse with EmailVerificationAsyncStatusResponse data
-
-        Raises:
-            ValidationError: If request validation fails
         """
-        logger.debug("Starting get_async_status operation")
-
-        # Validate request
-        if not request:
-            logger.error("EmailVerificationAsyncStatusRequest is required")
-            raise ValidationError(
-                "EmailVerificationAsyncStatusRequest must be provided"
-            )
-
-        if not isinstance(request, EmailVerificationAsyncStatusRequest):
-            logger.error(
-                f"Expected EmailVerificationAsyncStatusRequest, got {type(request).__name__}"
-            )
-            raise ValidationError(
-                "request must be an EmailVerificationAsyncStatusRequest instance"
-            )
-
-        logger.debug("Async status request: %s", request)
+        self.logger.debug("Starting get_async_status operation")
 
         # Prepare API call
-        url = f"email-verification/verify-async/{request.email_verification_id}"
-        logger.info(
-            f"Getting async verification status for ID: {request.email_verification_id}"
-        )
+        self.logger.debug("Getting async verification status for ID: %s", request.email_verification_id)
 
         # Make API call
-        response = self.client.request("GET", url)
+        response = self.client.request(method="GET", endpoint=f"email-verification/verify-async/{request.email_verification_id}")
 
         # Create standardized response
-        return self._create_response(response, EmailVerificationAsyncStatusResponse)
+        return self._create_response(response)
 
     def list_verifications(self, request: EmailVerificationListsRequest) -> APIResponse:
         """List all email verification lists.
@@ -159,38 +95,20 @@ class EmailVerification(BaseResource):
             request: The list request data with pagination options.
 
         Returns:
-            APIResponse with EmailVerificationListsResponse data
-
-        Raises:
-            ValidationError: If request validation fails
+            APIResponse with list of email verification lists
         """
-        logger.debug("Starting list_verifications operation")
-
-        # Validate request
-        if not request:
-            logger.error("EmailVerificationListsRequest is required")
-            raise ValidationError("EmailVerificationListsRequest must be provided")
-
-        if not isinstance(request, EmailVerificationListsRequest):
-            logger.error(
-                f"Expected EmailVerificationListsRequest, got {type(request).__name__}"
-            )
-            raise ValidationError(
-                "request must be an EmailVerificationListsRequest instance"
-            )
-
-        logger.debug("List verifications request: %s", request)
+        self.logger.debug("Starting list_verifications operation")
 
         # Extract query parameters
         params = request.to_query_params()
 
-        logger.info("Listing email verification lists with params: %s", params)
+        self.logger.debug("Listing email verification lists with params: %s", params)
 
         # Make API call
-        response = self.client.request("GET", "email-verification", params=params)
+        response = self.client.request(method="GET", endpoint="email-verification", params=params)
 
         # Create standardized response
-        return self._create_response(response, EmailVerificationListsResponse)
+        return self._create_response(response)
 
     def get_verification(self, request: EmailVerificationGetRequest) -> APIResponse:
         """Get a single email verification list.
@@ -199,37 +117,18 @@ class EmailVerification(BaseResource):
             request: The get verification request data.
 
         Returns:
-            APIResponse with EmailVerificationResponse data
-
-        Raises:
-            ValidationError: If request validation fails
+            APIResponse with email verification list data
         """
-        logger.debug("Starting get_verification operation")
-
-        # Validate request
-        if not request:
-            logger.error("EmailVerificationGetRequest is required")
-            raise ValidationError("EmailVerificationGetRequest must be provided")
-
-        if not isinstance(request, EmailVerificationGetRequest):
-            logger.error(
-                f"Expected EmailVerificationGetRequest, got {type(request).__name__}"
-            )
-            raise ValidationError(
-                "request must be an EmailVerificationGetRequest instance"
-            )
-
-        logger.debug("Get verification request: %s", request)
+        self.logger.debug("Starting get_verification operation")
 
         # Prepare API call
-        url = f"email-verification/{request.email_verification_id}"
-        logger.info("Getting email verification list: %s", request.email_verification_id)
+        self.logger.debug("Getting email verification list: %s", request.email_verification_id)
 
         # Make API call
-        response = self.client.request("GET", url)
+        response = self.client.request(method="GET", endpoint=f"email-verification/{request.email_verification_id}")
 
         # Create standardized response
-        return self._create_response(response, EmailVerificationResponse)
+        return self._create_response(response)
 
     def create_verification(
         self, request: EmailVerificationCreateRequest
@@ -240,40 +139,20 @@ class EmailVerification(BaseResource):
             request: The create verification request data.
 
         Returns:
-            APIResponse with EmailVerificationResponse data
-
-        Raises:
-            ValidationError: If request validation fails
+            APIResponse with email verification list data
         """
-        logger.debug("Starting create_verification operation")
-
-        # Validate request
-        if not request:
-            logger.error("EmailVerificationCreateRequest is required")
-            raise ValidationError("EmailVerificationCreateRequest must be provided")
-
-        if not isinstance(request, EmailVerificationCreateRequest):
-            logger.error(
-                f"Expected EmailVerificationCreateRequest, got {type(request).__name__}"
-            )
-            raise ValidationError(
-                "request must be an EmailVerificationCreateRequest instance"
-            )
-
-        logger.debug("Create verification request: %s", request)
+        self.logger.debug("Starting create_verification operation")
 
         # Prepare request body
-        payload = {"name": request.name, "emails": request.emails}
+        body = request.model_dump(exclude_none=True)
 
-        logger.info(
-            f"Creating email verification list: {request.name} with {len(request.emails)} emails"
-        )
+        self.logger.debug("Creating email verification list: %s with %s emails", request.name, len(request.emails))
 
         # Make API call
-        response = self.client.request("POST", "email-verification", body=payload)
+        response = self.client.request("POST", "email-verification", body=body)
 
         # Create standardized response
-        return self._create_response(response, EmailVerificationResponse)
+        return self._create_response(response)
 
     def verify_list(self, request: EmailVerificationVerifyRequest) -> APIResponse:
         """Start verification of an email verification list.
@@ -282,37 +161,16 @@ class EmailVerification(BaseResource):
             request: The verify list request data.
 
         Returns:
-            APIResponse with EmailVerificationResponse data
-
-        Raises:
-            ValidationError: If request validation fails
+            APIResponse with verification result
         """
-        logger.debug("Starting verify_list operation")
-
-        # Validate request
-        if not request:
-            logger.error("EmailVerificationVerifyRequest is required")
-            raise ValidationError("EmailVerificationVerifyRequest must be provided")
-
-        if not isinstance(request, EmailVerificationVerifyRequest):
-            logger.error(
-                f"Expected EmailVerificationVerifyRequest, got {type(request).__name__}"
-            )
-            raise ValidationError(
-                "request must be an EmailVerificationVerifyRequest instance"
-            )
-
-        logger.debug("Verify list request: %s", request)
-
-        # Prepare API call
-        url = f"email-verification/{request.email_verification_id}/verify"
-        logger.info("Starting verification for list: %s", request.email_verification_id)
+        self.logger.debug("Starting verify_list operation")
+        self.logger.debug("Starting verification for list: %s", request.email_verification_id)
 
         # Make API call
-        response = self.client.request("GET", url)
+        response = self.client.request(method="GET", endpoint=f"email-verification/{request.email_verification_id}/verify")
 
         # Create standardized response
-        return self._create_response(response, EmailVerificationResponse)
+        return self._create_response(response)
 
     def get_results(self, request: EmailVerificationResultsRequest) -> APIResponse:
         """Get verification results for an email verification list.
@@ -321,39 +179,17 @@ class EmailVerification(BaseResource):
             request: The results request data with optional filters.
 
         Returns:
-            APIResponse with EmailVerificationResultsResponse data
-
-        Raises:
-            ValidationError: If request validation fails
+            APIResponse with verification results
         """
-        logger.debug("Starting get_results operation")
-
-        # Validate request
-        if not request:
-            logger.error("EmailVerificationResultsRequest is required")
-            raise ValidationError("EmailVerificationResultsRequest must be provided")
-
-        if not isinstance(request, EmailVerificationResultsRequest):
-            logger.error(
-                f"Expected EmailVerificationResultsRequest, got {type(request).__name__}"
-            )
-            raise ValidationError(
-                "request must be an EmailVerificationResultsRequest instance"
-            )
-
-        logger.debug("Get results request: %s", request)
+        self.logger.debug("Starting get_results operation")
 
         # Extract query parameters
         params = request.to_query_params()
 
-        # Prepare API call
-        url = f"email-verification/{request.email_verification_id}/results"
-        logger.info(
-            f"Getting verification results for list: {request.email_verification_id} with params: {params}"
-        )
+        self.logger.debug("Getting verification results for list: %s with params: %s", request.email_verification_id, params)
 
         # Make API call
-        response = self.client.request("GET", url, params=params)
+        response = self.client.request(method="GET", endpoint=f"email-verification/{request.email_verification_id}/results", params=params)
 
         # Create standardized response
-        return self._create_response(response, EmailVerificationResultsResponse)
+        return self._create_response(response)

@@ -350,11 +350,7 @@ class Recipients(BaseResource):
             APIResponse with deleted entries
         """
         # Build request body (without domain_id for hard bounces)
-        body = {}
-        if request.ids:
-            body["ids"] = request.ids
-        if request.all is not None:
-            body["all"] = request.all
+        body = request.model_dump(exclude_none=True, exclude={"domain_id"})
 
         self.logger.debug("Deleting hard bounces with body: %s", body)
 
@@ -377,11 +373,7 @@ class Recipients(BaseResource):
         """
 
         # Build request body (without domain_id for spam complaints)
-        body = {}
-        if request.ids:
-            body["ids"] = request.ids
-        if request.all is not None:
-            body["all"] = request.all
+        body = request.model_dump(exclude_none=True, exclude={"domain_id"})
 
         self.logger.debug("Deleting spam complaints with body: %s", body)
 
@@ -403,11 +395,7 @@ class Recipients(BaseResource):
             APIResponse with deleted entries
         """
         # Build request body (without domain_id for unsubscribes)
-        body = {}
-        if request.ids:
-            body["ids"] = request.ids
-        if request.all is not None:
-            body["all"] = request.all
+        body = request.model_dump(exclude_none=True, exclude={"domain_id"})
 
         self.logger.debug("Deleting unsubscribes with body: %s", body)
 
@@ -429,11 +417,7 @@ class Recipients(BaseResource):
             APIResponse with deleted entries
         """
         # Build request body (without domain_id for on-hold)
-        body = {}
-        if request.ids:
-            body["ids"] = request.ids
-        if request.all is not None:
-            body["all"] = request.all
+        body = request.model_dump(exclude_none=True, exclude={"domain_id"})
 
         self.logger.debug("Deleting from on-hold with body: %s", body)
 
