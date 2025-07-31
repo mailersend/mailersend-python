@@ -1230,26 +1230,20 @@ response = ms.inbound.delete_inbound_route(request)
 ### Get a list of messages
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import MessagesBuilder
+from mailersend import MailerSendClient, MessagesBuilder
 
 ms = MailerSendClient()
 
 request = (MessagesBuilder()
-          .page(1)
-          .limit(25)
           .build_list_request())
 
 response = ms.messages.list_messages(request)
-for message in response.data:
-    print(f"Message ID: {message.id}, Subject: {message.subject}")
 ```
 
 ### Get a single message
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import MessagesBuilder
+from mailersend import MailerSendClient, MessagesBuilder
 
 ms = MailerSendClient()
 
@@ -1258,7 +1252,6 @@ request = (MessagesBuilder()
           .build_get_request())
 
 response = ms.messages.get_message(request)
-print(f"Message: {response.subject}")
 ```
 
 ## Scheduled messages
@@ -1266,52 +1259,43 @@ print(f"Message: {response.subject}")
 ### Get a list of scheduled messages
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import SchedulesBuilder
+from mailersend import MailerSendClient, SchedulesBuilder
 
 ms = MailerSendClient()
 
 request = (SchedulesBuilder()
           .domain_id("domain-id")
-          .page(1)
-          .limit(25)
           .build_list_request())
 
-response = ms.schedules.list_scheduled_messages(request)
-for scheduled in response.data:
-    print(f"Message: {scheduled.subject}, Send at: {scheduled.send_at}")
+response = ms.schedules.list_schedules(request)
 ```
 
 ### Get a single scheduled message
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import SchedulesBuilder
+from mailersend import MailerSendClient, SchedulesBuilder
 
 ms = MailerSendClient()
 
 request = (SchedulesBuilder()
-          .scheduled_message_id("scheduled-id")
+          .message_id("scheduled-id")
           .build_get_request())
 
-response = ms.schedules.get_scheduled_message(request)
-print(f"Scheduled message: {response.subject}")
+response = ms.schedules.get_schedule(request)
 ```
 
 ### Delete a scheduled message
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import SchedulesBuilder
+from mailersend import MailerSendClient, SchedulesBuilder
 
 ms = MailerSendClient()
 
 request = (SchedulesBuilder()
-          .scheduled_message_id("scheduled-id")
+          .message_id("scheduled-id")
           .build_delete_request())
 
-response = ms.schedules.delete_scheduled_message(request)
-print("Scheduled message deleted")
+response = ms.schedules.delete_schedule(request)
 ```
 
 ## Recipients
@@ -1319,129 +1303,105 @@ print("Scheduled message deleted")
 ### Get a list of recipients
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import RecipientsBuilder
+from mailersend import MailerSendClient, RecipientsBuilder
 
 ms = MailerSendClient()
 
 request = (RecipientsBuilder()
           .domain_id("domain-id")
-          .page(1)
-          .limit(25)
-          .build_list_request())
+          .build_recipients_list_request())
 
 response = ms.recipients.list_recipients(request)
-for recipient in response.data:
-    print(f"Recipient: {recipient.email}")
 ```
 
 ### Get a single recipient
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import RecipientsBuilder
+from mailersend import MailerSendClient, RecipientsBuilder
 
 ms = MailerSendClient()
 
 request = (RecipientsBuilder()
           .recipient_id("recipient-id")
-          .build_get_request())
+          .build_recipient_get_request())
 
 response = ms.recipients.get_recipient(request)
-print(f"Recipient: {response.email}")
 ```
 
 ### Delete a recipient
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import RecipientsBuilder
+from mailersend import MailerSendClient, RecipientsBuilder
 
 ms = MailerSendClient()
 
 request = (RecipientsBuilder()
           .recipient_id("recipient-id")
-          .build_delete_request())
+          .build_recipient_delete_request())
 
 response = ms.recipients.delete_recipient(request)
-print("Recipient deleted")
 ```
 
 ### Get recipients from a blocklist
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import RecipientsBuilder
+from mailersend import MailerSendClient, RecipientsBuilder
 
 ms = MailerSendClient()
 
 request = (RecipientsBuilder()
           .domain_id("domain-id")
-          .page(1)
-          .limit(25)
-          .build_blocklist_request())
+          .build_suppression_list_request())
 
-response = ms.recipients.get_blocklist(request)
-for blocked in response.data:
-    print(f"Blocked: {blocked.pattern}")
+response = ms.recipients.list_blocklist(request)
 ```
 
 ### Get recipients from hard bounces
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import RecipientsBuilder
+from mailersend import MailerSendClient, RecipientsBuilder
 
 ms = MailerSendClient()
 
 request = (RecipientsBuilder()
           .domain_id("domain-id")
-          .build_hard_bounces_request())
+          .build_suppression_list_request())
 
-response = ms.recipients.get_hard_bounces(request)
-for bounce in response.data:
-    print(f"Hard bounce: {bounce.recipient}")
+response = ms.recipients.list_hard_bounces(request)
 ```
 
 ### Get recipients from spam complaints
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import RecipientsBuilder
+from mailersend import MailerSendClient, RecipientsBuilder
 
 ms = MailerSendClient()
 
 request = (RecipientsBuilder()
           .domain_id("domain-id")
-          .build_spam_complaints_request())
+          .build_suppression_list_request())
 
-response = ms.recipients.get_spam_complaints(request)
-for spam in response.data:
-    print(f"Spam complaint: {spam.recipient}")
+response = ms.recipients.list_spam_complaints(request)
 ```
 
 ### Get recipients from unsubscribes
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import RecipientsBuilder
+from mailersend import MailerSendClient, RecipientsBuilder
 
 ms = MailerSendClient()
 
 request = (RecipientsBuilder()
           .domain_id("domain-id")
-          .build_unsubscribes_request())
+          .build_suppression_list_request())
 
-response = ms.recipients.get_unsubscribes(request)
-for unsub in response.data:
-    print(f"Unsubscribed: {unsub.recipient}")
+response = ms.recipients.list_unsubscribes(request)
 ```
 
 ### Add recipients to blocklist
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import RecipientsBuilder
+from mailersend import MailerSendClient, RecipientsBuilder
 
 ms = MailerSendClient()
 
@@ -1449,7 +1409,7 @@ ms = MailerSendClient()
 request = (RecipientsBuilder()
           .domain_id("domain-id")
           .recipients(["blocked@example.com", "spam@example.com"])
-          .build_add_blocklist_request())
+          .build_suppression_add_request())
 
 response = ms.recipients.add_to_blocklist(request)
 
@@ -1457,7 +1417,7 @@ response = ms.recipients.add_to_blocklist(request)
 request = (RecipientsBuilder()
           .domain_id("domain-id")
           .patterns(["*@spammer.com", "*@blocked-domain.com"])
-          .build_add_blocklist_request())
+          .build_suppression_add_request())
 
 response = ms.recipients.add_to_blocklist(request)
 ```
@@ -1465,15 +1425,14 @@ response = ms.recipients.add_to_blocklist(request)
 ### Add hard bounced recipients
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import RecipientsBuilder
+from mailersend import MailerSendClient, RecipientsBuilder
 
 ms = MailerSendClient()
 
 request = (RecipientsBuilder()
           .domain_id("domain-id")
           .recipients(["bounced@example.com"])
-          .build_add_hard_bounces_request())
+          .build_suppression_add_request())
 
 response = ms.recipients.add_hard_bounces(request)
 ```
@@ -1481,15 +1440,14 @@ response = ms.recipients.add_hard_bounces(request)
 ### Add spam complaints
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import RecipientsBuilder
+from mailersend import MailerSendClient, RecipientsBuilder
 
 ms = MailerSendClient()
 
 request = (RecipientsBuilder()
           .domain_id("domain-id")
           .recipients(["complainer@example.com"])
-          .build_add_spam_complaints_request())
+          .build_suppression_add_request())
 
 response = ms.recipients.add_spam_complaints(request)
 ```
@@ -1497,15 +1455,14 @@ response = ms.recipients.add_spam_complaints(request)
 ### Add recipients to unsubscribe list
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import RecipientsBuilder
+from mailersend import MailerSendClient, RecipientsBuilder
 
 ms = MailerSendClient()
 
 request = (RecipientsBuilder()
           .domain_id("domain-id")
           .recipients(["unsubscribed@example.com"])
-          .build_add_unsubscribes_request())
+          .build_suppression_add_request())
 
 response = ms.recipients.add_unsubscribes(request)
 ```
@@ -1513,15 +1470,23 @@ response = ms.recipients.add_unsubscribes(request)
 ### Delete recipients from blocklist
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import RecipientsBuilder
+from mailersend import MailerSendClient, RecipientsBuilder
 
 ms = MailerSendClient()
 
+# Delete specific entries by IDs
 request = (RecipientsBuilder()
           .domain_id("domain-id")
-          .recipients(["unblocked@example.com"])
-          .build_delete_blocklist_request())
+          .ids(["recipient-id-1", "recipient-id-2"])
+          .build_suppression_delete_request())
+
+response = ms.recipients.delete_from_blocklist(request)
+
+# Or delete all entries
+request = (RecipientsBuilder()
+          .domain_id("domain-id")
+          .all(True)
+          .build_suppression_delete_request())
 
 response = ms.recipients.delete_from_blocklist(request)
 ```
@@ -1529,15 +1494,23 @@ response = ms.recipients.delete_from_blocklist(request)
 ### Delete hard bounced recipients
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import RecipientsBuilder
+from mailersend import MailerSendClient, RecipientsBuilder
 
 ms = MailerSendClient()
 
+# Delete specific entries by IDs
 request = (RecipientsBuilder()
           .domain_id("domain-id")
-          .recipients(["recovered@example.com"])
-          .build_delete_hard_bounces_request())
+          .ids(["recipient-id"])
+          .build_suppression_delete_request())
+
+response = ms.recipients.delete_hard_bounces(request)
+
+# Or delete all entries
+request = (RecipientsBuilder()
+          .domain_id("domain-id")
+          .all(True)
+          .build_suppression_delete_request())
 
 response = ms.recipients.delete_hard_bounces(request)
 ```
@@ -1545,15 +1518,23 @@ response = ms.recipients.delete_hard_bounces(request)
 ### Delete spam complaints
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import RecipientsBuilder
+from mailersend import MailerSendClient, RecipientsBuilder
 
 ms = MailerSendClient()
 
+# Delete specific entries by IDs  
 request = (RecipientsBuilder()
           .domain_id("domain-id")
-          .recipients(["resolved@example.com"])
-          .build_delete_spam_complaints_request())
+          .ids(["recipient-id"])
+          .build_suppression_delete_request())
+
+response = ms.recipients.delete_spam_complaints(request)
+
+# Or delete all entries
+request = (RecipientsBuilder()
+          .domain_id("domain-id")
+          .all(True)
+          .build_suppression_delete_request())
 
 response = ms.recipients.delete_spam_complaints(request)
 ```
@@ -1561,15 +1542,23 @@ response = ms.recipients.delete_spam_complaints(request)
 ### Delete recipients from unsubscribe list
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import RecipientsBuilder
+from mailersend import MailerSendClient, RecipientsBuilder
 
 ms = MailerSendClient()
 
+# Delete specific entries by IDs
 request = (RecipientsBuilder()
           .domain_id("domain-id")
-          .recipients(["resubscribed@example.com"])
-          .build_delete_unsubscribes_request())
+          .ids(["recipient-id"])
+          .build_suppression_delete_request())
+
+response = ms.recipients.delete_unsubscribes(request)
+
+# Or delete all entries
+request = (RecipientsBuilder()
+          .domain_id("domain-id")
+          .all(True)
+          .build_suppression_delete_request())
 
 response = ms.recipients.delete_unsubscribes(request)
 ```
@@ -1579,8 +1568,7 @@ response = ms.recipients.delete_unsubscribes(request)
 ### Get a list of templates
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import TemplatesBuilder
+from mailersend import MailerSendClient, TemplatesBuilder
 
 ms = MailerSendClient()
 
@@ -1591,15 +1579,12 @@ request = (TemplatesBuilder()
           .build_list_request())
 
 response = ms.templates.list_templates(request)
-for template in response.data:
-    print(f"Template: {template.name} (ID: {template.id})")
 ```
 
 ### Get a single template
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import TemplatesBuilder
+from mailersend import MailerSendClient, TemplatesBuilder
 
 ms = MailerSendClient()
 
@@ -1608,14 +1593,12 @@ request = (TemplatesBuilder()
           .build_get_request())
 
 response = ms.templates.get_template(request)
-print(f"Template: {response.name}")
 ```
 
 ### Delete template
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import TemplatesBuilder
+from mailersend import MailerSendClient, TemplatesBuilder
 
 ms = MailerSendClient()
 
@@ -1624,7 +1607,6 @@ request = (TemplatesBuilder()
           .build_delete_request())
 
 response = ms.templates.delete_template(request)
-print("Template deleted")
 ```
 
 ## Webhooks
