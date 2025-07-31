@@ -7,7 +7,7 @@ defaults, date handling, and validation.
 """
 
 from datetime import datetime, timezone, timedelta
-from typing import List, Optional, Union, Literal
+from typing import List, Optional, Literal
 
 from ..models.analytics import AnalyticsRequest
 from ..exceptions import ValidationError
@@ -31,7 +31,7 @@ class AnalyticsBuilder:
 
         >>> # Opens by country for specific domain
         >>> request = (AnalyticsBuilder()
-        ...     .domain("domain-id-123")
+        ...     .domain_id("domain-id-123")
         ...     .date_from_timestamp(1443651141)
         ...     .date_to_timestamp(1443661141)
         ...     .tags("campaign-2024")
@@ -56,7 +56,7 @@ class AnalyticsBuilder:
         self._group_by: str = "days"
         self._event: List[str] = []
 
-    def domain(self, domain_id: str) -> "AnalyticsBuilder":
+    def domain_id(self, domain_id: str) -> "AnalyticsBuilder":
         """
         Set the domain ID to filter analytics data.
 
@@ -98,7 +98,7 @@ class AnalyticsBuilder:
             self.recipient(recipient_id)
         return self
 
-    def date_from_timestamp(self, timestamp: int) -> "AnalyticsBuilder":
+    def date_from(self, timestamp: int) -> "AnalyticsBuilder":
         """
         Set the start date using a Unix timestamp.
 
@@ -113,7 +113,7 @@ class AnalyticsBuilder:
         self._date_from = timestamp
         return self
 
-    def date_to_timestamp(self, timestamp: int) -> "AnalyticsBuilder":
+    def date_to(self, timestamp: int) -> "AnalyticsBuilder":
         """
         Set the end date using a Unix timestamp.
 
