@@ -193,16 +193,16 @@ MAILERSEND_API_KEY=your-api-key
 Then initialize the client:
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 
 # Automatically uses MAILERSEND_API_KEY environment variable
-ms = MailerSend()
+ms = MailerSendClient()
 ```
 
 ### Direct API Key
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 
 ms = MailerSend(api_key="your-api-key")
 ```
@@ -218,10 +218,10 @@ The MailerSend Python SDK v2 introduces a modern, clean architecture that follow
 The SDK uses the builder pattern for constructing API requests. This provides a fluent, readable interface for setting parameters:
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import SmsRecipientsBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 # Build a request using the fluent builder pattern
 request = (SmsRecipientsBuilder()
@@ -273,10 +273,10 @@ The MailerSend SDK provides flexible ways to access and work with API response d
 Access response data using dictionary-style syntax:
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import SmsRecipientsBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 request = SmsRecipientsBuilder().sms_recipient_id("recipient-123").build_get_request()
 response = ms.sms_recipients.get_sms_recipient(request)
 
@@ -454,14 +454,14 @@ if "meta" in response.data:
 Always check if the response was successful:
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import EmailBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 try:
     email = EmailBuilder().from_email("sender@domain.com").build()
-    response = ms.email.send(email)
+    response = ms.emails.send(email)
     
     if response.success:
         email_id = response.data.id
@@ -531,12 +531,12 @@ The SDK includes comprehensive logging to help with debugging and monitoring:
 
 ```python
 import logging
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 
 # Enable debug logging
 logging.basicConfig(level=logging.DEBUG)
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 # All API calls will now be logged with detailed information
 ```
@@ -545,7 +545,7 @@ ms = MailerSend()
 
 ```python
 import logging
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 
 # Configure logging with custom format
 logging.basicConfig(
@@ -557,7 +557,7 @@ logging.basicConfig(
     ]
 )
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 # Logs will include:
 # - API request details
@@ -575,10 +575,10 @@ ms = MailerSend()
 ### Send an email
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import EmailBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 email = (EmailBuilder()
          .from_email("sender@domain.com", "Your Name")
@@ -588,17 +588,17 @@ email = (EmailBuilder()
          .text("Hello World!")
          .build())
 
-response = ms.email.send(email)
+response = ms.emails.send(email)
 print(f"Email sent: {response.message_id}")
 ```
 
 ### Add CC, BCC recipients
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import EmailBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 email = (EmailBuilder()
          .from_email("sender@domain.com", "Your Name")
@@ -609,16 +609,16 @@ email = (EmailBuilder()
          .html("<h1>Hello World!</h1>")
          .build())
 
-response = ms.email.send(email)
+response = ms.emails.send(email)
 ```
 
 ### Send a template-based email
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import EmailBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 email = (EmailBuilder()
          .from_email("sender@domain.com", "Your Name")
@@ -633,16 +633,16 @@ email = (EmailBuilder()
          }])
          .build())
 
-response = ms.email.send(email)
+response = ms.emails.send(email)
 ```
 
 ### Personalization
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import EmailBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 email = (EmailBuilder()
          .from_email("sender@domain.com", "Your Name")
@@ -660,17 +660,17 @@ email = (EmailBuilder()
          }])
          .build())
 
-response = ms.email.send(email)
+response = ms.emails.send(email)
 ```
 
 ### Send email with attachment
 
 ```python
 import base64
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import EmailBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 email = (EmailBuilder()
          .from_email("sender@domain.com", "Your Name")
@@ -680,7 +680,7 @@ email = (EmailBuilder()
          .attach_file("document.pdf")
          .build())
 
-response = ms.email.send(email)
+response = ms.emails.send(email)
 ```
 
 ## Email Verification
@@ -688,10 +688,10 @@ response = ms.email.send(email)
 ### Get all email verification lists
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import EmailVerificationBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = EmailVerificationBuilder().build_list_request()
 response = ms.email_verification.list_verification_lists(request)
@@ -703,10 +703,10 @@ for verification_list in response.data:
 ### Get a single email verification list
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import EmailVerificationBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (EmailVerificationBuilder()
           .verification_list_id("list-id")
@@ -719,10 +719,10 @@ print(f"List name: {response.data.name}")
 ### Create an email verification list
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import EmailVerificationBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (EmailVerificationBuilder()
           .name("My Verification List")
@@ -736,10 +736,10 @@ print(f"Created list with ID: {response.data.id}")
 ### Verify a list
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import EmailVerificationBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (EmailVerificationBuilder()
           .verification_list_id("list-id")
@@ -752,10 +752,10 @@ print(f"Verification started: {response.message}")
 ### Get list results
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import EmailVerificationBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (EmailVerificationBuilder()
           .verification_list_id("list-id")
@@ -771,10 +771,10 @@ for result in response.data:
 ### Send bulk email
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import EmailBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 # Create individual EmailRequest objects
 emails = [
@@ -794,18 +794,18 @@ emails = [
         .build()
 ]
 
-response = ms.email.send_bulk(emails)
+response = ms.emails.send_bulk(emails)
 print(f"Bulk email ID: {response.data.bulk_email_id}")
 ```
 
 ### Get bulk email status
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 
-ms = MailerSend()
+ms = MailerSendClient()
 
-response = ms.email.get_bulk_status("bulk-email-id")
+response = ms.emails.get_bulk_status("bulk-email-id")
 print(f"Status: {response.data.state}")
 ```
 
@@ -814,10 +814,10 @@ print(f"Status: {response.data.state}")
 ### Get a list of activities
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import ActivityBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (ActivityBuilder()
           .domain_id("domain-id")
@@ -825,7 +825,7 @@ request = (ActivityBuilder()
           .limit(25)
           .build_list_request())
 
-response = ms.activity.list_activities(request)
+response = ms.activities.list_activities(request)
 for activity in response.data:
     print(f"Event: {activity.type}, Email: {activity.email.recipient.email}")
 ```
@@ -833,11 +833,11 @@ for activity in response.data:
 ### Get activity with filters
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import ActivityBuilder
 from datetime import datetime, timedelta
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 # Get activities from last 7 days
 date_from = int((datetime.now() - timedelta(days=7)).timestamp())
@@ -852,22 +852,22 @@ request = (ActivityBuilder()
           .limit(50)
           .build_list_request())
 
-response = ms.activity.list_activities(request)
+response = ms.activities.list_activities(request)
 ```
 
 ### Get a single activity
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import ActivityBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (ActivityBuilder()
           .activity_id("activity-id")
           .build_get_request())
 
-response = ms.activity.get_activity(request)
+response = ms.activities.get_activity(request)
 print(f"Activity type: {response.data.type}")
 ```
 
@@ -876,11 +876,11 @@ print(f"Activity type: {response.data.type}")
 ### Activity data by date
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import AnalyticsBuilder
 from datetime import datetime, timedelta
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 date_from = int((datetime.now() - timedelta(days=30)).timestamp())
 date_to = int(datetime.now().timestamp())
@@ -901,10 +901,10 @@ for stat in response.data:
 ### Opens by country
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import AnalyticsBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (AnalyticsBuilder()
           .date_from(date_from)
@@ -920,10 +920,10 @@ for country in response.data:
 ### Opens by user-agent name
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import AnalyticsBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (AnalyticsBuilder()
           .date_from(date_from)
@@ -939,10 +939,10 @@ for agent in response.data:
 ### Opens by reading environment
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import AnalyticsBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (AnalyticsBuilder()
           .date_from(date_from)
@@ -960,10 +960,10 @@ for env in response.data:
 ### Get a list of inbound routes
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import InboundBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (InboundBuilder()
           .domain_id("domain-id")
@@ -979,10 +979,10 @@ for route in response.data:
 ### Get a single inbound route
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import InboundBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (InboundBuilder()
           .inbound_id("inbound-id")
@@ -995,11 +995,11 @@ print(f"Route name: {response.data.name}")
 ### Add an inbound route
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import InboundBuilder
 from mailersend.models.inbound import FilterType, ForwardType
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (InboundBuilder()
           .domain_id("domain-id")
@@ -1016,10 +1016,10 @@ print(f"Created route with ID: {response.data.id}")
 ### Update an inbound route
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import InboundBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (InboundBuilder()
           .inbound_id("inbound-id")
@@ -1034,10 +1034,10 @@ print(f"Updated route: {response.data.name}")
 ### Delete an inbound route
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import InboundBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (InboundBuilder()
           .inbound_id("inbound-id")
@@ -1052,10 +1052,10 @@ print("Inbound route deleted successfully")
 ### Get a list of domains
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import DomainsBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (DomainsBuilder()
           .verified(True)
@@ -1071,10 +1071,10 @@ for domain in response.data:
 ### Get a single domain
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import DomainsBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (DomainsBuilder()
           .domain_id("domain-id")
@@ -1087,10 +1087,10 @@ print(f"Domain: {response.data.name}")
 ### Add a domain
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import DomainsBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (DomainsBuilder()
           .name("mydomain.com")
@@ -1106,10 +1106,10 @@ print(f"Created domain with ID: {response.data.id}")
 ### Delete a domain
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import DomainsBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (DomainsBuilder()
           .domain_id("domain-id")
@@ -1122,10 +1122,10 @@ print("Domain deleted successfully")
 ### Get a list of recipients per domain
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import DomainsBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (DomainsBuilder()
           .domain_id("domain-id")
@@ -1141,10 +1141,10 @@ for recipient in response.data:
 ### Update domain settings
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import DomainsBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (DomainsBuilder()
           .domain_id("domain-id")
@@ -1165,10 +1165,10 @@ print("Domain settings updated")
 ### Get DNS Records
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import DomainsBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (DomainsBuilder()
           .domain_id("domain-id")
@@ -1182,10 +1182,10 @@ for record in response.data:
 ### Verify a domain
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import DomainsBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (DomainsBuilder()
           .domain_id("domain-id")
@@ -1200,10 +1200,10 @@ print(f"Verification status: {response.data.domain_settings.is_verified}")
 ### Get a list of messages
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import MessagesBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (MessagesBuilder()
           .page(1)
@@ -1218,10 +1218,10 @@ for message in response.data:
 ### Get a single message
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import MessagesBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (MessagesBuilder()
           .message_id("message-id")
@@ -1236,10 +1236,10 @@ print(f"Message: {response.data.subject}")
 ### Get a list of scheduled messages
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import SchedulesBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (SchedulesBuilder()
           .domain_id("domain-id")
@@ -1255,10 +1255,10 @@ for scheduled in response.data:
 ### Get a single scheduled message
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import SchedulesBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (SchedulesBuilder()
           .scheduled_message_id("scheduled-id")
@@ -1271,10 +1271,10 @@ print(f"Scheduled message: {response.data.subject}")
 ### Delete a scheduled message
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import SchedulesBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (SchedulesBuilder()
           .scheduled_message_id("scheduled-id")
@@ -1289,10 +1289,10 @@ print("Scheduled message deleted")
 ### Get a list of recipients
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import RecipientsBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (RecipientsBuilder()
           .domain_id("domain-id")
@@ -1308,10 +1308,10 @@ for recipient in response.data:
 ### Get a single recipient
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import RecipientsBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (RecipientsBuilder()
           .recipient_id("recipient-id")
@@ -1324,10 +1324,10 @@ print(f"Recipient: {response.data.email}")
 ### Delete a recipient
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import RecipientsBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (RecipientsBuilder()
           .recipient_id("recipient-id")
@@ -1340,10 +1340,10 @@ print("Recipient deleted")
 ### Get recipients from a blocklist
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import RecipientsBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (RecipientsBuilder()
           .domain_id("domain-id")
@@ -1359,10 +1359,10 @@ for blocked in response.data:
 ### Get recipients from hard bounces
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import RecipientsBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (RecipientsBuilder()
           .domain_id("domain-id")
@@ -1376,10 +1376,10 @@ for bounce in response.data:
 ### Get recipients from spam complaints
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import RecipientsBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (RecipientsBuilder()
           .domain_id("domain-id")
@@ -1393,10 +1393,10 @@ for spam in response.data:
 ### Get recipients from unsubscribes
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import RecipientsBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (RecipientsBuilder()
           .domain_id("domain-id")
@@ -1410,10 +1410,10 @@ for unsub in response.data:
 ### Add recipients to blocklist
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import RecipientsBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 # Using specific emails
 request = (RecipientsBuilder()
@@ -1435,10 +1435,10 @@ response = ms.recipients.add_to_blocklist(request)
 ### Add hard bounced recipients
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import RecipientsBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (RecipientsBuilder()
           .domain_id("domain-id")
@@ -1451,10 +1451,10 @@ response = ms.recipients.add_hard_bounces(request)
 ### Add spam complaints
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import RecipientsBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (RecipientsBuilder()
           .domain_id("domain-id")
@@ -1467,10 +1467,10 @@ response = ms.recipients.add_spam_complaints(request)
 ### Add recipients to unsubscribe list
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import RecipientsBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (RecipientsBuilder()
           .domain_id("domain-id")
@@ -1483,10 +1483,10 @@ response = ms.recipients.add_unsubscribes(request)
 ### Delete recipients from blocklist
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import RecipientsBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (RecipientsBuilder()
           .domain_id("domain-id")
@@ -1499,10 +1499,10 @@ response = ms.recipients.delete_from_blocklist(request)
 ### Delete hard bounced recipients
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import RecipientsBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (RecipientsBuilder()
           .domain_id("domain-id")
@@ -1515,10 +1515,10 @@ response = ms.recipients.delete_hard_bounces(request)
 ### Delete spam complaints
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import RecipientsBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (RecipientsBuilder()
           .domain_id("domain-id")
@@ -1531,10 +1531,10 @@ response = ms.recipients.delete_spam_complaints(request)
 ### Delete recipients from unsubscribe list
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import RecipientsBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (RecipientsBuilder()
           .domain_id("domain-id")
@@ -1549,10 +1549,10 @@ response = ms.recipients.delete_unsubscribes(request)
 ### Create a token
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import TokensBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (TokensBuilder()
           .name("My API Token")
@@ -1567,10 +1567,10 @@ print(f"Token: {response.data.accessToken}")  # Save this token securely!
 ### Pause / Unpause Token
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import TokensBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 # Pause token
 request = (TokensBuilder()
@@ -1592,10 +1592,10 @@ response = ms.tokens.update_token(request)
 ### Delete a Token
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import TokensBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (TokensBuilder()
           .token_id("token-id")
@@ -1610,10 +1610,10 @@ print("Token deleted")
 ### Get a list of templates
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import TemplatesBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (TemplatesBuilder()
           .domain_id("domain-id")
@@ -1629,10 +1629,10 @@ for template in response.data:
 ### Get a single template
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import TemplatesBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (TemplatesBuilder()
           .template("template-id")
@@ -1645,10 +1645,10 @@ print(f"Template: {response.data.name}")
 ### Delete template
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import TemplatesBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (TemplatesBuilder()
           .template("template-id")
@@ -1663,10 +1663,10 @@ print("Template deleted")
 ### Get a list of webhooks
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import WebhooksBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (WebhooksBuilder()
           .domain_id("domain-id")
@@ -1680,10 +1680,10 @@ for webhook in response.data:
 ### Get a single webhook
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import WebhooksBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (WebhooksBuilder()
           .webhook_id("webhook-id")
@@ -1696,10 +1696,10 @@ print(f"Webhook: {response.data.name}")
 ### Create a Webhook
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import WebhooksBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (WebhooksBuilder()
           .domain_id("domain-id")
@@ -1716,10 +1716,10 @@ print(f"Created webhook with ID: {response.data.id}")
 ### Create a disabled webhook
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import WebhooksBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (WebhooksBuilder()
           .domain_id("domain-id")
@@ -1735,10 +1735,10 @@ response = ms.webhooks.create_webhook(request)
 ### Update a Webhook
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import WebhooksBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (WebhooksBuilder()
           .webhook_id("webhook-id")
@@ -1753,10 +1753,10 @@ response = ms.webhooks.update_webhook(request)
 ### Disable/Enable a Webhook
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import WebhooksBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 # Disable webhook
 request = (WebhooksBuilder()
@@ -1778,10 +1778,10 @@ response = ms.webhooks.update_webhook(request)
 ### Delete a Webhook
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import WebhooksBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (WebhooksBuilder()
           .webhook_id("webhook-id")
@@ -1796,10 +1796,10 @@ print("Webhook deleted")
 ### Sending SMS messages
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import SmsSendingBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 # Simple SMS
 request = (SmsSendingBuilder()
@@ -1836,11 +1836,11 @@ response = ms.sms_sending.send(request)
 ### Get a list of SMS activities
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import SmsActivityBuilder
 from datetime import datetime, timedelta
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 # Get activities from last 7 days
 date_from = int((datetime.now() - timedelta(days=7)).timestamp())
@@ -1863,10 +1863,10 @@ for activity in response.data:
 ### Get activity of a single SMS message
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import SmsActivityBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (SmsActivityBuilder()
           .sms_message_id("sms-message-id")
@@ -1881,10 +1881,10 @@ print(f"SMS status: {response.data.status}")
 ### Get a list of SMS phone numbers
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import SmsNumbersBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (SmsNumbersBuilder()
           .paused(False)
@@ -1900,10 +1900,10 @@ for number in response.data:
 ### Get an SMS phone number
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import SmsNumbersBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (SmsNumbersBuilder()
           .from_number("sms-number-id")
@@ -1916,10 +1916,10 @@ print(f"Number: {response.data.phone_number}")
 ### Update a single SMS phone number
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import SmsNumbersBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (SmsNumbersBuilder()
           .from_number("sms-number-id")
@@ -1933,10 +1933,10 @@ print("SMS number updated")
 ### Delete an SMS phone number
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import SmsNumbersBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (SmsNumbersBuilder()
           .from_number("sms-number-id")
@@ -1951,11 +1951,11 @@ print("SMS number deleted")
 ### Get a list of SMS recipients
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import SmsRecipientsBuilder
 from mailersend.models.sms_recipients import SmsRecipientStatus
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (SmsRecipientsBuilder()
           .from_number("sms-number-id")
@@ -1983,10 +1983,10 @@ dict_response = response.to_dict()          # Full dictionary
 ### Get an SMS recipient
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import SmsRecipientsBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (SmsRecipientsBuilder()
           .sms_recipient_id("recipient-id")
@@ -1999,11 +1999,11 @@ print(f"Recipient: {response.data.number}")
 ### Update a single SMS recipient
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import SmsRecipientsBuilder
 from mailersend.models.sms_recipients import SmsRecipientStatus
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (SmsRecipientsBuilder()
           .sms_recipient_id("recipient-id")
@@ -2018,10 +2018,10 @@ print("SMS recipient updated to opt-out")
 ### Get a list of SMS messages
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import SmsMessagesBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (SmsMessagesBuilder()
           .page(1)
@@ -2036,10 +2036,10 @@ for message in response.data:
 ### Get an SMS message
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import SmsMessagesBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (SmsMessagesBuilder()
           .sms_message_id("message-id")
@@ -2054,10 +2054,10 @@ print(f"Message: {response.data.text}")
 ### Get a list of SMS webhooks
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import SmsWebhooksBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (SmsWebhooksBuilder()
           .from_number("sms-number-id")
@@ -2071,10 +2071,10 @@ for webhook in response.data:
 ### Get a single SMS webhook
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import SmsWebhooksBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (SmsWebhooksBuilder()
           .sms_webhook_id("webhook-id")
@@ -2087,11 +2087,11 @@ print(f"Webhook: {response.data.name}")
 ### Create an SMS webhook
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import SmsWebhooksBuilder
 from mailersend.models.sms_webhooks import SmsWebhookEvent
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (SmsWebhooksBuilder()
           .from_number("sms-number-id")
@@ -2110,11 +2110,11 @@ print(f"Created SMS webhook with ID: {response.data.id}")
 ### Update a single SMS webhook
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import SmsWebhooksBuilder
 from mailersend.models.sms_webhooks import SmsWebhookEvent
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (SmsWebhooksBuilder()
           .sms_webhook_id("webhook-id")
@@ -2131,10 +2131,10 @@ print("SMS webhook updated")
 ### Delete an SMS webhook
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import SmsWebhooksBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (SmsWebhooksBuilder()
           .sms_webhook_id("webhook-id")
@@ -2149,10 +2149,10 @@ print("SMS webhook deleted")
 ### Get a list of SMS inbound routes
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import SmsInboundsBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (SmsInboundsBuilder()
           .from_number("sms-number-id")
@@ -2169,10 +2169,10 @@ for route in response.data:
 ### Get a single SMS inbound route
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import SmsInboundsBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (SmsInboundsBuilder()
           .sms_inbound_id("inbound-id")
@@ -2185,11 +2185,11 @@ print(f"Route: {response.data.name}")
 ### Create an SMS inbound route
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import SmsInboundsBuilder
 from mailersend.models.sms_inbounds import FilterComparer
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (SmsInboundsBuilder()
           .from_number("sms-number-id")
@@ -2206,11 +2206,11 @@ print(f"Created SMS inbound route with ID: {response.data.id}")
 ### Update an SMS inbound route
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import SmsInboundsBuilder
 from mailersend.models.sms_inbounds import FilterComparer
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (SmsInboundsBuilder()
           .sms_inbound_id("inbound-id")
@@ -2227,10 +2227,10 @@ print("SMS inbound route updated")
 ### Delete an SMS inbound route
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import SmsInboundsBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (SmsInboundsBuilder()
           .sms_inbound_id("inbound-id")
@@ -2245,10 +2245,10 @@ print("SMS inbound route deleted")
 ### Get a list of sender identities
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import IdentitiesBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (IdentitiesBuilder()
           .domain_id("domain-id")
@@ -2264,10 +2264,10 @@ for identity in response.data:
 ### Get a sender identity
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import IdentitiesBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (IdentitiesBuilder()
           .identity_id("identity-id")
@@ -2280,10 +2280,10 @@ print(f"Identity: {response.data.name}")
 ### Create a sender identity
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import IdentitiesBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (IdentitiesBuilder()
           .domain_id("domain-id")
@@ -2302,10 +2302,10 @@ print(f"Created identity with ID: {response.data.id}")
 ### Update a sender identity
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import IdentitiesBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (IdentitiesBuilder()
           .identity_id("identity-id")
@@ -2323,10 +2323,10 @@ print("Identity updated")
 ### Delete a sender identity
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import IdentitiesBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 request = (IdentitiesBuilder()
           .identity_id("identity-id")
@@ -2341,9 +2341,9 @@ print("Identity deleted")
 ### Get API Quota
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 response = ms.api_quota.get_quota()
 print(f"Quota used: {response.data.used}/{response.data.limit}")
@@ -2357,11 +2357,11 @@ print(f"Resets at: {response.data.reset_date}")
 The SDK provides comprehensive error handling with detailed error information:
 
 ```python
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.exceptions import MailerSendError
 from mailersend.builders import EmailBuilder
 
-ms = MailerSend()
+ms = MailerSendClient()
 
 try:
     email = (EmailBuilder()
@@ -2371,7 +2371,7 @@ try:
              .html("<h1>Test</h1>")
              .build())
     
-    response = ms.email.send(email)
+    response = ms.emails.send(email)
     
 except MailerSendError as e:
     print(f"MailerSend API Error: {e}")
@@ -2414,12 +2414,12 @@ The SDK uses VCR.py for integration tests to record and replay API responses:
 
 ```python
 import pytest
-from mailersend import MailerSend
+from mailersend import MailerSendClient
 from mailersend.builders import SmsRecipientsBuilder
 
 @pytest.mark.vcr
 def test_list_sms_recipients():
-    ms = MailerSend()
+    ms = MailerSendClient()
     request = SmsRecipientsBuilder().build_list_request()
     response = ms.sms_recipients.list_sms_recipients(request)
     assert response.data is not None
