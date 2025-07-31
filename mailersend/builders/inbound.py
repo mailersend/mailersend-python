@@ -281,9 +281,9 @@ class InboundBuilder:
                 domain_enabled=self._domain_enabled,
                 inbound_domain=self._inbound_domain,
                 inbound_priority=self._inbound_priority,
-                catch_filter=self._catch_filter,
+                catch_filter=self._catch_filter[0] if self._catch_filter else None,
                 catch_type=self._catch_type,
-                match_filter=self._match_filter,
+                match_filter=self._match_filter[0] if self._match_filter else None,
                 match_type=self._match_type,
                 forwards=self._forwards,
             )
@@ -320,9 +320,9 @@ class InboundBuilder:
                 domain_enabled=self._domain_enabled,
                 inbound_domain=self._inbound_domain,
                 inbound_priority=self._inbound_priority,
-                catch_filter=self._catch_filter,
+                catch_filter=self._catch_filter[0] if self._catch_filter else None,
                 catch_type=self._catch_type,
-                match_filter=self._match_filter,
+                match_filter=self._match_filter[0] if self._match_filter else None,
                 match_type=self._match_type,
                 forwards=self._forwards,
             )

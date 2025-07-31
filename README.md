@@ -1147,27 +1147,21 @@ response = ms.identities.delete_identity_by_email(request)
 ### Get a list of inbound routes
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import InboundBuilder
+from mailersend import MailerSendClient, InboundBuilder
 
 ms = MailerSendClient()
 
 request = (InboundBuilder()
           .domain_id("domain-id")
-          .page(1)
-          .limit(25)
           .build_list_request())
 
-response = ms.inbound.list_inbound_routes(request)
-for route in response.data:
-    print(f"Route: {route.name}, Domain: {route.domain}")
+response = ms.inbound.list(request)
 ```
 
 ### Get a single inbound route
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import InboundBuilder
+from mailersend import MailerSendClient, InboundBuilder
 
 ms = MailerSendClient()
 
@@ -1175,36 +1169,36 @@ request = (InboundBuilder()
           .inbound_id("inbound-id")
           .build_get_request())
 
-response = ms.inbound.get_inbound_route(request)
-print(f"Route name: {response.name}")
+response = ms.inbound.get(request)
 ```
 
 ### Add an inbound route
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import InboundBuilder
-from mailersend.models.inbound import FilterType, ForwardType
+from mailersend import MailerSendClient, InboundBuilder
 
 ms = MailerSendClient()
 
 request = (InboundBuilder()
           .domain_id("domain-id")
           .name("My Inbound Route")
-          .enabled(True)
-          .catch_filter(FilterType.CATCH_RECIPIENT, "equal", "support")
-          .forward(ForwardType.WEBHOOK, "https://example.com/webhook")
+          .domain_enabled(False)
+          .inbound_priority(1)
+          .catch_type("all")
+          .match_type("all")
+          .add_forward("email", "support@mycompany.com")
+          .catch_recipient([{"comparer": "equal", "value": "support"}])
+          .add_match_filter("match_sender", [{"comparer": "equal", "value": "support"}])
+          .add_webhook_forward("https://mycompany.com/webhook")
           .build_create_request())
 
 response = ms.inbound.create_inbound_route(request)
-print(f"Created route with ID: {response.id}")
 ```
 
 ### Update an inbound route
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import InboundBuilder
+from mailersend import MailerSendClient, InboundBuilder
 
 ms = MailerSendClient()
 
@@ -1215,14 +1209,12 @@ request = (InboundBuilder()
           .build_update_request())
 
 response = ms.inbound.update_inbound_route(request)
-print(f"Updated route: {response.name}")
 ```
 
 ### Delete an inbound route
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import InboundBuilder
+from mailersend import MailerSendClient, InboundBuilder
 
 ms = MailerSendClient()
 
@@ -1231,7 +1223,6 @@ request = (InboundBuilder()
           .build_delete_request())
 
 response = ms.inbound.delete_inbound_route(request)
-print("Inbound route deleted successfully")
 ```
 
 ## Messages

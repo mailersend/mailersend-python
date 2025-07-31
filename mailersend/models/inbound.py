@@ -181,11 +181,11 @@ class InboundCreateRequest(BaseModel):
     inbound_priority: Optional[int] = Field(
         None, ge=0, le=100, description="Inbound priority"
     )
-    catch_filter: List[InboundFilterGroup] = Field(
+    catch_filter: InboundFilterGroup = Field(
         ..., description="Catch filter configuration"
     )
     catch_type: Optional[str] = Field(None, description="Catch type (all or one)")
-    match_filter: List[InboundFilterGroup] = Field(
+    match_filter: InboundFilterGroup = Field(
         ..., description="Match filter configuration"
     )
     match_type: Optional[str] = Field(None, description="Match type (all or one)")
@@ -286,11 +286,11 @@ class InboundUpdateRequest(BaseModel):
     inbound_priority: Optional[int] = Field(
         None, ge=0, le=100, description="Inbound priority"
     )
-    catch_filter: List[InboundFilterGroup] = Field(
+    catch_filter: InboundFilterGroup = Field(
         ..., description="Catch filter configuration"
     )
     catch_type: Optional[str] = Field(None, description="Catch type (all or one)")
-    match_filter: List[InboundFilterGroup] = Field(
+    match_filter: InboundFilterGroup = Field(
         ..., description="Match filter configuration"
     )
     match_type: Optional[str] = Field(None, description="Match type (all or one)")
