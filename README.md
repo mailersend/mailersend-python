@@ -1740,11 +1740,9 @@ from mailersend import MailerSendClient, EmailVerificationBuilder
 
 ms = MailerSendClient()
 
-request = EmailVerificationBuilder().build_list_request()
-response = ms.email_verification.list_verification_lists(request)
+request = EmailVerificationBuilder().build_lists()
 
-for verification_list in response.data:
-    print(f"List: {verification_list.name}, Status: {verification_list.status}")
+response = ms.email_verification.list_verifications(request)
 ```
 
 ### Get a single email verification list
@@ -1755,11 +1753,10 @@ from mailersend import MailerSendClient, EmailVerificationBuilder
 ms = MailerSendClient()
 
 request = (EmailVerificationBuilder()
-          .verification_list_id("list-id")
-          .build_get_request())
+          .email_verification_id("list-id")
+          .build_get())
 
-response = ms.email_verification.get_verification_list(request)
-print(f"List name: {response.name}")
+response = ms.email_verification.get_verification(request)
 ```
 
 ### Create an email verification list
@@ -1772,10 +1769,9 @@ ms = MailerSendClient()
 request = (EmailVerificationBuilder()
           .name("My Verification List")
           .emails(["test1@example.com", "test2@example.com"])
-          .build_create_request())
+          .build_create())
 
-response = ms.email_verification.create_verification_list(request)
-print(f"Created list with ID: {response.id}")
+response = ms.email_verification.create_verification(request)
 ```
 
 ### Verify a list
@@ -1786,11 +1782,10 @@ from mailersend import MailerSendClient, EmailVerificationBuilder
 ms = MailerSendClient()
 
 request = (EmailVerificationBuilder()
-          .verification_list_id("list-id")
-          .build_verify_request())
+          .email_verification_id("list-id")
+          .build_verify_list())
 
 response = ms.email_verification.verify_list(request)
-print(f"Verification started: {response.message}")
 ```
 
 ### Get list results
@@ -1801,12 +1796,10 @@ from mailersend import MailerSendClient, EmailVerificationBuilder
 ms = MailerSendClient()
 
 request = (EmailVerificationBuilder()
-          .verification_list_id("list-id")
-          .build_results_request())
+          .email_verification_id("list-id")
+          .build_results())
 
-response = ms.email_verification.get_verification_results(request)
-for result in response.data:
-    print(f"Email: {result.email}, Status: {result.status}")
+response = ms.email_verification.get_results(request)
 ```
 
 ## SMS
