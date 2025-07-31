@@ -204,7 +204,7 @@ ms = MailerSendClient()
 ```python
 from mailersend import MailerSendClient
 
-ms = MailerSend(api_key="your-api-key")
+ms = MailerSendClient(api_key="your-api-key")
 ```
 
 <a name="sdk-architecture"></a>

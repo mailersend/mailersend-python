@@ -1,4 +1,5 @@
 import logging
+import os
 from typing import Optional, Dict, Any, Type, cast, Union
 from urllib.parse import urljoin
 
@@ -44,16 +45,20 @@ class MailerSendClient:
     authentication, request formatting, and error handling.
     
     Examples:
-        >>> client = MailerSendClient(api_key="your_api_key")
+        >>> # Using environment variable (recommended)
+        >>> client = MailerSendClient()  # Reads from MAILERSEND_API_KEY
         >>> response = client.emails.send(email_request)
         
-        # Enable debug logging for detailed request/response info
-        >>> client = MailerSendClient(api_key="your_api_key", debug=True)
+        >>> # Using explicit API key
+        >>> client = MailerSendClient(api_key="your_api_key")
+        
+        >>> # Enable debug logging for detailed request/response info
+        >>> client = MailerSendClient(debug=True)
     """
     
     def __init__(
         self,
-        api_key: str,
+        api_key: Optional[str] = None,
         base_url: str = DEFAULT_BASE_URL,
         timeout: int = DEFAULT_TIMEOUT,
         max_retries: int = 3,
@@ -64,7 +69,8 @@ class MailerSendClient:
         Initialize the MailerSend client.
         
         Args:
-            api_key: Your MailerSend API key
+            api_key: Your MailerSend API key. If not provided, will try to read 
+                    from MAILERSEND_API_KEY environment variable
             base_url: Base URL for API requests
             timeout: Request timeout in seconds
             max_retries: Maximum number of retries for failed requests
@@ -72,12 +78,19 @@ class MailerSendClient:
             logger: Custom logger instance
         
         Raises:
-            ValueError: If api_key is empty
+            ValueError: If no API key is provided and MAILERSEND_API_KEY 
+                       environment variable is not set
         """
-        if not api_key:
-            raise ValueError("API key cannot be empty")
+        # Try to get API key from environment variable first, then from parameter
+        resolved_api_key = api_key or os.getenv('MAILERSEND_API_KEY')
+        
+        if not resolved_api_key:
+            raise ValueError(
+                "API key is required. Either pass it as 'api_key' parameter or "
+                "set the 'MAILERSEND_API_KEY' environment variable."
+            )
             
-        self.api_key = api_key
+        self.api_key = resolved_api_key
         self.base_url = base_url
         self.timeout = timeout
         self.debug = debug
