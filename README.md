@@ -781,8 +781,7 @@ request = (ActivityBuilder()
           .limit(25)
           .build_list_request())
 
-response = ms.activities.list_activities(request)
-print(response.data)
+response = ms.activities.get(request)
 ```
 
 ### Get activity with filters
@@ -806,7 +805,7 @@ request = (ActivityBuilder()
           .limit(50)
           .build_list_request())
 
-response = ms.activities.list_activities(request)
+response = ms.activities.get(request)
 ```
 
 ### Get a single activity
@@ -820,8 +819,7 @@ request = (SingleActivityBuilder()
           .activity_id("activity-id")
           .build_get_request())
 
-response = ms.activities.get_activity(request)
-print(f"Activity type: {response.type}")
+response = ms.activities.get_single(request)
 ```
 
 ## Analytics
