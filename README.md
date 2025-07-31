@@ -46,12 +46,6 @@ MailerSend Python SDK
     - [Send email with attachment](#send-email-with-attachment)
     - [Send bulk email](#send-bulk-email)
     - [Get bulk email status](#get-bulk-email-status)
-  - [Email Verification](#email-verification)
-    - [Get all email verification lists](#get-all-email-verification-lists)
-    - [Get a single email verification list](#get-a-single-email-verification-list)
-    - [Create an email verification list](#create-an-email-verification-list)
-    - [Verify a list](#verify-a-list)
-    - [Get list results](#get-list-results)
   - [Activity](#activity)
     - [Get a list of activities](#get-a-list-of-activities)
     - [Get activity with filters](#get-activity-with-filters)
@@ -61,12 +55,6 @@ MailerSend Python SDK
     - [Opens by country](#opens-by-country)
     - [Opens by user-agent name](#opens-by-user-agent-name)
     - [Opens by reading environment](#opens-by-reading-environment)
-  - [Inbound Routes](#inbound-routes)
-    - [Get a list of inbound routes](#get-a-list-of-inbound-routes)
-    - [Get a single inbound route](#get-a-single-inbound-route)
-    - [Add an inbound route](#add-an-inbound-route)
-    - [Update an inbound route](#update-an-inbound-route)
-    - [Delete an inbound route](#delete-an-inbound-route)
   - [Domains](#domains)
     - [Get a list of domains](#get-a-list-of-domains)
     - [Get a single domain](#get-a-single-domain)
@@ -76,6 +64,18 @@ MailerSend Python SDK
     - [Update domain settings](#update-domain-settings)
     - [Get DNS Records](#get-dns-records)
     - [Verify a domain](#verify-a-domain)
+  - [Sender Identities](#sender-identities)
+    - [Get a list of sender identities](#get-a-list-of-sender-identities)
+    - [Get a sender identity](#get-a-sender-identity)
+    - [Create a sender identity](#create-a-sender-identity)
+    - [Update a sender identity](#update-a-sender-identity)
+    - [Delete a sender identity](#delete-a-sender-identity)
+  - [Inbound Routes](#inbound-routes)
+    - [Get a list of inbound routes](#get-a-list-of-inbound-routes)
+    - [Get a single inbound route](#get-a-single-inbound-route)
+    - [Add an inbound route](#add-an-inbound-route)
+    - [Update an inbound route](#update-an-inbound-route)
+    - [Delete an inbound route](#delete-an-inbound-route)
   - [Messages](#messages)
     - [Get a list of messages](#get-a-list-of-messages)
     - [Get a single message](#get-a-single-message)
@@ -99,10 +99,6 @@ MailerSend Python SDK
     - [Delete hard bounced recipients](#delete-hard-bounced-recipients)
     - [Delete spam complaints](#delete-spam-complaints)
     - [Delete recipients from unsubscribe list](#delete-recipients-from-unsubscribe-list)
-  - [Tokens](#tokens)
-    - [Create a token](#create-a-token)
-    - [Pause / Unpause Token](#pause--unpause-token)
-    - [Delete a Token](#delete-a-token)
   - [Templates](#templates)
     - [Get a list of templates](#get-a-list-of-templates)
     - [Get a single template](#get-a-single-template)
@@ -115,10 +111,34 @@ MailerSend Python SDK
     - [Update a Webhook](#update-a-webhook)
     - [Disable/Enable a Webhook](#disableenable-a-webhook)
     - [Delete a Webhook](#delete-a-webhook)
+  - [Email Verification](#email-verification)
+    - [Get all email verification lists](#get-all-email-verification-lists)
+    - [Get a single email verification list](#get-a-single-email-verification-list)
+    - [Create an email verification list](#create-an-email-verification-list)
+    - [Verify a list](#verify-a-list)
+    - [Get list results](#get-list-results)
   - [SMS](#sms)
     - [Sending SMS messages](#sending-sms-messages)
   - [SMS Activity](#sms-activity)
     - [Get a list of SMS activities](#get-a-list-of-sms-activities)
+  - [Webhooks](#webhooks-1)
+    - [Get a list of webhooks](#get-a-list-of-webhooks-1)
+    - [Get a single webhook](#get-a-single-webhook-1)
+    - [Create a Webhook](#create-a-webhook-1)
+    - [Create a disabled webhook](#create-a-disabled-webhook-1)
+    - [Update a Webhook](#update-a-webhook-1)
+    - [Disable/Enable a Webhook](#disableenable-a-webhook-1)
+    - [Delete a Webhook](#delete-a-webhook-1)
+  - [Email Verification](#email-verification-1)
+    - [Get all email verification lists](#get-all-email-verification-lists-1)
+    - [Get a single email verification list](#get-a-single-email-verification-list-1)
+    - [Create an email verification list](#create-an-email-verification-list-1)
+    - [Verify a list](#verify-a-list-1)
+    - [Get list results](#get-list-results-1)
+  - [SMS](#sms-1)
+    - [Sending SMS messages](#sending-sms-messages-1)
+  - [SMS Activity](#sms-activity-1)
+    - [Get a list of SMS activities](#get-a-list-of-sms-activities-1)
     - [Get activity of a single SMS message](#get-activity-of-a-single-sms-message)
   - [SMS Phone Numbers](#sms-phone-numbers)
     - [Get a list of SMS phone numbers](#get-a-list-of-sms-phone-numbers)
@@ -144,13 +164,11 @@ MailerSend Python SDK
     - [Create an SMS inbound route](#create-an-sms-inbound-route)
     - [Update an SMS inbound route](#update-an-sms-inbound-route)
     - [Delete an SMS inbound route](#delete-an-sms-inbound-route)
-  - [Sender Identities](#sender-identities)
-    - [Get a list of sender identities](#get-a-list-of-sender-identities)
-    - [Get a sender identity](#get-a-sender-identity)
-    - [Create a sender identity](#create-a-sender-identity)
-    - [Update a sender identity](#update-a-sender-identity)
-    - [Delete a sender identity](#delete-a-sender-identity)
-  - [API Quota](#api-quota)
+  - [Tokens](#tokens)
+    - [Create a token](#create-a-token)
+    - [Pause / Unpause Token](#pause--unpause-token)
+    - [Delete a Token](#delete-a-token)
+  - [Other Endpoints](#other-endpoints)
     - [Get API Quota](#get-api-quota)
 - [Error Handling](#error-handling)
 - [Testing](#testing)
@@ -741,84 +759,6 @@ response = ms.emails.get_bulk_status("bulk-email-id")
 print(f"Status: {response.state}")
 ```
 
-## Email Verification
-
-### Get all email verification lists
-
-```python
-from mailersend import MailerSendClient, EmailVerificationBuilder
-
-ms = MailerSendClient()
-
-request = EmailVerificationBuilder().build_list_request()
-response = ms.email_verification.list_verification_lists(request)
-
-for verification_list in response.data:
-    print(f"List: {verification_list.name}, Status: {verification_list.status}")
-```
-
-### Get a single email verification list
-
-```python
-from mailersend import MailerSendClient, EmailVerificationBuilder
-
-ms = MailerSendClient()
-
-request = (EmailVerificationBuilder()
-          .verification_list_id("list-id")
-          .build_get_request())
-
-response = ms.email_verification.get_verification_list(request)
-print(f"List name: {response.name}")
-```
-
-### Create an email verification list
-
-```python
-from mailersend import MailerSendClient, EmailVerificationBuilder
-
-ms = MailerSendClient()
-
-request = (EmailVerificationBuilder()
-          .name("My Verification List")
-          .emails(["test1@example.com", "test2@example.com"])
-          .build_create_request())
-
-response = ms.email_verification.create_verification_list(request)
-print(f"Created list with ID: {response.id}")
-```
-
-### Verify a list
-
-```python
-from mailersend import MailerSendClient, EmailVerificationBuilder
-
-ms = MailerSendClient()
-
-request = (EmailVerificationBuilder()
-          .verification_list_id("list-id")
-          .build_verify_request())
-
-response = ms.email_verification.verify_list(request)
-print(f"Verification started: {response.message}")
-```
-
-### Get list results
-
-```python
-from mailersend import MailerSendClient, EmailVerificationBuilder
-
-ms = MailerSendClient()
-
-request = (EmailVerificationBuilder()
-          .verification_list_id("list-id")
-          .build_results_request())
-
-response = ms.email_verification.get_verification_results(request)
-for result in response.data:
-    print(f"Email: {result.email}, Status: {result.status}")
-```
-
 ## Activity
 
 ### Get a list of activities
@@ -957,98 +897,6 @@ request = (AnalyticsBuilder()
 response = ms.analytics.get_opens_by_reading_environment(request)
 for env in response.data:
     print(f"Environment: {env.name}, Opens: {env.opens}")
-```
-
-## Inbound Routes
-
-### Get a list of inbound routes
-
-```python
-from mailersend import MailerSendClient
-from mailersend import InboundBuilder
-
-ms = MailerSendClient()
-
-request = (InboundBuilder()
-          .domain_id("domain-id")
-          .page(1)
-          .limit(25)
-          .build_list_request())
-
-response = ms.inbound.list_inbound_routes(request)
-for route in response.data:
-    print(f"Route: {route.name}, Domain: {route.domain}")
-```
-
-### Get a single inbound route
-
-```python
-from mailersend import MailerSendClient
-from mailersend import InboundBuilder
-
-ms = MailerSendClient()
-
-request = (InboundBuilder()
-          .inbound_id("inbound-id")
-          .build_get_request())
-
-response = ms.inbound.get_inbound_route(request)
-print(f"Route name: {response.name}")
-```
-
-### Add an inbound route
-
-```python
-from mailersend import MailerSendClient
-from mailersend import InboundBuilder
-from mailersend.models.inbound import FilterType, ForwardType
-
-ms = MailerSendClient()
-
-request = (InboundBuilder()
-          .domain_id("domain-id")
-          .name("My Inbound Route")
-          .enabled(True)
-          .catch_filter(FilterType.CATCH_RECIPIENT, "equal", "support")
-          .forward(ForwardType.WEBHOOK, "https://example.com/webhook")
-          .build_create_request())
-
-response = ms.inbound.create_inbound_route(request)
-print(f"Created route with ID: {response.id}")
-```
-
-### Update an inbound route
-
-```python
-from mailersend import MailerSendClient
-from mailersend import InboundBuilder
-
-ms = MailerSendClient()
-
-request = (InboundBuilder()
-          .inbound_id("inbound-id")
-          .name("Updated Route Name")
-          .enabled(False)
-          .build_update_request())
-
-response = ms.inbound.update_inbound_route(request)
-print(f"Updated route: {response.name}")
-```
-
-### Delete an inbound route
-
-```python
-from mailersend import MailerSendClient
-from mailersend import InboundBuilder
-
-ms = MailerSendClient()
-
-request = (InboundBuilder()
-          .inbound_id("inbound-id")
-          .build_delete_request())
-
-response = ms.inbound.delete_inbound_route(request)
-print("Inbound route deleted successfully")
 ```
 
 ## Domains
@@ -1197,6 +1045,192 @@ request = (DomainsBuilder()
 
 response = ms.domains.verify_domain(request)
 print(f"Verification status: {response.domain_settings.is_verified}")
+```
+
+## Sender Identities
+
+### Get a list of sender identities
+
+```python
+from mailersend import MailerSendClient
+from mailersend import IdentityBuilder
+
+ms = MailerSendClient()
+
+request = (IdentityBuilder()
+          .domain_id("domain-id")
+          .page(1)
+          .limit(25)
+          .build_list_request())
+
+response = ms.identities.list_identities(request)
+for identity in response.data:
+    print(f"Identity: {identity.email}, Name: {identity.name}")
+```
+
+### Get a sender identity
+
+```python
+from mailersend import MailerSendClient
+from mailersend import IdentityBuilder
+
+ms = MailerSendClient()
+
+request = (IdentityBuilder()
+          .identity_id("identity-id")
+          .build_get_request())
+
+response = ms.identities.get_identity(request)
+print(f"Identity: {response.email}")
+```
+
+### Create a sender identity
+
+```python
+from mailersend import MailerSendClient
+from mailersend import IdentityBuilder
+
+ms = MailerSendClient()
+
+request = (IdentityBuilder()
+          .domain_id("domain-id")
+          .name("John Doe")
+          .email("john@yourdomain.com")
+          .reply_to_email("support@yourdomain.com")
+          .reply_to_name("Support Team")
+          .add_note("Marketing campaigns")
+          .build_create_request())
+
+response = ms.identities.create_identity(request)
+print(f"Created identity with ID: {response.id}")
+```
+
+### Update a sender identity
+
+```python
+from mailersend import MailerSendClient
+from mailersend import IdentityBuilder
+
+ms = MailerSendClient()
+
+request = (IdentityBuilder()
+          .identity_id("identity-id")
+          .name("Jane Doe")
+          .reply_to_email("support@yourdomain.com")
+          .reply_to_name("Support Team")
+          .add_note("Updated for new campaign")
+          .build_update_request())
+
+response = ms.identities.update_identity(request)
+print("Identity updated successfully")
+```
+
+### Delete a sender identity
+
+```python
+from mailersend import MailerSendClient
+from mailersend import IdentityBuilder
+
+ms = MailerSendClient()
+
+request = (IdentityBuilder()
+          .identity_id("identity-id")
+          .build_delete_request())
+
+response = ms.identities.delete_identity(request)
+print("Identity deleted successfully")
+```
+
+## Inbound Routes
+
+### Get a list of inbound routes
+
+```python
+from mailersend import MailerSendClient
+from mailersend import InboundBuilder
+
+ms = MailerSendClient()
+
+request = (InboundBuilder()
+          .domain_id("domain-id")
+          .page(1)
+          .limit(25)
+          .build_list_request())
+
+response = ms.inbound.list_inbound_routes(request)
+for route in response.data:
+    print(f"Route: {route.name}, Domain: {route.domain}")
+```
+
+### Get a single inbound route
+
+```python
+from mailersend import MailerSendClient
+from mailersend import InboundBuilder
+
+ms = MailerSendClient()
+
+request = (InboundBuilder()
+          .inbound_id("inbound-id")
+          .build_get_request())
+
+response = ms.inbound.get_inbound_route(request)
+print(f"Route name: {response.name}")
+```
+
+### Add an inbound route
+
+```python
+from mailersend import MailerSendClient
+from mailersend import InboundBuilder
+from mailersend.models.inbound import FilterType, ForwardType
+
+ms = MailerSendClient()
+
+request = (InboundBuilder()
+          .domain_id("domain-id")
+          .name("My Inbound Route")
+          .enabled(True)
+          .catch_filter(FilterType.CATCH_RECIPIENT, "equal", "support")
+          .forward(ForwardType.WEBHOOK, "https://example.com/webhook")
+          .build_create_request())
+
+response = ms.inbound.create_inbound_route(request)
+print(f"Created route with ID: {response.id}")
+```
+
+### Update an inbound route
+
+```python
+from mailersend import MailerSendClient
+from mailersend import InboundBuilder
+
+ms = MailerSendClient()
+
+request = (InboundBuilder()
+          .inbound_id("inbound-id")
+          .name("Updated Route Name")
+          .enabled(False)
+          .build_update_request())
+
+response = ms.inbound.update_inbound_route(request)
+print(f"Updated route: {response.name}")
+```
+
+### Delete an inbound route
+
+```python
+from mailersend import MailerSendClient
+from mailersend import InboundBuilder
+
+ms = MailerSendClient()
+
+request = (InboundBuilder()
+          .inbound_id("inbound-id")
+          .build_delete_request())
+
+response = ms.inbound.delete_inbound_route(request)
+print("Inbound route deleted successfully")
 ```
 
 ## Messages
@@ -1548,67 +1582,6 @@ request = (RecipientsBuilder()
 response = ms.recipients.delete_unsubscribes(request)
 ```
 
-## Tokens
-
-### Create a token
-
-```python
-from mailersend import MailerSendClient
-from mailersend import TokensBuilder
-
-ms = MailerSendClient()
-
-request = (TokensBuilder()
-          .name("My API Token")
-          .scopes(["email_full", "analytics_read"])
-          .domain_id("domain-id")
-          .build_token_create())
-
-response = ms.tokens.create_token(request)
-print(f"Token: {response.accessToken}")  # Save this token securely!
-```
-
-### Pause / Unpause Token
-
-```python
-from mailersend import MailerSendClient
-from mailersend import TokensBuilder
-
-ms = MailerSendClient()
-
-# Pause token
-request = (TokensBuilder()
-          .token_id("token-id")
-          .pause()
-          .build_token_update())
-
-response = ms.tokens.update_token(request)
-
-# Unpause token
-request = (TokensBuilder()
-          .token_id("token-id")
-          .unpause()
-          .build_token_update())
-
-response = ms.tokens.update_token(request)
-```
-
-### Delete a Token
-
-```python
-from mailersend import MailerSendClient
-from mailersend import TokensBuilder
-
-ms = MailerSendClient()
-
-request = (TokensBuilder()
-          .token_id("token-id")
-          .build_token_delete())
-
-response = ms.tokens.delete_token(request)
-print("Token deleted")
-```
-
 ## Templates
 
 ### Get a list of templates
@@ -1647,6 +1620,261 @@ print(f"Template: {response.name}")
 ```
 
 ### Delete template
+
+```python
+from mailersend import MailerSendClient
+from mailersend import TemplatesBuilder
+
+ms = MailerSendClient()
+
+request = (TemplatesBuilder()
+          .template("template-id")
+          .build_delete_request())
+
+response = ms.templates.delete_template(request)
+print("Template deleted")
+```
+
+## Webhooks
+
+### Get a list of webhooks
+
+```python
+from mailersend import MailerSendClient
+from mailersend import WebhooksBuilder
+
+ms = MailerSendClient()
+
+request = (WebhooksBuilder()
+          .domain_id("domain-id")
+          .limit(25)
+          .build_list_request())
+
+response = ms.webhooks.list_webhooks(request)
+for webhook in response.data:
+    print(f"Webhook: {webhook.name} - {webhook.url}")
+```
+
+### Get a single webhook
+
+```python
+from mailersend import MailerSendClient
+from mailersend import WebhooksBuilder
+
+ms = MailerSendClient()
+
+request = (WebhooksBuilder()
+          .webhook_id("webhook-id")
+          .build_webhook_get_request())
+
+response = ms.webhooks.get_webhook(request)
+print(f"Webhook: {response.name}")
+```
+
+### Create a Webhook
+
+```python
+from mailersend import MailerSendClient
+from mailersend import WebhooksBuilder
+
+ms = MailerSendClient()
+
+request = (WebhooksBuilder()
+          .domain_id("domain-id")
+          .url("https://yourdomain.com/webhook")
+          .name("My webhook")
+          .events(["activity.sent", "activity.delivered"])
+          .enabled(True)
+          .build_webhook_create_request())
+
+response = ms.webhooks.create_webhook(request)
+print(f"Created webhook with ID: {response.id}")
+```
+
+### Create a disabled webhook
+
+```python
+from mailersend import MailerSendClient
+from mailersend import WebhooksBuilder
+
+ms = MailerSendClient()
+
+request = (WebhooksBuilder()
+          .domain_id("domain-id")
+          .url("https://yourdomain.com/webhook")
+          .name("My disabled webhook")
+          .events(["activity.sent", "activity.delivered"])
+          .enabled(False)
+          .build_webhook_create_request())
+
+response = ms.webhooks.create_webhook(request)
+print(f"Created disabled webhook with ID: {response.id}")
+```
+
+### Update a Webhook
+
+```python
+from mailersend import MailerSendClient
+from mailersend import WebhooksBuilder
+
+ms = MailerSendClient()
+
+request = (WebhooksBuilder()
+          .webhook_id("webhook-id")
+          .url("https://yourdomain.com/webhook-updated")
+          .name("My updated webhook")
+          .events(["activity.sent"])
+          .enabled(True)
+          .build_webhook_update_request())
+
+response = ms.webhooks.update_webhook(request)
+print("Webhook updated")
+```
+
+### Disable/Enable a Webhook
+
+```python
+from mailersend import MailerSendClient
+from mailersend import WebhooksBuilder
+
+ms = MailerSendClient()
+
+# Disable webhook
+request = (WebhooksBuilder()
+          .webhook_id("webhook-id")
+          .enabled(False)
+          .build_webhook_update_request())
+
+response = ms.webhooks.update_webhook(request)
+print("Webhook disabled")
+
+# Enable webhook
+request = (WebhooksBuilder()
+          .webhook_id("webhook-id")
+          .enabled(True)
+          .build_webhook_update_request())
+
+response = ms.webhooks.update_webhook(request)
+print("Webhook enabled")
+```
+
+### Delete a Webhook
+
+```python
+from mailersend import MailerSendClient
+from mailersend import WebhooksBuilder
+
+ms = MailerSendClient()
+
+request = (WebhooksBuilder()
+          .webhook_id("webhook-id")
+          .build_webhook_delete_request())
+
+response = ms.webhooks.delete_webhook(request)
+print("Webhook deleted")
+```
+
+## Email Verification
+
+### Get all email verification lists
+
+```python
+from mailersend import MailerSendClient, EmailVerificationBuilder
+
+ms = MailerSendClient()
+
+request = EmailVerificationBuilder().build_list_request()
+response = ms.email_verification.list_verification_lists(request)
+
+for verification_list in response.data:
+    print(f"List: {verification_list.name}, Status: {verification_list.status}")
+```
+
+### Get a single email verification list
+
+```python
+from mailersend import MailerSendClient, EmailVerificationBuilder
+
+ms = MailerSendClient()
+
+request = (EmailVerificationBuilder()
+          .verification_list_id("list-id")
+          .build_get_request())
+
+response = ms.email_verification.get_verification_list(request)
+print(f"List name: {response.name}")
+```
+
+### Create an email verification list
+
+```python
+from mailersend import MailerSendClient, EmailVerificationBuilder
+
+ms = MailerSendClient()
+
+request = (EmailVerificationBuilder()
+          .name("My Verification List")
+          .emails(["test1@example.com", "test2@example.com"])
+          .build_create_request())
+
+response = ms.email_verification.create_verification_list(request)
+print(f"Created list with ID: {response.id}")
+```
+
+### Verify a list
+
+```python
+from mailersend import MailerSendClient, EmailVerificationBuilder
+
+ms = MailerSendClient()
+
+request = (EmailVerificationBuilder()
+          .verification_list_id("list-id")
+          .build_verify_request())
+
+response = ms.email_verification.verify_list(request)
+print(f"Verification started: {response.message}")
+```
+
+### Get list results
+
+```python
+from mailersend import MailerSendClient, EmailVerificationBuilder
+
+ms = MailerSendClient()
+
+request = (EmailVerificationBuilder()
+          .verification_list_id("list-id")
+          .build_results_request())
+
+response = ms.email_verification.get_verification_results(request)
+for result in response.data:
+    print(f"Email: {result.email}, Status: {result.status}")
+```
+
+## SMS
+
+### Sending SMS messages
+
+```python
+from mailersend import MailerSendClient
+from mailersend import SmsSendingBuilder
+
+ms = MailerSendClient()
+
+request = (SmsSendingBuilder()
+          .from_number("sms-number-id")
+          .to("+1234567890")
+          .text("Hello from MailerSend!")
+          .build())
+
+response = ms.sms.send(request)
+print(f"SMS sent with ID: {response.id}")
+```
+
+## SMS Activity
+
+### Get a list of SMS activities
 
 ```python
 from mailersend import MailerSendClient
@@ -1793,6 +2021,84 @@ request = (WebhooksBuilder()
 
 response = ms.webhooks.delete_webhook(request)
 print("Webhook deleted")
+```
+
+## Email Verification
+
+### Get all email verification lists
+
+```python
+from mailersend import MailerSendClient, EmailVerificationBuilder
+
+ms = MailerSendClient()
+
+request = EmailVerificationBuilder().build_list_request()
+response = ms.email_verification.list_verification_lists(request)
+
+for verification_list in response.data:
+    print(f"List: {verification_list.name}, Status: {verification_list.status}")
+```
+
+### Get a single email verification list
+
+```python
+from mailersend import MailerSendClient, EmailVerificationBuilder
+
+ms = MailerSendClient()
+
+request = (EmailVerificationBuilder()
+          .verification_list_id("list-id")
+          .build_get_request())
+
+response = ms.email_verification.get_verification_list(request)
+print(f"List name: {response.name}")
+```
+
+### Create an email verification list
+
+```python
+from mailersend import MailerSendClient, EmailVerificationBuilder
+
+ms = MailerSendClient()
+
+request = (EmailVerificationBuilder()
+          .name("My Verification List")
+          .emails(["test1@example.com", "test2@example.com"])
+          .build_create_request())
+
+response = ms.email_verification.create_verification_list(request)
+print(f"Created list with ID: {response.id}")
+```
+
+### Verify a list
+
+```python
+from mailersend import MailerSendClient, EmailVerificationBuilder
+
+ms = MailerSendClient()
+
+request = (EmailVerificationBuilder()
+          .verification_list_id("list-id")
+          .build_verify_request())
+
+response = ms.email_verification.verify_list(request)
+print(f"Verification started: {response.message}")
+```
+
+### Get list results
+
+```python
+from mailersend import MailerSendClient, EmailVerificationBuilder
+
+ms = MailerSendClient()
+
+request = (EmailVerificationBuilder()
+          .verification_list_id("list-id")
+          .build_results_request())
+
+response = ms.email_verification.get_verification_results(request)
+for result in response.data:
+    print(f"Email: {result.email}, Status: {result.status}")
 ```
 
 ## SMS
@@ -2244,103 +2550,70 @@ response = ms.sms_inbounds.delete_sms_inbound(request)
 print("SMS inbound route deleted")
 ```
 
-## Sender Identities
+## Tokens
 
-### Get a list of sender identities
+### Create a token
 
 ```python
 from mailersend import MailerSendClient
-from mailersend import IdentitiesBuilder
+from mailersend import TokensBuilder
 
 ms = MailerSendClient()
 
-request = (IdentitiesBuilder()
+request = (TokensBuilder()
+          .name("My API Token")
+          .scopes(["email_full", "analytics_read"])
           .domain_id("domain-id")
-          .page(1)
-          .limit(25)
-          .build_list_request())
+          .build_token_create())
 
-response = ms.identities.list_identities(request)
-for identity in response.data:
-    print(f"Identity: {identity.name} <{identity.email}>")
+response = ms.tokens.create_token(request)
+print(f"Created token: {response.accessToken}")
 ```
 
-### Get a sender identity
+### Pause / Unpause Token
 
 ```python
 from mailersend import MailerSendClient
-from mailersend import IdentitiesBuilder
+from mailersend import TokensBuilder
 
 ms = MailerSendClient()
 
-request = (IdentitiesBuilder()
-          .identity_id("identity-id")
-          .build_get_request())
+# Pause token
+request = (TokensBuilder()
+          .token_id("token-id")
+          .status("pause")
+          .build_token_update())
 
-response = ms.identities.get_identity(request)
-print(f"Identity: {response.name}")
+response = ms.tokens.update_token(request)
+print("Token paused")
+
+# Unpause token
+request = (TokensBuilder()
+          .token_id("token-id")
+          .status("unpause")
+          .build_token_update())
+
+response = ms.tokens.update_token(request)
+print("Token unpaused")
 ```
 
-### Create a sender identity
+### Delete a Token
 
 ```python
 from mailersend import MailerSendClient
-from mailersend import IdentitiesBuilder
+from mailersend import TokensBuilder
 
 ms = MailerSendClient()
 
-request = (IdentitiesBuilder()
-          .domain_id("domain-id")
-          .name("John Doe")
-          .email("email@domain.com")
-          .reply_to_email("reply@domain.com")
-          .reply_to_name("Doe John")
-          .add_note(True)
-          .personal_note("This is my awesome note")
-          .build_create_request())
+request = (TokensBuilder()
+          .token_id("token-id")
+          .build_token_delete())
 
-response = ms.identities.create_identity(request)
-print(f"Created identity with ID: {response.id}")
+response = ms.tokens.delete_token(request)
+print("Token deleted")
 ```
 
-### Update a sender identity
-
-```python
-from mailersend import MailerSendClient
-from mailersend import IdentitiesBuilder
-
-ms = MailerSendClient()
-
-request = (IdentitiesBuilder()
-          .identity_id("identity-id")
-          .name("Abe Doe")
-          .email("email@mydomain.com")
-          .reply_to_email("reply@mydomain.com")
-          .reply_to_name("Doe Abe")
-          .add_note(False)
-          .build_update_request())
-
-response = ms.identities.update_identity(request)
-print("Identity updated")
-```
-
-### Delete a sender identity
-
-```python
-from mailersend import MailerSendClient
-from mailersend import IdentitiesBuilder
-
-ms = MailerSendClient()
-
-request = (IdentitiesBuilder()
-          .identity_id("identity-id")
-          .build_delete_request())
-
-response = ms.identities.delete_identity(request)
-print("Identity deleted")
-```
-
-## API Quota
+## Other Endpoints
 
 ### Get API Quota
 
