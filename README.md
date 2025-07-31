@@ -69,7 +69,9 @@ MailerSend Python SDK
     - [Get a sender identity](#get-a-sender-identity)
     - [Create a sender identity](#create-a-sender-identity)
     - [Update a sender identity](#update-a-sender-identity)
+    - [Update a sender identity by email](#update-a-sender-identity-by-email)
     - [Delete a sender identity](#delete-a-sender-identity)
+    - [Delete a sender identity by email](#delete-a-sender-identity-by-email)
   - [Inbound Routes](#inbound-routes)
     - [Get a list of inbound routes](#get-a-list-of-inbound-routes)
     - [Get a single inbound route](#get-a-single-inbound-route)
@@ -1094,6 +1096,24 @@ request = (IdentityBuilder()
 response = ms.identities.update_identity(request)
 ```
 
+### Update a sender identity by email
+
+```python
+from mailersend import MailerSendClient, IdentityBuilder
+
+ms = MailerSendClient()
+
+request = (IdentityBuilder()
+          .email("support@yourdomain.com")
+          .name("Doe Jane")
+          .reply_to_email("support@yourdomain.com")
+          .reply_to_name("Support Team")
+          .add_note(True)
+          .build_update_by_email_request())
+
+response = ms.identities.update_identity(request)
+```
+
 ### Delete a sender identity
 
 ```python
@@ -1106,7 +1126,20 @@ request = (IdentityBuilder()
           .build_delete_request())
 
 response = ms.identities.delete_identity(request)
-print("Identity deleted successfully")
+```
+
+### Delete a sender identity by email
+
+```python
+from mailersend import MailerSendClient, IdentityBuilder
+
+ms = MailerSendClient()
+
+request = (IdentityBuilder()
+          .email("support@yourdomain.com")
+          .build_delete_by_email_request())
+
+response = ms.identities.delete_identity_by_email(request)
 ```
 
 ## Inbound Routes
