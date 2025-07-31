@@ -282,9 +282,9 @@ All data is validated using Pydantic models ensuring type safety and data integr
 ```python
 # All responses are strongly typed
 response = ms.sms_recipients.get_sms_recipient(request)
-print(response.data.id)           # Validated string
-print(response.data.number)       # Validated phone number
-print(response.data.created_at)   # Validated datetime object
+print(response.id)           # Validated string
+print(response.number)       # Validated phone number
+print(response.created_at)   # Validated datetime object
 ```
 
 <a name="response-data-access"></a>
@@ -325,13 +325,13 @@ Access data using dot notation for cleaner code:
 
 ```python
 # Attribute-style access (most convenient)
-recipient_id = response.data.id
-phone_number = response.data.number
-status = response.data.status
+recipient_id = response.id
+phone_number = response.number
+status = response.status
 
-# Nested attribute access
-if hasattr(response.data, 'sms') and response.data.sms:
-    latest_sms = response.data.sms[0].text
+# Nested attribute access for complex data
+if hasattr(response, 'sms') and response.sms:
+    latest_sms = response.sms[0].text
 ```
 
 ### Safe Access with Defaults
@@ -490,7 +490,7 @@ try:
     response = ms.emails.send(email)
     
     if response.success:
-        email_id = response.data.id
+        email_id = response.id
         remaining_quota = response.rate_limit_remaining
     else:
         status_code = response.status_code
@@ -527,8 +527,8 @@ if not response.success:
 # Single item responses (get operations)
 user_response = ms.users.get_user(request)
 if user_response.success:
-    user_name = user_response.data.name
-    user_email = user_response.data.email
+    user_name = user_response.name
+    user_email = user_response.email
 
 # List responses (paginated)
 users_response = ms.users.list_users(request)
@@ -739,7 +739,7 @@ request = (EmailVerificationBuilder()
           .build_get_request())
 
 response = ms.email_verification.get_verification_list(request)
-print(f"List name: {response.data.name}")
+print(f"List name: {response.name}")
 ```
 
 ### Create an email verification list
@@ -756,7 +756,7 @@ request = (EmailVerificationBuilder()
           .build_create_request())
 
 response = ms.email_verification.create_verification_list(request)
-print(f"Created list with ID: {response.data.id}")
+print(f"Created list with ID: {response.id}")
 ```
 
 ### Verify a list
@@ -821,7 +821,7 @@ emails = [
 ]
 
 response = ms.emails.send_bulk(emails)
-print(f"Bulk email ID: {response.data.bulk_email_id}")
+print(f"Bulk email ID: {response.bulk_email_id}")
 ```
 
 ### Get bulk email status
@@ -832,7 +832,7 @@ from mailersend import MailerSendClient
 ms = MailerSendClient()
 
 response = ms.emails.get_bulk_status("bulk-email-id")
-print(f"Status: {response.data.state}")
+print(f"Status: {response.state}")
 ```
 
 ## Activity
@@ -894,7 +894,7 @@ request = (ActivityBuilder()
           .build_get_request())
 
 response = ms.activities.get_activity(request)
-print(f"Activity type: {response.data.type}")
+print(f"Activity type: {response.type}")
 ```
 
 ## Analytics
@@ -1015,7 +1015,7 @@ request = (InboundBuilder()
           .build_get_request())
 
 response = ms.inbound.get_inbound_route(request)
-print(f"Route name: {response.data.name}")
+print(f"Route name: {response.name}")
 ```
 
 ### Add an inbound route
@@ -1036,7 +1036,7 @@ request = (InboundBuilder()
           .build_create_request())
 
 response = ms.inbound.create_inbound_route(request)
-print(f"Created route with ID: {response.data.id}")
+print(f"Created route with ID: {response.id}")
 ```
 
 ### Update an inbound route
@@ -1054,7 +1054,7 @@ request = (InboundBuilder()
           .build_update_request())
 
 response = ms.inbound.update_inbound_route(request)
-print(f"Updated route: {response.data.name}")
+print(f"Updated route: {response.name}")
 ```
 
 ### Delete an inbound route
@@ -1107,7 +1107,7 @@ request = (DomainsBuilder()
           .build_get_request())
 
 response = ms.domains.get_domain(request)
-print(f"Domain: {response.data.name}")
+print(f"Domain: {response.name}")
 ```
 
 ### Add a domain
@@ -1126,7 +1126,7 @@ request = (DomainsBuilder()
           .build_create_request())
 
 response = ms.domains.create_domain(request)
-print(f"Created domain with ID: {response.data.id}")
+print(f"Created domain with ID: {response.id}")
 ```
 
 ### Delete a domain
@@ -1218,7 +1218,7 @@ request = (DomainsBuilder()
           .build_verify_request())
 
 response = ms.domains.verify_domain(request)
-print(f"Verification status: {response.data.domain_settings.is_verified}")
+print(f"Verification status: {response.domain_settings.is_verified}")
 ```
 
 ## Messages
@@ -1254,7 +1254,7 @@ request = (MessagesBuilder()
           .build_get_request())
 
 response = ms.messages.get_message(request)
-print(f"Message: {response.data.subject}")
+print(f"Message: {response.subject}")
 ```
 
 ## Scheduled messages
@@ -1291,7 +1291,7 @@ request = (SchedulesBuilder()
           .build_get_request())
 
 response = ms.schedules.get_scheduled_message(request)
-print(f"Scheduled message: {response.data.subject}")
+print(f"Scheduled message: {response.subject}")
 ```
 
 ### Delete a scheduled message
@@ -1344,7 +1344,7 @@ request = (RecipientsBuilder()
           .build_get_request())
 
 response = ms.recipients.get_recipient(request)
-print(f"Recipient: {response.data.email}")
+print(f"Recipient: {response.email}")
 ```
 
 ### Delete a recipient
@@ -1587,7 +1587,7 @@ request = (TokensBuilder()
           .build_token_create())
 
 response = ms.tokens.create_token(request)
-print(f"Token: {response.data.accessToken}")  # Save this token securely!
+print(f"Token: {response.accessToken}")  # Save this token securely!
 ```
 
 ### Pause / Unpause Token
@@ -1665,7 +1665,7 @@ request = (TemplatesBuilder()
           .build_get_request())
 
 response = ms.templates.get_template(request)
-print(f"Template: {response.data.name}")
+print(f"Template: {response.name}")
 ```
 
 ### Delete template
@@ -1716,7 +1716,7 @@ request = (WebhooksBuilder()
           .build_webhook_get_request())
 
 response = ms.webhooks.get_webhook(request)
-print(f"Webhook: {response.data.name}")
+print(f"Webhook: {response.name}")
 ```
 
 ### Create a Webhook
@@ -1736,7 +1736,7 @@ request = (WebhooksBuilder()
           .build_webhook_create_request())
 
 response = ms.webhooks.create_webhook(request)
-print(f"Created webhook with ID: {response.data.id}")
+print(f"Created webhook with ID: {response.id}")
 ```
 
 ### Create a disabled webhook
@@ -1899,7 +1899,7 @@ request = (SmsActivityBuilder()
           .build_get_request())
 
 response = ms.sms_activity.get(request)
-print(f"SMS status: {response.data.status}")
+print(f"SMS status: {response.status}")
 ```
 
 ## SMS Phone Numbers
@@ -1936,7 +1936,7 @@ request = (SmsNumbersBuilder()
           .build_get_request())
 
 response = ms.sms_numbers.get_sms_number(request)
-print(f"Number: {response.data.phone_number}")
+print(f"Number: {response.phone_number}")
 ```
 
 ### Update a single SMS phone number
@@ -2019,7 +2019,7 @@ request = (SmsRecipientsBuilder()
           .build_get_request())
 
 response = ms.sms_recipients.get_sms_recipient(request)
-print(f"Recipient: {response.data.number}")
+print(f"Recipient: {response.number}")
 ```
 
 ### Update a single SMS recipient
@@ -2072,7 +2072,7 @@ request = (SmsMessagesBuilder()
           .build_get_request())
 
 response = ms.sms_messages.get_sms_message(request)
-print(f"Message: {response.data.text}")
+print(f"Message: {response.text}")
 ```
 
 ## SMS Webhooks
@@ -2107,7 +2107,7 @@ request = (SmsWebhooksBuilder()
           .build_get_request())
 
 response = ms.sms_webhooks.get_sms_webhook(request)
-print(f"Webhook: {response.data.name}")
+print(f"Webhook: {response.name}")
 ```
 
 ### Create an SMS webhook
@@ -2130,7 +2130,7 @@ request = (SmsWebhooksBuilder()
           .build_create_request())
 
 response = ms.sms_webhooks.create_sms_webhook(request)
-print(f"Created SMS webhook with ID: {response.data.id}")
+print(f"Created SMS webhook with ID: {response.id}")
 ```
 
 ### Update a single SMS webhook
@@ -2205,7 +2205,7 @@ request = (SmsInboundsBuilder()
           .build_get_request())
 
 response = ms.sms_inbounds.get_sms_inbound(request)
-print(f"Route: {response.data.name}")
+print(f"Route: {response.name}")
 ```
 
 ### Create an SMS inbound route
@@ -2226,7 +2226,7 @@ request = (SmsInboundsBuilder()
           .build_create_request())
 
 response = ms.sms_inbounds.create_sms_inbound(request)
-print(f"Created SMS inbound route with ID: {response.data.id}")
+print(f"Created SMS inbound route with ID: {response.id}")
 ```
 
 ### Update an SMS inbound route
@@ -2300,7 +2300,7 @@ request = (IdentitiesBuilder()
           .build_get_request())
 
 response = ms.identities.get_identity(request)
-print(f"Identity: {response.data.name}")
+print(f"Identity: {response.name}")
 ```
 
 ### Create a sender identity
@@ -2322,7 +2322,7 @@ request = (IdentitiesBuilder()
           .build_create_request())
 
 response = ms.identities.create_identity(request)
-print(f"Created identity with ID: {response.data.id}")
+print(f"Created identity with ID: {response.id}")
 ```
 
 ### Update a sender identity
@@ -2372,8 +2372,8 @@ from mailersend import MailerSendClient
 ms = MailerSendClient()
 
 response = ms.api_quota.get_quota()
-print(f"Quota used: {response.data.used}/{response.data.limit}")
-print(f"Resets at: {response.data.reset_date}")
+print(f"Quota used: {response.used}/{response.limit}")
+print(f"Resets at: {response.reset_date}")
 ```
 
 <a name="error-handling"></a>
