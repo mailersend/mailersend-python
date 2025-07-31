@@ -1032,27 +1032,21 @@ response = ms.domains.get_domain_verification_status(request)
 ### Get a list of sender identities
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import IdentityBuilder
+from mailersend import MailerSendClient, IdentityBuilder
 
 ms = MailerSendClient()
 
 request = (IdentityBuilder()
           .domain_id("domain-id")
-          .page(1)
-          .limit(25)
           .build_list_request())
 
 response = ms.identities.list_identities(request)
-for identity in response.data:
-    print(f"Identity: {identity.email}, Name: {identity.name}")
 ```
 
 ### Get a sender identity
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import IdentityBuilder
+from mailersend import MailerSendClient, IdentityBuilder
 
 ms = MailerSendClient()
 
@@ -1061,14 +1055,12 @@ request = (IdentityBuilder()
           .build_get_request())
 
 response = ms.identities.get_identity(request)
-print(f"Identity: {response.email}")
 ```
 
 ### Create a sender identity
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import IdentityBuilder
+from mailersend import MailerSendClient, IdentityBuilder
 
 ms = MailerSendClient()
 
@@ -1078,18 +1070,16 @@ request = (IdentityBuilder()
           .email("john@yourdomain.com")
           .reply_to_email("support@yourdomain.com")
           .reply_to_name("Support Team")
-          .add_note("Marketing campaigns")
+          .add_note(True)
           .build_create_request())
 
 response = ms.identities.create_identity(request)
-print(f"Created identity with ID: {response.id}")
 ```
 
 ### Update a sender identity
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import IdentityBuilder
+from mailersend import MailerSendClient, IdentityBuilder
 
 ms = MailerSendClient()
 
@@ -1098,18 +1088,16 @@ request = (IdentityBuilder()
           .name("Jane Doe")
           .reply_to_email("support@yourdomain.com")
           .reply_to_name("Support Team")
-          .add_note("Updated for new campaign")
+          .add_note(True)
           .build_update_request())
 
 response = ms.identities.update_identity(request)
-print("Identity updated successfully")
 ```
 
 ### Delete a sender identity
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import IdentityBuilder
+from mailersend import MailerSendClient, IdentityBuilder
 
 ms = MailerSendClient()
 
