@@ -46,7 +46,7 @@ class Domains(BaseResource):
 
         self.logger.debug("Query params: %s", params)
 
-        response = self.client.request("GET", "domains", params=params)
+        response = self.client.request(method="GET", path="domains", params=params)
 
         return self._create_response(response)
 
@@ -63,7 +63,7 @@ class Domains(BaseResource):
         self.logger.debug("Preparing to get domain")
         self.logger.debug("Requesting domain information for: %s", request.domain_id)
 
-        response = self.client.request("GET", f"domains/{request.domain_id}")
+        response = self.client.request(method="GET", path=f"domains/{request.domain_id}")
 
         return self._create_response(response)
 
@@ -84,7 +84,7 @@ class Domains(BaseResource):
 
         self.logger.debug("Request body: %s", body)
 
-        response = self.client.request("POST", "domains", body=body)
+        response = self.client.request(method="POST", path="domains", body=body)
 
         return self._create_response(response)
 
@@ -101,7 +101,7 @@ class Domains(BaseResource):
         self.logger.debug("Preparing to delete domain")
         self.logger.debug("Deleting domain: %s", request.domain_id)
 
-        response = self.client.request("DELETE", f"domains/{request.domain_id}")
+        response = self.client.request(method="DELETE", path=f"domains/{request.domain_id}")
 
         return self._create_response(response)
 
@@ -124,7 +124,7 @@ class Domains(BaseResource):
         self.logger.debug("Query params: %s", params)
 
         response = self.client.request(
-            "GET", f"domains/{request.domain_id}/recipients", params=params
+            method="GET", path=f"domains/{request.domain_id}/recipients", params=params
         )
 
         return self._create_response(response)
@@ -152,7 +152,7 @@ class Domains(BaseResource):
         self.logger.debug("Request body: %s", body)
 
         response = self.client.request(
-            "PUT", f"domains/{request.domain_id}/settings", body=body
+            method="PUT", path=f"domains/{request.domain_id}/settings", body=body
         )
 
         return self._create_response(response)
@@ -171,7 +171,7 @@ class Domains(BaseResource):
         self.logger.debug("Retrieving DNS records for domain: %s", request.domain_id)
 
         response = self.client.request(
-            "GET", f"domains/{request.domain_id}/dns-records"
+            method="GET", path=f"domains/{request.domain_id}/dns-records"
         )
 
         return self._create_response(response)
@@ -193,6 +193,6 @@ class Domains(BaseResource):
             "Retrieving verification status for domain: %s", request.domain_id
         )
 
-        response = self.client.request("GET", f"domains/{request.domain_id}/verify")
+        response = self.client.request(method="GET", path=f"domains/{request.domain_id}/verify")
 
         return self._create_response(response)

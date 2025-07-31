@@ -1,4 +1,4 @@
-from typing import List, Optional, Literal, Any
+from typing import Optional
 from pydantic import Field, field_validator
 
 from .base import BaseModel as MailerSendBaseModel
@@ -13,7 +13,11 @@ class DomainListQueryParams(MailerSendBaseModel):
 
     def to_query_params(self) -> dict:
         """Convert to query parameters for API request."""
-        params = {"page": self.page, "limit": self.limit, "verified": self.verified}
+        params = {"page": self.page, "limit": self.limit}
+        
+        # Convert boolean to lowercase string for API compatibility
+        if self.verified is not None:
+            params["verified"] = str(self.verified).lower()
 
         return {k: v for k, v in params.items() if v is not None}
 
