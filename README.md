@@ -901,27 +901,22 @@ response = ms.analytics.get_opens_by_reading_environment(request)
 ### Get a list of domains
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import DomainsBuilder
+from mailersend import MailerSendClient, DomainsBuilder
 
 ms = MailerSendClient()
 
 request = (DomainsBuilder()
-          .verified(True)
           .page(1)
           .limit(25)
           .build_list_request())
 
 response = ms.domains.list_domains(request)
-for domain in response.data:
-    print(f"Domain: {domain.name}, Verified: {domain.domain_settings.is_verified}")
 ```
 
 ### Get a single domain
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import DomainsBuilder
+from mailersend import MailerSendClient, DomainsBuilder
 
 ms = MailerSendClient()
 
@@ -936,13 +931,12 @@ print(f"Domain: {response.name}")
 ### Add a domain
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import DomainsBuilder
+from mailersend import MailerSendClient, DomainsBuilder
 
 ms = MailerSendClient()
 
 request = (DomainsBuilder()
-          .name("mydomain.com")
+          .domain_name("mydomain.com")
           .return_path_subdomain("rp")
           .custom_tracking_subdomain("ct")
           .inbound_routing_subdomain("ir")
@@ -955,8 +949,7 @@ print(f"Created domain with ID: {response.id}")
 ### Delete a domain
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import DomainsBuilder
+from mailersend import MailerSendClient, DomainsBuilder
 
 ms = MailerSendClient()
 
@@ -965,14 +958,12 @@ request = (DomainsBuilder()
           .build_delete_request())
 
 response = ms.domains.delete_domain(request)
-print("Domain deleted successfully")
 ```
 
 ### Get a list of recipients per domain
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import DomainsBuilder
+from mailersend import MailerSendClient, DomainsBuilder
 
 ms = MailerSendClient()
 
@@ -983,15 +974,12 @@ request = (DomainsBuilder()
           .build_recipients_request())
 
 response = ms.domains.get_domain_recipients(request)
-for recipient in response.data:
-    print(f"Recipient: {recipient.email}")
 ```
 
 ### Update domain settings
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import DomainsBuilder
+from mailersend import MailerSendClient, DomainsBuilder
 
 ms = MailerSendClient()
 
@@ -1005,27 +993,23 @@ request = (DomainsBuilder()
           .custom_tracking_enabled(True)
           .custom_tracking_subdomain("email")
           .precedence_bulk(False)
-          .build_settings_request())
+          .build_update_settings_request())
 
 response = ms.domains.update_domain_settings(request)
-print("Domain settings updated")
 ```
 
 ### Get DNS Records
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import DomainsBuilder
+from mailersend import MailerSendClient, DomainsBuilder
 
 ms = MailerSendClient()
 
 request = (DomainsBuilder()
           .domain_id("domain-id")
-          .build_dns_request())
+          .build_dns_records_request())
 
-response = ms.domains.get_dns_records(request)
-for record in response.data:
-    print(f"Type: {record.type}, Name: {record.name}, Value: {record.value}")
+response = ms.domains.get_domain_dns_records(request)
 ```
 
 ### Verify a domain
@@ -1038,10 +1022,9 @@ ms = MailerSendClient()
 
 request = (DomainsBuilder()
           .domain_id("domain-id")
-          .build_verify_request())
+          .build_verification_request())
 
-response = ms.domains.verify_domain(request)
-print(f"Verification status: {response.domain_settings.is_verified}")
+response = ms.domains.get_domain_verification_status(request)
 ```
 
 ## Sender Identities
