@@ -765,18 +765,24 @@ print(f"Status: {response.state}")
 
 ```python
 from mailersend import MailerSendClient, ActivityBuilder
+from datetime import datetime, timedelta
 
 ms = MailerSendClient()
 
+# Get activities from last 7 days (maximum allowed timeframe)
+date_from = int((datetime.now() - timedelta(days=7)).timestamp())
+date_to = int(datetime.now().timestamp())
+
 request = (ActivityBuilder()
           .domain_id("domain-id")
+          .date_from(date_from)
+          .date_to(date_to)
           .page(1)
           .limit(25)
           .build_list_request())
 
 response = ms.activities.list_activities(request)
-for activity in response.data:
-    print(f"Event: {activity.type}, Email: {activity.email.recipient.email}")
+print(response.data)
 ```
 
 ### Get activity with filters
@@ -806,11 +812,11 @@ response = ms.activities.list_activities(request)
 ### Get a single activity
 
 ```python
-from mailersend import MailerSendClient, ActivityBuilder
+from mailersend import MailerSendClient, SingleActivityBuilder
 
 ms = MailerSendClient()
 
-request = (ActivityBuilder()
+request = (SingleActivityBuilder()
           .activity_id("activity-id")
           .build_get_request())
 

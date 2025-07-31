@@ -82,6 +82,10 @@ class ActivityBuilder:
             return int(value.timestamp())
         return value
 
+    def build_list_request(self) -> ActivityRequest:
+        """Build the ActivityRequest object for listing activities."""
+        return self.build()
+    
     def build(self) -> ActivityRequest:
         """Build the ActivityRequest object."""
         # Convert dates to timestamps if needed
@@ -151,6 +155,10 @@ class SingleActivityBuilder:
         self._activity_id = None
         return self
 
+    def build_get_request(self) -> SingleActivityRequest:
+        """Build the SingleActivityRequest object for getting a single activity."""
+        return self.build()
+    
     def build(self) -> SingleActivityRequest:
         """
         Build the SingleActivityRequest object.
