@@ -38,7 +38,7 @@ class IdentitiesResource(BaseResource):
 
         # Make API request
         response = self.client.request(
-            method="GET", path="/identities", params=params if params else None
+            method="GET", path="identities", params=params if params else None
         )
 
         return self._create_response(response)
@@ -64,7 +64,7 @@ class IdentitiesResource(BaseResource):
         )
 
         # Make API request
-        response = self.client.request(method="POST", path="/identities", body=data)
+        response = self.client.request(method="POST", path="identities", body=data)
 
         return self._create_response(response)
 
@@ -82,7 +82,7 @@ class IdentitiesResource(BaseResource):
 
         # Make API request
         response = self.client.request(
-            method="GET", path=f"/identities/{request.identity_id}"
+            method="GET", path=f"identities/{request.identity_id}"
         )
 
         return self._create_response(response)
@@ -101,7 +101,7 @@ class IdentitiesResource(BaseResource):
 
         # Make API request
         response = self.client.request(
-            method="GET", path=f"/identities/email/{request.email}"
+            method="GET", path=f"identities/email/{request.email}"
         )
 
         return self._create_response(response)
@@ -133,7 +133,7 @@ class IdentitiesResource(BaseResource):
         # Make API request
         response = self.client.request(
             method="PUT",
-            path=f"/identities/{request.identity_id}",
+            path=f"identities/{request.identity_id}",
             body=data if data else None,
         )
 
@@ -164,7 +164,7 @@ class IdentitiesResource(BaseResource):
         # Make API request
         response = self.client.request(
             method="PUT",
-            path=f"/identities/email/{request.email}",
+            path=f"identities/email/{request.email}",
             body=data if data else None,
         )
 
@@ -186,7 +186,7 @@ class IdentitiesResource(BaseResource):
 
         # Make API request
         response = self.client.request(
-            method="DELETE", path=f"/identities/{request.identity_id}"
+            method="DELETE", path=f"identities/{request.identity_id}"
         )
 
         return self._create_response(response)
@@ -207,7 +207,7 @@ class IdentitiesResource(BaseResource):
 
         # Make API request
         response = self.client.request(
-            method="DELETE", path=f"/identities/email/{request.email}"
+            method="DELETE", path=f"identities/email/{request.email}"
         )
 
         return self._create_response(response)
