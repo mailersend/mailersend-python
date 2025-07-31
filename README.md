@@ -838,10 +838,10 @@ date_to = int(datetime.now().timestamp())
 request = (AnalyticsBuilder()
           .date_from(date_from)
           .date_to(date_to)
-          .events(["sent", "delivered", "opened"])
+          .events("sent", "delivered", "opened")
           .domain_id("domain-id")
           .group_by("days")
-          .build_date_request())
+          .build())
 
 response = ms.analytics.get_activity_by_date(request)
 for stat in response.data:
@@ -859,11 +859,9 @@ request = (AnalyticsBuilder()
           .date_from(date_from)
           .date_to(date_to)
           .domain_id("domain-id")
-          .build_country_request())
+          .build())
 
 response = ms.analytics.get_opens_by_country(request)
-for country in response.data:
-    print(f"Country: {country.name}, Opens: {country.opens}")
 ```
 
 ### Opens by user-agent name
@@ -877,18 +875,15 @@ request = (AnalyticsBuilder()
           .date_from(date_from)
           .date_to(date_to)
           .domain_id("domain-id")
-          .build_user_agent_request())
+          .build())
 
 response = ms.analytics.get_opens_by_user_agent(request)
-for agent in response.data:
-    print(f"User Agent: {agent.name}, Opens: {agent.opens}")
 ```
 
 ### Opens by reading environment
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import AnalyticsBuilder
+from mailersend import MailerSendClient, AnalyticsBuilder
 
 ms = MailerSendClient()
 
@@ -896,11 +891,9 @@ request = (AnalyticsBuilder()
           .date_from(date_from)
           .date_to(date_to)
           .domain_id("domain-id")
-          .build_reading_environment_request())
+          .build())
 
 response = ms.analytics.get_opens_by_reading_environment(request)
-for env in response.data:
-    print(f"Environment: {env.name}, Opens: {env.opens}")
 ```
 
 ## Domains
