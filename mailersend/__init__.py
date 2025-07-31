@@ -14,11 +14,11 @@ from .resources.activity import Activity
 from .resources.analytics import Analytics
 from .resources.domains import Domains
 from .models.email import (
-    EmailContact, 
+    EmailContact,
     EmailAttachment,
-    EmailPersonalization, 
+    EmailPersonalization,
     EmailRequest,
-    EmailTrackingSettings, 
+    EmailTrackingSettings,
     EmailHeader
 )
 from .models.activity import (
@@ -41,7 +41,7 @@ from .exceptions import (
     ValidationError
 )
 
-__version__ = "1.0.0"
+__version__ = "2.0.0"
 
 __all__ = [
     # Core client
