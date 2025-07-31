@@ -44,15 +44,15 @@ MailerSend Python SDK
     - [Send a template-based email](#send-a-template-based-email)
     - [Personalization](#personalization)
     - [Send email with attachment](#send-email-with-attachment)
+  - [Bulk Email](#bulk-email)
+    - [Send bulk email](#send-bulk-email)
+    - [Get bulk email status](#get-bulk-email-status)
   - [Email Verification](#email-verification)
     - [Get all email verification lists](#get-all-email-verification-lists)
     - [Get a single email verification list](#get-a-single-email-verification-list)
     - [Create an email verification list](#create-an-email-verification-list)
     - [Verify a list](#verify-a-list)
     - [Get list results](#get-list-results)
-  - [Bulk Email](#bulk-email)
-    - [Send bulk email](#send-bulk-email)
-    - [Get bulk email status](#get-bulk-email-status)
   - [Activity](#activity)
     - [Get a list of activities](#get-a-list-of-activities)
     - [Get activity with filters](#get-activity-with-filters)
@@ -687,9 +687,7 @@ response = ms.emails.send(email)
 ### Send email with attachment
 
 ```python
-import base64
-from mailersend import MailerSendClient
-from mailersend import EmailBuilder
+from mailersend import MailerSendClient, EmailBuilder
 
 ms = MailerSendClient()
 
@@ -702,89 +700,6 @@ email = (EmailBuilder()
          .build())
 
 response = ms.emails.send(email)
-```
-
-## Email Verification
-
-### Get all email verification lists
-
-```python
-from mailersend import MailerSendClient
-from mailersend import EmailVerificationBuilder
-
-ms = MailerSendClient()
-
-request = EmailVerificationBuilder().build_list_request()
-response = ms.email_verification.list_verification_lists(request)
-
-for verification_list in response.data:
-    print(f"List: {verification_list.name}, Status: {verification_list.status}")
-```
-
-### Get a single email verification list
-
-```python
-from mailersend import MailerSendClient
-from mailersend import EmailVerificationBuilder
-
-ms = MailerSendClient()
-
-request = (EmailVerificationBuilder()
-          .verification_list_id("list-id")
-          .build_get_request())
-
-response = ms.email_verification.get_verification_list(request)
-print(f"List name: {response.name}")
-```
-
-### Create an email verification list
-
-```python
-from mailersend import MailerSendClient
-from mailersend import EmailVerificationBuilder
-
-ms = MailerSendClient()
-
-request = (EmailVerificationBuilder()
-          .name("My Verification List")
-          .emails(["test1@example.com", "test2@example.com"])
-          .build_create_request())
-
-response = ms.email_verification.create_verification_list(request)
-print(f"Created list with ID: {response.id}")
-```
-
-### Verify a list
-
-```python
-from mailersend import MailerSendClient
-from mailersend import EmailVerificationBuilder
-
-ms = MailerSendClient()
-
-request = (EmailVerificationBuilder()
-          .verification_list_id("list-id")
-          .build_verify_request())
-
-response = ms.email_verification.verify_list(request)
-print(f"Verification started: {response.message}")
-```
-
-### Get list results
-
-```python
-from mailersend import MailerSendClient
-from mailersend import EmailVerificationBuilder
-
-ms = MailerSendClient()
-
-request = (EmailVerificationBuilder()
-          .verification_list_id("list-id")
-          .build_results_request())
-
-response = ms.email_verification.get_verification_results(request)
-for result in response.data:
-    print(f"Email: {result.email}, Status: {result.status}")
 ```
 
 ## Bulk Email
@@ -829,13 +744,90 @@ response = ms.emails.get_bulk_status("bulk-email-id")
 print(f"Status: {response.state}")
 ```
 
+## Email Verification
+
+### Get all email verification lists
+
+```python
+from mailersend import MailerSendClient, EmailVerificationBuilder
+
+ms = MailerSendClient()
+
+request = EmailVerificationBuilder().build_list_request()
+response = ms.email_verification.list_verification_lists(request)
+
+for verification_list in response.data:
+    print(f"List: {verification_list.name}, Status: {verification_list.status}")
+```
+
+### Get a single email verification list
+
+```python
+from mailersend import MailerSendClient, EmailVerificationBuilder
+
+ms = MailerSendClient()
+
+request = (EmailVerificationBuilder()
+          .verification_list_id("list-id")
+          .build_get_request())
+
+response = ms.email_verification.get_verification_list(request)
+print(f"List name: {response.name}")
+```
+
+### Create an email verification list
+
+```python
+from mailersend import MailerSendClient, EmailVerificationBuilder
+
+ms = MailerSendClient()
+
+request = (EmailVerificationBuilder()
+          .name("My Verification List")
+          .emails(["test1@example.com", "test2@example.com"])
+          .build_create_request())
+
+response = ms.email_verification.create_verification_list(request)
+print(f"Created list with ID: {response.id}")
+```
+
+### Verify a list
+
+```python
+from mailersend import MailerSendClient, EmailVerificationBuilder
+
+ms = MailerSendClient()
+
+request = (EmailVerificationBuilder()
+          .verification_list_id("list-id")
+          .build_verify_request())
+
+response = ms.email_verification.verify_list(request)
+print(f"Verification started: {response.message}")
+```
+
+### Get list results
+
+```python
+from mailersend import MailerSendClient, EmailVerificationBuilder
+
+ms = MailerSendClient()
+
+request = (EmailVerificationBuilder()
+          .verification_list_id("list-id")
+          .build_results_request())
+
+response = ms.email_verification.get_verification_results(request)
+for result in response.data:
+    print(f"Email: {result.email}, Status: {result.status}")
+```
+
 ## Activity
 
 ### Get a list of activities
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import ActivityBuilder
+from mailersend import MailerSendClient, ActivityBuilder
 
 ms = MailerSendClient()
 
@@ -853,8 +845,7 @@ for activity in response.data:
 ### Get activity with filters
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import ActivityBuilder
+from mailersend import MailerSendClient, ActivityBuilder
 from datetime import datetime, timedelta
 
 ms = MailerSendClient()
@@ -878,8 +869,7 @@ response = ms.activities.list_activities(request)
 ### Get a single activity
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import ActivityBuilder
+from mailersend import MailerSendClient, ActivityBuilder
 
 ms = MailerSendClient()
 
@@ -896,8 +886,7 @@ print(f"Activity type: {response.type}")
 ### Activity data by date
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import AnalyticsBuilder
+from mailersend import MailerSendClient, AnalyticsBuilder
 from datetime import datetime, timedelta
 
 ms = MailerSendClient()
@@ -921,8 +910,7 @@ for stat in response.data:
 ### Opens by country
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import AnalyticsBuilder
+from mailersend import MailerSendClient, AnalyticsBuilder
 
 ms = MailerSendClient()
 
@@ -940,8 +928,7 @@ for country in response.data:
 ### Opens by user-agent name
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import AnalyticsBuilder
+from mailersend import MailerSendClient, AnalyticsBuilder
 
 ms = MailerSendClient()
 
