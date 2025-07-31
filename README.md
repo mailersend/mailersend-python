@@ -44,7 +44,6 @@ MailerSend Python SDK
     - [Send a template-based email](#send-a-template-based-email)
     - [Personalization](#personalization)
     - [Send email with attachment](#send-email-with-attachment)
-  - [Bulk Email](#bulk-email)
     - [Send bulk email](#send-bulk-email)
     - [Get bulk email status](#get-bulk-email-status)
   - [Email Verification](#email-verification)
@@ -701,8 +700,6 @@ email = (EmailBuilder()
 
 response = ms.emails.send(email)
 ```
-
-## Bulk Email
 
 ### Send bulk email
 
