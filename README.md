@@ -460,7 +460,7 @@ from mailersend.builders import EmailBuilder
 ms = MailerSend()
 
 try:
-    email = EmailBuilder().mail_from("sender@domain.com").build()
+    email = EmailBuilder().from_email("sender@domain.com").build()
     response = ms.email.send(email)
     
     if response.success:
@@ -581,11 +581,11 @@ from mailersend.builders import EmailBuilder
 ms = MailerSend()
 
 email = (EmailBuilder()
-         .mail_from("sender@domain.com", "Your Name")
-         .mail_to([{"email": "recipient@domain.com", "name": "Recipient"}])
+         .from_email("sender@domain.com", "Your Name")
+         .to_many([{"email": "recipient@domain.com", "name": "Recipient"}])
          .subject("Hello from MailerSend!")
-         .html_content("<h1>Hello World!</h1>")
-         .text_content("Hello World!")
+         .html("<h1>Hello World!</h1>")
+         .text("Hello World!")
          .build())
 
 response = ms.email.send(email)
@@ -601,12 +601,12 @@ from mailersend.builders import EmailBuilder
 ms = MailerSend()
 
 email = (EmailBuilder()
-         .mail_from("sender@domain.com", "Your Name")
-         .mail_to([{"email": "recipient@domain.com", "name": "Recipient"}])
-         .cc([{"email": "cc@domain.com", "name": "CC Recipient"}])
-         .bcc([{"email": "bcc@domain.com", "name": "BCC Recipient"}])
+         .from_email("sender@domain.com", "Your Name")
+         .to_many([{"email": "recipient@domain.com", "name": "Recipient"}])
+         .cc("cc@domain.com", "CC Recipient")
+         .bcc("bcc@domain.com", "BCC Recipient")
          .subject("Hello with CC/BCC!")
-         .html_content("<h1>Hello World!</h1>")
+         .html("<h1>Hello World!</h1>")
          .build())
 
 response = ms.email.send(email)
@@ -621,10 +621,10 @@ from mailersend.builders import EmailBuilder
 ms = MailerSend()
 
 email = (EmailBuilder()
-         .mail_from("sender@domain.com", "Your Name")
-         .mail_to([{"email": "recipient@domain.com", "name": "Recipient"}])
-         .template_id("template-id")
-         .personalization([{
+         .from_email("sender@domain.com", "Your Name")
+         .to_many([{"email": "recipient@domain.com", "name": "Recipient"}])
+         .template("template-id")
+         .personalize_many([{
              "email": "recipient@domain.com",
              "data": {
                  "name": "John",
@@ -645,11 +645,11 @@ from mailersend.builders import EmailBuilder
 ms = MailerSend()
 
 email = (EmailBuilder()
-         .mail_from("sender@domain.com", "Your Name")
-         .mail_to([{"email": "recipient@domain.com", "name": "Recipient"}])
+         .from_email("sender@domain.com", "Your Name")
+         .to_many([{"email": "recipient@domain.com", "name": "Recipient"}])
          .subject("Hello {$name}!")
-         .html_content("<h1>Hello {$name} from {$company}!</h1>")
-         .personalization([{
+         .html("<h1>Hello {$name} from {$company}!</h1>")
+         .personalize_many([{
              "email": "recipient@domain.com",
              "data": {
                  "name": "John",
@@ -672,21 +672,12 @@ from mailersend.builders import EmailBuilder
 
 ms = MailerSend()
 
-# Read and encode file
-with open('document.pdf', 'rb') as f:
-    file_content = base64.b64encode(f.read()).decode('ascii')
-
 email = (EmailBuilder()
-         .mail_from("sender@domain.com", "Your Name")
-         .mail_to([{"email": "recipient@domain.com", "name": "Recipient"}])
+         .from_email("sender@domain.com", "Your Name")
+         .to_many([{"email": "recipient@domain.com", "name": "Recipient"}])
          .subject("Email with attachment")
-         .html_content("<h1>Please find attached document</h1>")
-         .attachments([{
-             "id": "document",
-             "filename": "document.pdf",
-             "content": file_content,
-             "disposition": "attachment"
-         }])
+         .html("<h1>Please find attached document</h1>")
+         .attach_file("document.pdf")
          .build())
 
 response = ms.email.send(email)
@@ -781,45 +772,40 @@ for result in response.data:
 
 ```python
 from mailersend import MailerSend
-from mailersend.builders import BulkEmailBuilder
+from mailersend.builders import EmailBuilder
 
 ms = MailerSend()
 
+# Create individual EmailRequest objects
 emails = [
-    {
-        "from": {"email": "sender@domain.com", "name": "Sender"},
-        "to": [{"email": "recipient1@domain.com", "name": "Recipient 1"}],
-        "subject": "Bulk email 1",
-        "html": "<h1>Hello from bulk email 1</h1>",
-        "text": "Hello from bulk email 1"
-    },
-    {
-        "from": {"email": "sender@domain.com", "name": "Sender"},
-        "to": [{"email": "recipient2@domain.com", "name": "Recipient 2"}],
-        "subject": "Bulk email 2", 
-        "html": "<h1>Hello from bulk email 2</h1>",
-        "text": "Hello from bulk email 2"
-    }
+    EmailBuilder()
+        .from_email("sender@domain.com", "Sender")
+        .to_many([{"email": "recipient1@domain.com", "name": "Recipient 1"}])
+        .subject("Bulk email 1")
+        .html("<h1>Hello from bulk email 1</h1>")
+        .text("Hello from bulk email 1")
+        .build(),
+    EmailBuilder()
+        .from_email("sender@domain.com", "Sender")
+        .to_many([{"email": "recipient2@domain.com", "name": "Recipient 2"}])
+        .subject("Bulk email 2")
+        .html("<h1>Hello from bulk email 2</h1>")
+        .text("Hello from bulk email 2")
+        .build()
 ]
 
-request = BulkEmailBuilder().emails(emails).build()
-response = ms.bulk_email.send(request)
-print(f"Bulk email ID: {response.bulk_email_id}")
+response = ms.email.send_bulk(emails)
+print(f"Bulk email ID: {response.data.bulk_email_id}")
 ```
 
 ### Get bulk email status
 
 ```python
 from mailersend import MailerSend
-from mailersend.builders import BulkEmailBuilder
 
 ms = MailerSend()
 
-request = (BulkEmailBuilder()
-          .bulk_email_id("bulk-email-id")
-          .build_status_request())
-
-response = ms.bulk_email.get_status(request)
+response = ms.email.get_bulk_status("bulk-email-id")
 print(f"Status: {response.data.state}")
 ```
 
@@ -1649,7 +1635,7 @@ from mailersend.builders import TemplatesBuilder
 ms = MailerSend()
 
 request = (TemplatesBuilder()
-          .template_id("template-id")
+          .template("template-id")
           .build_get_request())
 
 response = ms.templates.get_template(request)
@@ -1665,7 +1651,7 @@ from mailersend.builders import TemplatesBuilder
 ms = MailerSend()
 
 request = (TemplatesBuilder()
-          .template_id("template-id")
+          .template("template-id")
           .build_delete_request())
 
 response = ms.templates.delete_template(request)
@@ -1817,8 +1803,8 @@ ms = MailerSend()
 
 # Simple SMS
 request = (SmsSendingBuilder()
-          .sms_number_id("sms-number-id")
-          .recipients(["+1234567890", "+1234567891"])
+          .from_number("sms-number-id")
+          .to(["+1234567890", "+1234567891"])
           .text("Hello from MailerSend SMS!")
           .build())
 
@@ -1827,8 +1813,8 @@ print(f"SMS sent: {response.message}")
 
 # SMS with personalization
 request = (SmsSendingBuilder()
-          .sms_number_id("sms-number-id")
-          .recipients(["+1234567890", "+1234567891"])
+          .from_number("sms-number-id")
+          .to(["+1234567890", "+1234567891"])
           .text("Hello {{name}}, your order {{order_id}} is ready!")
           .personalization([
               {
@@ -1861,7 +1847,7 @@ date_from = int((datetime.now() - timedelta(days=7)).timestamp())
 date_to = int(datetime.now().timestamp())
 
 request = (SmsActivityBuilder()
-          .sms_number_id("sms-number-id")
+          .from_number("sms-number-id")
           .date_from(date_from)
           .date_to(date_to)
           .events(["sent", "delivered", "failed"])
@@ -1920,7 +1906,7 @@ from mailersend.builders import SmsNumbersBuilder
 ms = MailerSend()
 
 request = (SmsNumbersBuilder()
-          .sms_number_id("sms-number-id")
+          .from_number("sms-number-id")
           .build_get_request())
 
 response = ms.sms_numbers.get_sms_number(request)
@@ -1936,7 +1922,7 @@ from mailersend.builders import SmsNumbersBuilder
 ms = MailerSend()
 
 request = (SmsNumbersBuilder()
-          .sms_number_id("sms-number-id")
+          .from_number("sms-number-id")
           .paused(True)
           .build_update_request())
 
@@ -1953,7 +1939,7 @@ from mailersend.builders import SmsNumbersBuilder
 ms = MailerSend()
 
 request = (SmsNumbersBuilder()
-          .sms_number_id("sms-number-id")
+          .from_number("sms-number-id")
           .build_delete_request())
 
 response = ms.sms_numbers.delete_sms_number(request)
@@ -1972,7 +1958,7 @@ from mailersend.models.sms_recipients import SmsRecipientStatus
 ms = MailerSend()
 
 request = (SmsRecipientsBuilder()
-          .sms_number_id("sms-number-id")
+          .from_number("sms-number-id")
           .status(SmsRecipientStatus.ACTIVE)
           .page(1)
           .limit(25)
@@ -2074,7 +2060,7 @@ from mailersend.builders import SmsWebhooksBuilder
 ms = MailerSend()
 
 request = (SmsWebhooksBuilder()
-          .sms_number_id("sms-number-id")
+          .from_number("sms-number-id")
           .build_list_request())
 
 response = ms.sms_webhooks.list_sms_webhooks(request)
@@ -2108,7 +2094,7 @@ from mailersend.models.sms_webhooks import SmsWebhookEvent
 ms = MailerSend()
 
 request = (SmsWebhooksBuilder()
-          .sms_number_id("sms-number-id")
+          .from_number("sms-number-id")
           .url("https://webhook.example.com/sms")
           .name("SMS Webhook")
           .add_event(SmsWebhookEvent.SMS_SENT)
@@ -2169,7 +2155,7 @@ from mailersend.builders import SmsInboundsBuilder
 ms = MailerSend()
 
 request = (SmsInboundsBuilder()
-          .sms_number_id("sms-number-id")
+          .from_number("sms-number-id")
           .enabled(True)
           .page(1)
           .limit(25)
@@ -2206,7 +2192,7 @@ from mailersend.models.sms_inbounds import FilterComparer
 ms = MailerSend()
 
 request = (SmsInboundsBuilder()
-          .sms_number_id("sms-number-id")
+          .from_number("sms-number-id")
           .name("Support Route")
           .forward_url("https://api.example.com/sms/support")
           .filter(FilterComparer.STARTS_WITH, "SUPPORT")
@@ -2379,10 +2365,10 @@ ms = MailerSend()
 
 try:
     email = (EmailBuilder()
-             .mail_from("invalid-email", "Sender")  # Invalid email
-             .mail_to([{"email": "recipient@domain.com", "name": "Recipient"}])
+             .from_email("invalid-email", "Sender")  # Invalid email
+             .to_many([{"email": "recipient@domain.com", "name": "Recipient"}])
              .subject("Test")
-             .html_content("<h1>Test</h1>")
+             .html("<h1>Test</h1>")
              .build())
     
     response = ms.email.send(email)
