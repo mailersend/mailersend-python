@@ -10,6 +10,8 @@ MailerSend Python SDK
   - [Requirements](#requirements)
   - [Authentication](#authentication)
     - [Environment Variable (Recommended)](#environment-variable-recommended)
+      - [Option 1: System Environment Variable](#option-1-system-environment-variable)
+      - [Option 2: Using .env File](#option-2-using-env-file)
     - [Direct API Key](#direct-api-key)
 - [SDK Architecture](#sdk-architecture)
   - [Builder Pattern](#builder-pattern)
@@ -178,16 +180,12 @@ The SDK supports multiple authentication methods:
 
 ### Environment Variable (Recommended)
 
-Set your API key as an environment variable:
+#### Option 1: System Environment Variable
+
+Set your API key as a system environment variable:
 
 ```bash
 export MAILERSEND_API_KEY="your-api-key"
-```
-
-Or add it to your `.env` file:
-
-```bash
-MAILERSEND_API_KEY=your-api-key
 ```
 
 Then initialize the client:
@@ -196,6 +194,34 @@ Then initialize the client:
 from mailersend import MailerSendClient
 
 # Automatically uses MAILERSEND_API_KEY environment variable
+ms = MailerSendClient()
+```
+
+#### Option 2: Using .env File
+
+For development, you can use a `.env` file. First install `python-dotenv`:
+
+```bash
+pip install python-dotenv
+```
+
+Create a `.env` file in your project root:
+
+```bash
+# .env
+MAILERSEND_API_KEY=your-api-key
+```
+
+Then load it in your Python code:
+
+```python
+from mailersend import MailerSendClient
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Client automatically uses the loaded MAILERSEND_API_KEY
 ms = MailerSendClient()
 ```
 
