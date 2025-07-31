@@ -1576,7 +1576,7 @@ request = (TemplatesBuilder()
           .domain_id("domain-id")
           .page(1)
           .limit(25)
-          .build_list_request())
+          .build_templates_list_request())
 
 response = ms.templates.list_templates(request)
 ```
@@ -1590,7 +1590,7 @@ ms = MailerSendClient()
 
 request = (TemplatesBuilder()
           .template("template-id")
-          .build_get_request())
+          .build_template_get_request())
 
 response = ms.templates.get_template(request)
 ```
@@ -1614,26 +1614,21 @@ response = ms.templates.delete_template(request)
 ### Get a list of webhooks
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import WebhooksBuilder
+from mailersend import MailerSendClient, WebhooksBuilder
 
 ms = MailerSendClient()
 
 request = (WebhooksBuilder()
           .domain_id("domain-id")
-          .limit(25)
-          .build_list_request())
+          .build_webhooks_list_request())
 
 response = ms.webhooks.list_webhooks(request)
-for webhook in response.data:
-    print(f"Webhook: {webhook.name} - {webhook.url}")
 ```
 
 ### Get a single webhook
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import WebhooksBuilder
+from mailersend import MailerSendClient, WebhooksBuilder
 
 ms = MailerSendClient()
 
@@ -1642,14 +1637,12 @@ request = (WebhooksBuilder()
           .build_webhook_get_request())
 
 response = ms.webhooks.get_webhook(request)
-print(f"Webhook: {response.name}")
 ```
 
 ### Create a Webhook
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import WebhooksBuilder
+from mailersend import MailerSendClient, WebhooksBuilder
 
 ms = MailerSendClient()
 
@@ -1662,14 +1655,12 @@ request = (WebhooksBuilder()
           .build_webhook_create_request())
 
 response = ms.webhooks.create_webhook(request)
-print(f"Created webhook with ID: {response.id}")
 ```
 
 ### Create a disabled webhook
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import WebhooksBuilder
+from mailersend import MailerSendClient, WebhooksBuilder
 
 ms = MailerSendClient()
 
@@ -1682,14 +1673,12 @@ request = (WebhooksBuilder()
           .build_webhook_create_request())
 
 response = ms.webhooks.create_webhook(request)
-print(f"Created disabled webhook with ID: {response.id}")
 ```
 
 ### Update a Webhook
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import WebhooksBuilder
+from mailersend import MailerSendClient, WebhooksBuilder
 
 ms = MailerSendClient()
 
@@ -1702,14 +1691,12 @@ request = (WebhooksBuilder()
           .build_webhook_update_request())
 
 response = ms.webhooks.update_webhook(request)
-print("Webhook updated")
 ```
 
 ### Disable/Enable a Webhook
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import WebhooksBuilder
+from mailersend import MailerSendClient, WebhooksBuilder
 
 ms = MailerSendClient()
 
@@ -1720,7 +1707,6 @@ request = (WebhooksBuilder()
           .build_webhook_update_request())
 
 response = ms.webhooks.update_webhook(request)
-print("Webhook disabled")
 
 # Enable webhook
 request = (WebhooksBuilder()
@@ -1729,14 +1715,12 @@ request = (WebhooksBuilder()
           .build_webhook_update_request())
 
 response = ms.webhooks.update_webhook(request)
-print("Webhook enabled")
 ```
 
 ### Delete a Webhook
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import WebhooksBuilder
+from mailersend import MailerSendClient, WebhooksBuilder
 
 ms = MailerSendClient()
 
@@ -1745,7 +1729,6 @@ request = (WebhooksBuilder()
           .build_webhook_delete_request())
 
 response = ms.webhooks.delete_webhook(request)
-print("Webhook deleted")
 ```
 
 ## Email Verification
