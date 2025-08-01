@@ -64,7 +64,7 @@ class TestTemplates:
         # Verify client was called correctly
         self.mock_client.request.assert_called_once_with(
             method="GET",
-            endpoint="templates",
+            path="templates",
             params={"domain_id": "test-domain", "page": 2, "limit": 50},
         )
 
@@ -83,7 +83,7 @@ class TestTemplates:
 
         # Verify client was called with defaults
         self.mock_client.request.assert_called_once_with(
-            method="GET", endpoint="templates", params={"page": 1, "limit": 25}
+            method="GET", path="templates", params={"page": 1, "limit": 25}
         )
 
     def test_get_template_returns_api_response(self):
@@ -109,7 +109,7 @@ class TestTemplates:
 
         # Verify endpoint construction
         self.mock_client.request.assert_called_once_with(
-            method="GET", endpoint="templates/template123"
+            method="GET", path="templates/template123"
         )
 
     def test_delete_template_returns_api_response(self):
@@ -135,7 +135,7 @@ class TestTemplates:
 
         # Verify endpoint construction
         self.mock_client.request.assert_called_once_with(
-            method="DELETE", endpoint="templates/template123"
+            method="DELETE", path="templates/template123"
         )
 
     def test_integration_workflow(self):

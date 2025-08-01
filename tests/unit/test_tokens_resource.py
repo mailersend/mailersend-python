@@ -54,7 +54,7 @@ class TestTokens:
 
         # Verify client was called correctly
         self.mock_client.request.assert_called_once_with(
-            method="GET", endpoint="token", params={"page": 2, "limit": 50}
+            method="GET", path="token", params={"page": 2, "limit": 50}
         )
 
         # Verify _create_response was called
@@ -72,7 +72,7 @@ class TestTokens:
 
         # Verify client was called with empty params (defaults excluded)
         self.mock_client.request.assert_called_once_with(
-            method="GET", endpoint="token", params={}
+            method="GET", path="token", params={}
         )
 
     def test_get_token_returns_api_response(self):
@@ -98,7 +98,7 @@ class TestTokens:
 
         # Verify endpoint construction
         self.mock_client.request.assert_called_once_with(
-            method="GET", endpoint="token/token123"
+            method="GET", path="token/token123"
         )
 
     def test_create_token_returns_api_response(self):
@@ -131,7 +131,7 @@ class TestTokens:
         # Verify client was called with correct body
         self.mock_client.request.assert_called_once_with(
             method="POST",
-            endpoint="token",
+            path="token",
             body={
                 "name": "Test Token",
                 "domain_id": "domain123",
@@ -162,7 +162,7 @@ class TestTokens:
 
         # Verify client was called with correct body and endpoint
         self.mock_client.request.assert_called_once_with(
-            method="PUT", endpoint="token/token123/settings", body={"status": "unpause"}
+            method="PUT", path="token/token123/settings", body={"status": "unpause"}
         )
 
     def test_update_token_name_returns_api_response(self):
@@ -188,7 +188,7 @@ class TestTokens:
 
         # Verify client was called with correct body and endpoint
         self.mock_client.request.assert_called_once_with(
-            method="PUT", endpoint="token/token123", body={"name": "Updated Name"}
+            method="PUT", path="token/token123", body={"name": "Updated Name"}
         )
 
     def test_delete_token_returns_api_response(self):
@@ -214,7 +214,7 @@ class TestTokens:
 
         # Verify endpoint construction
         self.mock_client.request.assert_called_once_with(
-            method="DELETE", endpoint="token/token123"
+            method="DELETE", path="token/token123"
         )
 
     def test_integration_workflow(self):

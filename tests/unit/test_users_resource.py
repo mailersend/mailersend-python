@@ -57,7 +57,7 @@ class TestUsers:
         result = self.resource.list_users(request)
 
         self.mock_client.request.assert_called_once_with(
-            method="GET", endpoint="users", params={"page": 2, "limit": 50}
+            method="GET", path="users", params={"page": 2, "limit": 50}
         )
         assert result == self.mock_api_response
 
@@ -71,7 +71,7 @@ class TestUsers:
         result = self.resource.get_user(request)
 
         self.mock_client.request.assert_called_once_with(
-            method="GET", endpoint="users/user123"
+            method="GET", path="users/user123"
         )
         assert result == self.mock_api_response
         self.resource._create_response.assert_called_once_with(mock_response)
@@ -100,7 +100,7 @@ class TestUsers:
         }
 
         self.mock_client.request.assert_called_once_with(
-            method="POST", endpoint="users", body=expected_body
+            method="POST", path="users", body=expected_body
         )
         assert result == self.mock_api_response
         self.resource._create_response.assert_called_once_with(mock_response)
@@ -128,7 +128,7 @@ class TestUsers:
         }
 
         self.mock_client.request.assert_called_once_with(
-            method="PUT", endpoint="users/user123", body=expected_body
+            method="PUT", path="users/user123", body=expected_body
         )
         assert result == self.mock_api_response
         self.resource._create_response.assert_called_once_with(mock_response)
@@ -143,7 +143,7 @@ class TestUsers:
         result = self.resource.delete_user(request)
 
         self.mock_client.request.assert_called_once_with(
-            method="DELETE", endpoint="users/user123"
+            method="DELETE", path="users/user123"
         )
         assert result == self.mock_api_response
         self.resource._create_response.assert_called_once_with(mock_response, None)
@@ -171,7 +171,7 @@ class TestUsers:
         result = self.resource.get_invite(request)
 
         self.mock_client.request.assert_called_once_with(
-            method="GET", endpoint="invites/invite123"
+            method="GET", path="invites/invite123"
         )
         assert result == self.mock_api_response
         self.resource._create_response.assert_called_once_with(mock_response)
@@ -186,7 +186,7 @@ class TestUsers:
         result = self.resource.resend_invite(request)
 
         self.mock_client.request.assert_called_once_with(
-            method="POST", endpoint="invites/invite123/resend"
+            method="POST", path="invites/invite123/resend"
         )
         assert result == self.mock_api_response
         self.resource._create_response.assert_called_once_with(mock_response)
@@ -201,7 +201,7 @@ class TestUsers:
         result = self.resource.cancel_invite(request)
 
         self.mock_client.request.assert_called_once_with(
-            method="DELETE", endpoint="invites/invite123"
+            method="DELETE", path="invites/invite123"
         )
         assert result == self.mock_api_response
         self.resource._create_response.assert_called_once_with(mock_response, None)

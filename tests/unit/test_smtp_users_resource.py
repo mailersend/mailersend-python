@@ -56,7 +56,7 @@ class TestSmtpUsers:
         # Verify client was called correctly
         self.mock_client.request.assert_called_once_with(
             method="GET",
-            endpoint="domains/test-domain/smtp-users",
+            path="domains/test-domain/smtp-users",
             params={"limit": 50},
         )
 
@@ -77,7 +77,7 @@ class TestSmtpUsers:
 
         # Verify client was called with empty params (defaults excluded)
         self.mock_client.request.assert_called_once_with(
-            method="GET", endpoint="domains/test-domain/smtp-users", params={}
+            method="GET", path="domains/test-domain/smtp-users", params={}
         )
 
     def test_get_smtp_user_returns_api_response(self):
@@ -103,7 +103,7 @@ class TestSmtpUsers:
 
         # Verify endpoint construction
         self.mock_client.request.assert_called_once_with(
-            method="GET", endpoint="domains/test-domain/smtp-users/user123"
+            method="GET", path="domains/test-domain/smtp-users/user123"
         )
 
     def test_create_smtp_user_returns_api_response(self):
@@ -132,7 +132,7 @@ class TestSmtpUsers:
         # Verify client was called with correct body
         self.mock_client.request.assert_called_once_with(
             method="POST",
-            endpoint="domains/test-domain/smtp-users",
+            path="domains/test-domain/smtp-users",
             body={"name": "Test User", "enabled": True},
         )
 
@@ -167,7 +167,7 @@ class TestSmtpUsers:
         # Verify client was called with correct body and endpoint
         self.mock_client.request.assert_called_once_with(
             method="PUT",
-            endpoint="domains/test-domain/smtp-users/user123",
+            path="domains/test-domain/smtp-users/user123",
             body={"name": "Updated User", "enabled": False},
         )
 
@@ -194,7 +194,7 @@ class TestSmtpUsers:
 
         # Verify endpoint construction
         self.mock_client.request.assert_called_once_with(
-            method="DELETE", endpoint="domains/test-domain/smtp-users/user123"
+            method="DELETE", path="domains/test-domain/smtp-users/user123"
         )
 
     def test_integration_workflow(self):

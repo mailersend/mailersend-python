@@ -68,7 +68,7 @@ class TestActivityResource:
 
         # Verify the client was called correctly
         activity_resource.client.request.assert_called_once_with(
-            method="GET", endpoint=f"activities/{activity_id}"
+            method="GET", path=f"activities/{activity_id}"
         )
 
         # Verify the result
@@ -89,7 +89,7 @@ class TestActivityResource:
 
         # Verify the client was called with stripped ID
         activity_resource.client.request.assert_called_once_with(
-            method="GET", endpoint=f"activities/{expected_id}"
+            method="GET", path=f"activities/{expected_id}"
         )
 
         assert isinstance(result, APIResponse)

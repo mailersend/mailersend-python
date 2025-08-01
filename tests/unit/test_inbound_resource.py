@@ -55,7 +55,7 @@ class TestInboundResource:
         # Verify client was called correctly
         self.mock_client.request.assert_called_once_with(
             method="GET",
-            endpoint="inbound",
+            path="inbound",
             params={"page": 2, "limit": 50, "domain_id": "domain123"},
         )
 
@@ -74,7 +74,7 @@ class TestInboundResource:
 
         # Verify client was called with defaults
         self.mock_client.request.assert_called_once_with(
-            method="GET", endpoint="inbound", params={"page": 1, "limit": 25}
+            method="GET", path="inbound", params={"page": 1, "limit": 25}
         )
 
     def test_list_excludes_none_values(self):
@@ -115,13 +115,13 @@ class TestInboundResource:
 
         # Verify client was called correctly
         self.mock_client.request.assert_called_once_with(
-            method="GET", endpoint="inbound/test-id"
+            method="GET", path="inbound/test-id"
         )
 
     def test_create_returns_api_response(self):
         """Test create method returns APIResponse."""
-        catch_filter = [InboundFilterGroup(type="catch_all")]
-        match_filter = [InboundFilterGroup(type="match_all")]
+        catch_filter = InboundFilterGroup(type="catch_all")
+        match_filter = InboundFilterGroup(type="match_all")
         forwards = [InboundForward(type="email", value="test@example.com")]
 
         request = InboundCreateRequest(
@@ -143,8 +143,8 @@ class TestInboundResource:
 
     def test_create_request_body_serialization(self):
         """Test create request body is serialized correctly."""
-        catch_filter = [InboundFilterGroup(type="catch_all")]
-        match_filter = [InboundFilterGroup(type="match_all")]
+        catch_filter = InboundFilterGroup(type="catch_all")
+        match_filter = InboundFilterGroup(type="match_all")
         forwards = [
             InboundForward(id="forward-id", type="email", value="test@example.com")
         ]
@@ -166,7 +166,7 @@ class TestInboundResource:
         # Verify the request was made with correct data structure
         call_args = self.mock_client.request.call_args
         assert call_args[1]["method"] == "POST"
-        assert call_args[1]["endpoint"] == "inbound"
+        assert call_args[1]["path"] == "inbound"
 
         # Verify data structure
         data = call_args[1]["body"]
@@ -183,8 +183,8 @@ class TestInboundResource:
 
     def test_update_returns_api_response(self):
         """Test update method returns APIResponse."""
-        catch_filter = [InboundFilterGroup(type="catch_all")]
-        match_filter = [InboundFilterGroup(type="match_all")]
+        catch_filter = InboundFilterGroup(type="catch_all")
+        match_filter = InboundFilterGroup(type="match_all")
         forwards = [InboundForward(type="email", value="test@example.com")]
 
         request = InboundUpdateRequest(
@@ -206,8 +206,8 @@ class TestInboundResource:
 
     def test_update_excludes_inbound_id_from_body(self):
         """Test update excludes inbound_id from request body."""
-        catch_filter = [InboundFilterGroup(type="catch_all")]
-        match_filter = [InboundFilterGroup(type="match_all")]
+        catch_filter = InboundFilterGroup(type="catch_all")
+        match_filter = InboundFilterGroup(type="match_all")
         forwards = [InboundForward(type="email", value="test@example.com")]
 
         request = InboundUpdateRequest(
@@ -227,7 +227,7 @@ class TestInboundResource:
         # Verify the request structure
         call_args = self.mock_client.request.call_args
         assert call_args[1]["method"] == "PUT"
-        assert call_args[1]["endpoint"] == "inbound/test-id"
+        assert call_args[1]["path"] == "inbound/test-id"
 
         # Verify inbound_id is not in the request body
         data = call_args[1]["body"]
@@ -257,7 +257,7 @@ class TestInboundResource:
 
         # Verify client was called correctly
         self.mock_client.request.assert_called_once_with(
-            method="DELETE", endpoint="inbound/test-id"
+            method="DELETE", path="inbound/test-id"
         )
 
     def test_integration_workflow(self):
@@ -267,8 +267,8 @@ class TestInboundResource:
         request_list = InboundListRequest(query_params=query_params)
         request_get = InboundGetRequest(inbound_id="test-id")
 
-        catch_filter = [InboundFilterGroup(type="catch_all")]
-        match_filter = [InboundFilterGroup(type="match_all")]
+        catch_filter = InboundFilterGroup(type="catch_all")
+        match_filter = InboundFilterGroup(type="match_all")
         forwards = [InboundForward(type="email", value="test@example.com")]
 
         request_create = InboundCreateRequest(

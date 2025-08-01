@@ -14,8 +14,8 @@ class TestAnalyticsBuilder:
         """Test basic analytics builder construction"""
         request = (
             AnalyticsBuilder()
-            .date_from_timestamp(1443651141)
-            .date_to_timestamp(1443661141)
+            .date_from(1443651141)
+            .date_to(1443661141)
             .build()
         )
 
@@ -28,9 +28,9 @@ class TestAnalyticsBuilder:
         """Test domain filtering"""
         request = (
             AnalyticsBuilder()
-            .domain("domain-123")
-            .date_from_timestamp(1443651141)
-            .date_to_timestamp(1443661141)
+            .domain_id("domain-123")
+            .date_from(1443651141)
+            .date_to(1443661141)
             .build()
         )
 
@@ -42,8 +42,8 @@ class TestAnalyticsBuilder:
             AnalyticsBuilder()
             .recipient("recipient-1")
             .recipient("recipient-2")
-            .date_from_timestamp(1443651141)
-            .date_to_timestamp(1443661141)
+            .date_from(1443651141)
+            .date_to(1443661141)
             .build()
         )
 
@@ -54,8 +54,8 @@ class TestAnalyticsBuilder:
         request = (
             AnalyticsBuilder()
             .recipients("recipient-1", "recipient-2", "recipient-3")
-            .date_from_timestamp(1443651141)
-            .date_to_timestamp(1443661141)
+            .date_from(1443651141)
+            .date_to(1443661141)
             .build()
         )
 
@@ -77,8 +77,8 @@ class TestAnalyticsBuilder:
         """Test timestamp-based date methods"""
         request = (
             AnalyticsBuilder()
-            .date_from_timestamp(1443651141)
-            .date_to_timestamp(1443661141)
+            .date_from(1443651141)
+            .date_to(1443661141)
             .build()
         )
 
@@ -92,12 +92,12 @@ class TestAnalyticsBuilder:
         with pytest.raises(
             ValidationError, match="Timestamp must be a positive integer"
         ):
-            builder.date_from_timestamp(-1)
+            builder.date_from(-1)
 
         with pytest.raises(
             ValidationError, match="Timestamp must be a positive integer"
         ):
-            builder.date_to_timestamp(0)
+            builder.date_to(0)
 
     def test_datetime_date_methods(self):
         """Test datetime-based date methods"""
@@ -251,8 +251,8 @@ class TestAnalyticsBuilder:
         request = (
             AnalyticsBuilder()
             .tag("newsletter", "marketing")
-            .date_from_timestamp(1443651141)
-            .date_to_timestamp(1443661141)
+            .date_from(1443651141)
+            .date_to(1443661141)
             .build()
         )
 
@@ -263,8 +263,8 @@ class TestAnalyticsBuilder:
         request = (
             AnalyticsBuilder()
             .tags("newsletter", "marketing", "campaign")
-            .date_from_timestamp(1443651141)
-            .date_to_timestamp(1443661141)
+            .date_from(1443651141)
+            .date_to(1443661141)
             .build()
         )
 
@@ -287,8 +287,8 @@ class TestAnalyticsBuilder:
             .tag("newsletter")
             .tag("newsletter")  # duplicate
             .tag("marketing")
-            .date_from_timestamp(1443651141)
-            .date_to_timestamp(1443661141)
+            .date_from(1443651141)
+            .date_to(1443661141)
             .build()
         )
 
@@ -300,8 +300,8 @@ class TestAnalyticsBuilder:
             request = (
                 AnalyticsBuilder()
                 .group_by(group_by)
-                .date_from_timestamp(1443651141)
-                .date_to_timestamp(1443661141)
+                .date_from(1443651141)
+                .date_to(1443661141)
                 .build()
             )
 
@@ -319,8 +319,8 @@ class TestAnalyticsBuilder:
         request = (
             AnalyticsBuilder()
             .event("sent", "delivered", "opened")
-            .date_from_timestamp(1443651141)
-            .date_to_timestamp(1443661141)
+            .date_from(1443651141)
+            .date_to(1443661141)
             .build()
         )
 
@@ -331,8 +331,8 @@ class TestAnalyticsBuilder:
         request = (
             AnalyticsBuilder()
             .events("sent", "delivered", "opened", "clicked")
-            .date_from_timestamp(1443651141)
-            .date_to_timestamp(1443661141)
+            .date_from(1443651141)
+            .date_to(1443661141)
             .build()
         )
 
@@ -352,8 +352,8 @@ class TestAnalyticsBuilder:
             .event("sent")
             .event("sent")  # duplicate
             .event("delivered")
-            .date_from_timestamp(1443651141)
-            .date_to_timestamp(1443661141)
+            .date_from(1443651141)
+            .date_to(1443661141)
             .build()
         )
 
@@ -364,8 +364,8 @@ class TestAnalyticsBuilder:
         request = (
             AnalyticsBuilder()
             .all_events()
-            .date_from_timestamp(1443651141)
-            .date_to_timestamp(1443661141)
+            .date_from(1443651141)
+            .date_to(1443661141)
             .build()
         )
 
@@ -392,8 +392,8 @@ class TestAnalyticsBuilder:
         request = (
             AnalyticsBuilder()
             .delivery_events()
-            .date_from_timestamp(1443651141)
-            .date_to_timestamp(1443661141)
+            .date_from(1443651141)
+            .date_to(1443661141)
             .build()
         )
 
@@ -411,8 +411,8 @@ class TestAnalyticsBuilder:
         request = (
             AnalyticsBuilder()
             .engagement_events()
-            .date_from_timestamp(1443651141)
-            .date_to_timestamp(1443661141)
+            .date_from(1443651141)
+            .date_to(1443661141)
             .build()
         )
 
@@ -424,8 +424,8 @@ class TestAnalyticsBuilder:
         request = (
             AnalyticsBuilder()
             .negative_events()
-            .date_from_timestamp(1443651141)
-            .date_to_timestamp(1443661141)
+            .date_from(1443651141)
+            .date_to(1443661141)
             .build()
         )
 
@@ -440,13 +440,13 @@ class TestAnalyticsBuilder:
             builder.build()
 
         with pytest.raises(ValidationError, match="date_to is required"):
-            builder.date_from_timestamp(1443651141).build()
+            builder.date_from(1443651141).build()
 
     def test_complex_builder_chain(self):
         """Test complex builder chain"""
         request = (
             AnalyticsBuilder()
-            .domain("domain-123")
+            .domain_id("domain-123")
             .recipients("recipient-1", "recipient-2")
             .date_range_days(30)
             .tags("newsletter", "marketing")
@@ -465,10 +465,10 @@ class TestAnalyticsBuilder:
         """Test builder reset functionality"""
         builder = (
             AnalyticsBuilder()
-            .domain("domain-123")
+            .domain_id("domain-123")
             .tags("newsletter")
-            .date_from_timestamp(1443651141)
-            .date_to_timestamp(1443661141)
+            .date_from(1443651141)
+            .date_to(1443661141)
         )
 
         # Build first request
@@ -479,10 +479,10 @@ class TestAnalyticsBuilder:
         # Reset and build new request
         request2 = (
             builder.reset()
-            .domain("domain-456")
+            .domain_id("domain-456")
             .tags("marketing")
-            .date_from_timestamp(1443651141)
-            .date_to_timestamp(1443661141)
+            .date_from(1443651141)
+            .date_to(1443661141)
             .build()
         )
 
@@ -494,10 +494,10 @@ class TestAnalyticsBuilder:
         """Test builder copy functionality"""
         base_builder = (
             AnalyticsBuilder()
-            .domain("domain-123")
+            .domain_id("domain-123")
             .tags("newsletter")
-            .date_from_timestamp(1443651141)
-            .date_to_timestamp(1443661141)
+            .date_from(1443651141)
+            .date_to(1443661141)
         )
 
         # Copy and modify
@@ -516,11 +516,11 @@ class TestAnalyticsBuilder:
         builder = AnalyticsBuilder()
 
         # Test all methods return self
-        assert builder.domain("test") is builder
+        assert builder.domain_id("test") is builder
         assert builder.recipient("test") is builder
         assert builder.recipients("test") is builder
-        assert builder.date_from_timestamp(1443651141) is builder
-        assert builder.date_to_timestamp(1443661141) is builder
+        assert builder.date_from(1443651141) is builder
+        assert builder.date_to(1443661141) is builder
         assert builder.tag("test") is builder
         assert builder.tags("test") is builder
         assert builder.group_by("days") is builder
@@ -540,8 +540,8 @@ class TestAnalyticsBuilderEdgeCases:
         """Test handling of empty lists in build"""
         request = (
             AnalyticsBuilder()
-            .date_from_timestamp(1443651141)
-            .date_to_timestamp(1443661141)
+            .date_from(1443651141)
+            .date_to(1443661141)
             .build()
         )
 
@@ -565,18 +565,18 @@ class TestAnalyticsBuilderEdgeCases:
 
     def test_builder_state_isolation(self):
         """Test that builder instances don't interfere with each other"""
-        builder1 = AnalyticsBuilder().domain("domain-1").tags("tag-1")
-        builder2 = AnalyticsBuilder().domain("domain-2").tags("tag-2")
+        builder1 = AnalyticsBuilder().domain_id("domain-1").tags("tag-1")
+        builder2 = AnalyticsBuilder().domain_id("domain-2").tags("tag-2")
 
         request1 = (
-            builder1.date_from_timestamp(1443651141)
-            .date_to_timestamp(1443661141)
+            builder1.date_from(1443651141)
+            .date_to(1443661141)
             .build()
         )
 
         request2 = (
-            builder2.date_from_timestamp(1443651141)
-            .date_to_timestamp(1443661141)
+            builder2.date_from(1443651141)
+            .date_to(1443661141)
             .build()
         )
 

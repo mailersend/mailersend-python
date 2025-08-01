@@ -48,7 +48,7 @@ class TestSmsMessages:
 
         # Default values should not be sent as params
         self.mock_client.request.assert_called_once_with(
-            method="GET", endpoint="sms-messages", params={}
+            method="GET", path="sms-messages", params={}
         )
         assert result == self.mock_api_response
 
@@ -64,7 +64,7 @@ class TestSmsMessages:
 
         expected_params = {"page": 2, "limit": 50}
         self.mock_client.request.assert_called_once_with(
-            method="GET", endpoint="sms-messages", params=expected_params
+            method="GET", path="sms-messages", params=expected_params
         )
         assert result == self.mock_api_response
 
@@ -78,7 +78,7 @@ class TestSmsMessages:
         result = self.resource.get_sms_message(request)
 
         self.mock_client.request.assert_called_once_with(
-            method="GET", endpoint="sms-messages/msg123"
+            method="GET", path="sms-messages/msg123"
         )
         assert result == self.mock_api_response
         self.resource._create_response.assert_called_once_with(mock_response)

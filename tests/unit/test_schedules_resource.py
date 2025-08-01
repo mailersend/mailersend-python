@@ -54,7 +54,7 @@ class TestSchedules:
         # Verify client was called correctly
         self.mock_client.request.assert_called_once_with(
             method="GET",
-            endpoint="message-schedules",
+            path="message-schedules",
             params={
                 "domain_id": "test-domain",
                 "status": "scheduled",
@@ -78,7 +78,7 @@ class TestSchedules:
 
         # Verify client was called with defaults
         self.mock_client.request.assert_called_once_with(
-            method="GET", endpoint="message-schedules", params={"page": 1, "limit": 25}
+            method="GET", path="message-schedules", params={"page": 1, "limit": 25}
         )
 
     def test_list_schedules_excludes_none_values(self):
@@ -122,7 +122,7 @@ class TestSchedules:
 
         # Verify client was called correctly
         self.mock_client.request.assert_called_once_with(
-            method="GET", endpoint="message-schedules/message123"
+            method="GET", path="message-schedules/message123"
         )
 
     def test_get_schedule_endpoint_construction(self):
@@ -136,7 +136,7 @@ class TestSchedules:
 
         # Verify endpoint construction
         self.mock_client.request.assert_called_once_with(
-            method="GET", endpoint="message-schedules/61e01f471053b349a5478a52"
+            method="GET", path="message-schedules/61e01f471053b349a5478a52"
         )
 
     def test_delete_schedule_returns_api_response(self):
@@ -162,7 +162,7 @@ class TestSchedules:
 
         # Verify client was called correctly
         self.mock_client.request.assert_called_once_with(
-            method="DELETE", endpoint="message-schedules/message123"
+            method="DELETE", path="message-schedules/message123"
         )
 
     def test_delete_schedule_endpoint_construction(self):
@@ -176,7 +176,7 @@ class TestSchedules:
 
         # Verify endpoint construction
         self.mock_client.request.assert_called_once_with(
-            method="DELETE", endpoint="message-schedules/61e01f471053b349a5478a52"
+            method="DELETE", path="message-schedules/61e01f471053b349a5478a52"
         )
 
     def test_integration_workflow(self):

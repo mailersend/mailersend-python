@@ -54,7 +54,7 @@ class TestSmsWebhooks:
 
         expected_params = {"sms_number_id": "sms456"}
         self.mock_client.request.assert_called_once_with(
-            method="GET", endpoint="sms-webhooks", params=expected_params
+            method="GET", path="sms-webhooks", params=expected_params
         )
         assert result == self.mock_api_response
 
@@ -68,7 +68,7 @@ class TestSmsWebhooks:
         result = self.resource.get_sms_webhook(request)
 
         self.mock_client.request.assert_called_once_with(
-            method="GET", endpoint="sms-webhooks/webhook123"
+            method="GET", path="sms-webhooks/webhook123"
         )
         assert result == self.mock_api_response
         self.resource._create_response.assert_called_once_with(mock_response)
@@ -95,7 +95,7 @@ class TestSmsWebhooks:
             "sms_number_id": "sms123",
         }
         self.mock_client.request.assert_called_once_with(
-            method="POST", endpoint="sms-webhooks", body=expected_body
+            method="POST", path="sms-webhooks", body=expected_body
         )
         assert result == self.mock_api_response
         self.resource._create_response.assert_called_once_with(mock_response)
@@ -113,7 +113,7 @@ class TestSmsWebhooks:
 
         expected_body = {"name": "Updated Webhook", "enabled": False}
         self.mock_client.request.assert_called_once_with(
-            method="PUT", endpoint="sms-webhooks/webhook123", body=expected_body
+            method="PUT", path="sms-webhooks/webhook123", body=expected_body
         )
         assert result == self.mock_api_response
         self.resource._create_response.assert_called_once_with(mock_response)
@@ -128,7 +128,7 @@ class TestSmsWebhooks:
         result = self.resource.delete_sms_webhook(request)
 
         self.mock_client.request.assert_called_once_with(
-            method="DELETE", endpoint="sms-webhooks/webhook123"
+            method="DELETE", path="sms-webhooks/webhook123"
         )
         assert result == self.mock_api_response
         self.resource._create_response.assert_called_once_with(mock_response)

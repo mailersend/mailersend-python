@@ -71,7 +71,7 @@ class TestDomainListQueryParams:
         params = DomainListQueryParams(page=2, limit=10, verified=True)
         query_params = params.to_query_params()
 
-        assert query_params == {"page": 2, "limit": 10, "verified": True}
+        assert query_params == {"page": 2, "limit": 10, "verified": "true"}
 
     def test_to_query_params_exclude_none(self):
         """Test query parameter conversion excluding None values."""
@@ -112,7 +112,7 @@ class TestDomainListRequest:
         expected = query_params.to_query_params()
 
         assert result == expected
-        assert result == {"page": 3, "limit": 20, "verified": False}
+        assert result == {"page": 3, "limit": 20, "verified": "false"}
 
 
 class TestDomainRecipientsQueryParams:
@@ -583,7 +583,7 @@ class TestDomainsModelIntegration:
         query_data = list_req.to_query_params()
         assert query_data["page"] == 1
         assert query_data["limit"] == 10
-        assert query_data["verified"] is True
+        assert query_data["verified"] == "true"
 
         # Create request
         create_req = DomainCreateRequest(name="test.com", return_path_subdomain="mail")
