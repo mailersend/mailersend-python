@@ -54,7 +54,7 @@ class TestSmsSending:
             "text": "Hello world!",
         }
         self.mock_client.request.assert_called_once_with(
-            method="POST", endpoint="sms", body=expected_body
+            method="POST", path="sms", body=expected_body
         )
         assert result == self.mock_api_response
 
@@ -85,7 +85,7 @@ class TestSmsSending:
             ],
         }
         self.mock_client.request.assert_called_once_with(
-            method="POST", endpoint="sms", body=expected_body
+            method="POST", path="sms", body=expected_body
         )
         assert result == self.mock_api_response
         self.resource._create_response.assert_called_once_with(mock_response)

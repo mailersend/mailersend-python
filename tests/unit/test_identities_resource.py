@@ -41,7 +41,7 @@ class TestIdentitiesResource:
 
         assert result == self.mock_api_response
         self.mock_client.request.assert_called_once_with(
-            method="GET", endpoint="/identities", params={"page": 1, "limit": 25}
+            method="GET", path="identities", params={"page": 1, "limit": 25}
         )
         self.resource._create_response.assert_called_once_with(mock_response)
 
@@ -57,7 +57,7 @@ class TestIdentitiesResource:
         assert result == self.mock_api_response
         self.mock_client.request.assert_called_once_with(
             method="GET",
-            endpoint="/identities",
+            path="identities",
             params={"page": 2, "limit": 50, "domain_id": "domain123"},
         )
         self.resource._create_response.assert_called_once_with(mock_response)
@@ -74,7 +74,7 @@ class TestIdentitiesResource:
         assert result == self.mock_api_response
         self.mock_client.request.assert_called_once_with(
             method="GET",
-            endpoint="/identities",
+            path="identities",
             params={"page": 1, "limit": 25, "domain_id": "domain123"},
         )
         self.resource._create_response.assert_called_once_with(mock_response)
@@ -92,7 +92,7 @@ class TestIdentitiesResource:
         assert result == self.mock_api_response
         self.mock_client.request.assert_called_once_with(
             method="POST",
-            endpoint="/identities",
+            path="identities",
             body={
                 "domain_id": "domain123",
                 "name": "John Doe",
@@ -120,7 +120,7 @@ class TestIdentitiesResource:
         assert result == self.mock_api_response
         self.mock_client.request.assert_called_once_with(
             method="POST",
-            endpoint="/identities",
+            path="identities",
             body={
                 "domain_id": "domain123",
                 "name": "John Doe",
@@ -152,7 +152,7 @@ class TestIdentitiesResource:
         # Verify that None values are excluded via model_dump
         self.mock_client.request.assert_called_once_with(
             method="POST",
-            endpoint="/identities",
+            path="identities",
             body={
                 "domain_id": "domain123",
                 "name": "John Doe",
@@ -172,7 +172,7 @@ class TestIdentitiesResource:
 
         assert result == self.mock_api_response
         self.mock_client.request.assert_called_once_with(
-            method="GET", endpoint="/identities/identity123"
+            method="GET", path="identities/identity123"
         )
         self.resource._create_response.assert_called_once_with(mock_response)
 
@@ -186,7 +186,7 @@ class TestIdentitiesResource:
 
         assert result == self.mock_api_response
         self.mock_client.request.assert_called_once_with(
-            method="GET", endpoint="/identities/email/john@example.com"
+            method="GET", path="identities/email/john@example.com"
         )
         self.resource._create_response.assert_called_once_with(mock_response)
 
@@ -201,7 +201,7 @@ class TestIdentitiesResource:
         assert result == self.mock_api_response
         self.mock_client.request.assert_called_once_with(
             method="PUT",
-            endpoint="/identities/identity123",
+            path="identities/identity123",
             body={"name": "Updated Name"},
         )
         self.resource._create_response.assert_called_once_with(mock_response)
@@ -224,7 +224,7 @@ class TestIdentitiesResource:
             "reply_to_email": "updated@example.com",
         }
         self.mock_client.request.assert_called_once_with(
-            method="PUT", endpoint="/identities/identity123", body=expected_data
+            method="PUT", path="identities/identity123", body=expected_data
         )
         self.resource._create_response.assert_called_once_with(mock_response)
 
@@ -247,7 +247,7 @@ class TestIdentitiesResource:
         }
         self.mock_client.request.assert_called_once_with(
             method="PUT",
-            endpoint="/identities/email/john@example.com",
+            path="identities/email/john@example.com",
             body=expected_data,
         )
         self.resource._create_response.assert_called_once_with(mock_response)
@@ -262,7 +262,7 @@ class TestIdentitiesResource:
 
         assert result == self.mock_api_response
         self.mock_client.request.assert_called_once_with(
-            method="DELETE", endpoint="/identities/identity123"
+            method="DELETE", path="identities/identity123"
         )
         self.resource._create_response.assert_called_once_with(mock_response)
 
@@ -276,7 +276,7 @@ class TestIdentitiesResource:
 
         assert result == self.mock_api_response
         self.mock_client.request.assert_called_once_with(
-            method="DELETE", endpoint="/identities/email/john@example.com"
+            method="DELETE", path="identities/email/john@example.com"
         )
         self.resource._create_response.assert_called_once_with(mock_response)
 

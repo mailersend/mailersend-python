@@ -38,7 +38,7 @@ class TestEmailVerification:
 
         assert isinstance(result, APIResponse)
         self.mock_client.request.assert_called_once_with(
-            "POST", "email-verification/verify", body={"email": "test@example.com"}
+            method="POST", path="email-verification/verify", body={"email": "test@example.com"}
         )
 
     def test_verify_email_async_valid_request(self):
@@ -54,8 +54,8 @@ class TestEmailVerification:
 
         assert isinstance(result, APIResponse)
         self.mock_client.request.assert_called_once_with(
-            "POST",
-            "email-verification/verify-async",
+            method="POST",
+            path="email-verification/verify-async",
             body={"email": "test@example.com"},
         )
 
@@ -72,7 +72,7 @@ class TestEmailVerification:
 
         assert isinstance(result, APIResponse)
         self.mock_client.request.assert_called_once_with(
-            method="GET", endpoint="email-verification/verify-async/abc123"
+            method="GET", path="email-verification/verify-async/abc123"
         )
 
     def test_list_verifications_with_defaults(self):
@@ -100,7 +100,7 @@ class TestEmailVerification:
 
         assert isinstance(result, APIResponse)
         self.mock_client.request.assert_called_once_with(
-            method="GET", endpoint="email-verification", params={"page": 1, "limit": 25}
+            method="GET", path="email-verification", params={"page": 1, "limit": 25}
         )
 
     def test_list_verifications_with_custom_params(self):
@@ -128,7 +128,7 @@ class TestEmailVerification:
 
         assert isinstance(result, APIResponse)
         self.mock_client.request.assert_called_once_with(
-            method="GET", endpoint="email-verification", params={"page": 2, "limit": 50}
+            method="GET", path="email-verification", params={"page": 2, "limit": 50}
         )
 
     def test_get_verification_valid_request(self):
@@ -163,7 +163,7 @@ class TestEmailVerification:
 
         assert isinstance(result, APIResponse)
         self.mock_client.request.assert_called_once_with(
-            method="GET", endpoint="email-verification/abc123"
+            method="GET", path="email-verification/abc123"
         )
 
     def test_create_verification_valid_request(self):
@@ -199,7 +199,7 @@ class TestEmailVerification:
 
         assert isinstance(result, APIResponse)
         self.mock_client.request.assert_called_once_with(
-            "POST", "email-verification", body={"name": "Test List", "emails": emails}
+            method="POST", path="email-verification", body={"name": "Test List", "emails": emails}
         )
 
     def test_verify_list_valid_request(self):
@@ -234,7 +234,7 @@ class TestEmailVerification:
 
         assert isinstance(result, APIResponse)
         self.mock_client.request.assert_called_once_with(
-            method="GET", endpoint="email-verification/abc123/verify"
+            method="GET", path="email-verification/abc123/verify"
         )
 
     def test_get_results_with_defaults(self):
@@ -265,7 +265,7 @@ class TestEmailVerification:
         assert isinstance(result, APIResponse)
         self.mock_client.request.assert_called_once_with(
             method="GET",
-            endpoint="email-verification/abc123/results",
+            path="email-verification/abc123/results",
             params={"page": 1, "limit": 25},
         )
 
@@ -300,6 +300,6 @@ class TestEmailVerification:
         assert isinstance(result, APIResponse)
         self.mock_client.request.assert_called_once_with(
             method="GET",
-            endpoint="email-verification/abc123/results",
+            path="email-verification/abc123/results",
             params={"page": 2, "limit": 50, "results": results_filter},
         )

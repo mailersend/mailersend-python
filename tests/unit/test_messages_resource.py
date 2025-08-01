@@ -49,7 +49,7 @@ class TestMessages:
 
         # Verify client was called correctly
         self.mock_client.request.assert_called_once_with(
-            method="GET", endpoint="messages", params={"page": 2, "limit": 50}
+            method="GET", path="messages", params={"page": 2, "limit": 50}
         )
 
         # Verify _create_response was called
@@ -67,7 +67,7 @@ class TestMessages:
 
         # Verify client was called with defaults
         self.mock_client.request.assert_called_once_with(
-            method="GET", endpoint="messages", params={"page": 1, "limit": 25}
+            method="GET", path="messages", params={"page": 1, "limit": 25}
         )
 
     def test_list_messages_excludes_none_values(self):
@@ -109,7 +109,7 @@ class TestMessages:
 
         # Verify client was called correctly
         self.mock_client.request.assert_called_once_with(
-            method="GET", endpoint="messages/message123"
+            method="GET", path="messages/message123"
         )
 
     def test_get_message_endpoint_construction(self):
@@ -123,7 +123,7 @@ class TestMessages:
 
         # Verify endpoint construction
         self.mock_client.request.assert_called_once_with(
-            method="GET", endpoint="messages/5ee0b183b251345e407c936a"
+            method="GET", path="messages/5ee0b183b251345e407c936a"
         )
 
     def test_integration_workflow(self):

@@ -56,7 +56,7 @@ class TestRecipients:
         # Verify client was called with correct params
         self.mock_client.request.assert_called_once_with(
             method="GET",
-            endpoint="recipients",
+            path="recipients",
             params={"domain_id": "test-domain", "page": 2, "limit": 50},
         )
 
@@ -72,7 +72,7 @@ class TestRecipients:
 
         # Verify client was called with defaults
         self.mock_client.request.assert_called_once_with(
-            method="GET", endpoint="recipients", params={"page": 1, "limit": 25}
+            method="GET", path="recipients", params={"page": 1, "limit": 25}
         )
 
         assert result == self.mock_api_response
@@ -100,7 +100,7 @@ class TestRecipients:
 
         # Verify client was called correctly
         self.mock_client.request.assert_called_once_with(
-            method="GET", endpoint="recipients/test-recipient"
+            method="GET", path="recipients/test-recipient"
         )
 
     def test_delete_recipient_returns_api_response(self):
@@ -126,7 +126,7 @@ class TestRecipients:
 
         # Verify client was called correctly
         self.mock_client.request.assert_called_once_with(
-            method="DELETE", endpoint="recipients/test-recipient"
+            method="DELETE", path="recipients/test-recipient"
         )
 
     def test_list_blocklist_returns_api_response(self):
@@ -205,7 +205,7 @@ class TestRecipients:
         # Verify client was called with correct data
         call_args = self.mock_client.request.call_args
         assert call_args[1]["method"] == "POST"
-        assert call_args[1]["endpoint"] == "suppressions/blocklist"
+        assert call_args[1]["path"] == "suppressions/blocklist"
 
         body = call_args[1]["body"]
         assert "domain_id" in body
@@ -274,7 +274,7 @@ class TestRecipients:
         # Verify client was called with correct data
         call_args = self.mock_client.request.call_args
         assert call_args[1]["method"] == "DELETE"
-        assert call_args[1]["endpoint"] == "suppressions/blocklist"
+        assert call_args[1]["path"] == "suppressions/blocklist"
 
         body = call_args[1]["body"]
         assert "domain_id" in body

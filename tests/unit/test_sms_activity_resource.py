@@ -62,7 +62,7 @@ class TestSmsActivity:
         }
 
         self.mock_client.request.assert_called_once_with(
-            method="GET", endpoint="sms-activity", params=expected_params
+            method="GET", path="sms-activity", params=expected_params
         )
         assert result == self.mock_api_response
 
@@ -83,7 +83,7 @@ class TestSmsActivity:
         }
 
         self.mock_client.request.assert_called_once_with(
-            method="GET", endpoint="sms-activity", params=expected_params
+            method="GET", path="sms-activity", params=expected_params
         )
         assert result == self.mock_api_response
 
@@ -97,7 +97,7 @@ class TestSmsActivity:
         result = self.resource.get(request)
 
         self.mock_client.request.assert_called_once_with(
-            method="GET", endpoint="sms-messages/62134a2d7de3253bf10d6642"
+            method="GET", path="sms-messages/62134a2d7de3253bf10d6642"
         )
         assert result == self.mock_api_response
         self.resource._create_response.assert_called_once_with(mock_response)

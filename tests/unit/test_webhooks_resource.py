@@ -51,7 +51,7 @@ class TestWebhooks:
 
         # Verify client was called correctly
         self.mock_client.request.assert_called_once_with(
-            method="GET", endpoint="webhooks", params={"domain_id": "domain123"}
+            method="GET", path="webhooks", params={"domain_id": "domain123"}
         )
 
         # Verify _create_response was called
@@ -80,7 +80,7 @@ class TestWebhooks:
 
         # Verify endpoint construction
         self.mock_client.request.assert_called_once_with(
-            method="GET", endpoint="webhooks/webhook123"
+            method="GET", path="webhooks/webhook123"
         )
 
     def test_create_webhook_returns_api_response(self):
@@ -125,7 +125,7 @@ class TestWebhooks:
 
         # Verify client was called with correct body
         self.mock_client.request.assert_called_once_with(
-            method="POST", endpoint="webhooks", body=expected_body
+            method="POST", path="webhooks", body=expected_body
         )
 
     def test_update_webhook_returns_api_response(self):
@@ -162,7 +162,7 @@ class TestWebhooks:
 
         # Verify client was called with correct body and endpoint
         self.mock_client.request.assert_called_once_with(
-            method="PUT", endpoint="webhooks/webhook123", body=expected_body
+            method="PUT", path="webhooks/webhook123", body=expected_body
         )
 
     def test_update_webhook_excludes_webhook_id_from_body(self):
@@ -178,7 +178,7 @@ class TestWebhooks:
 
         # Verify webhook_id is not in body but is in endpoint
         self.mock_client.request.assert_called_once_with(
-            method="PUT", endpoint="webhooks/webhook123", body=expected_body
+            method="PUT", path="webhooks/webhook123", body=expected_body
         )
 
     def test_delete_webhook_returns_api_response(self):
@@ -204,7 +204,7 @@ class TestWebhooks:
 
         # Verify endpoint construction
         self.mock_client.request.assert_called_once_with(
-            method="DELETE", endpoint="webhooks/webhook123"
+            method="DELETE", path="webhooks/webhook123"
         )
 
     def test_integration_workflow(self):

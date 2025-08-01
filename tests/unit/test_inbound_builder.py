@@ -273,8 +273,10 @@ class TestInboundBuilder:
         assert request.domain_id == "domain123"
         assert request.name == "Test Route"
         assert request.domain_enabled is False
-        assert len(request.catch_filter) == 1
-        assert len(request.match_filter) == 1
+        assert request.catch_filter.type == "catch_all"
+        assert request.catch_filter.filters is None  # catch_all doesn't need specific filters
+        assert request.match_filter.type == "match_all"
+        assert request.match_filter.filters is None  # match_all doesn't need specific filters
         assert len(request.forwards) == 1
 
     def test_build_create_request_with_domain_enabled(self):
@@ -416,14 +418,14 @@ class TestInboundBuilder:
         builder.add_webhook_forward("https://api.example.com/webhook", "secret123")
 
         request = builder.build_create_request()
-        assert len(request.catch_filter) == 1
-        assert request.catch_filter[0].type == "catch_recipient"
-        assert request.catch_filter[0].filters == catch_filters
+        assert request.catch_filter is not None
+        assert request.catch_filter.type == "catch_recipient"
+        assert request.catch_filter.filters == catch_filters
         assert request.catch_type == "one"
 
-        assert len(request.match_filter) == 1
-        assert request.match_filter[0].type == "match_sender"
-        assert request.match_filter[0].filters == match_filters
+        assert request.match_filter is not None
+        assert request.match_filter.type == "match_sender"
+        assert request.match_filter.filters == match_filters
         assert request.match_type == "all"
 
         assert len(request.forwards) == 2

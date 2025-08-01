@@ -60,7 +60,7 @@ class TestSmsInbounds:
         }
 
         self.mock_client.request.assert_called_once_with(
-            method="GET", endpoint="sms-inbounds", params=expected_params
+            method="GET", path="sms-inbounds", params=expected_params
         )
         assert result == self.mock_api_response
 
@@ -74,7 +74,7 @@ class TestSmsInbounds:
         result = self.resource.get_sms_inbound(request)
 
         self.mock_client.request.assert_called_once_with(
-            method="GET", endpoint="sms-inbounds/inbound123"
+            method="GET", path="sms-inbounds/inbound123"
         )
         assert result == self.mock_api_response
         self.resource._create_response.assert_called_once_with(mock_response)
@@ -100,7 +100,7 @@ class TestSmsInbounds:
         }
 
         self.mock_client.request.assert_called_once_with(
-            method="POST", endpoint="sms-inbounds", body=expected_body
+            method="POST", path="sms-inbounds", body=expected_body
         )
         assert result == self.mock_api_response
         self.resource._create_response.assert_called_once_with(mock_response)
@@ -130,7 +130,7 @@ class TestSmsInbounds:
         }
 
         self.mock_client.request.assert_called_once_with(
-            method="POST", endpoint="sms-inbounds", body=expected_body
+            method="POST", path="sms-inbounds", body=expected_body
         )
         assert result == self.mock_api_response
 
@@ -148,7 +148,7 @@ class TestSmsInbounds:
         expected_body = {"name": "Updated Route", "enabled": False}
 
         self.mock_client.request.assert_called_once_with(
-            method="PUT", endpoint="sms-inbounds/inbound123", body=expected_body
+            method="PUT", path="sms-inbounds/inbound123", body=expected_body
         )
         assert result == self.mock_api_response
         self.resource._create_response.assert_called_once_with(mock_response)
@@ -163,7 +163,7 @@ class TestSmsInbounds:
         result = self.resource.delete_sms_inbound(request)
 
         self.mock_client.request.assert_called_once_with(
-            method="DELETE", endpoint="sms-inbounds/inbound123"
+            method="DELETE", path="sms-inbounds/inbound123"
         )
         assert result == self.mock_api_response
         self.resource._create_response.assert_called_once_with(mock_response)

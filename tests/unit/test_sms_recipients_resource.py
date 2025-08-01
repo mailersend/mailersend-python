@@ -56,7 +56,7 @@ class TestSmsRecipients:
             "limit": 50,
         }
         self.mock_client.request.assert_called_once_with(
-            method="GET", endpoint="sms-recipients", params=expected_params
+            method="GET", path="sms-recipients", params=expected_params
         )
         assert result == self.mock_api_response
 
@@ -70,7 +70,7 @@ class TestSmsRecipients:
         result = self.resource.list_sms_recipients(request)
 
         self.mock_client.request.assert_called_once_with(
-            method="GET", endpoint="sms-recipients", params={}
+            method="GET", path="sms-recipients", params={}
         )
         assert result == self.mock_api_response
 
@@ -84,7 +84,7 @@ class TestSmsRecipients:
         result = self.resource.get_sms_recipient(request)
 
         self.mock_client.request.assert_called_once_with(
-            method="GET", endpoint="sms-recipients/recipient123"
+            method="GET", path="sms-recipients/recipient123"
         )
         assert result == self.mock_api_response
         self.resource._create_response.assert_called_once_with(mock_response)
@@ -102,7 +102,7 @@ class TestSmsRecipients:
 
         expected_body = {"status": "opt_out"}
         self.mock_client.request.assert_called_once_with(
-            method="PUT", endpoint="sms-recipients/recipient123", body=expected_body
+            method="PUT", path="sms-recipients/recipient123", body=expected_body
         )
         assert result == self.mock_api_response
         self.resource._create_response.assert_called_once_with(mock_response)

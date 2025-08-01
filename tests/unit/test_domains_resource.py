@@ -47,7 +47,7 @@ class TestDomainsResourceQueryParams:
 
         # Should call with default query params
         mock_client.request.assert_called_once_with(
-            "GET", "domains", params={"page": 1, "limit": 25}
+            method="GET", path="domains", params={"page": 1, "limit": 25}
         )
         domains._create_response.assert_called_once_with(mock_response)
         assert isinstance(result, type(domains._create_response.return_value))
@@ -66,9 +66,9 @@ class TestDomainsResourceQueryParams:
 
         result = domains.list_domains(request)
 
-        expected_params = {"page": 2, "limit": 50, "verified": True}
+        expected_params = {"page": 2, "limit": 50, "verified": "true"}
         mock_client.request.assert_called_once_with(
-            "GET", "domains", params=expected_params
+            method="GET", path="domains", params=expected_params
         )
         domains._create_response.assert_called_once_with(mock_response)
         assert isinstance(result, type(domains._create_response.return_value))
@@ -91,7 +91,7 @@ class TestDomainsResourceQueryParams:
 
         expected_params = {"page": 3, "limit": 20}
         mock_client.request.assert_called_once_with(
-            "GET", "domains/test-domain-id/recipients", params=expected_params
+            method="GET", path="domains/test-domain-id/recipients", params=expected_params
         )
         domains._create_response.assert_called_once_with(mock_response)
         assert isinstance(result, type(domains._create_response.return_value))
@@ -115,7 +115,7 @@ class TestDomainsResourceRequestBodyHandling:
 
         expected_body = {"name": "example.com", "return_path_subdomain": "mail"}
         mock_client.request.assert_called_once_with(
-            "POST", "domains", body=expected_body
+            method="POST", path="domains", body=expected_body
         )
         domains._create_response.assert_called_once_with(mock_response)
         assert isinstance(result, type(domains._create_response.return_value))
@@ -140,7 +140,7 @@ class TestDomainsResourceRequestBodyHandling:
         assert "domain_id" not in expected_body
 
         mock_client.request.assert_called_once_with(
-            "PUT", "domains/test-domain-id/settings", body=expected_body
+            method="PUT", path="domains/test-domain-id/settings", body=expected_body
         )
         domains._create_response.assert_called_once_with(mock_response)
         assert isinstance(result, type(domains._create_response.return_value))
