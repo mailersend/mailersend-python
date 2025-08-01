@@ -34,6 +34,7 @@ from .resources.sms_numbers import SmsNumbers
 from .resources.sms_recipients import SmsRecipients
 from .resources.sms_sending import SmsSending
 from .resources.sms_webhooks import SmsWebhooks
+from .resources.other import Other
 from .logging import get_logger, RequestLogger
 
 
@@ -140,6 +141,7 @@ class MailerSendClient:
         self.sms_inbounds = SmsInbounds(self)
         self.sms_recipients = SmsRecipients(self)
         self.sms_webhooks = SmsWebhooks(self)
+        self.api_quota = Other(self)
         
         self.logger.info("MailerSend client initialized successfully")
         if debug:
