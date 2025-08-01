@@ -1436,14 +1436,14 @@ dev = ["pre-commit", "pytest-asyncio", "tox"]
 
 [[package]]
 name = "python-dotenv"
-version = "0.21.1"
+version = "1.1.1"
 description = "Read key-value pairs from a .env file and set them as environment variables"
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.9"
 groups = ["dev"]
 files = [
-    {file = "python-dotenv-0.21.1.tar.gz", hash = "sha256:1c93de8f636cde3ce377292818d0e440b6e45a82f215c3744979151fa8151c49"},
-    {file = "python_dotenv-0.21.1-py3-none-any.whl", hash = "sha256:41e12e0318bebc859fcc4d97d4db8d20ad21721a6aa5047dd59f090391cb549a"},
+    {file = "python_dotenv-1.1.1-py3-none-any.whl", hash = "sha256:31f23644fe2602f88ff55e1f5c79ba497e01224ee7737937930c448e4d0e24dc"},
+    {file = "python_dotenv-1.1.1.tar.gz", hash = "sha256:a8a6399716257f45be6a007360200409fce5cda2661e3dec71d23dc15f6189ab"},
 ]
 
 [package.extras]
@@ -2147,4 +2147,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.9"
-content-hash = "8145acdb81aaaa224e7744f4ea3176bb8ca052bd8e8c550e730060ec11c440a2"
+content-hash = "76e53cf8e360cf2f8b72b1c697cc95a3fdc7d924d495ac4a51f084c70f7ec57b"
