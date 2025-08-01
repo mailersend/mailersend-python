@@ -119,10 +119,6 @@ MailerSend Python SDK
     - [Create an email verification list](#create-an-email-verification-list)
     - [Verify a list](#verify-a-list)
     - [Get list results](#get-list-results)
-  - [SMS](#sms)
-    - [Sending SMS messages](#sending-sms-messages)
-  - [SMS Activity](#sms-activity)
-    - [Get a list of SMS activities](#get-a-list-of-sms-activities)
   - [Webhooks](#webhooks-1)
     - [Get a list of webhooks](#get-a-list-of-webhooks-1)
     - [Get a single webhook](#get-a-single-webhook-1)
@@ -137,10 +133,10 @@ MailerSend Python SDK
     - [Create an email verification list](#create-an-email-verification-list-1)
     - [Verify a list](#verify-a-list-1)
     - [Get list results](#get-list-results-1)
-  - [SMS](#sms-1)
-    - [Sending SMS messages](#sending-sms-messages-1)
-  - [SMS Activity](#sms-activity-1)
-    - [Get a list of SMS activities](#get-a-list-of-sms-activities-1)
+  - [SMS](#sms)
+    - [Sending SMS messages](#sending-sms-messages)
+  - [SMS Activity](#sms-activity)
+    - [Get a list of SMS activities](#get-a-list-of-sms-activities)
     - [Get activity of a single SMS message](#get-activity-of-a-single-sms-message)
   - [SMS Phone Numbers](#sms-phone-numbers)
     - [Get a list of SMS phone numbers](#get-a-list-of-sms-phone-numbers)
@@ -1818,44 +1814,6 @@ request = (EmailVerificationBuilder()
 response = ms.email_verification.get_results(request)
 ```
 
-## SMS
-
-### Sending SMS messages
-
-```python
-from mailersend import MailerSendClient
-from mailersend import SmsSendingBuilder
-
-ms = MailerSendClient()
-
-request = (SmsSendingBuilder()
-          .from_number("sms-number-id")
-          .to("+1234567890")
-          .text("Hello from MailerSend!")
-          .build())
-
-response = ms.sms.send(request)
-print(f"SMS sent with ID: {response.id}")
-```
-
-## SMS Activity
-
-### Get a list of SMS activities
-
-```python
-from mailersend import MailerSendClient
-from mailersend import TemplatesBuilder
-
-ms = MailerSendClient()
-
-request = (TemplatesBuilder()
-          .template("template-id")
-          .build_delete_request())
-
-response = ms.templates.delete_template(request)
-print("Template deleted")
-```
-
 ## Webhooks
 
 ### Get a list of webhooks
@@ -2072,24 +2030,22 @@ for result in response.data:
 ### Sending SMS messages
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import SmsSendingBuilder
+from mailersend import MailerSendClient, SmsSendingBuilder
 
 ms = MailerSendClient()
 
 # Simple SMS
 request = (SmsSendingBuilder()
-          .from_number("sms-number-id")
+          .from_number("sms-number")
           .to(["+1234567890", "+1234567891"])
           .text("Hello from MailerSend SMS!")
           .build())
 
 response = ms.sms_sending.send(request)
-print(f"SMS sent: {response.message}")
 
 # SMS with personalization
 request = (SmsSendingBuilder()
-          .from_number("sms-number-id")
+          .from_number("sms-number")
           .to(["+1234567890", "+1234567891"])
           .text("Hello {{name}}, your order {{order_id}} is ready!")
           .personalization([
@@ -2112,8 +2068,7 @@ response = ms.sms_sending.send(request)
 ### Get a list of SMS activities
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import SmsActivityBuilder
+from mailersend import MailerSendClient, SmsActivityBuilder
 from datetime import datetime, timedelta
 
 ms = MailerSendClient()
@@ -2123,24 +2078,21 @@ date_from = int((datetime.now() - timedelta(days=7)).timestamp())
 date_to = int(datetime.now().timestamp())
 
 request = (SmsActivityBuilder()
-          .from_number("sms-number-id")
+          .sms_number_id("sms-number-id")
           .date_from(date_from)
           .date_to(date_to)
-          .events(["sent", "delivered", "failed"])
+          .status(["sent", "delivered", "failed"])
           .page(1)
           .limit(25)
           .build_list_request())
 
 response = ms.sms_activity.list(request)
-for activity in response.data:
-    print(f"SMS to {activity.to}: {activity.status}")
 ```
 
 ### Get activity of a single SMS message
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import SmsActivityBuilder
+from mailersend import MailerSendClient, SmsActivityBuilder
 
 ms = MailerSendClient()
 
@@ -2149,7 +2101,6 @@ request = (SmsActivityBuilder()
           .build_get_request())
 
 response = ms.sms_activity.get(request)
-print(f"SMS status: {response.status}")
 ```
 
 ## SMS Phone Numbers
@@ -2157,8 +2108,7 @@ print(f"SMS status: {response.status}")
 ### Get a list of SMS phone numbers
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import SmsNumbersBuilder
+from mailersend import MailerSendClient, SmsNumbersBuilder
 
 ms = MailerSendClient()
 
@@ -2168,58 +2118,50 @@ request = (SmsNumbersBuilder()
           .limit(25)
           .build_list_request())
 
-response = ms.sms_numbers.list_sms_numbers(request)
-for number in response.data:
-    print(f"Number: {number.phone_number}, Paused: {number.paused}")
+response = ms.sms_numbers.list(request)
 ```
 
 ### Get an SMS phone number
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import SmsNumbersBuilder
+from mailersend import MailerSendClient, SmsNumbersBuilder
 
 ms = MailerSendClient()
 
 request = (SmsNumbersBuilder()
-          .from_number("sms-number-id")
+          .sms_number_id("sms-number-id")
           .build_get_request())
 
-response = ms.sms_numbers.get_sms_number(request)
-print(f"Number: {response.phone_number}")
+response = ms.sms_numbers.get(request)
 ```
 
 ### Update a single SMS phone number
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import SmsNumbersBuilder
+from mailersend import MailerSendClient, SmsNumbersBuilder
 
 ms = MailerSendClient()
 
 request = (SmsNumbersBuilder()
-          .from_number("sms-number-id")
+          .sms_number_id("sms-number-id")
           .paused(True)
           .build_update_request())
 
-response = ms.sms_numbers.update_sms_number(request)
-print("SMS number updated")
+response = ms.sms_numbers.update(request)
 ```
 
 ### Delete an SMS phone number
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import SmsNumbersBuilder
+from mailersend import MailerSendClient, SmsNumbersBuilder
 
 ms = MailerSendClient()
 
 request = (SmsNumbersBuilder()
-          .from_number("sms-number-id")
+          .sms_number_id("sms-number-id")
           .build_delete_request())
 
-response = ms.sms_numbers.delete_sms_number(request)
-print("SMS number deleted")
+response = ms.sms_numbers.delete(request)
 ```
 
 ## SMS Recipients
@@ -2227,40 +2169,25 @@ print("SMS number deleted")
 ### Get a list of SMS recipients
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import SmsRecipientsBuilder
+from mailersend import MailerSendClient, SmsRecipientsBuilder
 from mailersend.models.sms_recipients import SmsRecipientStatus
 
 ms = MailerSendClient()
 
 request = (SmsRecipientsBuilder()
-          .from_number("sms-number-id")
+          .sms_number_id("sms-number-id")
           .status(SmsRecipientStatus.ACTIVE)
           .page(1)
           .limit(25)
           .build_list_request())
 
 response = ms.sms_recipients.list_sms_recipients(request)
-
-# Multiple ways to access the same data
-for recipient in response.data:
-    print(f"Recipient: {recipient.number}, Status: {recipient.status}")
-
-# Alternative access patterns
-total_recipients = response['meta']['total']        # Dict access
-request_id = response.headers.x_request_id         # Header attribute access
-status_code = response.status_code                 # Direct property access
-
-# Convert to different formats
-json_response = response.to_json(indent=2)  # Pretty JSON
-dict_response = response.to_dict()          # Full dictionary
 ```
 
 ### Get an SMS recipient
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import SmsRecipientsBuilder
+from mailersend import MailerSendClient, SmsRecipientsBuilder
 
 ms = MailerSendClient()
 
@@ -2269,14 +2196,12 @@ request = (SmsRecipientsBuilder()
           .build_get_request())
 
 response = ms.sms_recipients.get_sms_recipient(request)
-print(f"Recipient: {response.number}")
 ```
 
 ### Update a single SMS recipient
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import SmsRecipientsBuilder
+from mailersend import MailerSendClient, SmsRecipientsBuilder
 from mailersend.models.sms_recipients import SmsRecipientStatus
 
 ms = MailerSendClient()
@@ -2286,7 +2211,6 @@ request = (SmsRecipientsBuilder()
           .build_update_request(SmsRecipientStatus.OPT_OUT))
 
 response = ms.sms_recipients.update_sms_recipient(request)
-print("SMS recipient updated to opt-out")
 ```
 
 ## SMS Messages
@@ -2294,35 +2218,30 @@ print("SMS recipient updated to opt-out")
 ### Get a list of SMS messages
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import SmsMessagesBuilder
+from mailersend import MailerSendClient, SmsMessagesBuilder
 
 ms = MailerSendClient()
 
 request = (SmsMessagesBuilder()
           .page(1)
           .limit(25)
-          .build_list_request())
+          .build_sms_messages_list())
 
 response = ms.sms_messages.list_sms_messages(request)
-for message in response.data:
-    print(f"Message to {message.to}: {message.text}")
 ```
 
 ### Get an SMS message
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import SmsMessagesBuilder
+from mailersend import MailerSendClient, SmsMessagesBuilder
 
 ms = MailerSendClient()
 
 request = (SmsMessagesBuilder()
           .sms_message_id("message-id")
-          .build_get_request())
+          .build_sms_message_get())
 
 response = ms.sms_messages.get_sms_message(request)
-print(f"Message: {response.text}")
 ```
 
 ## SMS Webhooks
@@ -2330,25 +2249,21 @@ print(f"Message: {response.text}")
 ### Get a list of SMS webhooks
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import SmsWebhooksBuilder
+from mailersend import MailerSendClient, SmsWebhooksBuilder
 
 ms = MailerSendClient()
 
 request = (SmsWebhooksBuilder()
-          .from_number("sms-number-id")
+          .sms_number_id("sms-number-id")
           .build_list_request())
 
 response = ms.sms_webhooks.list_sms_webhooks(request)
-for webhook in response.data:
-    print(f"Webhook: {webhook.name} - {webhook.url}")
 ```
 
 ### Get a single SMS webhook
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import SmsWebhooksBuilder
+from mailersend import MailerSendClient, SmsWebhooksBuilder
 
 ms = MailerSendClient()
 
@@ -2357,14 +2272,12 @@ request = (SmsWebhooksBuilder()
           .build_get_request())
 
 response = ms.sms_webhooks.get_sms_webhook(request)
-print(f"Webhook: {response.name}")
 ```
 
 ### Create an SMS webhook
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import SmsWebhooksBuilder
+from mailersend import MailerSendClient, SmsWebhooksBuilder
 from mailersend.models.sms_webhooks import SmsWebhookEvent
 
 ms = MailerSendClient()
@@ -2380,14 +2293,12 @@ request = (SmsWebhooksBuilder()
           .build_create_request())
 
 response = ms.sms_webhooks.create_sms_webhook(request)
-print(f"Created SMS webhook with ID: {response.id}")
 ```
 
 ### Update a single SMS webhook
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import SmsWebhooksBuilder
+from mailersend import MailerSendClient, SmsWebhooksBuilder
 from mailersend.models.sms_webhooks import SmsWebhookEvent
 
 ms = MailerSendClient()
@@ -2401,14 +2312,12 @@ request = (SmsWebhooksBuilder()
           .build_update_request())
 
 response = ms.sms_webhooks.update_sms_webhook(request)
-print("SMS webhook updated")
 ```
 
 ### Delete an SMS webhook
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import SmsWebhooksBuilder
+from mailersend import MailerSendClient, SmsWebhooksBuilder
 
 ms = MailerSendClient()
 
@@ -2417,7 +2326,6 @@ request = (SmsWebhooksBuilder()
           .build_delete_request())
 
 response = ms.sms_webhooks.delete_sms_webhook(request)
-print("SMS webhook deleted")
 ```
 
 ## SMS Inbound Routing
@@ -2425,28 +2333,22 @@ print("SMS webhook deleted")
 ### Get a list of SMS inbound routes
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import SmsInboundsBuilder
+from mailersend import MailerSendClient, SmsInboundsBuilder
 
 ms = MailerSendClient()
 
 request = (SmsInboundsBuilder()
-          .from_number("sms-number-id")
+          .sms_number_id("sms-number-id")
           .enabled(True)
-          .page(1)
-          .limit(25)
           .build_list_request())
 
 response = ms.sms_inbounds.list_sms_inbounds(request)
-for route in response.data:
-    print(f"Route: {route.name} -> {route.forward_url}")
 ```
 
 ### Get a single SMS inbound route
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import SmsInboundsBuilder
+from mailersend import MailerSendClient, SmsInboundsBuilder
 
 ms = MailerSendClient()
 
@@ -2455,20 +2357,18 @@ request = (SmsInboundsBuilder()
           .build_get_request())
 
 response = ms.sms_inbounds.get_sms_inbound(request)
-print(f"Route: {response.name}")
 ```
 
 ### Create an SMS inbound route
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import SmsInboundsBuilder
+from mailersend import MailerSendClient, SmsInboundsBuilder
 from mailersend.models.sms_inbounds import FilterComparer
 
 ms = MailerSendClient()
 
 request = (SmsInboundsBuilder()
-          .from_number("sms-number-id")
+          .sms_number_id("sms-number-id")
           .name("Support Route")
           .forward_url("https://api.example.com/sms/support")
           .filter(FilterComparer.STARTS_WITH, "SUPPORT")
@@ -2476,20 +2376,18 @@ request = (SmsInboundsBuilder()
           .build_create_request())
 
 response = ms.sms_inbounds.create_sms_inbound(request)
-print(f"Created SMS inbound route with ID: {response.id}")
 ```
 
 ### Update an SMS inbound route
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import SmsInboundsBuilder
+from mailersend import MailerSendClient, SmsInboundsBuilder
 from mailersend.models.sms_inbounds import FilterComparer
 
 ms = MailerSendClient()
 
 request = (SmsInboundsBuilder()
-          .sms_inbound_id("inbound-id")
+          .sms_number_id("inbound-id")
           .name("Updated Support Route")
           .forward_url("https://api.example.com/sms/new-support")
           .filter(FilterComparer.CONTAINS, "HELP")
@@ -2497,14 +2395,12 @@ request = (SmsInboundsBuilder()
           .build_update_request())
 
 response = ms.sms_inbounds.update_sms_inbound(request)
-print("SMS inbound route updated")
 ```
 
 ### Delete an SMS inbound route
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import SmsInboundsBuilder
+from mailersend import MailerSendClient, SmsInboundsBuilder
 
 ms = MailerSendClient()
 
@@ -2513,7 +2409,6 @@ request = (SmsInboundsBuilder()
           .build_delete_request())
 
 response = ms.sms_inbounds.delete_sms_inbound(request)
-print("SMS inbound route deleted")
 ```
 
 ## Tokens
