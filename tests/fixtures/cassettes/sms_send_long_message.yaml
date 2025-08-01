@@ -1,0 +1,68 @@
+interactions:
+- request:
+    body: '{"from": "+1234567890", "to": ["+1234567890"], "text": "This is a long
+      SMS message. This is a long SMS message. This is a long SMS message. This is
+      a long SMS message. This is a long SMS message. This is a long SMS message.
+      This is a long SMS message. This is a long SMS message. This is a long SMS message.
+      This is a long SMS message. This is a long SMS message. This is a long SMS message.
+      This is a long SMS message. This is a long SMS message. This is a long SMS message.
+      This is a long SMS message. This is a long SMS message. This is a long SMS message.
+      This is a long SMS message. This is a long SMS message. This is a long SMS message.
+      This is a long SMS message. This is a long SMS message. This is a long SMS message.
+      This is a long SMS message. This is a long SMS message. This is a long SMS message.
+      This is a long SMS message. This is a long SMS message. This is a long SMS message.
+      This is a long SMS message. This is a long SMS message. This is a long SMS message.
+      This is a long SMS message. This is a long SMS message. This is a long SMS message.
+      This is a long SMS message. This is a long SMS message. This is a long SMS message.
+      This is a long SMS message. This is a long SMS message. This is a long SMS message.
+      This is a long SMS message. This is a long SMS message. This is a long SMS message.
+      This is a long SMS message. This is a long SMS message. This is a long SMS message.
+      This is a long SMS message. This is a long SMS message. "}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '1462'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+    method: POST
+    uri: https://api.mailersend.com/v1/sms
+  response:
+    body:
+      string: '{"message":"The from field contains an invalid number. (and 2 more
+        errors)","errors":{"from":["The from field contains an invalid number."],"to":["Daily
+        quota for this number exceeded."],"to.0":["The to.0 field contains an invalid
+        number."]}}'
+    headers:
+      CF-RAY:
+      - 966d533d3969e294-BEG
+      Cache-Control:
+      - no-cache, private
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Date:
+      - Tue, 29 Jul 2025 14:32:21 GMT
+      Server:
+      - cloudflare
+      Transfer-Encoding:
+      - chunked
+      cf-cache-status:
+      - DYNAMIC
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-apiquota-remaining:
+      - '-1'
+      x-apiquota-reset:
+      - '2025-07-30T00:00:00Z'
+    status:
+      code: 422
+      message: Unprocessable Entity
+version: 1

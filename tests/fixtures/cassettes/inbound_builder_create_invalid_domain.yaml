@@ -1,0 +1,149 @@
+interactions:
+- request:
+    body: '{"domain_id": "invalid-domain-id", "name": "Test Route", "domain_enabled":
+      false, "catch_filter": {"type": "catch_all"}, "match_filter": {"type": "match_all"},
+      "forwards": [{"type": "email", "value": "test@example.com"}]}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '221'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+    method: POST
+    uri: https://api.mailersend.com/v1/inbound
+  response:
+    body:
+      string: "{\n    \"message\": \"You cannot create a resource at the moment. Please
+        wait a while before retrying.\"\n}"
+    headers:
+      CF-RAY:
+      - 9684ca5098130380-BEG
+      Cache-Control:
+      - no-cache, private
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Date:
+      - Fri, 01 Aug 2025 10:53:11 GMT
+      Server:
+      - cloudflare
+      Transfer-Encoding:
+      - chunked
+      cf-cache-status:
+      - DYNAMIC
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-apiquota-remaining:
+      - '-1'
+      x-apiquota-reset:
+      - '2025-08-02T00:00:00Z'
+    status:
+      code: 429
+      message: Too Many Requests
+- request:
+    body: '{"domain_id": "invalid-domain-id", "name": "Test Route", "domain_enabled":
+      false, "catch_filter": {"type": "catch_all"}, "match_filter": {"type": "match_all"},
+      "forwards": [{"type": "email", "value": "test@example.com"}]}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '221'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+    method: POST
+    uri: https://api.mailersend.com/v1/inbound
+  response:
+    body:
+      string: "{\n    \"message\": \"You cannot create a resource at the moment. Please
+        wait a while before retrying.\"\n}"
+    headers:
+      CF-RAY:
+      - 9684ca520f3f0a8e-BEG
+      Cache-Control:
+      - no-cache, private
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Date:
+      - Fri, 01 Aug 2025 10:53:11 GMT
+      Server:
+      - cloudflare
+      Transfer-Encoding:
+      - chunked
+      cf-cache-status:
+      - DYNAMIC
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-apiquota-remaining:
+      - '-1'
+      x-apiquota-reset:
+      - '2025-08-02T00:00:00Z'
+    status:
+      code: 429
+      message: Too Many Requests
+- request:
+    body: '{"domain_id": "invalid-domain-id", "name": "Test Route", "domain_enabled":
+      false, "catch_filter": {"type": "catch_all"}, "match_filter": {"type": "match_all"},
+      "forwards": [{"type": "email", "value": "test@example.com"}]}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '221'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+    method: POST
+    uri: https://api.mailersend.com/v1/inbound
+  response:
+    body:
+      string: '{"message":"The domain id field is required. #MS42209","errors":{"domain_id":["The
+        domain id field is required. #MS42209"]}}'
+    headers:
+      CF-RAY:
+      - 9684ca572aad9857-BEG
+      Cache-Control:
+      - no-cache, private
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Date:
+      - Fri, 01 Aug 2025 10:53:12 GMT
+      Server:
+      - cloudflare
+      Transfer-Encoding:
+      - chunked
+      cf-cache-status:
+      - DYNAMIC
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-apiquota-remaining:
+      - '-1'
+      x-apiquota-reset:
+      - '2025-08-02T00:00:00Z'
+    status:
+      code: 422
+      message: Unprocessable Entity
+version: 1

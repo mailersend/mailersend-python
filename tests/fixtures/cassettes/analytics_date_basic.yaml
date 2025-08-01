@@ -1,0 +1,48 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      User-Agent:
+      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+    method: GET
+    uri: https://api.mailersend.com/v1/analytics/date?date_from=1746144000&date_to=1748736000&group_by=days&event%5B%5D=sent&event%5B%5D=delivered&event%5B%5D=opened
+  response:
+    body:
+      string: '{"data":{"date_from":"1746144000","date_to":"1748822399","group_by":"days","stats":[{"date":"1746144000","sent":0,"delivered":0,"opened":0},{"date":"1746230400","sent":0,"delivered":0,"opened":0},{"date":"1746316800","sent":0,"delivered":0,"opened":0},{"date":"1746403200","sent":0,"delivered":0,"opened":0},{"date":"1746489600","sent":0,"delivered":0,"opened":0},{"date":"1746576000","sent":0,"delivered":0,"opened":0},{"date":"1746662400","sent":0,"delivered":0,"opened":0},{"date":"1746748800","sent":0,"delivered":0,"opened":0},{"date":"1746835200","sent":0,"delivered":0,"opened":0},{"date":"1746921600","sent":0,"delivered":0,"opened":0},{"date":"1747008000","sent":0,"delivered":0,"opened":0},{"date":"1747094400","sent":0,"delivered":0,"opened":0},{"date":"1747180800","sent":0,"delivered":0,"opened":0},{"date":"1747267200","sent":0,"delivered":0,"opened":0},{"date":"1747353600","sent":0,"delivered":0,"opened":0},{"date":"1747440000","sent":0,"delivered":0,"opened":0},{"date":"1747526400","sent":1,"delivered":1,"opened":2},{"date":"1747612800","sent":0,"delivered":0,"opened":0},{"date":"1747699200","sent":0,"delivered":0,"opened":0},{"date":"1747785600","sent":0,"delivered":0,"opened":0},{"date":"1747872000","sent":0,"delivered":0,"opened":0},{"date":"1747958400","sent":0,"delivered":0,"opened":0},{"date":"1748044800","sent":0,"delivered":0,"opened":0},{"date":"1748131200","sent":0,"delivered":0,"opened":0},{"date":"1748217600","sent":0,"delivered":0,"opened":0},{"date":"1748304000","sent":0,"delivered":0,"opened":0},{"date":"1748390400","sent":0,"delivered":0,"opened":0},{"date":"1748476800","sent":0,"delivered":0,"opened":0},{"date":"1748563200","sent":0,"delivered":0,"opened":0},{"date":"1748649600","sent":0,"delivered":0,"opened":0},{"date":"1748736000","sent":0,"delivered":0,"opened":0}]}}'
+    headers:
+      CF-RAY:
+      - 966c83aed9ca8e88-BEG
+      Cache-Control:
+      - no-cache, private
+      Connection:
+      - keep-alive
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/json
+      Date:
+      - Tue, 29 Jul 2025 12:10:40 GMT
+      Server:
+      - cloudflare
+      Transfer-Encoding:
+      - chunked
+      cf-cache-status:
+      - DYNAMIC
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-apiquota-remaining:
+      - '-1'
+      x-apiquota-reset:
+      - '2025-07-30T00:00:00Z'
+    status:
+      code: 200
+      message: OK
+version: 1

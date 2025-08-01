@@ -1,0 +1,94 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      User-Agent:
+      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+    method: GET
+    uri: https://api.mailersend.com/v1/analytics/date?date_from=1748131200&date_to=1748736000&group_by=days&event%5B%5D=sent&event%5B%5D=delivered
+  response:
+    body:
+      string: '{"data":{"date_from":"1748131200","date_to":"1748822399","group_by":"days","stats":[{"date":"1748131200","sent":0,"delivered":0},{"date":"1748217600","sent":0,"delivered":0},{"date":"1748304000","sent":0,"delivered":0},{"date":"1748390400","sent":0,"delivered":0},{"date":"1748476800","sent":0,"delivered":0},{"date":"1748563200","sent":0,"delivered":0},{"date":"1748649600","sent":0,"delivered":0},{"date":"1748736000","sent":0,"delivered":0}]}}'
+    headers:
+      CF-RAY:
+      - 966c83ec5fdfe295-BEG
+      Cache-Control:
+      - no-cache, private
+      Connection:
+      - keep-alive
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/json
+      Date:
+      - Tue, 29 Jul 2025 12:10:49 GMT
+      Server:
+      - cloudflare
+      Transfer-Encoding:
+      - chunked
+      cf-cache-status:
+      - DYNAMIC
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-apiquota-remaining:
+      - '-1'
+      x-apiquota-reset:
+      - '2025-07-30T00:00:00Z'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      User-Agent:
+      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+    method: GET
+    uri: https://api.mailersend.com/v1/analytics/date?date_from=1747526400&date_to=1748736000&group_by=days&event%5B%5D=opened&event%5B%5D=clicked
+  response:
+    body:
+      string: '{"data":{"date_from":"1747526400","date_to":"1748822399","group_by":"days","stats":[{"date":"1747526400","opened":2,"clicked":0},{"date":"1747612800","opened":0,"clicked":0},{"date":"1747699200","opened":0,"clicked":0},{"date":"1747785600","opened":0,"clicked":0},{"date":"1747872000","opened":0,"clicked":0},{"date":"1747958400","opened":0,"clicked":0},{"date":"1748044800","opened":0,"clicked":0},{"date":"1748131200","opened":0,"clicked":0},{"date":"1748217600","opened":0,"clicked":0},{"date":"1748304000","opened":0,"clicked":0},{"date":"1748390400","opened":0,"clicked":0},{"date":"1748476800","opened":0,"clicked":0},{"date":"1748563200","opened":0,"clicked":0},{"date":"1748649600","opened":0,"clicked":0},{"date":"1748736000","opened":0,"clicked":0}]}}'
+    headers:
+      CF-RAY:
+      - 966c83ed6f6fe297-BEG
+      Cache-Control:
+      - no-cache, private
+      Connection:
+      - keep-alive
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/json
+      Date:
+      - Tue, 29 Jul 2025 12:10:49 GMT
+      Server:
+      - cloudflare
+      Transfer-Encoding:
+      - chunked
+      cf-cache-status:
+      - DYNAMIC
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-apiquota-remaining:
+      - '-1'
+      x-apiquota-reset:
+      - '2025-07-30T00:00:00Z'
+    status:
+      code: 200
+      message: OK
+version: 1

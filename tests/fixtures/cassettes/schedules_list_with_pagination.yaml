@@ -1,0 +1,51 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      User-Agent:
+      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+    method: GET
+    uri: https://api.mailersend.com/v1/message-schedules?page=1&limit=10
+  response:
+    body:
+      string: '{"data":[{"message_id":"6888bb59bbd49a78d3334484","subject":"Test Email","send_at":"2025-07-30T12:15:21.000000Z","status":"scheduled","status_message":null,"created_at":"2025-07-29T12:15:21.000000Z"},{"message_id":"6888bbb9b713a022b0acd094","subject":"Test
+        Email","send_at":"2025-07-30T12:16:57.000000Z","status":"scheduled","status_message":null,"created_at":"2025-07-29T12:16:57.000000Z"}],"links":{"first":"https:\/\/api.mailersend.com\/v1\/message-schedules?page=1","last":"https:\/\/api.mailersend.com\/v1\/message-schedules?page=1","prev":null,"next":null},"meta":{"current_page":1,"from":1,"last_page":1,"links":[{"url":null,"label":"&laquo;
+        Previous","active":false},{"url":"https:\/\/api.mailersend.com\/v1\/message-schedules?page=1","label":"1","active":true},{"url":null,"label":"Next
+        &raquo;","active":false}],"path":"https:\/\/api.mailersend.com\/v1\/message-schedules","per_page":10,"to":2,"total":2}}'
+    headers:
+      CF-RAY:
+      - 966d2ec709ed1b8b-BEG
+      Cache-Control:
+      - no-cache, private
+      Connection:
+      - keep-alive
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/json
+      Date:
+      - Tue, 29 Jul 2025 14:07:28 GMT
+      Server:
+      - cloudflare
+      Transfer-Encoding:
+      - chunked
+      cf-cache-status:
+      - DYNAMIC
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-apiquota-remaining:
+      - '-1'
+      x-apiquota-reset:
+      - '2025-07-30T00:00:00Z'
+    status:
+      code: 200
+      message: OK
+version: 1
