@@ -1,0 +1,48 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      User-Agent:
+      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+    method: GET
+    uri: https://api.mailersend.com/v1/analytics/date?domain_id=your-domain-id&date_from=1746144000&date_to=1748736000&group_by=months&event%5B%5D=opened&event%5B%5D=clicked&event%5B%5D=unsubscribed&event%5B%5D=spam_complaints
+  response:
+    body:
+      string: '{"data":{"date_from":"1746144000","date_to":"1748822399","group_by":"months","stats":[{"date":"1746057600","opened":2,"clicked":0,"unsubscribed":0,"spam_complaints":0},{"date":"1748736000","opened":0,"clicked":0,"unsubscribed":0,"spam_complaints":0}]}}'
+    headers:
+      CF-RAY:
+      - 966c83e14e86e294-BEG
+      Cache-Control:
+      - no-cache, private
+      Connection:
+      - keep-alive
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/json
+      Date:
+      - Tue, 29 Jul 2025 12:10:48 GMT
+      Server:
+      - cloudflare
+      Transfer-Encoding:
+      - chunked
+      cf-cache-status:
+      - DYNAMIC
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-apiquota-remaining:
+      - '-1'
+      x-apiquota-reset:
+      - '2025-07-30T00:00:00Z'
+    status:
+      code: 200
+      message: OK
+version: 1

@@ -1,0 +1,55 @@
+interactions:
+- request:
+    body: '{"from": {"email": "ms-sdk@igor.fail", "name": "Sender"}, "to": [{"email":
+      "igor@mailerlite.com", "name": "Recipient"}], "subject": "Test Email", "text":
+      "This is a plain text email for testing.", "html": "<p>This is a test email</p>",
+      "precedence_bulk": true}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '260'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+    method: POST
+    uri: https://api.mailersend.com/v1/email
+  response:
+    body:
+      string: ''
+    headers:
+      CF-RAY:
+      - 966d6dee582ff832-VIE
+      Cache-Control:
+      - no-cache, private
+      Connection:
+      - keep-alive
+      Content-Type:
+      - text/html; charset=UTF-8
+      Date:
+      - Tue, 29 Jul 2025 14:50:34 GMT
+      Server:
+      - cloudflare
+      Transfer-Encoding:
+      - chunked
+      cf-cache-status:
+      - DYNAMIC
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-apiquota-remaining:
+      - '-1'
+      x-apiquota-reset:
+      - '2025-07-30T00:00:00Z'
+      x-message-id:
+      - 6888dfba8942efdecfd82b5c
+      x-send-paused:
+      - 'true'
+    status:
+      code: 202
+      message: Accepted
+version: 1

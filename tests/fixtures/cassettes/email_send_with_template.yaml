@@ -1,0 +1,55 @@
+interactions:
+- request:
+    body: '{"from": {"email": "ms-sdk@igor.fail", "name": "Sender"}, "to": [{"email":
+      "igor@mailerlite.com", "name": "Recipient"}], "subject": "Test Email", "html":
+      "<p>This is a test email</p>", "template_id": "351ndgwkr8xgzqx8", "personalization":
+      [{"email": "igor@mailerlite.com", "data": {"name": "Recipient Name"}}]}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '310'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+    method: POST
+    uri: https://api.mailersend.com/v1/email
+  response:
+    body:
+      string: ''
+    headers:
+      CF-RAY:
+      - 966d6df59c8acf86-BEG
+      Cache-Control:
+      - no-cache, private
+      Connection:
+      - keep-alive
+      Content-Type:
+      - text/html; charset=UTF-8
+      Date:
+      - Tue, 29 Jul 2025 14:50:36 GMT
+      Server:
+      - cloudflare
+      Transfer-Encoding:
+      - chunked
+      cf-cache-status:
+      - DYNAMIC
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-apiquota-remaining:
+      - '-1'
+      x-apiquota-reset:
+      - '2025-07-30T00:00:00Z'
+      x-message-id:
+      - 6888dfbb94808450972a2cb5
+      x-send-paused:
+      - 'true'
+    status:
+      code: 202
+      message: Accepted
+version: 1

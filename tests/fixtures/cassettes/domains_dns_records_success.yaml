@@ -1,0 +1,50 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      User-Agent:
+      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+    method: GET
+    uri: https://api.mailersend.com/v1/domains/65qngkdovk8lwr12/dns-records
+  response:
+    body:
+      string: '{"data":{"id":"65qngkdovk8lwr12","spf":{"hostname":"igor.fail","type":"TXT","value":"v=spf1
+        include:_spf.mailersend.net include:_spf.mltest.co include:_spf.mx.cloudflare.net
+        a mx include:_spf.mlsend.com ~all"},"dkim":{"hostname":"mlsend2._domainkey.igor.fail","type":"CNAME","value":"mlsend2._domainkey.mailersend.net"},"return_path":{"hostname":"mta.igor.fail","type":"CNAME","value":"mailersend.net"},"custom_tracking":{"hostname":"track.igor.fail","type":"CNAME","value":"links.mailersend.net"},"inbound_routing":{"hostname":"inbound.igor.fail","type":"MX","value":"inbound.mailersend.net","priority":"10"}}}'
+    headers:
+      CF-RAY:
+      - 966c885aa96be297-BEG
+      Cache-Control:
+      - no-cache, private
+      Connection:
+      - keep-alive
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/json
+      Date:
+      - Tue, 29 Jul 2025 12:13:51 GMT
+      Server:
+      - cloudflare
+      Transfer-Encoding:
+      - chunked
+      cf-cache-status:
+      - DYNAMIC
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-apiquota-remaining:
+      - '-1'
+      x-apiquota-reset:
+      - '2025-07-30T00:00:00Z'
+    status:
+      code: 200
+      message: OK
+version: 1
