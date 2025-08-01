@@ -657,8 +657,14 @@ ms = MailerSendClient()
 email = (EmailBuilder()
          .from_email("sender@domain.com", "Your Name")
          .to_many([{"email": "recipient@domain.com", "name": "Recipient"}])
-         .cc("cc@domain.com", "CC Recipient")
-         .bcc("bcc@domain.com", "BCC Recipient")
+         .cc([
+            {"email": "cc1@example.com", "name": "CC User 1"},
+            {"email": "cc2@example.com", "name": "CC User 2"}
+         ])
+         .bcc([
+            {"email": "bcc1@example.com", "name": "BCC User 1"},
+            {"email": "bcc2@example.com"}
+         ])
          .subject("Hello with CC/BCC!")
          .html("<h1>Hello World!</h1>")
          .build())

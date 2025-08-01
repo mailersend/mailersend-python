@@ -87,6 +87,148 @@ class TestEmailBuilder:
         assert email.to[2].email == "user3@example.com"
         assert email.to[2].name is None
 
+    def test_cc_array_functionality(self):
+        """Test CC with array input"""
+        cc_recipients = [
+            {"email": "cc1@example.com", "name": "CC User 1"},
+            {"email": "cc2@example.com", "name": "CC User 2"},
+            {"email": "cc3@example.com"},  # No name
+        ]
+
+        email = (
+            EmailBuilder()
+            .from_email("sender@example.com")
+            .to("recipient@example.com")
+            .cc(cc_recipients)
+            .subject("CC Array Test")
+            .text("Test message")
+            .build()
+        )
+
+        assert len(email.cc) == 3
+        assert email.cc[0].email == "cc1@example.com"
+        assert email.cc[0].name == "CC User 1"
+        assert email.cc[1].email == "cc2@example.com"
+        assert email.cc[1].name == "CC User 2"
+        assert email.cc[2].email == "cc3@example.com"
+        assert email.cc[2].name is None
+
+    def test_bcc_array_functionality(self):
+        """Test BCC with array input"""
+        bcc_recipients = [
+            {"email": "bcc1@example.com", "name": "BCC User 1"},
+            {"email": "bcc2@example.com", "name": "BCC User 2"},
+            {"email": "bcc3@example.com"},  # No name
+        ]
+
+        email = (
+            EmailBuilder()
+            .from_email("sender@example.com")
+            .to("recipient@example.com")
+            .bcc(bcc_recipients)
+            .subject("BCC Array Test")
+            .text("Test message")
+            .build()
+        )
+
+        assert len(email.bcc) == 3
+        assert email.bcc[0].email == "bcc1@example.com"
+        assert email.bcc[0].name == "BCC User 1"
+        assert email.bcc[1].email == "bcc2@example.com"
+        assert email.bcc[1].name == "BCC User 2"
+        assert email.bcc[2].email == "bcc3@example.com"
+        assert email.bcc[2].name is None
+
+    def test_cc_many_method(self):
+        """Test cc_many method"""
+        cc_recipients = [
+            {"email": "cc1@example.com", "name": "CC User 1"},
+            {"email": "cc2@example.com", "name": "CC User 2"},
+        ]
+
+        email = (
+            EmailBuilder()
+            .from_email("sender@example.com")
+            .to("recipient@example.com")
+            .cc_many(cc_recipients)
+            .subject("CC Many Test")
+            .text("Test message")
+            .build()
+        )
+
+        assert len(email.cc) == 2
+        assert email.cc[0].email == "cc1@example.com"
+        assert email.cc[0].name == "CC User 1"
+        assert email.cc[1].email == "cc2@example.com"
+        assert email.cc[1].name == "CC User 2"
+
+    def test_bcc_many_method(self):
+        """Test bcc_many method"""
+        bcc_recipients = [
+            {"email": "bcc1@example.com", "name": "BCC User 1"},
+            {"email": "bcc2@example.com", "name": "BCC User 2"},
+        ]
+
+        email = (
+            EmailBuilder()
+            .from_email("sender@example.com")
+            .to("recipient@example.com")
+            .bcc_many(bcc_recipients)
+            .subject("BCC Many Test")
+            .text("Test message")
+            .build()
+        )
+
+        assert len(email.bcc) == 2
+        assert email.bcc[0].email == "bcc1@example.com"
+        assert email.bcc[0].name == "BCC User 1"
+        assert email.bcc[1].email == "bcc2@example.com"
+        assert email.bcc[1].name == "BCC User 2"
+
+    def test_cc_bcc_mixed_usage(self):
+        """Test mixing single and array CC/BCC methods"""
+        email = (
+            EmailBuilder()
+            .from_email("sender@example.com")
+            .to("recipient@example.com")
+            .cc("single-cc@example.com", "Single CC")
+            .cc([{"email": "array-cc1@example.com", "name": "Array CC 1"}])
+            .bcc("single-bcc@example.com")
+            .bcc_many([
+                {"email": "many-bcc1@example.com", "name": "Many BCC 1"},
+                {"email": "many-bcc2@example.com"}
+            ])
+            .subject("Mixed Usage Test")
+            .text("Test message")
+            .build()
+        )
+
+        assert len(email.cc) == 2
+        assert email.cc[0].email == "single-cc@example.com"
+        assert email.cc[0].name == "Single CC"
+        assert email.cc[1].email == "array-cc1@example.com"
+        assert email.cc[1].name == "Array CC 1"
+
+        assert len(email.bcc) == 3
+        assert email.bcc[0].email == "single-bcc@example.com"
+        assert email.bcc[0].name is None
+        assert email.bcc[1].email == "many-bcc1@example.com"
+        assert email.bcc[1].name == "Many BCC 1"
+        assert email.bcc[2].email == "many-bcc2@example.com"
+        assert email.bcc[2].name is None
+
+    def test_cc_bcc_invalid_input_validation(self):
+        """Test error handling for invalid CC/BCC input types"""
+        builder = EmailBuilder()
+
+        # Test invalid type for cc method
+        with pytest.raises(ValidationError, match="Email must be a string or list of recipient objects"):
+            builder.cc(123)  # Invalid type
+
+        # Test invalid type for bcc method
+        with pytest.raises(ValidationError, match="Email must be a string or list of recipient objects"):
+            builder.bcc({"email": "test@example.com"})  # Dict instead of string or list
+
     def test_content_methods(self):
         """Test different content setting methods"""
         email = (
