@@ -176,6 +176,16 @@ MailerSend Python SDK
     - [Create an SMTP user](#create-an-smtp-user)
     - [Update an SMTP user](#update-an-smtp-user)
     - [Delete an SMTP user](#delete-an-smtp-user)
+  - [Users](#users)
+    - [Get a list of account users](#get-a-list-of-account-users)
+    - [Get a single account user](#get-a-single-account-user)
+    - [Invite a user to account](#invite-a-user-to-account)
+    - [Update an account user](#update-an-account-user)
+    - [Delete a user from account](#delete-a-user-from-account)
+    - [Get a list of invites](#get-a-list-of-invites)
+    - [Get a single invite](#get-a-single-invite)
+    - [Resend an invite](#resend-an-invite)
+    - [Cancel an invite](#cancel-an-invite)
   - [Other Endpoints](#other-endpoints)
     - [Get API Quota](#get-api-quota)
 - [Error Handling](#error-handling)
@@ -2641,6 +2651,155 @@ request = (SmtpUsersBuilder()
 response = ms.smtp_users.delete_smtp_user(request)
 ```
 
+## Users
+
+### Get a list of account users
+
+```python
+from mailersend import MailerSendClient, UsersBuilder
+
+ms = MailerSendClient()
+
+request = (UsersBuilder()
+          .page(1)
+          .limit(25)
+          .build_users_list())
+
+response = ms.users.list_users(request)
+```
+
+### Get a single account user
+
+```python
+from mailersend import MailerSendClient, UsersBuilder
+
+ms = MailerSendClient()
+
+request = (UsersBuilder()
+          .user_id("user-id")
+          .build_user_get())
+
+response = ms.users.get_user(request)
+```
+
+### Invite a user to account
+
+```python
+from mailersend import MailerSendClient, UsersBuilder
+
+ms = MailerSendClient()
+
+# Basic invite with admin role
+request = (UsersBuilder()
+          .email("newuser@example.com")
+          .admin_role()
+          .build_user_invite())
+
+response = ms.users.invite_user(request)
+
+# Custom invite with specific permissions and access
+request = (UsersBuilder()
+          .email("designer@example.com")
+          .designer_role()
+          .add_permission("read-all-templates")
+          .add_permission("manage-template")
+          .add_template("template-id")
+          .add_domain("domain-id")
+          .requires_periodic_password_change(True)
+          .build_user_invite())
+
+response = ms.users.invite_user(request)
+```
+
+### Update an account user
+
+```python
+from mailersend import MailerSendClient, UsersBuilder
+
+ms = MailerSendClient()
+
+request = (UsersBuilder()
+          .user_id("user-id")
+          .manager_role()
+          .add_permission("read-analytics")
+          .add_permission("read-activity")
+          .add_domain("domain-id")
+          .build_user_update())
+
+response = ms.users.update_user(request)
+```
+
+### Delete a user from account
+
+```python
+from mailersend import MailerSendClient, UsersBuilder
+
+ms = MailerSendClient()
+
+request = (UsersBuilder()
+          .user_id("user-id")
+          .build_user_delete())
+
+response = ms.users.delete_user(request)
+```
+
+### Get a list of invites
+
+```python
+from mailersend import MailerSendClient, UsersBuilder
+
+ms = MailerSendClient()
+
+request = (UsersBuilder()
+          .page(1)
+          .limit(25)
+          .build_invites_list())
+
+response = ms.users.list_invites(request)
+```
+
+### Get a single invite
+
+```python
+from mailersend import MailerSendClient, UsersBuilder
+
+ms = MailerSendClient()
+
+request = (UsersBuilder()
+          .invite_id("invite-id")
+          .build_invite_get())
+
+response = ms.users.get_invite(request)
+```
+
+### Resend an invite
+
+```python
+from mailersend import MailerSendClient, UsersBuilder
+
+ms = MailerSendClient()
+
+request = (UsersBuilder()
+          .invite_id("invite-id")
+          .build_invite_resend())
+
+response = ms.users.resend_invite(request)
+```
+
+### Cancel an invite
+
+```python
+from mailersend import MailerSendClient, UsersBuilder
+
+ms = MailerSendClient()
+
+request = (UsersBuilder()
+          .invite_id("invite-id")
+          .build_invite_cancel())
+
+response = ms.users.cancel_invite(request)
+```
+
 ## Other Endpoints
 
 ### Get API Quota
@@ -2651,8 +2810,6 @@ from mailersend import MailerSendClient
 ms = MailerSendClient()
 
 response = ms.api_quota.get_quota()
-print(f"Quota used: {response.used}/{response.limit}")
-print(f"Resets at: {response.reset_date}")
 ```
 
 <a name="error-handling"></a>
@@ -2749,6 +2906,8 @@ def test_list_sms_recipients():
 | Templates            | `{GET, DELETE} templates`               | ✅         |
 | Tokens               | `{POST, PUT, DELETE} tokens`            | ✅         |
 | SMTP Users           | `{GET, POST, PUT, DELETE} smtp-users`   | ✅         |
+| Users                | `{GET, POST, PUT, DELETE} users`        | ✅         |
+| User Invites         | `{GET, POST, DELETE} invites`           | ✅         |
 | Webhooks             | `{GET, POST, PUT, DELETE} webhooks`     | ✅         |
 | SMS Sending          | `POST sms`                              | ✅         |
 | SMS Activity         | `GET sms-activity`                      | ✅         |

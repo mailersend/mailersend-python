@@ -24,6 +24,7 @@ from .sms_sending import SmsSending
 from .sms_recipients import SmsRecipients
 from .sms_webhooks import SmsWebhooks
 from .sms_inbounds import SmsInbounds
+from .other import Other
 
 __all__ = [
     "BaseResource",
@@ -48,4 +49,5 @@ __all__ = [
     "SmsRecipients",
     "SmsWebhooks",
     "SmsInbounds",
+    "Other",
 ]
