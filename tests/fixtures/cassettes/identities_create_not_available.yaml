@@ -17,23 +17,22 @@ interactions:
       User-Agent:
       - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
     method: POST
-    uri: https://api.mailersend.com/identities
+    uri: https://api.mailersend.com/v1/identities
   response:
     body:
-      string: "{\n    \"message\": \"The route identities could not be found.\"\n}"
+      string: '{"message":"The email has already been taken.","errors":{"email":["The
+        email has already been taken."]}}'
     headers:
       CF-RAY:
-      - 966cbf526aa4d814-BEG
+      - 9684c6c4badff339-BEG
       Cache-Control:
       - no-cache, private
       Connection:
       - keep-alive
-      Content-Encoding:
-      - gzip
       Content-Type:
       - application/json
       Date:
-      - Tue, 29 Jul 2025 12:51:22 GMT
+      - Fri, 01 Aug 2025 10:50:46 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
@@ -42,7 +41,11 @@ interactions:
       - DYNAMIC
       strict-transport-security:
       - max-age=31536000; includeSubDomains
+      x-apiquota-remaining:
+      - '-1'
+      x-apiquota-reset:
+      - '2025-08-02T00:00:00Z'
     status:
-      code: 404
-      message: Not Found
+      code: 422
+      message: Unprocessable Entity
 version: 1

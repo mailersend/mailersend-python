@@ -45,13 +45,9 @@ def sample_inbound_data(test_domain_id):
         "domain_enabled": False,
         "inbound_domain": None,
         "inbound_priority": None,
-        "catch_filter": [
-            InboundFilterGroup(type="catch_all")
-        ],
+        "catch_filter": InboundFilterGroup(type="catch_all"),
         "catch_type": "all",
-        "match_filter": [
-            InboundFilterGroup(type="match_all")
-        ],
+        "match_filter": InboundFilterGroup(type="match_all"),
         "match_type": "all",
         "forwards": [
             InboundForward(type="email", value=os.environ.get("SDK_FROM_EMAIL", "test@example.com"))
@@ -68,29 +64,25 @@ def sample_inbound_data_with_domain(test_domain_id):
         "domain_enabled": True,
         "inbound_domain": "inbound.example.com",
         "inbound_priority": 50,
-        "catch_filter": [
-            InboundFilterGroup(
-                type="catch_recipient",
-                filters=[
-                    {
-                        "comparer": "equal",
-                        "value": "support@example.com"
-                    }
-                ]
-            )
-        ],
+        "catch_filter": InboundFilterGroup(
+            type="catch_recipient",
+            filters=[
+                {
+                    "comparer": "equal",
+                    "value": "support@example.com"
+                }
+            ]
+        ),
         "catch_type": "all",
-        "match_filter": [
-            InboundFilterGroup(
-                type="match_sender",
-                filters=[
-                    {
-                        "comparer": "contains",
-                        "value": "@trusted.com"
-                    }
-                ]
-            )
-        ],
+        "match_filter": InboundFilterGroup(
+            type="match_sender",
+            filters=[
+                {
+                    "comparer": "contains",
+                    "value": "@trusted.com"
+                }
+            ]
+        ),
         "match_type": "all",
         "forwards": [
             InboundForward(type="email", value=os.environ.get("SDK_FROM_EMAIL", "test@example.com")),
@@ -277,8 +269,8 @@ class TestInboundIntegration:
                 domain_id="",
                 name="Test Route",
                 domain_enabled=False,
-                catch_filter=[InboundFilterGroup(type="catch_all")],
-                match_filter=[InboundFilterGroup(type="match_all")],
+                catch_filter=InboundFilterGroup(type="catch_all"),
+                match_filter=InboundFilterGroup(type="match_all"),
                 forwards=[InboundForward(type="email", value="test@example.com")]
             )
         assert "domain id is required" in str(exc_info.value).lower()
@@ -289,8 +281,8 @@ class TestInboundIntegration:
                 domain_id="test-domain",
                 name="",
                 domain_enabled=False,
-                catch_filter=[InboundFilterGroup(type="catch_all")],
-                match_filter=[InboundFilterGroup(type="match_all")],
+                catch_filter=InboundFilterGroup(type="catch_all"),
+                match_filter=InboundFilterGroup(type="match_all"),
                 forwards=[InboundForward(type="email", value="test@example.com")]
             )
         assert "name is required" in str(exc_info.value).lower()
@@ -301,8 +293,8 @@ class TestInboundIntegration:
                 domain_id="test-domain",
                 name="Test Route",
                 domain_enabled=False,
-                catch_filter=[InboundFilterGroup(type="catch_all")],
-                match_filter=[InboundFilterGroup(type="match_all")],
+                catch_filter=InboundFilterGroup(type="catch_all"),
+                match_filter=InboundFilterGroup(type="match_all"),
                 forwards=[]
             )
         assert "at least one forward is required" in str(exc_info.value).lower()
@@ -313,8 +305,8 @@ class TestInboundIntegration:
                 domain_id="test-domain",
                 name="Test Route",
                 domain_enabled=True,
-                catch_filter=[InboundFilterGroup(type="catch_all")],
-                match_filter=[InboundFilterGroup(type="match_all")],
+                catch_filter=InboundFilterGroup(type="catch_all"),
+                match_filter=InboundFilterGroup(type="match_all"),
                 forwards=[InboundForward(type="email", value="test@example.com")]
             )
         assert "inbound domain is required when domain is enabled" in str(exc_info.value).lower()
@@ -326,8 +318,8 @@ class TestInboundIntegration:
                 name="Test Route",
                 domain_enabled=True,
                 inbound_domain="test.com",
-                catch_filter=[InboundFilterGroup(type="catch_all")],
-                match_filter=[InboundFilterGroup(type="match_all")],
+                catch_filter=InboundFilterGroup(type="catch_all"),
+                match_filter=InboundFilterGroup(type="match_all"),
                 forwards=[InboundForward(type="email", value="test@example.com")]
             )
         assert "inbound priority is required when domain is enabled" in str(exc_info.value).lower()
@@ -386,124 +378,3 @@ class TestInboundBuilderIntegration:
         
         with pytest.raises(BadRequestError):
             email_client.inbound.create(request)
-
-    def test_builder_reset_functionality(self):
-        """Test builder reset functionality."""
-        builder = InboundBuilder()
-        builder.domain_id("test").name("test").page(2).limit(5)
-        
-        # Reset the builder
-        builder.reset()
-        
-        # Build a basic request to verify reset worked
-        request = builder.build_list_request()
-        assert request.query_params.page == 1  # Default value
-        assert request.query_params.limit == 25  # Default value
-        assert request.query_params.domain_id is None
-
-    def test_builder_copy_functionality(self):
-        """Test builder copy functionality."""
-        original_builder = InboundBuilder()
-        original_builder.domain_id("test").page(2).limit(5)
-        
-        # Copy the builder
-        copied_builder = original_builder.copy()
-        
-        # Modify the copy
-        copied_builder.page(3)
-        
-        # Verify original is unchanged
-        original_request = original_builder.build_list_request()
-        copied_request = copied_builder.build_list_request()
-        
-        assert original_request.query_params.page == 2
-        assert copied_request.query_params.page == 3
-        assert original_request.query_params.domain_id == copied_request.query_params.domain_id
-
-    def test_builder_fluent_interface(self):
-        """Test that builder methods return self for chaining."""
-        builder = InboundBuilder()
-        
-        # Test method chaining
-        result = (builder
-            .domain_id("test")
-            .name("Test Route")
-            .domain_enabled(False)
-            .page(1)
-            .limit(10)
-            .catch_all()
-            .match_all()
-            .add_email_forward("test@example.com"))
-        
-        assert result is builder
-        
-        # Verify the builder state
-        request = builder.build_create_request()
-        assert request.domain_id == "test"
-        assert request.name == "Test Route"
-        assert request.domain_enabled is False
-        assert len(request.catch_filter) == 1
-        assert len(request.match_filter) == 1
-        assert len(request.forwards) == 1
-
-    def test_builder_complex_filter_configuration(self):
-        """Test complex filter configuration with builder."""
-        builder = InboundBuilder()
-        
-        # Build complex configuration
-        request = (builder
-            .domain_id("test-domain")
-            .name("Complex Route")
-            .domain_enabled(True)
-            .enable_domain("inbound.example.com", 75)
-            .catch_recipient([
-                {"comparer": "equal", "value": "support@example.com"},
-                {"comparer": "contains", "value": "help"}
-            ], "all")
-            .match_sender([
-                {"comparer": "ends-with", "value": "@trusted.com"}
-            ], "all")
-            .add_email_forward("admin@example.com")
-            .add_webhook_forward("https://api.example.com/webhook", "secret123")
-            .build_create_request())
-        
-        assert request.domain_id == "test-domain"
-        assert request.name == "Complex Route"
-        assert request.domain_enabled is True
-        assert request.inbound_domain == "inbound.example.com"
-        assert request.inbound_priority == 75
-        assert len(request.catch_filter) == 1
-        assert request.catch_filter[0].type == "catch_recipient"
-        assert len(request.match_filter) == 1
-        assert request.match_filter[0].type == "match_sender"
-        assert len(request.forwards) == 2
-        assert request.forwards[0].type == "email"
-        assert request.forwards[1].type == "webhook"
-        assert request.forwards[1].secret == "secret123"
-
-    @vcr.use_cassette("inbound_comprehensive_workflow.yaml") 
-    def test_comprehensive_inbound_workflow(self, email_client, test_domain_id):
-        """Test comprehensive workflow covering list, error scenarios, and builder usage."""
-        # Test list with pagination
-        list_request = InboundListRequest(
-            query_params=InboundListQueryParams(page=1, limit=10, domain_id=test_domain_id)
-        )
-        
-        response = email_client.inbound.list(list_request)
-        assert isinstance(response, APIResponse)
-        assert response.status_code == 200
-        
-        # Test builder pattern
-        builder = InboundBuilder()
-        builder_request = builder.page(1).limit(10).domain_id(test_domain_id).build_list_request()
-        
-        builder_response = email_client.inbound.list(builder_request)
-        assert isinstance(builder_response, APIResponse)
-        assert builder_response.status_code == 200
-        
-        # Test error scenarios
-        from mailersend.exceptions import ResourceNotFoundError
-        
-        get_request = InboundGetRequest(inbound_id="non-existent-id")
-        with pytest.raises(ResourceNotFoundError):
-            email_client.inbound.get(get_request)

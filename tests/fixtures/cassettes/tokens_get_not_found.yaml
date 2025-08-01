@@ -1,6 +1,6 @@
 interactions:
 - request:
-    body: '{"name": "Updated Test Identity"}'
+    body: null
     headers:
       Accept:
       - application/json
@@ -8,20 +8,18 @@ interactions:
       - gzip, deflate
       Connection:
       - keep-alive
-      Content-Length:
-      - '33'
       Content-Type:
       - application/json
       User-Agent:
       - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
-    method: PUT
-    uri: https://api.mailersend.com/v1/identities/email/test@example.com
+    method: GET
+    uri: https://api.mailersend.com/v1/token/test-token-id
   response:
     body:
       string: "{\n    \"message\": \"Resource not found.\"\n}"
     headers:
       CF-RAY:
-      - 9684c6cb0b621b8b-BEG
+      - 9684c1cf1c92076b-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -31,7 +29,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 01 Aug 2025 10:50:47 GMT
+      - Fri, 01 Aug 2025 10:47:22 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
@@ -40,10 +38,6 @@ interactions:
       - DYNAMIC
       strict-transport-security:
       - max-age=31536000; includeSubDomains
-      x-apiquota-remaining:
-      - '-1'
-      x-apiquota-reset:
-      - '2025-08-02T00:00:00Z'
     status:
       code: 404
       message: Not Found

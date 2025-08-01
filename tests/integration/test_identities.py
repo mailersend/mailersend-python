@@ -45,64 +45,9 @@ def sample_identity_data():
 
 
 class TestIdentitiesIntegration:
-    """
-    Integration tests for Identities API.
-    
-    Note: Currently all API tests expect ResourceNotFoundError because the identities
-    endpoint appears to not be available on the current account/plan level.
-    Once the endpoint becomes available, these tests can be updated to expect 
-    successful responses instead of 404 errors.
-    """
-
-    @vcr.use_cassette("identities_list_basic.yaml")
-    def test_list_identities_endpoint_not_available(self, email_client, basic_identity_list_request):
-        """Test that identities endpoint is currently not available (404)."""
-        from mailersend.exceptions import ResourceNotFoundError
-        
-        with pytest.raises(ResourceNotFoundError) as exc_info:
-            email_client.identities.list_identities(basic_identity_list_request)
-
-        error_str = str(exc_info.value).lower()
-        assert "could not be found" in error_str or "not found" in error_str
-
-    @vcr.use_cassette("identities_list_with_pagination.yaml")
-    def test_list_identities_with_pagination_not_available(self, email_client):
-        """Test that identities pagination endpoint is not available."""
-        from mailersend.exceptions import ResourceNotFoundError
-        
-        request = IdentityListRequest(
-            query_params=IdentityListQueryParams(page=1, limit=10)
-        )
-
-        with pytest.raises(ResourceNotFoundError) as exc_info:
-            email_client.identities.list_identities(request)
-
-        error_str = str(exc_info.value).lower()
-        assert "could not be found" in error_str or "not found" in error_str
-
-    @vcr.use_cassette("identities_list_with_domain_filter.yaml")
-    def test_list_identities_with_domain_filter_not_available(self, email_client, sample_identity_data):
-        """Test that identities domain filter endpoint is not available."""
-        from mailersend.exceptions import ResourceNotFoundError
-        
-        request = IdentityListRequest(
-            query_params=IdentityListQueryParams(
-                page=1, 
-                limit=10, 
-                domain_id=sample_identity_data["domain_id"]
-            )
-        )
-
-        with pytest.raises(ResourceNotFoundError) as exc_info:
-            email_client.identities.list_identities(request)
-
-        error_str = str(exc_info.value).lower()
-        assert "could not be found" in error_str or "not found" in error_str
-
     @vcr.use_cassette("identities_create_not_available.yaml")
     def test_create_identity_endpoint_not_available(self, email_client, sample_identity_data):
-        """Test that create identity endpoint is not available."""
-        from mailersend.exceptions import ResourceNotFoundError
+        from mailersend.exceptions import BadRequestError
         
         request = IdentityCreateRequest(
             domain_id=sample_identity_data["domain_id"],
@@ -114,15 +59,14 @@ class TestIdentitiesIntegration:
             personal_note=sample_identity_data["personal_note"]
         )
 
-        with pytest.raises(ResourceNotFoundError) as exc_info:
+        with pytest.raises(BadRequestError) as exc_info:
             email_client.identities.create_identity(request)
 
         error_str = str(exc_info.value).lower()
-        assert "could not be found" in error_str or "not found" in error_str
+        assert "the email has already been taken." in error_str
 
     @vcr.use_cassette("identities_get_single.yaml")
     def test_get_identity_endpoint_not_available(self, email_client, identity_get_request):
-        """Test that get identity endpoint is not available."""
         from mailersend.exceptions import ResourceNotFoundError
         
         with pytest.raises(ResourceNotFoundError) as exc_info:

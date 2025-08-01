@@ -1,7 +1,7 @@
 interactions:
 - request:
     body: '{"name": "Test Inbound Route", "domain_enabled": false, "catch_filter":
-      [{"type": "catch_all"}], "catch_type": "all", "match_filter": [{"type": "match_all"}],
+      {"type": "catch_all"}, "catch_type": "all", "match_filter": {"type": "match_all"},
       "match_type": "all", "forwards": [{"type": "email", "value": "ms-sdk@igor.fail"}]}'
     headers:
       Accept:
@@ -11,7 +11,7 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '241'
+      - '237'
       Content-Type:
       - application/json
       User-Agent:
@@ -23,7 +23,7 @@ interactions:
       string: "{\n    \"message\": \"Resource not found.\"\n}"
     headers:
       CF-RAY:
-      - 966cbd2af8695165-BEG
+      - 9684ca4eea11f969-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -33,7 +33,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 29 Jul 2025 12:49:54 GMT
+      - Fri, 01 Aug 2025 10:53:11 GMT
       Server:
       - cloudflare
       Transfer-Encoding:

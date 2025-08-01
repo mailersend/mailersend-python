@@ -13,13 +13,13 @@ interactions:
       User-Agent:
       - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
     method: GET
-    uri: https://api.mailersend.com/identities?page=1&limit=10
+    uri: https://api.mailersend.com/v1/token/test-token-id
   response:
     body:
-      string: "{\n    \"message\": \"The route identities could not be found.\"\n}"
+      string: "{\n    \"message\": \"Resource not found.\"\n}"
     headers:
       CF-RAY:
-      - 966cb3fe0f78aeaa-BEG
+      - 9684c1d958be8e88-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -29,7 +29,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 29 Jul 2025 12:43:38 GMT
+      - Fri, 01 Aug 2025 10:47:24 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
