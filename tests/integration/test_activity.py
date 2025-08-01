@@ -19,9 +19,9 @@ def test_domain_id():
 def base_activity_request(test_domain_id):
     """Basic activity request parameters that are valid for most tests"""
     # Use fixed timestamps for VCR consistency
-    # These represent a realistic 24-hour window for testing
-    date_from = 1753757734  # Fixed timestamp (now - 12 hours)
-    date_to = 1753844134  # Fixed timestamp (now + 12 hours)
+    # These are the exact timestamps recorded in the VCR cassettes
+    date_from = 1754040747  # Fixed timestamp from cassette
+    date_to = 1754044347    # Fixed timestamp from cassette (1 hour later)
 
     query_params = ActivityQueryParams(
         date_from=date_from, date_to=date_to, page=1, limit=25

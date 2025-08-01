@@ -13,14 +13,13 @@ interactions:
       User-Agent:
       - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
     method: GET
-    uri: https://api.mailersend.com/identities/email/test@example.com
+    uri: https://api.mailersend.com/v1/identities/email/test@example.com
   response:
     body:
-      string: "{\n    \"message\": \"The route identities/email/test@example.com could
-        not be found.\"\n}"
+      string: "{\n    \"message\": \"Resource not found.\"\n}"
     headers:
       CF-RAY:
-      - 966cc0b82bc2e297-BEG
+      - 9684c6c85d461f09-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -30,7 +29,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 29 Jul 2025 12:52:20 GMT
+      - Fri, 01 Aug 2025 10:50:46 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
@@ -39,6 +38,10 @@ interactions:
       - DYNAMIC
       strict-transport-security:
       - max-age=31536000; includeSubDomains
+      x-apiquota-remaining:
+      - '-1'
+      x-apiquota-reset:
+      - '2025-08-02T00:00:00Z'
     status:
       code: 404
       message: Not Found
