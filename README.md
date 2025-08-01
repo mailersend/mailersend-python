@@ -170,6 +170,12 @@ MailerSend Python SDK
     - [Create a token](#create-a-token)
     - [Pause / Unpause Token](#pause--unpause-token)
     - [Delete a Token](#delete-a-token)
+  - [SMTP Users](#smtp-users)
+    - [Get a list of SMTP users](#get-a-list-of-smtp-users)
+    - [Get a single SMTP user](#get-a-single-smtp-user)
+    - [Create an SMTP user](#create-an-smtp-user)
+    - [Update an SMTP user](#update-an-smtp-user)
+    - [Delete an SMTP user](#delete-an-smtp-user)
   - [Other Endpoints](#other-endpoints)
     - [Get API Quota](#get-api-quota)
 - [Error Handling](#error-handling)
@@ -2505,8 +2511,7 @@ print("SMS inbound route deleted")
 ### Create a token
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import TokensBuilder
+from mailersend import MailerSendClient, TokensBuilder
 
 ms = MailerSendClient()
 
@@ -2517,14 +2522,12 @@ request = (TokensBuilder()
           .build_token_create())
 
 response = ms.tokens.create_token(request)
-print(f"Created token: {response.accessToken}")
 ```
 
 ### Pause / Unpause Token
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import TokensBuilder
+from mailersend import MailerSendClient, TokensBuilder
 
 ms = MailerSendClient()
 
@@ -2535,7 +2538,6 @@ request = (TokensBuilder()
           .build_token_update())
 
 response = ms.tokens.update_token(request)
-print("Token paused")
 
 # Unpause token
 request = (TokensBuilder()
@@ -2544,14 +2546,12 @@ request = (TokensBuilder()
           .build_token_update())
 
 response = ms.tokens.update_token(request)
-print("Token unpaused")
 ```
 
 ### Delete a Token
 
 ```python
-from mailersend import MailerSendClient
-from mailersend import TokensBuilder
+from mailersend import MailerSendClient, TokensBuilder
 
 ms = MailerSendClient()
 
@@ -2560,7 +2560,85 @@ request = (TokensBuilder()
           .build_token_delete())
 
 response = ms.tokens.delete_token(request)
-print("Token deleted")
+```
+
+## SMTP Users
+
+### Get a list of SMTP users
+
+```python
+from mailersend import MailerSendClient, SmtpUsersBuilder
+
+ms = MailerSendClient()
+
+request = (SmtpUsersBuilder()
+          .domain_id("domain-id")
+          .build_smtp_users_list())
+
+response = ms.smtp_users.list_smtp_users(request)
+```
+
+### Get a single SMTP user
+
+```python
+from mailersend import MailerSendClient, SmtpUsersBuilder
+
+ms = MailerSendClient()
+
+request = (SmtpUsersBuilder()
+          .domain_id("domain-id")
+          .smtp_user_id("smtp-user-id")
+          .build_smtp_user_get())
+
+response = ms.smtp_users.get_smtp_user(request)
+```
+
+### Create an SMTP user
+
+```python
+from mailersend import MailerSendClient, SmtpUsersBuilder
+
+ms = MailerSendClient()
+
+request = (SmtpUsersBuilder()
+          .domain_id("domain-id")
+          .name("SMTP User Name")
+          .enabled(True)
+          .build_smtp_user_create())
+
+response = ms.smtp_users.create_smtp_user(request)
+```
+
+### Update an SMTP user
+
+```python
+from mailersend import MailerSendClient, SmtpUsersBuilder
+
+ms = MailerSendClient()
+
+request = (SmtpUsersBuilder()
+          .domain_id("domain-id")
+          .smtp_user_id("smtp-user-id")
+          .name("Updated SMTP User Name")
+          .enabled(False)
+          .build_smtp_user_update())
+
+response = ms.smtp_users.update_smtp_user(request)
+```
+
+### Delete an SMTP user
+
+```python
+from mailersend import MailerSendClient, SmtpUsersBuilder
+
+ms = MailerSendClient()
+
+request = (SmtpUsersBuilder()
+          .domain_id("domain-id")
+          .smtp_user_id("smtp-user-id")
+          .build_smtp_user_delete())
+
+response = ms.smtp_users.delete_smtp_user(request)
 ```
 
 ## Other Endpoints
@@ -2670,6 +2748,7 @@ def test_list_sms_recipients():
 | Recipients           | `{GET, POST, DELETE} recipients`        | ✅         |
 | Templates            | `{GET, DELETE} templates`               | ✅         |
 | Tokens               | `{POST, PUT, DELETE} tokens`            | ✅         |
+| SMTP Users           | `{GET, POST, PUT, DELETE} smtp-users`   | ✅         |
 | Webhooks             | `{GET, POST, PUT, DELETE} webhooks`     | ✅         |
 | SMS Sending          | `POST sms`                              | ✅         |
 | SMS Activity         | `GET sms-activity`                      | ✅         |
