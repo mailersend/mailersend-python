@@ -45,6 +45,10 @@ class EmailBuilder:
         ...     .to("user1@example.com", "John Doe")
         ...     .to("user2@example.com", "Jane Smith")
         ...     .cc("manager@example.com")
+        ...     .bcc([
+        ...         {"email": "analytics@example.com", "name": "Analytics Team"},
+        ...         {"email": "backup@example.com"}
+        ...     ])
         ...     .subject("Monthly Newsletter")
         ...     .html_file("templates/newsletter.html")
         ...     .attach_file("documents/report.pdf")
@@ -126,32 +130,112 @@ class EmailBuilder:
             )
         return self
 
-    def cc(self, email: str, name: Optional[str] = None) -> "EmailBuilder":
+    def cc(self, email: Union[str, List[Dict[str, str]]], name: Optional[str] = None) -> "EmailBuilder":
         """
-        Add a recipient to the CC field.
+        Add recipient(s) to the CC field.
 
         Args:
-            email: CC recipient email address
-            name: Optional recipient name
+            email: CC recipient email address (string) or list of recipient objects
+            name: Optional recipient name (only used when email is a string)
 
         Returns:
             EmailBuilder instance for chaining
+
+        Examples:
+            Single recipient:
+            >>> builder.cc("cc@example.com", "CC User")
+
+            Multiple recipients:
+            >>> builder.cc([
+            ...     {"email": "cc1@example.com", "name": "CC User 1"},
+            ...     {"email": "cc2@example.com", "name": "CC User 2"}
+            ... ])
         """
-        self._cc.append(EmailContact(email=email, name=name))
+        if isinstance(email, str):
+            self._cc.append(EmailContact(email=email, name=name))
+        elif isinstance(email, list):
+            for recipient in email:
+                self._cc.append(
+                    EmailContact(email=recipient["email"], name=recipient.get("name"))
+                )
+        else:
+            raise ValidationError("Email must be a string or list of recipient objects")
         return self
 
-    def bcc(self, email: str, name: Optional[str] = None) -> "EmailBuilder":
+    def bcc(self, email: Union[str, List[Dict[str, str]]], name: Optional[str] = None) -> "EmailBuilder":
         """
-        Add a recipient to the BCC field.
+        Add recipient(s) to the BCC field.
 
         Args:
-            email: BCC recipient email address
-            name: Optional recipient name
+            email: BCC recipient email address (string) or list of recipient objects
+            name: Optional recipient name (only used when email is a string)
 
         Returns:
             EmailBuilder instance for chaining
+
+        Examples:
+            Single recipient:
+            >>> builder.bcc("bcc@example.com", "BCC User")
+
+            Multiple recipients:
+            >>> builder.bcc([
+            ...     {"email": "bcc1@example.com", "name": "BCC User 1"},
+            ...     {"email": "bcc2@example.com", "name": "BCC User 2"}
+            ... ])
         """
-        self._bcc.append(EmailContact(email=email, name=name))
+        if isinstance(email, str):
+            self._bcc.append(EmailContact(email=email, name=name))
+        elif isinstance(email, list):
+            for recipient in email:
+                self._bcc.append(
+                    EmailContact(email=recipient["email"], name=recipient.get("name"))
+                )
+        else:
+            raise ValidationError("Email must be a string or list of recipient objects")
+        return self
+
+    def cc_many(self, recipients: List[Dict[str, str]]) -> "EmailBuilder":
+        """
+        Add multiple recipients to the CC field.
+
+        Args:
+            recipients: List of dicts with 'email' and optional 'name' keys
+
+        Returns:
+            EmailBuilder instance for chaining
+
+        Example:
+            >>> builder.cc_many([
+            ...     {"email": "cc1@example.com", "name": "CC User 1"},
+            ...     {"email": "cc2@example.com", "name": "CC User 2"}
+            ... ])
+        """
+        for recipient in recipients:
+            self._cc.append(
+                EmailContact(email=recipient["email"], name=recipient.get("name"))
+            )
+        return self
+
+    def bcc_many(self, recipients: List[Dict[str, str]]) -> "EmailBuilder":
+        """
+        Add multiple recipients to the BCC field.
+
+        Args:
+            recipients: List of dicts with 'email' and optional 'name' keys
+
+        Returns:
+            EmailBuilder instance for chaining
+
+        Example:
+            >>> builder.bcc_many([
+            ...     {"email": "bcc1@example.com", "name": "BCC User 1"},
+            ...     {"email": "bcc2@example.com", "name": "BCC User 2"}
+            ... ])
+        """
+        for recipient in recipients:
+            self._bcc.append(
+                EmailContact(email=recipient["email"], name=recipient.get("name"))
+            )
         return self
 
     def reply_to(self, email: str, name: Optional[str] = None) -> "EmailBuilder":
