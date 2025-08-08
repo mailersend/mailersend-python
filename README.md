@@ -644,7 +644,6 @@ email = (EmailBuilder()
          .build())
 
 response = ms.emails.send(email)
-print(f"Email sent: {response.message_id}")
 ```
 
 ### Add CC, BCC recipients
@@ -765,7 +764,6 @@ emails = [
 ]
 
 response = ms.emails.send_bulk(emails)
-print(f"Bulk email ID: {response.bulk_email_id}")
 ```
 
 ### Get bulk email status
@@ -776,7 +774,6 @@ from mailersend import MailerSendClient
 ms = MailerSendClient()
 
 response = ms.emails.get_bulk_status("bulk-email-id")
-print(f"Status: {response.state}")
 ```
 
 ## Activity
@@ -864,8 +861,6 @@ request = (AnalyticsBuilder()
           .build())
 
 response = ms.analytics.get_activity_by_date(request)
-for stat in response.data:
-    print(f"Date: {stat.date}, Sent: {stat.sent}, Delivered: {stat.delivered}")
 ```
 
 ### Opens by country
@@ -945,7 +940,6 @@ request = (DomainsBuilder()
           .build_get_request())
 
 response = ms.domains.get_domain(request)
-print(f"Domain: {response.name}")
 ```
 
 ### Add a domain
@@ -963,7 +957,6 @@ request = (DomainsBuilder()
           .build_create_request())
 
 response = ms.domains.create_domain(request)
-print(f"Created domain with ID: {response.id}")
 ```
 
 ### Delete a domain
@@ -1835,8 +1828,6 @@ request = (WebhooksBuilder()
           .build_webhooks_list_request())
 
 response = ms.webhooks.list_webhooks(request)
-for webhook in response.data:
-    print(f"Webhook: {webhook.name} - {webhook.url}")
 ```
 
 ### Get a single webhook
@@ -1852,7 +1843,6 @@ request = (WebhooksBuilder()
           .build_webhook_get_request())
 
 response = ms.webhooks.get_webhook(request)
-print(f"Webhook: {response.name}")
 ```
 
 ### Create a Webhook
@@ -1872,7 +1862,6 @@ request = (WebhooksBuilder()
           .build_webhook_create_request())
 
 response = ms.webhooks.create_webhook(request)
-print(f"Created webhook with ID: {response.id}")
 ```
 
 ### Create a disabled webhook
@@ -1950,7 +1939,6 @@ request = (WebhooksBuilder()
           .build_webhook_delete_request())
 
 response = ms.webhooks.delete_webhook(request)
-print("Webhook deleted")
 ```
 
 ## Email Verification
@@ -1964,9 +1952,6 @@ ms = MailerSendClient()
 
 request = EmailVerificationBuilder().build_list_request()
 response = ms.email_verification.list_verification_lists(request)
-
-for verification_list in response.data:
-    print(f"List: {verification_list.name}, Status: {verification_list.status}")
 ```
 
 ### Get a single email verification list
@@ -1981,7 +1966,6 @@ request = (EmailVerificationBuilder()
           .build_get_request())
 
 response = ms.email_verification.get_verification_list(request)
-print(f"List name: {response.name}")
 ```
 
 ### Create an email verification list
@@ -1997,7 +1981,6 @@ request = (EmailVerificationBuilder()
           .build_create_request())
 
 response = ms.email_verification.create_verification_list(request)
-print(f"Created list with ID: {response.id}")
 ```
 
 ### Verify a list
@@ -2012,7 +1995,6 @@ request = (EmailVerificationBuilder()
           .build_verify_request())
 
 response = ms.email_verification.verify_list(request)
-print(f"Verification started: {response.message}")
 ```
 
 ### Get list results
@@ -2027,8 +2009,6 @@ request = (EmailVerificationBuilder()
           .build_results_request())
 
 response = ms.email_verification.get_verification_results(request)
-for result in response.data:
-    print(f"Email: {result.email}, Status: {result.status}")
 ```
 
 ## SMS
