@@ -16,7 +16,7 @@ class DomainListQueryParams(BaseModel):
     def to_query_params(self) -> dict:
         """Convert to query parameters for API request."""
         params = {"page": self.page, "limit": self.limit}
-        
+
         # Convert boolean to lowercase string for API compatibility
         if self.verified is not None:
             params["verified"] = str(self.verified).lower()
