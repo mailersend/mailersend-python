@@ -1,3 +1,5 @@
+"""Email models."""
+
 from typing import List, Dict, Optional, Any
 from pydantic import (
     Field,

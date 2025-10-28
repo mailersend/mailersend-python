@@ -1,3 +1,5 @@
+"""Domains models."""
+
 from typing import Optional
 from pydantic import Field, field_validator
 

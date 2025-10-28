@@ -1,3 +1,5 @@
+"""SMS Sending models."""
+
 from typing import List, Optional, Dict, Any
 from pydantic import Field, field_validator, model_validator
 
