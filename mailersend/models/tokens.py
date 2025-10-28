@@ -3,7 +3,8 @@
 from datetime import datetime
 from typing import List, Optional, Literal, Dict, Any
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import Field, field_validator
+from .base import BaseModel
 
 
 # Token scope constants

@@ -1,9 +1,9 @@
 """Webhooks API models for MailerSend SDK."""
 
-from datetime import datetime
 from typing import List, Optional, Dict, Any
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import Field, field_validator
+from .base import BaseModel
 
 
 # Query Parameters Models

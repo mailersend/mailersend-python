@@ -1,10 +1,10 @@
 from typing import List, Optional, Literal
 from pydantic import field_validator, Field
 
-from .base import BaseModel as MailerSendBaseModel
+from .base import BaseModel
 
 
-class SchedulesListQueryParams(MailerSendBaseModel):
+class SchedulesListQueryParams(BaseModel):
     """Model for schedules list query parameters with validation."""
 
     domain_id: Optional[str] = None
@@ -32,7 +32,7 @@ class SchedulesListQueryParams(MailerSendBaseModel):
         return {k: v for k, v in params.items() if v is not None}
 
 
-class SchedulesListRequest(MailerSendBaseModel):
+class SchedulesListRequest(BaseModel):
     """Request model for listing scheduled messages."""
 
     query_params: SchedulesListQueryParams
@@ -42,7 +42,7 @@ class SchedulesListRequest(MailerSendBaseModel):
         return self.query_params.to_query_params()
 
 
-class ScheduleGetRequest(MailerSendBaseModel):
+class ScheduleGetRequest(BaseModel):
     """Request model for getting a single scheduled message."""
 
     message_id: str
@@ -56,7 +56,7 @@ class ScheduleGetRequest(MailerSendBaseModel):
         return v.strip()
 
 
-class ScheduleDeleteRequest(MailerSendBaseModel):
+class ScheduleDeleteRequest(BaseModel):
     """Request model for deleting a scheduled message."""
 
     message_id: str

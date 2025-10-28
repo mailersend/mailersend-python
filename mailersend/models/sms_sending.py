@@ -1,10 +1,10 @@
 from typing import List, Optional, Dict, Any
 from pydantic import Field, field_validator, model_validator
 
-from .base import BaseModel as MailerSendBaseModel
+from .base import BaseModel
 
 
-class SmsPersonalization(MailerSendBaseModel):
+class SmsPersonalization(BaseModel):
     """Model for SMS personalization data."""
 
     phone_number: str
@@ -21,7 +21,7 @@ class SmsPersonalization(MailerSendBaseModel):
         return v
 
 
-class SmsSendRequest(MailerSendBaseModel):
+class SmsSendRequest(BaseModel):
     """
     Request model for sending SMS messages.
     """

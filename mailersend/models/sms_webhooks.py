@@ -2,10 +2,10 @@
 
 from typing import Optional, List, Dict, Any
 from datetime import datetime
-from pydantic import BaseModel, Field, field_validator, HttpUrl
+from pydantic import Field, field_validator, HttpUrl
+from .base import BaseModel
 from enum import Enum
 
-from .base import BaseModel as BaseMailerSendModel
 
 
 class SmsWebhookEvent(str, Enum):
@@ -162,7 +162,7 @@ class SmsWebhookDeleteRequest(BaseModel):
 
 
 # Response Models
-class SmsWebhook(BaseMailerSendModel):
+class SmsWebhook(BaseModel):
     """SMS webhook model."""
 
     id: str = Field(..., description="SMS webhook ID")

@@ -6,10 +6,10 @@ from datetime import datetime
 from typing import Optional, List
 from pydantic import Field
 
-from .base import BaseModel as MailerSendBaseModel
+from .base import BaseModel
 
 
-class SmsActivity(MailerSendBaseModel):
+class SmsActivity(BaseModel):
     """SMS Activity model."""
 
     from_: str = Field(..., alias="from")
@@ -20,7 +20,7 @@ class SmsActivity(MailerSendBaseModel):
     sms_message_id: str
 
 
-class SmsActivityListRequest(MailerSendBaseModel):
+class SmsActivityListRequest(BaseModel):
     """Request model for listing SMS activities."""
 
     sms_number_id: Optional[str] = None
@@ -59,13 +59,13 @@ class SmsActivityListRequest(MailerSendBaseModel):
         return params
 
 
-class SmsMessageGetRequest(MailerSendBaseModel):
+class SmsMessageGetRequest(BaseModel):
     """Request model for getting SMS message activity."""
 
     sms_message_id: str = Field(..., min_length=1)
 
 
-class SmsMessage(MailerSendBaseModel):
+class SmsMessage(BaseModel):
     """SMS Message model."""
 
     id: str

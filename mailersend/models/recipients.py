@@ -1,8 +1,8 @@
 """Recipients API models for MailerSend SDK."""
 
-from datetime import datetime
-from typing import Optional, List, Union, Dict, Any
-from pydantic import BaseModel, Field, field_validator
+from typing import Optional, List, Dict, Any
+from pydantic import Field, field_validator
+from .base import BaseModel
 
 
 # Query Parameters Models

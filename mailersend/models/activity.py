@@ -1,7 +1,7 @@
-from typing import List, Optional, Any, Dict
-from pydantic import BaseModel, Field, EmailStr, ConfigDict
+from typing import List, Optional, Any
+from pydantic import Field, EmailStr, ConfigDict
 
-from .base import BaseModel as BaseMailerSendModel
+from .base import BaseModel
 
 
 class ActivityRecipient(BaseModel):

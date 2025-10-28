@@ -3,11 +3,11 @@
 from typing import List, Optional, Dict, Any
 from pydantic import Field, field_validator
 
-from .base import BaseModel as MailerSendBaseModel
+from .base import BaseModel
 
 
 # Query Parameters Models
-class TemplatesListQueryParams(MailerSendBaseModel):
+class TemplatesListQueryParams(BaseModel):
     """Query parameters for listing templates."""
 
     domain_id: Optional[str] = None
@@ -37,7 +37,7 @@ class TemplatesListQueryParams(MailerSendBaseModel):
 
 
 # Request Models
-class TemplatesListRequest(MailerSendBaseModel):
+class TemplatesListRequest(BaseModel):
     """Request model for listing templates."""
 
     query_params: TemplatesListQueryParams = Field(
@@ -49,7 +49,7 @@ class TemplatesListRequest(MailerSendBaseModel):
         return self.query_params.to_query_params()
 
 
-class TemplateGetRequest(MailerSendBaseModel):
+class TemplateGetRequest(BaseModel):
     """Request model for getting a single template."""
 
     template_id: str
@@ -63,7 +63,7 @@ class TemplateGetRequest(MailerSendBaseModel):
         return v.strip()
 
 
-class TemplateDeleteRequest(MailerSendBaseModel):
+class TemplateDeleteRequest(BaseModel):
     """Request model for deleting a template."""
 
     template_id: str
