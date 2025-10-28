@@ -2,9 +2,8 @@
 
 from typing import Optional, List, Dict, Any
 from datetime import datetime
-from pydantic import BaseModel, Field, field_validator
-
-from .base import BaseModel as BaseMailerSendModel
+from pydantic import Field, field_validator
+from .base import BaseModel
 
 
 class SmsMessagesListQueryParams(BaseModel):

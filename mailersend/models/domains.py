@@ -1,10 +1,10 @@
 from typing import Optional
 from pydantic import Field, field_validator
 
-from .base import BaseModel as MailerSendBaseModel
+from .base import BaseModel
 
 
-class DomainListQueryParams(MailerSendBaseModel):
+class DomainListQueryParams(BaseModel):
     """Model for domain list query parameters with validation."""
 
     page: Optional[int] = Field(default=1, ge=1)
@@ -22,7 +22,7 @@ class DomainListQueryParams(MailerSendBaseModel):
         return {k: v for k, v in params.items() if v is not None}
 
 
-class DomainListRequest(MailerSendBaseModel):
+class DomainListRequest(BaseModel):
     """Request model for listing domains."""
 
     query_params: DomainListQueryParams
@@ -32,7 +32,7 @@ class DomainListRequest(MailerSendBaseModel):
         return self.query_params.to_query_params()
 
 
-class DomainRecipientsQueryParams(MailerSendBaseModel):
+class DomainRecipientsQueryParams(BaseModel):
     """Model for domain recipients query parameters with validation."""
 
     page: Optional[int] = Field(default=1, ge=1)
@@ -45,7 +45,7 @@ class DomainRecipientsQueryParams(MailerSendBaseModel):
         return {k: v for k, v in params.items() if v is not None}
 
 
-class DomainRecipientsRequest(MailerSendBaseModel):
+class DomainRecipientsRequest(BaseModel):
     """Request model for getting domain recipients."""
 
     domain_id: str  # Path parameter
@@ -63,7 +63,7 @@ class DomainRecipientsRequest(MailerSendBaseModel):
         return self.query_params.to_query_params()
 
 
-class DomainCreateRequest(MailerSendBaseModel):
+class DomainCreateRequest(BaseModel):
     """Request model for creating a new domain."""
 
     name: str
@@ -100,7 +100,7 @@ class DomainCreateRequest(MailerSendBaseModel):
         return v
 
 
-class DomainDeleteRequest(MailerSendBaseModel):
+class DomainDeleteRequest(BaseModel):
     """Request model for deleting a domain."""
 
     domain_id: str
@@ -113,7 +113,7 @@ class DomainDeleteRequest(MailerSendBaseModel):
         return v.strip()
 
 
-class DomainGetRequest(MailerSendBaseModel):
+class DomainGetRequest(BaseModel):
     """Request model for getting a single domain."""
 
     domain_id: str
@@ -126,7 +126,7 @@ class DomainGetRequest(MailerSendBaseModel):
         return v.strip()
 
 
-class DomainSettings(MailerSendBaseModel):
+class DomainSettings(BaseModel):
     """Model for domain settings."""
 
     send_paused: bool = False
@@ -149,7 +149,7 @@ class DomainSettings(MailerSendBaseModel):
     ignore_duplicated_recipients: bool = False
 
 
-class DomainUpdateSettingsRequest(MailerSendBaseModel):
+class DomainUpdateSettingsRequest(BaseModel):
     """Request model for updating domain settings."""
 
     domain_id: str
@@ -180,7 +180,7 @@ class DomainUpdateSettingsRequest(MailerSendBaseModel):
         return v
 
 
-class DomainDnsRecordsRequest(MailerSendBaseModel):
+class DomainDnsRecordsRequest(BaseModel):
     """Request model for getting domain DNS records."""
 
     domain_id: str
@@ -193,7 +193,7 @@ class DomainDnsRecordsRequest(MailerSendBaseModel):
         return v.strip()
 
 
-class DomainVerificationRequest(MailerSendBaseModel):
+class DomainVerificationRequest(BaseModel):
     """Request model for getting domain verification status."""
 
     domain_id: str

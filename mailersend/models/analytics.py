@@ -1,10 +1,10 @@
 from typing import List, Optional, Literal
 from pydantic import Field, field_validator, model_validator
 
-from .base import BaseModel as MailerSendBaseModel
+from .base import BaseModel
 
 
-class AnalyticsRequest(MailerSendBaseModel):
+class AnalyticsRequest(BaseModel):
     """
     Request model for Analytics API endpoints.
 

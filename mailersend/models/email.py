@@ -1,12 +1,12 @@
 from typing import List, Dict, Optional, Any
 from pydantic import (
-    BaseModel,
     Field,
     EmailStr,
     ConfigDict,
     field_validator,
     model_validator,
 )
+from .base import BaseModel
 import time
 
 

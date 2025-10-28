@@ -2,10 +2,10 @@
 
 from typing import Optional, List, Dict, Any
 from datetime import datetime
-from pydantic import BaseModel, Field, field_validator
+from pydantic import Field, field_validator
+from .base import BaseModel
 from enum import Enum
 
-from .base import BaseModel as BaseMailerSendModel
 
 
 class SmsRecipientStatus(str, Enum):
@@ -99,7 +99,7 @@ class SmsRecipientUpdateRequest(BaseModel):
 
 
 # Response Models
-class SmsRecipient(BaseMailerSendModel):
+class SmsRecipient(BaseModel):
     """SMS recipient model."""
 
     id: str = Field(..., description="SMS recipient ID")
