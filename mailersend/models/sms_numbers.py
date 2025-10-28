@@ -1,13 +1,12 @@
 """Models for SMS Phone Numbers API."""
 
 from datetime import datetime
-from typing import Optional, List, Dict, Any
-from pydantic import BaseModel, Field, field_validator
+from typing import Optional, Dict, Any
+from pydantic import Field
+from .base import BaseModel
 
-from .base import BaseModel as BaseMailerSendModel
 
-
-class SmsNumber(BaseMailerSendModel):
+class SmsNumber(BaseModel):
     """SMS Phone Number model."""
 
     id: str
@@ -16,7 +15,7 @@ class SmsNumber(BaseMailerSendModel):
     created_at: datetime
 
 
-class SmsNumbersListRequest(BaseMailerSendModel):
+class SmsNumbersListRequest(BaseModel):
     """Request model for listing SMS phone numbers."""
 
     paused: Optional[bool] = None
@@ -35,13 +34,13 @@ class SmsNumbersListRequest(BaseMailerSendModel):
         return params
 
 
-class SmsNumberGetRequest(BaseMailerSendModel):
+class SmsNumberGetRequest(BaseModel):
     """Request model for getting a specific SMS phone number."""
 
     sms_number_id: str = Field(..., min_length=1, description="SMS Number ID")
 
 
-class SmsNumberUpdateRequest(BaseMailerSendModel):
+class SmsNumberUpdateRequest(BaseModel):
     """Request model for updating an SMS phone number."""
 
     sms_number_id: str = Field(..., min_length=1, description="SMS Number ID")
@@ -55,7 +54,7 @@ class SmsNumberUpdateRequest(BaseMailerSendModel):
         return payload
 
 
-class SmsNumberDeleteRequest(BaseMailerSendModel):
+class SmsNumberDeleteRequest(BaseModel):
     """Request model for deleting an SMS phone number."""
 
     sms_number_id: str = Field(..., min_length=1, description="SMS Number ID")

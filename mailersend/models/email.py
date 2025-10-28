@@ -1,13 +1,14 @@
-from typing_extensions import Self
+"""Email models."""
+
 from typing import List, Dict, Optional, Any
 from pydantic import (
-    BaseModel,
     Field,
     EmailStr,
     ConfigDict,
     field_validator,
     model_validator,
 )
+from .base import BaseModel
 import time
 
 
@@ -74,12 +75,12 @@ class EmailRequest(BaseModel):
     model_config = ConfigDict(validate_by_name=True)
 
     @model_validator(mode="after")
-    def validate_from_email(cls, v):
-        if v.from_email is None and v.template_id is None:
+    def validate_from_email(self):
+        if self.from_email is None and self.template_id is None:
             raise ValueError(
                 "At least one of 'from_email' or 'template_id' is required"
             )
-        return v
+        return self
 
     @field_validator("subject")
     def validate_subject_length(cls, v):
@@ -88,12 +89,12 @@ class EmailRequest(BaseModel):
         return v
 
     @model_validator(mode="after")
-    def validate_content_exists(cls, v):
-        if v.html is None and v.text is None and v.template_id is None:
+    def validate_content_exists(self):
+        if self.html is None and self.text is None and self.template_id is None:
             raise ValueError(
                 "At least one of 'text', 'html' or 'template_id' must be provided"
             )
-        return v
+        return self
 
     @field_validator("tags")
     def validate_tags_count(cls, v):
