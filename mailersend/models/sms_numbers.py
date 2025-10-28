@@ -5,8 +5,6 @@ from typing import Optional, Dict, Any
 from pydantic import Field
 from .base import BaseModel
 
-
-
 class SmsNumber(BaseModel):
     """SMS Phone Number model."""
 

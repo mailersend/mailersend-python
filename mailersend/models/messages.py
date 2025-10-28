@@ -1,4 +1,6 @@
-from typing import List, Optional, Any
+"""Messages models."""
+
+from typing import Optional
 from pydantic import field_validator, Field
 
 from .base import BaseModel

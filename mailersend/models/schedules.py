@@ -1,4 +1,6 @@
-from typing import List, Optional, Literal
+"""Schedules models."""
+
+from typing import Optional, Literal
 from pydantic import field_validator, Field
 
 from .base import BaseModel

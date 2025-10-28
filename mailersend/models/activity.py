@@ -1,8 +1,9 @@
+"""Activity models."""
+
 from typing import List, Optional, Any
 from pydantic import Field, EmailStr, ConfigDict
 
 from .base import BaseModel
-
 
 class ActivityRecipient(BaseModel):
     """Model for activity recipient information."""

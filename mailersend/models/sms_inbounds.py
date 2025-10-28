@@ -1,11 +1,10 @@
 """SMS Inbounds models."""
 
-from typing import Optional, List, Dict, Any
+from typing import Optional, Dict, Any
 from datetime import datetime
-from pydantic import Field, field_validator, HttpUrl
-from .base import BaseModel
 from enum import Enum
-
+from pydantic import Field, field_validator
+from .base import BaseModel
 
 
 class FilterComparer(str, Enum):
