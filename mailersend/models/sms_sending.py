@@ -1,5 +1,5 @@
 from typing import List, Optional, Dict, Any
-from pydantic import BaseModel, Field, field_validator, model_validator
+from pydantic import Field, field_validator, model_validator
 
 from .base import BaseModel as MailerSendBaseModel
 
@@ -13,6 +13,7 @@ class SmsPersonalization(MailerSendBaseModel):
     model_config = {"validate_by_name": True}
 
     @field_validator("phone_number")
+    @classmethod
     def validate_phone_number(cls, v):
         """Validate phone number format."""
         if not v.startswith("+"):
@@ -33,6 +34,7 @@ class SmsSendRequest(MailerSendBaseModel):
     model_config = {"validate_by_name": True}
 
     @field_validator("from_number")
+    @classmethod
     def validate_from_number(cls, v):
         """Validate from number is in E164 format."""
         if not v.startswith("+"):
@@ -40,6 +42,7 @@ class SmsSendRequest(MailerSendBaseModel):
         return v
 
     @field_validator("to")
+    @classmethod
     def validate_to_numbers(cls, v):
         """Validate all to numbers are in E164 format."""
         for number in v:
@@ -50,6 +53,7 @@ class SmsSendRequest(MailerSendBaseModel):
         return v
 
     @field_validator("text")
+    @classmethod
     def validate_text_length(cls, v):
         """Validate text message length."""
         if len(v) > 2048:
@@ -59,11 +63,11 @@ class SmsSendRequest(MailerSendBaseModel):
         return v
 
     @model_validator(mode="after")
-    def validate_personalization(cls, v):
+    def validate_personalization(self):
         """Validate personalization data matches recipient numbers."""
-        if v.personalization:
-            personalization_numbers = {p.phone_number for p in v.personalization}
-            to_numbers = set(v.to)
+        if self.personalization:
+            personalization_numbers = {p.phone_number for p in self.personalization}
+            to_numbers = set(self.to)
 
             # Check if all personalization numbers are in the to list
             invalid_numbers = personalization_numbers - to_numbers
@@ -72,7 +76,7 @@ class SmsSendRequest(MailerSendBaseModel):
                     f"Personalization phone numbers not in recipient list: {invalid_numbers}"
                 )
 
-        return v
+        return self
 
     def to_json(self) -> Dict[str, Any]:
         """Convert to JSON format for API request."""

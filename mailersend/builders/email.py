@@ -7,10 +7,9 @@ intelligent defaults, file handling, and validation.
 """
 
 import base64
-import mimetypes
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import List, Dict, Any, Optional, Union, IO
+from typing import List, Dict, Any, Optional, Union
 
 from ..models.email import (
     EmailRequest,

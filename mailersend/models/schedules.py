@@ -13,6 +13,7 @@ class SchedulesListQueryParams(MailerSendBaseModel):
     limit: Optional[int] = Field(default=25, ge=10, le=100)
 
     @field_validator("domain_id")
+    @classmethod
     def validate_domain_id(cls, v):
         """Validate domain ID is not empty if provided."""
         if v is not None and not v.strip():
@@ -47,6 +48,7 @@ class ScheduleGetRequest(MailerSendBaseModel):
     message_id: str
 
     @field_validator("message_id")
+    @classmethod
     def validate_message_id(cls, v):
         """Validate message ID is provided and not empty."""
         if not v or not v.strip():
@@ -60,6 +62,7 @@ class ScheduleDeleteRequest(MailerSendBaseModel):
     message_id: str
 
     @field_validator("message_id")
+    @classmethod
     def validate_message_id(cls, v):
         """Validate message ID is provided and not empty."""
         if not v or not v.strip():

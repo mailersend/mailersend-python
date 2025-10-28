@@ -44,6 +44,7 @@ class AnalyticsRequest(MailerSendBaseModel):
     ] = Field(None, alias="event[]")
 
     @field_validator("date_from", "date_to")
+    @classmethod
     def validate_timestamps(cls, v):
         """Validate that timestamps are positive integers."""
         if v <= 0:
@@ -51,13 +52,14 @@ class AnalyticsRequest(MailerSendBaseModel):
         return v
 
     @model_validator(mode="after")
-    def validate_date_range(cls, v):
+    def validate_date_range(self):
         """Validate that date_from is before date_to."""
-        if v.date_from >= v.date_to:
+        if self.date_from >= self.date_to:
             raise ValueError("date_from must be lower than date_to")
-        return v
+        return self
 
     @field_validator("recipient_id")
+    @classmethod
     def validate_recipient_count(cls, v):
         """Validate recipient count limit."""
         if v and len(v) > 50:
@@ -65,6 +67,7 @@ class AnalyticsRequest(MailerSendBaseModel):
         return v
 
     @field_validator("tags")
+    @classmethod
     def validate_tags(cls, v):
         """Validate tags format."""
         if v:
