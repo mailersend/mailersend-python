@@ -4,7 +4,7 @@ Inbound models
 
 from typing import List, Optional
 from pydantic import Field, field_validator, model_validator
-from mailersend.models.base import BaseModel
+from .base import BaseModel
 
 
 # Data Models

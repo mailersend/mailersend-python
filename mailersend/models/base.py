@@ -1,4 +1,6 @@
-from typing import List, Dict, Any, Generic, TypeVar, Optional, Union
+"""Base models."""
+
+from typing import List, Dict, Any, Generic, TypeVar, Optional
 from pydantic import BaseModel as PydanticBaseModel, ConfigDict
 import json
 

@@ -3,7 +3,8 @@
 from datetime import datetime
 from typing import List, Optional, Any, Dict
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import Field, field_validator
+from .base import BaseModel
 
 
 # Domain and Template nested models
@@ -156,9 +157,9 @@ class UserInviteRequest(BaseModel):
         }
 
         if self.requires_periodic_password_change is not None:
-            json_data[
-                "requires_periodic_password_change"
-            ] = self.requires_periodic_password_change
+            json_data["requires_periodic_password_change"] = (
+                self.requires_periodic_password_change
+            )
 
         return json_data
 
@@ -191,9 +192,9 @@ class UserUpdateRequest(BaseModel):
         }
 
         if self.requires_periodic_password_change is not None:
-            json_data[
-                "requires_periodic_password_change"
-            ] = self.requires_periodic_password_change
+            json_data["requires_periodic_password_change"] = (
+                self.requires_periodic_password_change
+            )
 
         return json_data
 

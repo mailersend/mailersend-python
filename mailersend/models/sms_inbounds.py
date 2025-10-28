@@ -1,11 +1,10 @@
 """SMS Inbounds models."""
 
-from typing import Optional, List, Dict, Any
+from typing import Optional, Dict, Any
 from datetime import datetime
-from pydantic import BaseModel, Field, field_validator, HttpUrl
 from enum import Enum
-
-from .base import BaseModel as BaseMailerSendModel
+from pydantic import Field, field_validator
+from .base import BaseModel
 
 
 class FilterComparer(str, Enum):
@@ -21,7 +20,7 @@ class FilterComparer(str, Enum):
     NOT_ENDS_WITH = "not-ends-with"
 
 
-class SmsInboundFilter(BaseMailerSendModel):
+class SmsInboundFilter(BaseModel):
     """SMS inbound filter model."""
 
     comparer: FilterComparer = Field(..., description="Filter comparer")
@@ -35,7 +34,7 @@ class SmsInboundFilter(BaseMailerSendModel):
 
 
 # Query Parameters
-class SmsInboundsListQueryParams(BaseMailerSendModel):
+class SmsInboundsListQueryParams(BaseModel):
     """Query parameters for listing SMS inbounds."""
 
     sms_number_id: Optional[str] = Field(
@@ -70,7 +69,7 @@ class SmsInboundsListQueryParams(BaseMailerSendModel):
 
 
 # Request Models
-class SmsInboundsListRequest(BaseMailerSendModel):
+class SmsInboundsListRequest(BaseModel):
     """Request model for listing SMS inbounds."""
 
     query_params: SmsInboundsListQueryParams = Field(
@@ -82,7 +81,7 @@ class SmsInboundsListRequest(BaseMailerSendModel):
         return self.query_params.to_query_params()
 
 
-class SmsInboundGetRequest(BaseMailerSendModel):
+class SmsInboundGetRequest(BaseModel):
     """Request model for getting a single SMS inbound."""
 
     sms_inbound_id: str = Field(..., min_length=1, description="SMS inbound ID")
@@ -94,7 +93,7 @@ class SmsInboundGetRequest(BaseMailerSendModel):
         return v.strip()
 
 
-class SmsInboundCreateRequest(BaseMailerSendModel):
+class SmsInboundCreateRequest(BaseModel):
     """Request model for creating an SMS inbound."""
 
     sms_number_id: str = Field(..., min_length=1, description="SMS number ID")
@@ -133,7 +132,7 @@ class SmsInboundCreateRequest(BaseMailerSendModel):
         return body
 
 
-class SmsInboundUpdateRequest(BaseMailerSendModel):
+class SmsInboundUpdateRequest(BaseModel):
     """Request model for updating an SMS inbound."""
 
     sms_inbound_id: str = Field(..., min_length=1, description="SMS inbound ID")
@@ -184,7 +183,7 @@ class SmsInboundUpdateRequest(BaseMailerSendModel):
         return body
 
 
-class SmsInboundDeleteRequest(BaseMailerSendModel):
+class SmsInboundDeleteRequest(BaseModel):
     """Request model for deleting an SMS inbound."""
 
     sms_inbound_id: str = Field(..., min_length=1, description="SMS inbound ID")
@@ -197,7 +196,7 @@ class SmsInboundDeleteRequest(BaseMailerSendModel):
 
 
 # Response Models
-class SmsInbound(BaseMailerSendModel):
+class SmsInbound(BaseModel):
     """SMS inbound route model."""
 
     id: str = Field(..., description="Inbound route ID")

@@ -1,10 +1,8 @@
 """SMS Messages models."""
 
-from typing import Optional, List, Dict, Any
-from datetime import datetime
-from pydantic import BaseModel, Field, field_validator
-
-from .base import BaseModel as BaseMailerSendModel
+from typing import Dict, Any
+from pydantic import Field, field_validator
+from .base import BaseModel
 
 
 class SmsMessagesListQueryParams(BaseModel):
