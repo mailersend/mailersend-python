@@ -33,6 +33,7 @@ class MessageGetRequest(MailerSendBaseModel):
     message_id: str
 
     @field_validator("message_id")
+    @classmethod
     def validate_message_id(cls, v):
         """Validate message ID is provided and not empty."""
         if not v or not v.strip():
