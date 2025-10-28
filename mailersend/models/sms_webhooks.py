@@ -7,7 +7,6 @@ from .base import BaseModel
 from enum import Enum
 
 
-
 class SmsWebhookEvent(str, Enum):
     """SMS webhook event types."""
 

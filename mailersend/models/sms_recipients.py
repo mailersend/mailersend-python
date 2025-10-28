@@ -7,7 +7,6 @@ from .base import BaseModel
 from enum import Enum
 
 
-
 class SmsRecipientStatus(str, Enum):
     """SMS recipient status options."""
 

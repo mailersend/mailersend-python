@@ -129,7 +129,9 @@ class EmailBuilder:
             )
         return self
 
-    def cc(self, email: Union[str, List[Dict[str, str]]], name: Optional[str] = None) -> "EmailBuilder":
+    def cc(
+        self, email: Union[str, List[Dict[str, str]]], name: Optional[str] = None
+    ) -> "EmailBuilder":
         """
         Add recipient(s) to the CC field.
 
@@ -161,7 +163,9 @@ class EmailBuilder:
             raise ValidationError("Email must be a string or list of recipient objects")
         return self
 
-    def bcc(self, email: Union[str, List[Dict[str, str]]], name: Optional[str] = None) -> "EmailBuilder":
+    def bcc(
+        self, email: Union[str, List[Dict[str, str]]], name: Optional[str] = None
+    ) -> "EmailBuilder":
         """
         Add recipient(s) to the BCC field.
 
