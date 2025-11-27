@@ -1,0 +1,13 @@
+---
+remotes:
+  - git_url: git@github.com:mailerlite/git-hooks.git
+    ref: main
+    configs:
+      - branch-validation-config.yml
+
+pre-commit:
+  parallel: true
+  commands:
+    black:
+      glob: "*.py"
+      run: black .
