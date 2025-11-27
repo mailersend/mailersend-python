@@ -95,3 +95,4 @@ ENV/
 .vscode
 toolset.py
 doctester.py
+.direnv/
