@@ -159,6 +159,11 @@ from .sms_inbounds import (
     SmsInboundDeleteRequest,
     SmsInbound,
 )
+from .whatsapp import (
+    WhatsAppPersonalizationData,
+    WhatsAppPersonalization,
+    WhatsAppSendRequest,
+)
 
 __all__ = [
     "BaseModel",
@@ -289,4 +294,8 @@ __all__ = [
     "SmsInboundUpdateRequest",
     "SmsInboundDeleteRequest",
     "SmsInbound",
+    # WhatsApp models
+    "WhatsAppPersonalizationData",
+    "WhatsAppPersonalization",
+    "WhatsAppSendRequest",
 ]
