@@ -26,6 +26,7 @@ from .sms_sending import SmsSendingBuilder
 from .sms_recipients import SmsRecipientsBuilder
 from .sms_webhooks import SmsWebhooksBuilder
 from .sms_inbounds import SmsInboundsBuilder
+from .whatsapp import WhatsAppBuilder
 
 __all__ = [
     "EmailBuilder",
@@ -50,4 +51,5 @@ __all__ = [
     "SmsRecipientsBuilder",
     "SmsWebhooksBuilder",
     "SmsInboundsBuilder",
+    "WhatsAppBuilder",
 ]

@@ -35,6 +35,7 @@ from .resources.sms_recipients import SmsRecipients
 from .resources.sms_sending import SmsSending
 from .resources.sms_webhooks import SmsWebhooks
 from .resources.other import Other
+from .resources.whatsapp import WhatsApp
 from .logging import get_logger, RequestLogger
 
 
@@ -142,6 +143,7 @@ class MailerSendClient:
         self.sms_recipients = SmsRecipients(self)
         self.sms_webhooks = SmsWebhooks(self)
         self.api_quota = Other(self)
+        self.whatsapp = WhatsApp(self)
         
         self.logger.info("MailerSend client initialized successfully")
         if debug:

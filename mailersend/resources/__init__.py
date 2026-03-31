@@ -25,6 +25,7 @@ from .sms_recipients import SmsRecipients
 from .sms_webhooks import SmsWebhooks
 from .sms_inbounds import SmsInbounds
 from .other import Other
+from .whatsapp import WhatsApp
 
 __all__ = [
     "BaseResource",
@@ -50,4 +51,5 @@ __all__ = [
     "SmsWebhooks",
     "SmsInbounds",
     "Other",
+    "WhatsApp",
 ]

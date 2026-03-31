@@ -29,6 +29,7 @@ from .builders.sms_sending import SmsSendingBuilder
 from .builders.sms_recipients import SmsRecipientsBuilder
 from .builders.sms_webhooks import SmsWebhooksBuilder
 from .builders.sms_inbounds import SmsInboundsBuilder
+from .builders.whatsapp import WhatsAppBuilder
 from .resources.email import Email
 from .resources.activity import Activity
 from .resources.analytics import Analytics
@@ -91,7 +92,8 @@ __all__ = [
     "SmsRecipientsBuilder",
     "SmsWebhooksBuilder",
     "SmsInboundsBuilder",
-    
+    "WhatsAppBuilder",
+
     # Resources
     "Email",
     "Activity",
