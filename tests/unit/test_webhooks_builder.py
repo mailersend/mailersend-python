@@ -100,6 +100,7 @@ class TestWebhooksBuilder:
             "activity.delivered",
             "activity.soft_bounced",
             "activity.hard_bounced",
+            "activity.deferred",
             "activity.opened",
             "activity.opened_unique",
             "activity.clicked",
@@ -128,6 +129,18 @@ class TestWebhooksBuilder:
         ]
         assert builder._events == expected_events
 
+    def test_recipient_events(self):
+        """Test adding all recipient events."""
+        builder = WebhooksBuilder()
+        result = builder.recipient_events()
+        assert result is builder  # Fluent interface
+
+        expected_events = [
+            "recipient.on_hold_added",
+            "recipient.on_hold_removed",
+        ]
+        assert builder._events == expected_events
+
     def test_all_events(self):
         """Test adding all available events."""
         builder = WebhooksBuilder()
@@ -139,6 +152,7 @@ class TestWebhooksBuilder:
             "activity.delivered",
             "activity.soft_bounced",
             "activity.hard_bounced",
+            "activity.deferred",
             "activity.opened",
             "activity.opened_unique",
             "activity.clicked",
@@ -157,7 +171,11 @@ class TestWebhooksBuilder:
             "email_list.verified",
             "bulk_email.completed",
         ]
-        expected_all_events = expected_activity_events + expected_system_events
+        expected_recipient_events = [
+            "recipient.on_hold_added",
+            "recipient.on_hold_removed",
+        ]
+        expected_all_events = expected_activity_events + expected_system_events + expected_recipient_events
         assert builder._events == expected_all_events
 
     def test_method_chaining(self):
