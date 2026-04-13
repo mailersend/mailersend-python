@@ -1,4 +1,5 @@
 """Unit tests for Webhooks resource."""
+
 from unittest.mock import Mock, MagicMock
 
 from mailersend.resources.webhooks import Webhooks

@@ -21,17 +21,13 @@ from mailersend.models.base import APIResponse
 @pytest.fixture
 def basic_users_list_request():
     """Basic users list request"""
-    return UsersListRequest(
-        query_params=UsersListQueryParams(page=1, limit=10)
-    )
+    return UsersListRequest(query_params=UsersListQueryParams(page=1, limit=10))
 
 
 @pytest.fixture
 def basic_invites_list_request():
     """Basic invites list request"""
-    return InvitesListRequest(
-        query_params=InvitesListQueryParams(page=1, limit=10)
-    )
+    return InvitesListRequest(query_params=InvitesListQueryParams(page=1, limit=10))
 
 
 @pytest.fixture
@@ -55,7 +51,7 @@ def sample_user_invite_data():
         "permissions": ["email_send"],
         "domains": [],
         "templates": [],
-        "requires_periodic_password_change": False
+        "requires_periodic_password_change": False,
     }
 
 
@@ -91,9 +87,7 @@ class TestUsersIntegration:
     @vcr.use_cassette("users_list_with_pagination.yaml")
     def test_list_users_with_pagination(self, email_client):
         """Test listing users with pagination."""
-        request = UsersListRequest(
-            query_params=UsersListQueryParams(page=1, limit=10)
-        )
+        request = UsersListRequest(query_params=UsersListQueryParams(page=1, limit=10))
 
         response = email_client.users.list_users(request)
 
@@ -113,20 +107,23 @@ class TestUsersIntegration:
     def test_get_user_not_found_with_test_id(self, email_client, user_get_request):
         """Test getting a non-existent user returns 404."""
         from mailersend.exceptions import ResourceNotFoundError
-        
+
         with pytest.raises(ResourceNotFoundError) as exc_info:
             email_client.users.get_user(user_get_request)
 
         error_str = str(exc_info.value).lower()
-        assert ("not found" in error_str or "404" in error_str or 
-                "could not be found" in error_str or 
-                "user" in error_str)
+        assert (
+            "not found" in error_str
+            or "404" in error_str
+            or "could not be found" in error_str
+            or "user" in error_str
+        )
 
     @vcr.use_cassette("users_invite.yaml")
     def test_invite_user_invalid_data(self, email_client, sample_user_invite_data):
         """Test inviting a user with potentially invalid data."""
         from mailersend.exceptions import BadRequestError, ResourceNotFoundError
-        
+
         request = UserInviteRequest(**sample_user_invite_data)
 
         # This might fail due to invalid role, domain restrictions, or other business logic
@@ -134,44 +131,55 @@ class TestUsersIntegration:
             email_client.users.invite_user(request)
 
         error_str = str(exc_info.value).lower()
-        assert ("invalid" in error_str or "not found" in error_str or 
-                "role" in error_str or "permission" in error_str or
-                "domain" in error_str)
+        assert (
+            "invalid" in error_str
+            or "not found" in error_str
+            or "role" in error_str
+            or "permission" in error_str
+            or "domain" in error_str
+        )
 
     @vcr.use_cassette("users_update.yaml")
     def test_update_user_not_found_with_test_id(self, email_client, user_get_request):
         """Test updating a non-existent user with invalid role/permissions."""
         from mailersend.exceptions import BadRequestError
-        
+
         update_request = UserUpdateRequest(
             user_id=user_get_request.user_id,
             role="member",  # Invalid role - API validates before checking user existence
             permissions=["email_send"],  # Invalid permission
             domains=[],
-            templates=[]
+            templates=[],
         )
 
         with pytest.raises(BadRequestError) as exc_info:
             email_client.users.update_user(update_request)
 
         error_str = str(exc_info.value).lower()
-        assert ("invalid" in error_str or "role" in error_str or 
-                "permission" in error_str or "selected" in error_str)
+        assert (
+            "invalid" in error_str
+            or "role" in error_str
+            or "permission" in error_str
+            or "selected" in error_str
+        )
 
     @vcr.use_cassette("users_delete.yaml")
     def test_delete_user_not_found_with_test_id(self, email_client, user_get_request):
         """Test deleting a non-existent user returns 404."""
         from mailersend.exceptions import ResourceNotFoundError
-        
+
         delete_request = UserDeleteRequest(user_id=user_get_request.user_id)
 
         with pytest.raises(ResourceNotFoundError) as exc_info:
             email_client.users.delete_user(delete_request)
 
         error_str = str(exc_info.value).lower()
-        assert ("not found" in error_str or "404" in error_str or 
-                "could not be found" in error_str or 
-                "user" in error_str)
+        assert (
+            "not found" in error_str
+            or "404" in error_str
+            or "could not be found" in error_str
+            or "user" in error_str
+        )
 
     # ============================================================================
     # Invite Management Tests
@@ -203,44 +211,57 @@ class TestUsersIntegration:
     def test_get_invite_not_found_with_test_id(self, email_client, invite_get_request):
         """Test getting a non-existent invite returns 404."""
         from mailersend.exceptions import ResourceNotFoundError
-        
+
         with pytest.raises(ResourceNotFoundError) as exc_info:
             email_client.users.get_invite(invite_get_request)
 
         error_str = str(exc_info.value).lower()
-        assert ("not found" in error_str or "404" in error_str or 
-                "could not be found" in error_str or 
-                "invite" in error_str)
+        assert (
+            "not found" in error_str
+            or "404" in error_str
+            or "could not be found" in error_str
+            or "invite" in error_str
+        )
 
     @vcr.use_cassette("invites_resend.yaml")
-    def test_resend_invite_not_found_with_test_id(self, email_client, invite_get_request):
+    def test_resend_invite_not_found_with_test_id(
+        self, email_client, invite_get_request
+    ):
         """Test resending a non-existent invite returns 404."""
         from mailersend.exceptions import ResourceNotFoundError
-        
+
         resend_request = InviteResendRequest(invite_id=invite_get_request.invite_id)
 
         with pytest.raises(ResourceNotFoundError) as exc_info:
             email_client.users.resend_invite(resend_request)
 
         error_str = str(exc_info.value).lower()
-        assert ("not found" in error_str or "404" in error_str or 
-                "could not be found" in error_str or 
-                "invite" in error_str)
+        assert (
+            "not found" in error_str
+            or "404" in error_str
+            or "could not be found" in error_str
+            or "invite" in error_str
+        )
 
     @vcr.use_cassette("invites_cancel.yaml")
-    def test_cancel_invite_not_found_with_test_id(self, email_client, invite_get_request):
+    def test_cancel_invite_not_found_with_test_id(
+        self, email_client, invite_get_request
+    ):
         """Test canceling a non-existent invite returns 404."""
         from mailersend.exceptions import ResourceNotFoundError
-        
+
         cancel_request = InviteCancelRequest(invite_id=invite_get_request.invite_id)
 
         with pytest.raises(ResourceNotFoundError) as exc_info:
             email_client.users.cancel_invite(cancel_request)
 
         error_str = str(exc_info.value).lower()
-        assert ("not found" in error_str or "404" in error_str or 
-                "could not be found" in error_str or 
-                "invite" in error_str)
+        assert (
+            "not found" in error_str
+            or "404" in error_str
+            or "could not be found" in error_str
+            or "invite" in error_str
+        )
 
     # ============================================================================
     # Validation and API Response Tests
@@ -255,10 +276,7 @@ class TestUsersIntegration:
 
         # Should raise an AttributeError for invalid request type
         error_str = str(exc_info.value).lower()
-        assert (
-            "attribute" in error_str
-            or "to_query_params" in error_str
-        )
+        assert "attribute" in error_str or "to_query_params" in error_str
 
     @vcr.use_cassette("users_api_response_structure.yaml")
     def test_api_response_structure(self, email_client, basic_users_list_request):
@@ -338,15 +356,15 @@ class TestUsersIntegration:
         params = UsersListQueryParams(page=1, limit=25)
         assert params.page == 1
         assert params.limit == 25
-        
+
         # Test minimum limit validation
         with pytest.raises(ValueError):
             UsersListQueryParams(limit=5)  # Below minimum of 10
-            
-        # Test maximum limit validation  
+
+        # Test maximum limit validation
         with pytest.raises(ValueError):
             UsersListQueryParams(limit=150)  # Above maximum of 100
-            
+
         # Test minimum page validation
         with pytest.raises(ValueError):
             UsersListQueryParams(page=0)  # Below minimum of 1
@@ -357,15 +375,15 @@ class TestUsersIntegration:
         params = InvitesListQueryParams(page=2, limit=50)
         assert params.page == 2
         assert params.limit == 50
-        
+
         # Test minimum limit validation
         with pytest.raises(ValueError):
             InvitesListQueryParams(limit=5)  # Below minimum of 10
-            
-        # Test maximum limit validation  
+
+        # Test maximum limit validation
         with pytest.raises(ValueError):
             InvitesListQueryParams(limit=150)  # Above maximum of 100
-            
+
         # Test minimum page validation
         with pytest.raises(ValueError):
             InvitesListQueryParams(page=0)  # Below minimum of 1
@@ -378,11 +396,11 @@ class TestUsersIntegration:
             permissions=["email_send", "domains_manage"],
             domains=["domain1", "domain2"],
             templates=["template1"],
-            requires_periodic_password_change=True
+            requires_periodic_password_change=True,
         )
-        
+
         json_data = request.to_json()
-        
+
         assert json_data["email"] == "test@example.com"
         assert json_data["role"] == "admin"
         assert json_data["permissions"] == ["email_send", "domains_manage"]
@@ -398,11 +416,11 @@ class TestUsersIntegration:
             permissions=["email_send"],
             domains=["domain1"],
             templates=[],
-            requires_periodic_password_change=False
+            requires_periodic_password_change=False,
         )
-        
+
         json_data = request.to_json()
-        
+
         assert "user_id" not in json_data  # user_id goes in URL, not body
         assert json_data["role"] == "member"
         assert json_data["permissions"] == ["email_send"]
@@ -415,7 +433,7 @@ class TestUsersIntegration:
         # Test email with whitespace gets cleaned
         request = UserInviteRequest(email="  test@example.com  ", role="member")
         assert request.email == "test@example.com"
-        
+
         # Test role with whitespace gets cleaned
         request2 = UserInviteRequest(email="test@example.com", role="  admin  ")
-        assert request2.role == "admin" 
+        assert request2.role == "admin"

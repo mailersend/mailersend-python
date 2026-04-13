@@ -91,7 +91,9 @@ class TestDomainsResourceQueryParams:
 
         expected_params = {"page": 3, "limit": 20}
         mock_client.request.assert_called_once_with(
-            method="GET", path="domains/test-domain-id/recipients", params=expected_params
+            method="GET",
+            path="domains/test-domain-id/recipients",
+            params=expected_params,
         )
         domains._create_response.assert_called_once_with(mock_response)
         assert isinstance(result, type(domains._create_response.return_value))

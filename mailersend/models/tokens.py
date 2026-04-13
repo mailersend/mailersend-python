@@ -6,7 +6,6 @@ from typing import List, Optional, Literal, Dict, Any
 from pydantic import Field, field_validator
 from .base import BaseModel
 
-
 # Token scope constants
 TOKEN_SCOPES = [
     "email_full",

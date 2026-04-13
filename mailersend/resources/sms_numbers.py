@@ -32,9 +32,7 @@ class SmsNumbers(BaseResource):
 
         self.logger.debug("Listing SMS phone numbers with params: %s", params)
 
-        response = self.client.request(
-            method="GET", path="sms-numbers", params=params
-        )
+        response = self.client.request(method="GET", path="sms-numbers", params=params)
 
         return self._create_response(response)
 

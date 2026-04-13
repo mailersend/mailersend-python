@@ -14,9 +14,7 @@ from mailersend.models.base import APIResponse
 @pytest.fixture
 def basic_templates_list_request():
     """Basic templates list request"""
-    return TemplatesListRequest(
-        query_params=TemplatesListQueryParams(page=1, limit=10)
-    )
+    return TemplatesListRequest(query_params=TemplatesListQueryParams(page=1, limit=10))
 
 
 @pytest.fixture
@@ -53,7 +51,9 @@ class TestTemplatesIntegration:
                 first_template = templates[0]
                 assert "id" in first_template
                 assert "name" in first_template
-                assert "category" in first_template or "categories" in first_template  # API has both fields
+                assert (
+                    "category" in first_template or "categories" in first_template
+                )  # API has both fields
                 assert "created_at" in first_template
 
     @vcr.use_cassette("templates_list_no_params.yaml")
@@ -97,9 +97,7 @@ class TestTemplatesIntegration:
         """Test listing templates filtered by domain."""
         request = TemplatesListRequest(
             query_params=TemplatesListQueryParams(
-                page=1, 
-                limit=10, 
-                domain_id=sample_domain_id
+                page=1, limit=10, domain_id=sample_domain_id
             )
         )
 
@@ -117,21 +115,29 @@ class TestTemplatesIntegration:
                 assert isinstance(template, dict)
 
     @vcr.use_cassette("templates_get_single.yaml")
-    def test_get_template_not_found_with_test_id(self, email_client, template_get_request):
+    def test_get_template_not_found_with_test_id(
+        self, email_client, template_get_request
+    ):
         """Test getting a non-existent template returns 404."""
         from mailersend.exceptions import ResourceNotFoundError
-        
+
         with pytest.raises(ResourceNotFoundError) as exc_info:
             email_client.templates.get_template(template_get_request)
 
         error_str = str(exc_info.value).lower()
-        assert "not found" in error_str or "404" in error_str or "could not be found" in error_str
+        assert (
+            "not found" in error_str
+            or "404" in error_str
+            or "could not be found" in error_str
+        )
 
     @vcr.use_cassette("templates_delete.yaml")
-    def test_delete_template_not_found_with_test_id(self, email_client, template_get_request):
+    def test_delete_template_not_found_with_test_id(
+        self, email_client, template_get_request
+    ):
         """Test deleting a non-existent template returns 404."""
         from mailersend.exceptions import ResourceNotFoundError
-        
+
         delete_request = TemplateDeleteRequest(
             template_id=template_get_request.template_id
         )
@@ -140,9 +146,12 @@ class TestTemplatesIntegration:
             email_client.templates.delete_template(delete_request)
 
         error_str = str(exc_info.value).lower()
-        assert ("not found" in error_str or "404" in error_str or 
-                "could not be found" in error_str or 
-                "template" in error_str)
+        assert (
+            "not found" in error_str
+            or "404" in error_str
+            or "could not be found" in error_str
+            or "template" in error_str
+        )
 
     @vcr.use_cassette("templates_validation_error.yaml")
     def test_list_templates_validation_error(self, email_client):
@@ -153,10 +162,7 @@ class TestTemplatesIntegration:
 
         # Should raise an AttributeError for invalid request type
         error_str = str(exc_info.value).lower()
-        assert (
-            "attribute" in error_str
-            or "to_query_params" in error_str
-        )
+        assert "attribute" in error_str or "to_query_params" in error_str
 
     @vcr.use_cassette("templates_api_response_structure.yaml")
     def test_api_response_structure(self, email_client, basic_templates_list_request):
@@ -180,7 +186,9 @@ class TestTemplatesIntegration:
             assert len(response.request_id) > 0
 
     @vcr.use_cassette("templates_empty_result.yaml")
-    def test_list_templates_empty_result(self, email_client, basic_templates_list_request):
+    def test_list_templates_empty_result(
+        self, email_client, basic_templates_list_request
+    ):
         """Test listing templates when no templates exist."""
         response = email_client.templates.list_templates(basic_templates_list_request)
 
@@ -219,23 +227,19 @@ class TestTemplatesIntegration:
     def test_templates_list_query_params_validation(self):
         """Test validation for templates list query parameters."""
         # Test valid parameters
-        params = TemplatesListQueryParams(
-            page=1, 
-            limit=25, 
-            domain_id="test-domain"
-        )
+        params = TemplatesListQueryParams(page=1, limit=25, domain_id="test-domain")
         assert params.page == 1
         assert params.limit == 25
         assert params.domain_id == "test-domain"
-        
+
         # Test minimum limit validation
         with pytest.raises(ValueError):
             TemplatesListQueryParams(limit=5)  # Below minimum of 10
-            
-        # Test maximum limit validation  
+
+        # Test maximum limit validation
         with pytest.raises(ValueError):
             TemplatesListQueryParams(limit=150)  # Above maximum of 100
-            
+
         # Test minimum page validation
         with pytest.raises(ValueError):
             TemplatesListQueryParams(page=0)  # Below minimum of 1
@@ -243,21 +247,17 @@ class TestTemplatesIntegration:
     def test_templates_list_query_params_to_dict(self):
         """Test query parameters conversion to dictionary."""
         # Test with all parameters
-        params = TemplatesListQueryParams(
-            page=2,
-            limit=50,
-            domain_id="test-domain"
-        )
+        params = TemplatesListQueryParams(page=2, limit=50, domain_id="test-domain")
         query_dict = params.to_query_params()
-        
+
         assert query_dict["page"] == 2
         assert query_dict["limit"] == 50
         assert query_dict["domain_id"] == "test-domain"
-        
+
         # Test with minimal parameters (only defaults)
         params_minimal = TemplatesListQueryParams()
         query_dict_minimal = params_minimal.to_query_params()
-        
+
         assert query_dict_minimal["page"] == 1
         assert query_dict_minimal["limit"] == 25
         assert "domain_id" not in query_dict_minimal  # None values excluded
@@ -266,13 +266,13 @@ class TestTemplatesIntegration:
         """Test that TemplatesListRequest has proper defaults."""
         # Test creating request without explicit query_params
         request = TemplatesListRequest()
-        
+
         assert request.query_params is not None
         assert isinstance(request.query_params, TemplatesListQueryParams)
         assert request.query_params.page == 1
         assert request.query_params.limit == 25
         assert request.query_params.domain_id is None
-        
+
         # Test to_query_params method
         query_dict = request.to_query_params()
         assert query_dict["page"] == 1
@@ -284,7 +284,7 @@ class TestTemplatesIntegration:
         # Test domain_id with whitespace gets cleaned
         params = TemplatesListQueryParams(domain_id="  test-domain  ")
         assert params.domain_id == "test-domain"
-        
+
         # Test None domain_id is preserved
         params_none = TemplatesListQueryParams(domain_id=None)
-        assert params_none.domain_id is None 
+        assert params_none.domain_id is None

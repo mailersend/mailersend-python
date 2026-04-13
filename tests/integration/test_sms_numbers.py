@@ -20,11 +20,7 @@ def basic_sms_numbers_list_request():
 @pytest.fixture
 def sms_numbers_list_request_with_filters():
     """SMS numbers list request with filters"""
-    return SmsNumbersListRequest(
-        paused=False,
-        page=1,
-        limit=10
-    )
+    return SmsNumbersListRequest(paused=False, page=1, limit=10)
 
 
 @pytest.fixture
@@ -42,10 +38,7 @@ def sms_number_id_from_env():
 @pytest.fixture
 def sms_number_update_request(sms_number_id_from_env):
     """SMS number update request"""
-    return SmsNumberUpdateRequest(
-        sms_number_id=sms_number_id_from_env,
-        paused=True
-    )
+    return SmsNumberUpdateRequest(sms_number_id=sms_number_id_from_env, paused=True)
 
 
 @pytest.fixture
@@ -84,7 +77,9 @@ class TestSmsNumbersIntegration:
                 assert "created_at" in first_sms_number
 
     @vcr.use_cassette("sms_numbers_list_with_filters.yaml")
-    def test_list_sms_numbers_with_filters(self, email_client, sms_numbers_list_request_with_filters):
+    def test_list_sms_numbers_with_filters(
+        self, email_client, sms_numbers_list_request_with_filters
+    ):
         """Test listing SMS numbers with filters."""
         response = email_client.sms_numbers.list(sms_numbers_list_request_with_filters)
 
@@ -132,43 +127,54 @@ class TestSmsNumbersIntegration:
     # ============================================================================
 
     @vcr.use_cassette("sms_numbers_get_not_found.yaml")
-    def test_get_sms_number_not_found_with_test_id(self, email_client, sms_number_get_request):
+    def test_get_sms_number_not_found_with_test_id(
+        self, email_client, sms_number_get_request
+    ):
         """Test getting a non-existent SMS number returns 404."""
         from mailersend.exceptions import ResourceNotFoundError
-        
+
         with pytest.raises(ResourceNotFoundError) as exc_info:
             email_client.sms_numbers.get(sms_number_get_request)
 
         error_str = str(exc_info.value).lower()
-        assert ("not found" in error_str or "404" in error_str or 
-                "could not be found" in error_str or 
-                "sms" in error_str or "number" in error_str)
+        assert (
+            "not found" in error_str
+            or "404" in error_str
+            or "could not be found" in error_str
+            or "sms" in error_str
+            or "number" in error_str
+        )
 
     # ============================================================================
     # SMS Number Update Tests
     # ============================================================================
 
     @vcr.use_cassette("sms_numbers_update_not_found.yaml")
-    def test_update_sms_number_not_found_with_test_id(self, email_client, sms_number_update_request):
+    def test_update_sms_number_not_found_with_test_id(
+        self, email_client, sms_number_update_request
+    ):
         """Test updating a non-existent SMS number returns 404."""
         from mailersend.exceptions import ResourceNotFoundError
-        
+
         with pytest.raises(ResourceNotFoundError) as exc_info:
             email_client.sms_numbers.update(sms_number_update_request)
 
         error_str = str(exc_info.value).lower()
-        assert ("not found" in error_str or "404" in error_str or 
-                "could not be found" in error_str or 
-                "sms" in error_str or "number" in error_str)
+        assert (
+            "not found" in error_str
+            or "404" in error_str
+            or "could not be found" in error_str
+            or "sms" in error_str
+            or "number" in error_str
+        )
 
     @vcr.use_cassette("sms_numbers_update_pause.yaml")
     def test_update_sms_number_pause(self, email_client, sms_number_id_from_env):
         """Test pausing an SMS number."""
         from mailersend.exceptions import ResourceNotFoundError
-        
+
         request = SmsNumberUpdateRequest(
-            sms_number_id=sms_number_id_from_env,
-            paused=True
+            sms_number_id=sms_number_id_from_env, paused=True
         )
 
         # This will likely fail with 404 for test SMS number ID
@@ -176,18 +182,21 @@ class TestSmsNumbersIntegration:
             email_client.sms_numbers.update(request)
 
         error_str = str(exc_info.value).lower()
-        assert ("not found" in error_str or "404" in error_str or 
-                "could not be found" in error_str or 
-                "sms" in error_str or "number" in error_str)
+        assert (
+            "not found" in error_str
+            or "404" in error_str
+            or "could not be found" in error_str
+            or "sms" in error_str
+            or "number" in error_str
+        )
 
     @vcr.use_cassette("sms_numbers_update_unpause.yaml")
     def test_update_sms_number_unpause(self, email_client, sms_number_id_from_env):
         """Test unpausing an SMS number."""
         from mailersend.exceptions import ResourceNotFoundError
-        
+
         request = SmsNumberUpdateRequest(
-            sms_number_id=sms_number_id_from_env,
-            paused=False
+            sms_number_id=sms_number_id_from_env, paused=False
         )
 
         # This will likely fail with 404 for test SMS number ID
@@ -195,26 +204,36 @@ class TestSmsNumbersIntegration:
             email_client.sms_numbers.update(request)
 
         error_str = str(exc_info.value).lower()
-        assert ("not found" in error_str or "404" in error_str or 
-                "could not be found" in error_str or 
-                "sms" in error_str or "number" in error_str)
+        assert (
+            "not found" in error_str
+            or "404" in error_str
+            or "could not be found" in error_str
+            or "sms" in error_str
+            or "number" in error_str
+        )
 
     # ============================================================================
     # SMS Number Delete Tests
     # ============================================================================
 
     @vcr.use_cassette("sms_numbers_delete_not_found.yaml")
-    def test_delete_sms_number_not_found_with_test_id(self, email_client, sms_number_delete_request):
+    def test_delete_sms_number_not_found_with_test_id(
+        self, email_client, sms_number_delete_request
+    ):
         """Test deleting a non-existent SMS number returns 404."""
         from mailersend.exceptions import ResourceNotFoundError
-        
+
         with pytest.raises(ResourceNotFoundError) as exc_info:
             email_client.sms_numbers.delete(sms_number_delete_request)
 
         error_str = str(exc_info.value).lower()
-        assert ("not found" in error_str or "404" in error_str or 
-                "could not be found" in error_str or 
-                "sms" in error_str or "number" in error_str)
+        assert (
+            "not found" in error_str
+            or "404" in error_str
+            or "could not be found" in error_str
+            or "sms" in error_str
+            or "number" in error_str
+        )
 
     # ============================================================================
     # Validation and Error Handling Tests
@@ -229,10 +248,7 @@ class TestSmsNumbersIntegration:
 
         # Should raise an AttributeError for invalid request type
         error_str = str(exc_info.value).lower()
-        assert (
-            "attribute" in error_str
-            or "to_query_params" in error_str
-        )
+        assert "attribute" in error_str or "to_query_params" in error_str
 
     @vcr.use_cassette("sms_numbers_api_response_structure.yaml")
     def test_api_response_structure(self, email_client, basic_sms_numbers_list_request):
@@ -256,7 +272,9 @@ class TestSmsNumbersIntegration:
             assert len(response.request_id) > 0
 
     @vcr.use_cassette("sms_numbers_empty_result.yaml")
-    def test_list_sms_numbers_empty_result(self, email_client, basic_sms_numbers_list_request):
+    def test_list_sms_numbers_empty_result(
+        self, email_client, basic_sms_numbers_list_request
+    ):
         """Test listing SMS numbers when no SMS numbers exist."""
         response = email_client.sms_numbers.list(basic_sms_numbers_list_request)
 
@@ -290,16 +308,14 @@ class TestSmsNumbersIntegration:
 
         # Test valid update request with paused=True
         request = SmsNumberUpdateRequest(
-            sms_number_id="valid-sms-number-id",
-            paused=True
+            sms_number_id="valid-sms-number-id", paused=True
         )
         assert request.sms_number_id == "valid-sms-number-id"
         assert request.paused is True
 
         # Test valid update request with paused=False
         request2 = SmsNumberUpdateRequest(
-            sms_number_id="valid-sms-number-id",
-            paused=False
+            sms_number_id="valid-sms-number-id", paused=False
         )
         assert request2.paused is False
 
@@ -330,11 +346,7 @@ class TestSmsNumbersIntegration:
         assert params_paused["paused"] == "true"
 
         # Test with all filters
-        request_all = SmsNumbersListRequest(
-            paused=False,
-            page=2,
-            limit=25
-        )
+        request_all = SmsNumbersListRequest(paused=False, page=2, limit=25)
         params_all = request_all.to_query_params()
         assert params_all["paused"] == "false"
         assert params_all["page"] == 2
@@ -343,27 +355,21 @@ class TestSmsNumbersIntegration:
     def test_sms_number_update_to_json(self):
         """Test SMS number update request JSON conversion."""
         # Test with paused=True
-        request = SmsNumberUpdateRequest(
-            sms_number_id="test-id",
-            paused=True
-        )
-        
+        request = SmsNumberUpdateRequest(sms_number_id="test-id", paused=True)
+
         json_data = request.to_json()
         assert json_data["paused"] is True
         assert "sms_number_id" not in json_data  # ID goes in URL, not body
 
         # Test with paused=False
-        request2 = SmsNumberUpdateRequest(
-            sms_number_id="test-id",
-            paused=False
-        )
-        
+        request2 = SmsNumberUpdateRequest(sms_number_id="test-id", paused=False)
+
         json_data2 = request2.to_json()
         assert json_data2["paused"] is False
 
         # Test without paused field
         request3 = SmsNumberUpdateRequest(sms_number_id="test-id")
-        
+
         json_data3 = request3.to_json()
         assert json_data3 == {}  # Empty payload when no fields to update
 
@@ -423,10 +429,6 @@ class TestSmsNumbersIntegration:
         assert params_both == {"page": 3, "limit": 20}
 
         # Test all parameters with None values
-        request_all_none = SmsNumbersListRequest(
-            paused=None,
-            page=None,
-            limit=None
-        )
+        request_all_none = SmsNumbersListRequest(paused=None, page=None, limit=None)
         params_all_none = request_all_none.to_query_params()
-        assert params_all_none == {} 
+        assert params_all_none == {}

@@ -1,4 +1,5 @@
 """Unit tests for SMS Sending resource."""
+
 import pytest
 from unittest.mock import Mock, MagicMock
 

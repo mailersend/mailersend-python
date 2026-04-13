@@ -299,15 +299,13 @@ class TestAnalyticsIntegration:
     def test_activity_by_date_error_no_events(self):
         """Test that activity by date requires events"""
         from mailersend.exceptions import BadRequestError
-        
+
         request = self.analytics_request_factory(
             self.base_analytics_request,
             event=None,  # No events specified - should cause error
         )
 
-        with pytest.raises(
-            BadRequestError, match="The event must be an array"
-        ):
+        with pytest.raises(BadRequestError, match="The event must be an array"):
             self.email_client.analytics.get_activity_by_date(request)
 
     @vcr.use_cassette("tests/fixtures/cassettes/analytics_comprehensive_test.yaml")

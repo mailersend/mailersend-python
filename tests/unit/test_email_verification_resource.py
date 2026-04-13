@@ -38,7 +38,9 @@ class TestEmailVerification:
 
         assert isinstance(result, APIResponse)
         self.mock_client.request.assert_called_once_with(
-            method="POST", path="email-verification/verify", body={"email": "test@example.com"}
+            method="POST",
+            path="email-verification/verify",
+            body={"email": "test@example.com"},
         )
 
     def test_verify_email_async_valid_request(self):
@@ -199,7 +201,9 @@ class TestEmailVerification:
 
         assert isinstance(result, APIResponse)
         self.mock_client.request.assert_called_once_with(
-            method="POST", path="email-verification", body={"name": "Test List", "emails": emails}
+            method="POST",
+            path="email-verification",
+            body={"name": "Test List", "emails": emails},
         )
 
     def test_verify_list_valid_request(self):

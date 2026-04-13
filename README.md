@@ -182,6 +182,16 @@ MailerSend Python SDK
     - [Get a single invite](#get-a-single-invite)
     - [Resend an invite](#resend-an-invite)
     - [Cancel an invite](#cancel-an-invite)
+  - [DMARC Monitoring](#dmarc-monitoring)
+    - [Get a list of monitors](#get-a-list-of-monitors)
+    - [Create a monitor](#create-a-monitor)
+    - [Update a monitor](#update-a-monitor)
+    - [Delete a monitor](#delete-a-monitor)
+    - [Get aggregated reports](#get-aggregated-reports)
+    - [Get IP-specific reports](#get-ip-specific-reports)
+    - [Get report sources](#get-report-sources)
+    - [Mark IP as favorite](#mark-ip-as-favorite)
+    - [Remove IP from favorites](#remove-ip-from-favorites)
   - [Other Endpoints](#other-endpoints)
     - [Get API Quota](#get-api-quota)
 - [Error Handling](#error-handling)
@@ -2681,6 +2691,143 @@ request = (UsersBuilder()
 response = ms.users.cancel_invite(request)
 ```
 
+## DMARC Monitoring
+
+### Get a list of monitors
+
+```python
+from mailersend import MailerSendClient, DmarcMonitoringBuilder
+
+ms = MailerSendClient()
+
+request = (DmarcMonitoringBuilder()
+          .page(1)
+          .limit(25)
+          .build_list_request())
+
+response = ms.dmarc_monitoring.list_monitors(request)
+```
+
+### Create a monitor
+
+```python
+from mailersend import MailerSendClient, DmarcMonitoringBuilder
+
+ms = MailerSendClient()
+
+request = (DmarcMonitoringBuilder()
+          .domain_id("your-domain-id")
+          .build_create_request())
+
+response = ms.dmarc_monitoring.create_monitor(request)
+```
+
+### Update a monitor
+
+```python
+from mailersend import MailerSendClient, DmarcMonitoringBuilder
+
+ms = MailerSendClient()
+
+request = (DmarcMonitoringBuilder()
+          .monitor_id("monitor-id")
+          .wanted_dmarc_record("v=DMARC1; p=reject; rua=mailto:dmarc@example.com")
+          .build_update_request())
+
+response = ms.dmarc_monitoring.update_monitor(request)
+```
+
+### Delete a monitor
+
+```python
+from mailersend import MailerSendClient, DmarcMonitoringBuilder
+
+ms = MailerSendClient()
+
+request = (DmarcMonitoringBuilder()
+          .monitor_id("monitor-id")
+          .build_delete_request())
+
+response = ms.dmarc_monitoring.delete_monitor(request)
+```
+
+### Get aggregated reports
+
+```python
+from mailersend import MailerSendClient, DmarcMonitoringBuilder
+
+ms = MailerSendClient()
+
+request = (DmarcMonitoringBuilder()
+          .monitor_id("monitor-id")
+          .page(1)
+          .limit(25)
+          .build_report_request())
+
+response = ms.dmarc_monitoring.get_aggregated_report(request)
+```
+
+### Get IP-specific reports
+
+```python
+from mailersend import MailerSendClient, DmarcMonitoringBuilder
+
+ms = MailerSendClient()
+
+request = (DmarcMonitoringBuilder()
+          .monitor_id("monitor-id")
+          .ip("192.168.1.1")
+          .page(1)
+          .limit(25)
+          .build_ip_report_request())
+
+response = ms.dmarc_monitoring.get_ip_report(request)
+```
+
+### Get report sources
+
+```python
+from mailersend import MailerSendClient, DmarcMonitoringBuilder
+
+ms = MailerSendClient()
+
+request = (DmarcMonitoringBuilder()
+          .monitor_id("monitor-id")
+          .build_report_sources_request())
+
+response = ms.dmarc_monitoring.get_report_sources(request)
+```
+
+### Mark IP as favorite
+
+```python
+from mailersend import MailerSendClient, DmarcMonitoringBuilder
+
+ms = MailerSendClient()
+
+request = (DmarcMonitoringBuilder()
+          .monitor_id("monitor-id")
+          .ip("192.168.1.1")
+          .build_mark_favorite_request())
+
+response = ms.dmarc_monitoring.mark_ip_favorite(request)
+```
+
+### Remove IP from favorites
+
+```python
+from mailersend import MailerSendClient, DmarcMonitoringBuilder
+
+ms = MailerSendClient()
+
+request = (DmarcMonitoringBuilder()
+          .monitor_id("monitor-id")
+          .ip("192.168.1.1")
+          .build_remove_favorite_request())
+
+response = ms.dmarc_monitoring.remove_ip_favorite(request)
+```
+
 ## Other Endpoints
 
 ### Get API Quota
@@ -2799,6 +2946,7 @@ def test_list_sms_recipients():
 | SMS Inbound Routing  | `{GET, POST, PUT, DELETE} sms-inbounds` | ✅         |
 | Sender Identities    | `{GET, POST, PUT, DELETE} identities`   | ✅         |
 | API Quota            | `GET api-quota`                         | ✅         |
+| DMARC Monitoring     | `{GET, POST, PUT, DELETE} dmarc-monitoring` | ✅     |
 
 *All endpoints are available and fully tested. Refer to [official API docs](https://developers.mailersend.com/) for the most up-to-date API specifications.*
 

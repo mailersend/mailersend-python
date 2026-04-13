@@ -49,9 +49,7 @@ class Tokens(BaseResource):
         self.logger.info("Getting token: %s", request.token_id)
 
         # Make API call
-        response = self.client.request(
-            method="GET", path=f"token/{request.token_id}"
-        )
+        response = self.client.request(method="GET", path=f"token/{request.token_id}")
 
         # Create standardized response
         return self._create_response(response)

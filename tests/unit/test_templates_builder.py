@@ -1,4 +1,5 @@
 """Tests for Templates builder."""
+
 import pytest
 
 from mailersend.builders.templates import TemplatesBuilder
