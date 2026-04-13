@@ -122,6 +122,7 @@ class WebhooksBuilder:
             "activity.delivered",
             "activity.soft_bounced",
             "activity.hard_bounced",
+            "activity.deferred",
             "activity.opened",
             "activity.opened_unique",
             "activity.clicked",
@@ -154,6 +155,20 @@ class WebhooksBuilder:
             self.add_event(event)
         return self
 
+    def recipient_events(self) -> "WebhooksBuilder":
+        """Add all recipient events to the webhook.
+
+        Returns:
+            WebhooksBuilder: Self for method chaining
+        """
+        recipient_events = [
+            "recipient.on_hold_added",
+            "recipient.on_hold_removed",
+        ]
+        for event in recipient_events:
+            self.add_event(event)
+        return self
+
     def all_events(self) -> "WebhooksBuilder":
         """Add all available events to the webhook.
 
@@ -162,6 +177,7 @@ class WebhooksBuilder:
         """
         self.activity_events()
         self.system_events()
+        self.recipient_events()
         return self
 
     def build_webhooks_list_request(self) -> WebhooksListRequest:
