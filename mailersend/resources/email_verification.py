@@ -35,7 +35,9 @@ class EmailVerification(BaseResource):
         self.logger.debug("Verifying email address: %s", body)
 
         # Make API call
-        response = self.client.request(method="POST", path="email-verification/verify", body=body)
+        response = self.client.request(
+            method="POST", path="email-verification/verify", body=body
+        )
 
         # Create standardized response
         return self._create_response(response)
@@ -164,7 +166,9 @@ class EmailVerification(BaseResource):
         )
 
         # Make API call
-        response = self.client.request(method="POST", path="email-verification", body=body)
+        response = self.client.request(
+            method="POST", path="email-verification", body=body
+        )
 
         # Create standardized response
         return self._create_response(response)

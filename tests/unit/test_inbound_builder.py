@@ -274,9 +274,13 @@ class TestInboundBuilder:
         assert request.name == "Test Route"
         assert request.domain_enabled is False
         assert request.catch_filter.type == "catch_all"
-        assert request.catch_filter.filters is None  # catch_all doesn't need specific filters
+        assert (
+            request.catch_filter.filters is None
+        )  # catch_all doesn't need specific filters
         assert request.match_filter.type == "match_all"
-        assert request.match_filter.filters is None  # match_all doesn't need specific filters
+        assert (
+            request.match_filter.filters is None
+        )  # match_all doesn't need specific filters
         assert len(request.forwards) == 1
 
     def test_build_create_request_with_domain_enabled(self):

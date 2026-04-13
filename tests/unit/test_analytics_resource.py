@@ -240,7 +240,7 @@ class TestAnalyticsResource:
         """Test that None values are excluded from query parameters"""
         request = AnalyticsRequest(
             date_from=1443651141,
-            date_to=1443661141
+            date_to=1443661141,
             # domain_id is None, tags is None, etc.
         )
 

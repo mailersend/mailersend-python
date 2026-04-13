@@ -63,7 +63,9 @@ class Domains(BaseResource):
         self.logger.debug("Preparing to get domain")
         self.logger.debug("Requesting domain information for: %s", request.domain_id)
 
-        response = self.client.request(method="GET", path=f"domains/{request.domain_id}")
+        response = self.client.request(
+            method="GET", path=f"domains/{request.domain_id}"
+        )
 
         return self._create_response(response)
 
@@ -101,7 +103,9 @@ class Domains(BaseResource):
         self.logger.debug("Preparing to delete domain")
         self.logger.debug("Deleting domain: %s", request.domain_id)
 
-        response = self.client.request(method="DELETE", path=f"domains/{request.domain_id}")
+        response = self.client.request(
+            method="DELETE", path=f"domains/{request.domain_id}"
+        )
 
         return self._create_response(response)
 
@@ -193,6 +197,8 @@ class Domains(BaseResource):
             "Retrieving verification status for domain: %s", request.domain_id
         )
 
-        response = self.client.request(method="GET", path=f"domains/{request.domain_id}/verify")
+        response = self.client.request(
+            method="GET", path=f"domains/{request.domain_id}/verify"
+        )
 
         return self._create_response(response)

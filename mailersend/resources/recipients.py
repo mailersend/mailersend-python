@@ -43,9 +43,7 @@ class Recipients(BaseResource):
         self.logger.debug("Listing recipients with params: %s", params)
 
         # Make API call
-        response = self.client.request(
-            method="GET", path="recipients", params=params
-        )
+        response = self.client.request(method="GET", path="recipients", params=params)
 
         return self._create_response(response)
 

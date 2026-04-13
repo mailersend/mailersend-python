@@ -1,4 +1,5 @@
 """Unit tests for SMS Numbers resource."""
+
 from unittest.mock import Mock, MagicMock
 
 from mailersend.resources.sms_numbers import SmsNumbers

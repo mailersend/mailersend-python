@@ -1,4 +1,5 @@
 """Unit tests for Recipients resource."""
+
 import pytest
 from unittest.mock import Mock, MagicMock
 from requests import Response

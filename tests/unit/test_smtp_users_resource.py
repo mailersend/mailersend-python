@@ -1,4 +1,5 @@
 """Unit tests for SMTP Users resource."""
+
 from unittest.mock import Mock, MagicMock
 
 from mailersend.resources.smtp_users import SmtpUsers

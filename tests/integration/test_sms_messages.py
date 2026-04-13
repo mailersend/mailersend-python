@@ -86,14 +86,18 @@ class TestSmsMessagesIntegration:
             assert response.data["data"] == []
 
     @vcr.use_cassette("sms_messages_get_single.yaml")
-    def test_get_sms_message_not_found_with_test_id(self, email_client, sms_message_get_request):
+    def test_get_sms_message_not_found_with_test_id(
+        self, email_client, sms_message_get_request
+    ):
         """Test getting a non-existent SMS message returns 404."""
         from mailersend.exceptions import ResourceNotFoundError
-        
+
         with pytest.raises(ResourceNotFoundError) as exc_info:
             email_client.sms_messages.get_sms_message(sms_message_get_request)
 
-        assert "not found" in str(exc_info.value).lower() or "404" in str(exc_info.value)
+        assert "not found" in str(exc_info.value).lower() or "404" in str(
+            exc_info.value
+        )
 
     @vcr.use_cassette("sms_messages_list_with_filters.yaml")
     def test_list_sms_messages_with_filters(self, email_client):
@@ -126,10 +130,7 @@ class TestSmsMessagesIntegration:
 
         # Should raise an AttributeError for invalid request type
         error_str = str(exc_info.value).lower()
-        assert (
-            "attribute" in error_str
-            or "to_query_params" in error_str
-        )
+        assert "attribute" in error_str or "to_query_params" in error_str
 
     def test_get_sms_message_validation_error(self, email_client):
         """Test that invalid request raises validation error."""
@@ -139,10 +140,7 @@ class TestSmsMessagesIntegration:
 
         # Should raise an AttributeError for invalid request type
         error_str = str(exc_info.value).lower()
-        assert (
-            "attribute" in error_str
-            or "sms_message_id" in error_str
-        )
+        assert "attribute" in error_str or "sms_message_id" in error_str
 
     @vcr.use_cassette("sms_messages_api_response_structure.yaml")
     def test_api_response_structure(self, email_client, basic_sms_list_request):

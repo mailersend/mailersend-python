@@ -27,9 +27,7 @@ class SmsInbounds(BaseResource):
 
         self.logger.debug("Listing SMS inbounds with filters: %s", params)
 
-        response = self.client.request(
-            method="GET", path="sms-inbounds", params=params
-        )
+        response = self.client.request(method="GET", path="sms-inbounds", params=params)
         return self._create_response(response)
 
     def get_sms_inbound(self, request: SmsInboundGetRequest) -> APIResponse:

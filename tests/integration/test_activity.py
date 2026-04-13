@@ -21,7 +21,7 @@ def base_activity_request(test_domain_id):
     # Use fixed timestamps for VCR consistency
     # These are the exact timestamps recorded in the VCR cassettes
     date_from = 1754040747  # Fixed timestamp from cassette
-    date_to = 1754044347    # Fixed timestamp from cassette (1 hour later)
+    date_to = 1754044347  # Fixed timestamp from cassette (1 hour later)
 
     query_params = ActivityQueryParams(
         date_from=date_from, date_to=date_to, page=1, limit=25
@@ -372,8 +372,8 @@ class TestActivityGetSingle:
         with pytest.raises(ValueError) as exc_info:
             SingleActivityBuilder().activity_id("").build()
         assert "activity_id is required" in str(exc_info.value)
-        
-        # Test whitespace activity_id at model level  
+
+        # Test whitespace activity_id at model level
         with pytest.raises(ValueError) as exc_info:
             SingleActivityBuilder().activity_id("   ").build()
         assert "activity_id cannot be empty" in str(exc_info.value)
