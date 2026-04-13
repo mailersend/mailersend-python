@@ -33,7 +33,9 @@ class TestSmsActivityIntegration:
     """Integration tests for SMS Activity API."""
 
     @vcr.use_cassette("sms_activity_list_basic.yaml")
-    def test_list_sms_activity_basic(self, email_client, basic_sms_activity_list_request):
+    def test_list_sms_activity_basic(
+        self, email_client, basic_sms_activity_list_request
+    ):
         """Test listing SMS activity with basic parameters."""
         response = email_client.sms_activity.list(basic_sms_activity_list_request)
 
@@ -75,14 +77,14 @@ class TestSmsActivityIntegration:
             assert meta["current_page"] == 1
 
     @vcr.use_cassette("sms_activity_list_with_sms_number_filter.yaml")
-    def test_list_sms_activity_with_sms_number_filter(self, email_client, test_sms_number_id):
+    def test_list_sms_activity_with_sms_number_filter(
+        self, email_client, test_sms_number_id
+    ):
         """Test listing SMS activity with SMS number ID filter."""
         from mailersend.exceptions import BadRequestError
-        
+
         request = SmsActivityListRequest(
-            sms_number_id=test_sms_number_id,
-            page=1,
-            limit=10
+            sms_number_id=test_sms_number_id, page=1, limit=10
         )
 
         try:
@@ -98,17 +100,14 @@ class TestSmsActivityIntegration:
     def test_list_sms_activity_with_date_range(self, email_client):
         """Test listing SMS activity with date range filter."""
         from mailersend.exceptions import BadRequestError
-        
+
         # Use fixed timestamps to ensure VCR cassette matching
         # These represent a recent 7-day period
         date_to = 1753800000  # Fixed timestamp
         date_from = date_to - (7 * 24 * 60 * 60)  # 7 days earlier
-        
+
         request = SmsActivityListRequest(
-            date_from=date_from,
-            date_to=date_to,
-            page=1,
-            limit=10
+            date_from=date_from, date_to=date_to, page=1, limit=10
         )
 
         try:
@@ -118,16 +117,16 @@ class TestSmsActivityIntegration:
             assert response.data is not None
         except BadRequestError as e:
             # Expected if date range exceeds account retention limit
-            assert "date" in str(e).lower() or "retention" in str(e).lower() or "range" in str(e).lower()
+            assert (
+                "date" in str(e).lower()
+                or "retention" in str(e).lower()
+                or "range" in str(e).lower()
+            )
 
     @vcr.use_cassette("sms_activity_list_with_status_filter.yaml")
     def test_list_sms_activity_with_status_filter(self, email_client):
         """Test listing SMS activity with status filter."""
-        request = SmsActivityListRequest(
-            status=["queued", "sent"],
-            page=1,
-            limit=10
-        )
+        request = SmsActivityListRequest(status=["queued", "sent"], page=1, limit=10)
 
         response = email_client.sms_activity.list(request)
 
@@ -144,11 +143,15 @@ class TestSmsActivityIntegration:
     def test_get_sms_message_not_found(self, email_client, sms_message_get_request):
         """Test getting a non-existent SMS message returns 404."""
         from mailersend.exceptions import ResourceNotFoundError
-        
+
         with pytest.raises(ResourceNotFoundError) as exc_info:
             email_client.sms_activity.get(sms_message_get_request)
 
-        assert "not found" in str(exc_info.value).lower() or "404" in str(exc_info.value) or "could not be found" in str(exc_info.value).lower()
+        assert (
+            "not found" in str(exc_info.value).lower()
+            or "404" in str(exc_info.value)
+            or "could not be found" in str(exc_info.value).lower()
+        )
 
     @vcr.use_cassette("sms_activity_validation_error.yaml")
     def test_list_sms_activity_validation_error(self, email_client):
@@ -159,13 +162,12 @@ class TestSmsActivityIntegration:
 
         # Should raise an AttributeError for invalid request type
         error_str = str(exc_info.value).lower()
-        assert (
-            "attribute" in error_str
-            or "to_query_params" in error_str
-        )
+        assert "attribute" in error_str or "to_query_params" in error_str
 
     @vcr.use_cassette("sms_activity_api_response_structure.yaml")
-    def test_api_response_structure(self, email_client, basic_sms_activity_list_request):
+    def test_api_response_structure(
+        self, email_client, basic_sms_activity_list_request
+    ):
         """Test that API response has the expected structure and metadata."""
         response = email_client.sms_activity.list(basic_sms_activity_list_request)
 
@@ -186,7 +188,9 @@ class TestSmsActivityIntegration:
             assert len(response.request_id) > 0
 
     @vcr.use_cassette("sms_activity_empty_result.yaml")
-    def test_list_sms_activity_empty_result(self, email_client, basic_sms_activity_list_request):
+    def test_list_sms_activity_empty_result(
+        self, email_client, basic_sms_activity_list_request
+    ):
         """Test listing SMS activity when no activities exist."""
         response = email_client.sms_activity.list(basic_sms_activity_list_request)
 
@@ -207,9 +211,9 @@ class TestSmsActivityBuilderIntegration:
         """Test basic SMS activity list using builder."""
         builder = SmsActivityBuilder()
         request = builder.page(1).limit(10).build_list_request()
-        
+
         response = email_client.sms_activity.list(request)
-        
+
         assert isinstance(response, APIResponse)
         assert response.status_code == 200
 
@@ -217,41 +221,49 @@ class TestSmsActivityBuilderIntegration:
     def test_builder_list_with_filters(self, email_client):
         """Test SMS activity list with various filters using builder."""
         from mailersend.exceptions import BadRequestError
-        
+
         builder = SmsActivityBuilder()
-        
+
         # Use fixed timestamps to ensure VCR cassette matching
         date_to = 1753800000  # Fixed timestamp
         date_from = date_to - (7 * 24 * 60 * 60)  # 7 days earlier
-        
-        request = (builder
-            .date_from(date_from)
+
+        request = (
+            builder.date_from(date_from)
             .date_to(date_to)
             .status(["sent", "delivered"])
             .page(1)
             .limit(25)
-            .build_list_request())
-        
+            .build_list_request()
+        )
+
         try:
             response = email_client.sms_activity.list(request)
             assert isinstance(response, APIResponse)
             assert response.status_code == 200
         except BadRequestError as e:
             # Expected if date range exceeds account retention limit
-            assert "date" in str(e).lower() or "retention" in str(e).lower() or "range" in str(e).lower()
+            assert (
+                "date" in str(e).lower()
+                or "retention" in str(e).lower()
+                or "range" in str(e).lower()
+            )
 
     @vcr.use_cassette("sms_activity_builder_list_with_sms_number.yaml")
-    def test_builder_list_with_sms_number_filter(self, email_client, test_sms_number_id):
+    def test_builder_list_with_sms_number_filter(
+        self, email_client, test_sms_number_id
+    ):
         """Test SMS activity list with SMS number filter using builder."""
         from mailersend.exceptions import BadRequestError
-        
+
         builder = SmsActivityBuilder()
-        request = (builder
-            .sms_number_id(test_sms_number_id)
+        request = (
+            builder.sms_number_id(test_sms_number_id)
             .page(1)
             .limit(10)
-            .build_list_request())
-        
+            .build_list_request()
+        )
+
         try:
             response = email_client.sms_activity.list(request)
             assert isinstance(response, APIResponse)
@@ -264,31 +276,32 @@ class TestSmsActivityBuilderIntegration:
     def test_builder_get_not_found(self, email_client):
         """Test getting non-existent SMS message using builder."""
         from mailersend.exceptions import ResourceNotFoundError
-        
+
         builder = SmsActivityBuilder()
         request = builder.sms_message_id("test-sms-message-id").build_get_request()
-        
+
         with pytest.raises(ResourceNotFoundError):
             email_client.sms_activity.get(request)
 
     def test_builder_fluent_interface(self):
         """Test that builder methods return self for chaining."""
         builder = SmsActivityBuilder()
-        
+
         current_time = int(time.time())
-        
+
         # Test method chaining
-        result = (builder
-            .page(1)
+        result = (
+            builder.page(1)
             .limit(10)
             .sms_number_id("test-sms-number")
             .date_from(current_time - 86400)
             .date_to(current_time)
             .status(["sent", "delivered"])
-            .sms_message_id("test-message"))
-        
+            .sms_message_id("test-message")
+        )
+
         assert result is builder
-        
+
         # Verify the builder state for different requests
         list_request = builder.build_list_request()
         assert list_request.page == 1
@@ -297,7 +310,7 @@ class TestSmsActivityBuilderIntegration:
         assert list_request.date_from == current_time - 86400
         assert list_request.date_to == current_time
         assert list_request.status == ["sent", "delivered"]
-        
+
         get_request = builder.build_get_request()
         assert get_request.sms_message_id == "test-message"
 
@@ -305,10 +318,10 @@ class TestSmsActivityBuilderIntegration:
         """Test builder reset functionality."""
         builder = SmsActivityBuilder()
         builder.page(2).limit(50).sms_number_id("test").status(["sent"])
-        
+
         # Reset the builder
         builder.reset()
-        
+
         # Verify all fields are cleared
         assert builder._page is None
         assert builder._limit is None
@@ -321,53 +334,58 @@ class TestSmsActivityBuilderIntegration:
     def test_builder_validation_errors(self):
         """Test builder validation for missing required fields."""
         builder = SmsActivityBuilder()
-        
+
         # Test building get request without SMS message ID
         with pytest.raises(ValueError) as exc_info:
             builder.build_get_request()
         assert "sms message id must be set" in str(exc_info.value).lower()
 
     @vcr.use_cassette("sms_activity_comprehensive_workflow.yaml")
-    def test_comprehensive_sms_activity_workflow(self, email_client, test_sms_number_id):
+    def test_comprehensive_sms_activity_workflow(
+        self, email_client, test_sms_number_id
+    ):
         """Test comprehensive workflow covering list operations, error scenarios, and builder usage."""
         # Test list with different configurations
         list_request = SmsActivityListRequest(page=1, limit=10)
-        
+
         response = email_client.sms_activity.list(list_request)
         assert isinstance(response, APIResponse)
         assert response.status_code == 200
-        
+
         # Test builder pattern with different configurations
         builder = SmsActivityBuilder()
-        
+
         # Test list with builder and filters
         date_to = 1753800000  # Fixed timestamp
         date_from = date_to - (7 * 24 * 60 * 60)  # 7 days earlier
-        
+
         try:
-            builder_request = (builder
-                .date_from(date_from)
+            builder_request = (
+                builder.date_from(date_from)
                 .date_to(date_to)
                 .status(["sent"])
                 .page(1)
                 .limit(25)
-                .build_list_request())
+                .build_list_request()
+            )
             builder_response = email_client.sms_activity.list(builder_request)
             assert isinstance(builder_response, APIResponse)
             assert builder_response.status_code == 200
         except Exception:
             # Handle potential API errors in test environment
             pass
-        
+
         # Test error scenarios
         from mailersend.exceptions import ResourceNotFoundError
-        
+
         # Test get non-existent SMS message
         get_request = SmsMessageGetRequest(sms_message_id="non-existent-id")
         with pytest.raises(ResourceNotFoundError):
             email_client.sms_activity.get(get_request)
-        
+
         # Test builder error scenarios
-        builder_get_request = builder.sms_message_id("another-non-existent-id").build_get_request()
+        builder_get_request = builder.sms_message_id(
+            "another-non-existent-id"
+        ).build_get_request()
         with pytest.raises(ResourceNotFoundError):
             email_client.sms_activity.get(builder_get_request)

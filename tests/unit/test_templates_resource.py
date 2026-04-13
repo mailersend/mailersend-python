@@ -1,4 +1,5 @@
 """Unit tests for Templates resource."""
+
 import pytest
 from unittest.mock import Mock, MagicMock
 

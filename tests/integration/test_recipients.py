@@ -93,20 +93,26 @@ class TestRecipientsIntegration:
             assert meta["current_page"] == 1
 
     @vcr.use_cassette("recipients_get_single.yaml")
-    def test_get_recipient_not_found_with_test_id(self, email_client, recipient_get_request):
+    def test_get_recipient_not_found_with_test_id(
+        self, email_client, recipient_get_request
+    ):
         """Test getting a non-existent recipient returns 404."""
         from mailersend.exceptions import ResourceNotFoundError
-        
+
         with pytest.raises(ResourceNotFoundError) as exc_info:
             email_client.recipients.get_recipient(recipient_get_request)
 
-        assert "not found" in str(exc_info.value).lower() or "404" in str(exc_info.value)
+        assert "not found" in str(exc_info.value).lower() or "404" in str(
+            exc_info.value
+        )
 
     @vcr.use_cassette("recipients_delete_success.yaml")
-    def test_delete_recipient_not_found_with_test_id(self, email_client, recipient_get_request):
+    def test_delete_recipient_not_found_with_test_id(
+        self, email_client, recipient_get_request
+    ):
         """Test deleting a non-existent recipient returns 404."""
         from mailersend.exceptions import ResourceNotFoundError
-        
+
         delete_request = RecipientDeleteRequest(
             recipient_id=recipient_get_request.recipient_id
         )
@@ -114,7 +120,9 @@ class TestRecipientsIntegration:
         with pytest.raises(ResourceNotFoundError) as exc_info:
             email_client.recipients.delete_recipient(delete_request)
 
-        assert "not found" in str(exc_info.value).lower() or "404" in str(exc_info.value)
+        assert "not found" in str(exc_info.value).lower() or "404" in str(
+            exc_info.value
+        )
 
     # Suppression Lists Tests
 
@@ -165,7 +173,9 @@ class TestRecipientsIntegration:
     @vcr.use_cassette("recipients_spam_complaints_basic.yaml")
     def test_get_spam_complaints_basic(self, email_client, suppression_list_request):
         """Test getting spam complaints with basic parameters."""
-        response = email_client.recipients.list_spam_complaints(suppression_list_request)
+        response = email_client.recipients.list_spam_complaints(
+            suppression_list_request
+        )
 
         assert isinstance(response, APIResponse)
         assert response.status_code == 200
@@ -209,7 +219,7 @@ class TestRecipientsIntegration:
         """Test adding to blocklist with invalid domain ID returns 422."""
         from mailersend.exceptions import BadRequestError
         from mailersend.models.recipients import SuppressionAddRequest
-        
+
         request = SuppressionAddRequest(
             domain_id="test-domain-id",  # Invalid domain ID
             recipients=["test@example.com"],
@@ -219,14 +229,16 @@ class TestRecipientsIntegration:
             email_client.recipients.add_to_blocklist(request)
 
         error_str = str(exc_info.value).lower()
-        assert "domain" in error_str and ("invalid" in error_str or "required" in error_str)
+        assert "domain" in error_str and (
+            "invalid" in error_str or "required" in error_str
+        )
 
     @vcr.use_cassette("recipients_add_hard_bounces.yaml")
     def test_add_hard_bounces_invalid_domain(self, email_client):
         """Test adding hard bounces with invalid domain ID returns 422."""
         from mailersend.exceptions import BadRequestError
         from mailersend.models.recipients import SuppressionAddRequest
-        
+
         request = SuppressionAddRequest(
             domain_id="test-domain-id",  # Invalid domain ID
             recipients=["test@example.com"],
@@ -236,14 +248,16 @@ class TestRecipientsIntegration:
             email_client.recipients.add_hard_bounces(request)
 
         error_str = str(exc_info.value).lower()
-        assert "domain" in error_str and ("invalid" in error_str or "required" in error_str)
+        assert "domain" in error_str and (
+            "invalid" in error_str or "required" in error_str
+        )
 
     @vcr.use_cassette("recipients_add_spam_complaints.yaml")
     def test_add_spam_complaints_invalid_domain(self, email_client):
         """Test adding spam complaints with invalid domain ID returns 422."""
         from mailersend.exceptions import BadRequestError
         from mailersend.models.recipients import SuppressionAddRequest
-        
+
         request = SuppressionAddRequest(
             domain_id="test-domain-id",  # Invalid domain ID
             recipients=["test@example.com"],
@@ -253,14 +267,16 @@ class TestRecipientsIntegration:
             email_client.recipients.add_spam_complaints(request)
 
         error_str = str(exc_info.value).lower()
-        assert "domain" in error_str and ("invalid" in error_str or "required" in error_str)
+        assert "domain" in error_str and (
+            "invalid" in error_str or "required" in error_str
+        )
 
     @vcr.use_cassette("recipients_add_unsubscribes.yaml")
     def test_add_unsubscribes_invalid_domain(self, email_client):
         """Test adding unsubscribes with invalid domain ID returns 422."""
         from mailersend.exceptions import BadRequestError
         from mailersend.models.recipients import SuppressionAddRequest
-        
+
         request = SuppressionAddRequest(
             domain_id="test-domain-id",  # Invalid domain ID
             recipients=["test@example.com"],
@@ -270,14 +286,16 @@ class TestRecipientsIntegration:
             email_client.recipients.add_unsubscribes(request)
 
         error_str = str(exc_info.value).lower()
-        assert "domain" in error_str and ("invalid" in error_str or "required" in error_str)
+        assert "domain" in error_str and (
+            "invalid" in error_str or "required" in error_str
+        )
 
     @vcr.use_cassette("recipients_delete_from_blocklist.yaml")
     def test_delete_from_blocklist_invalid_domain(self, email_client):
         """Test deleting from blocklist with invalid domain ID returns 422."""
         from mailersend.exceptions import BadRequestError
         from mailersend.models.recipients import SuppressionDeleteRequest
-        
+
         request = SuppressionDeleteRequest(
             domain_id="test-domain-id",  # Invalid domain ID
             ids=["test-id"],
@@ -287,14 +305,16 @@ class TestRecipientsIntegration:
             email_client.recipients.delete_from_blocklist(request)
 
         error_str = str(exc_info.value).lower()
-        assert "domain" in error_str and ("invalid" in error_str or "required" in error_str)
+        assert "domain" in error_str and (
+            "invalid" in error_str or "required" in error_str
+        )
 
     @vcr.use_cassette("recipients_comprehensive_workflow.yaml")
     def test_comprehensive_recipients_workflow_invalid_domain(self, email_client):
         """Test comprehensive workflow with invalid domain ID returns errors."""
         from mailersend.exceptions import BadRequestError
         from mailersend.models.recipients import SuppressionAddRequest
-        
+
         # Step 1: Try to add recipient to blocklist (should fail with invalid domain)
         add_request = SuppressionAddRequest(
             domain_id="test-domain-id",  # Invalid domain ID
@@ -305,7 +325,9 @@ class TestRecipientsIntegration:
             email_client.recipients.add_to_blocklist(add_request)
 
         error_str = str(exc_info.value).lower()
-        assert "domain" in error_str and ("invalid" in error_str or "required" in error_str)
+        assert "domain" in error_str and (
+            "invalid" in error_str or "required" in error_str
+        )
 
     @vcr.use_cassette("recipients_api_response_structure.yaml")
     def test_api_response_structure(self, email_client, basic_recipients_list_request):
@@ -337,10 +359,7 @@ class TestRecipientsIntegration:
 
         # Should raise an AttributeError for invalid request type
         error_str = str(exc_info.value).lower()
-        assert (
-            "attribute" in error_str
-            or "to_query_params" in error_str
-        )
+        assert "attribute" in error_str or "to_query_params" in error_str
 
     @vcr.use_cassette("recipients_empty_list.yaml")
     def test_list_recipients_empty_result(

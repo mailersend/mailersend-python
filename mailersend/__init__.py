@@ -40,14 +40,14 @@ from .models.email import (
     EmailPersonalization,
     EmailRequest,
     EmailTrackingSettings,
-    EmailHeader
+    EmailHeader,
 )
 from .models.activity import (
     ActivityRecipient,
     ActivityEmail,
     Activity as ActivityModel,
     ActivityQueryParams,
-    SingleActivityRequest
+    SingleActivityRequest,
 )
 from .models.analytics import (
     AnalyticsRequest,
@@ -59,7 +59,7 @@ from .exceptions import (
     ResourceNotFoundError,
     BadRequestError,
     ServerError,
-    ValidationError
+    ValidationError,
 )
 
 __version__ = "2.0.0"
@@ -67,60 +67,54 @@ __version__ = "2.0.0"
 __all__ = [
     # Core client
     "MailerSendClient",
-    
     # Builders - All available from main module for better UX
     "EmailBuilder",
-    "ActivityBuilder", 
+    "ActivityBuilder",
     "SingleActivityBuilder",
     "AnalyticsBuilder",
     "DomainsBuilder",
     "IdentityBuilder",
-    "InboundBuilder", 
+    "InboundBuilder",
     "MessagesBuilder",
     "SchedulesBuilder",
     "RecipientsBuilder",
     "TemplatesBuilder",
-    "TokensBuilder", 
+    "TokensBuilder",
     "SmtpUsersBuilder",
     "WebhooksBuilder",
     "EmailVerificationBuilder",
     "UsersBuilder",
     "SmsMessagesBuilder",
-    "SmsNumbersBuilder", 
+    "SmsNumbersBuilder",
     "SmsActivityBuilder",
     "SmsSendingBuilder",
     "SmsRecipientsBuilder",
     "SmsWebhooksBuilder",
     "SmsInboundsBuilder",
     "DmarcMonitoringBuilder",
-
     # Resources
     "Email",
     "Activity",
     "Analytics",
     "Domains",
-    
     # Email models
     "EmailContact",
-    "EmailAttachment", 
+    "EmailAttachment",
     "EmailPersonalization",
     "EmailRequest",
     "EmailTrackingSettings",
     "EmailHeader",
-    
     # Activity models
     "ActivityRecipient",
     "ActivityEmail",
     "ActivityModel",
     "ActivityQueryParams",
     "SingleActivityRequest",
-    
     # Analytics models
     "AnalyticsRequest",
-    
     # Exceptions
     "MailerSendError",
-    "AuthenticationError", 
+    "AuthenticationError",
     "RateLimitExceeded",
     "ResourceNotFoundError",
     "BadRequestError",

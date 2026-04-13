@@ -31,9 +31,7 @@ class SmsWebhooks(BaseResource):
             request.query_params.sms_number_id,
         )
 
-        response = self.client.request(
-            method="GET", path="sms-webhooks", params=params
-        )
+        response = self.client.request(method="GET", path="sms-webhooks", params=params)
 
         return self._create_response(response)
 

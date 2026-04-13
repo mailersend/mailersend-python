@@ -48,7 +48,9 @@ class TestEmailVerificationIntegration:
         self, email_client, basic_list_request
     ):
         """Test listing email verification lists with basic parameters."""
-        response = email_client.email_verification.list_verifications(basic_list_request)
+        response = email_client.email_verification.list_verifications(
+            basic_list_request
+        )
 
         assert isinstance(response, APIResponse)
         assert response.status_code == 200
@@ -116,11 +118,13 @@ class TestEmailVerificationIntegration:
     ):
         """Test getting a non-existent email verification list returns 404."""
         from mailersend.exceptions import ResourceNotFoundError
-        
+
         with pytest.raises(ResourceNotFoundError) as exc_info:
             email_client.email_verification.get_verification(verification_get_request)
 
-        assert "not found" in str(exc_info.value).lower() or "404" in str(exc_info.value)
+        assert "not found" in str(exc_info.value).lower() or "404" in str(
+            exc_info.value
+        )
 
     @vcr.use_cassette("email_verification_get_not_found.yaml")
     def test_get_email_verification_list_not_found(self, email_client):
@@ -143,7 +147,7 @@ class TestEmailVerificationIntegration:
     ):
         """Test verifying a non-existent email verification list returns 404."""
         from mailersend.exceptions import ResourceNotFoundError
-        
+
         verify_request = EmailVerificationVerifyRequest(
             email_verification_id=verification_get_request.email_verification_id
         )
@@ -151,7 +155,9 @@ class TestEmailVerificationIntegration:
         with pytest.raises(ResourceNotFoundError) as exc_info:
             email_client.email_verification.verify_list(verify_request)
 
-        assert "not found" in str(exc_info.value).lower() or "404" in str(exc_info.value)
+        assert "not found" in str(exc_info.value).lower() or "404" in str(
+            exc_info.value
+        )
 
     @vcr.use_cassette("email_verification_get_results.yaml")
     def test_get_email_verification_results_not_found(
@@ -159,16 +165,18 @@ class TestEmailVerificationIntegration:
     ):
         """Test getting results for a non-existent email verification list returns 404."""
         from mailersend.exceptions import ResourceNotFoundError
-        
+
         results_request = EmailVerificationResultsRequest(
             email_verification_id=verification_get_request.email_verification_id,
-            query_params=EmailVerificationResultsQueryParams(page=1, limit=10)
+            query_params=EmailVerificationResultsQueryParams(page=1, limit=10),
         )
 
         with pytest.raises(ResourceNotFoundError) as exc_info:
             email_client.email_verification.get_results(results_request)
 
-        assert "not found" in str(exc_info.value).lower() or "404" in str(exc_info.value)
+        assert "not found" in str(exc_info.value).lower() or "404" in str(
+            exc_info.value
+        )
 
     @vcr.use_cassette("email_verification_comprehensive_workflow.yaml")
     def test_comprehensive_email_verification_workflow(
@@ -181,7 +189,9 @@ class TestEmailVerificationIntegration:
             name="Comprehensive Test List", emails=sample_email_list
         )
 
-        create_response = email_client.email_verification.create_verification(create_request)
+        create_response = email_client.email_verification.create_verification(
+            create_request
+        )
         assert isinstance(create_response, APIResponse)
         assert create_response.status_code in [200, 201]
 
@@ -212,12 +222,10 @@ class TestEmailVerificationIntegration:
         # Step 4: Get results (may not be ready immediately in real scenario)
         results_request = EmailVerificationResultsRequest(
             email_verification_id=created_list_id,
-            query_params=EmailVerificationResultsQueryParams(page=1, limit=10)
+            query_params=EmailVerificationResultsQueryParams(page=1, limit=10),
         )
 
-        results_response = email_client.email_verification.get_results(
-            results_request
-        )
+        results_response = email_client.email_verification.get_results(results_request)
         assert isinstance(results_response, APIResponse)
         assert results_response.status_code == 200
 
@@ -240,7 +248,9 @@ class TestEmailVerificationIntegration:
     @vcr.use_cassette("email_verification_api_response_structure.yaml")
     def test_api_response_structure(self, email_client, basic_list_request):
         """Test that API response has the expected structure and metadata."""
-        response = email_client.email_verification.list_verifications(basic_list_request)
+        response = email_client.email_verification.list_verifications(
+            basic_list_request
+        )
 
         assert isinstance(response, APIResponse)
         assert response.status_code == 200
@@ -266,17 +276,16 @@ class TestEmailVerificationIntegration:
 
         # Should raise an AttributeError for invalid request type
         error_str = str(exc_info.value).lower()
-        assert (
-            "attribute" in error_str
-            or "to_query_params" in error_str
-        )
+        assert "attribute" in error_str or "to_query_params" in error_str
 
     @vcr.use_cassette("email_verification_empty_list.yaml")
     def test_list_email_verification_empty_result(
         self, email_client, basic_list_request
     ):
         """Test listing email verification lists when no lists exist."""
-        response = email_client.email_verification.list_verifications(basic_list_request)
+        response = email_client.email_verification.list_verifications(
+            basic_list_request
+        )
 
         assert isinstance(response, APIResponse)
         assert response.status_code == 200

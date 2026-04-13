@@ -45,9 +45,7 @@ class Templates(BaseResource):
         self.logger.debug("Fetching templates with params: %s", params)
 
         # Make API call
-        response = self.client.request(
-            method="GET", path="templates", params=params
-        )
+        response = self.client.request(method="GET", path="templates", params=params)
 
         # Create standardized response
         return self._create_response(response)

@@ -31,9 +31,7 @@ class SmsActivity(BaseResource):
         self.logger.debug("Listing SMS activities with params: %s", params)
 
         # Make API request
-        response = self.client.request(
-            method="GET", path="sms-activity", params=params
-        )
+        response = self.client.request(method="GET", path="sms-activity", params=params)
 
         return self._create_response(response)
 

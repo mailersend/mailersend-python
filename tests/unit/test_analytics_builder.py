@@ -12,12 +12,7 @@ class TestAnalyticsBuilder:
 
     def test_basic_analytics_builder(self):
         """Test basic analytics builder construction"""
-        request = (
-            AnalyticsBuilder()
-            .date_from(1443651141)
-            .date_to(1443661141)
-            .build()
-        )
+        request = AnalyticsBuilder().date_from(1443651141).date_to(1443661141).build()
 
         assert isinstance(request, AnalyticsRequest)
         assert request.date_from == 1443651141
@@ -75,12 +70,7 @@ class TestAnalyticsBuilder:
 
     def test_timestamp_date_methods(self):
         """Test timestamp-based date methods"""
-        request = (
-            AnalyticsBuilder()
-            .date_from(1443651141)
-            .date_to(1443661141)
-            .build()
-        )
+        request = AnalyticsBuilder().date_from(1443651141).date_to(1443661141).build()
 
         assert request.date_from == 1443651141
         assert request.date_to == 1443661141
@@ -538,12 +528,7 @@ class TestAnalyticsBuilderEdgeCases:
 
     def test_empty_lists_in_build(self):
         """Test handling of empty lists in build"""
-        request = (
-            AnalyticsBuilder()
-            .date_from(1443651141)
-            .date_to(1443661141)
-            .build()
-        )
+        request = AnalyticsBuilder().date_from(1443651141).date_to(1443661141).build()
 
         # Empty lists should be None in the final request
         assert request.recipient_id is None
@@ -568,17 +553,9 @@ class TestAnalyticsBuilderEdgeCases:
         builder1 = AnalyticsBuilder().domain_id("domain-1").tags("tag-1")
         builder2 = AnalyticsBuilder().domain_id("domain-2").tags("tag-2")
 
-        request1 = (
-            builder1.date_from(1443651141)
-            .date_to(1443661141)
-            .build()
-        )
+        request1 = builder1.date_from(1443651141).date_to(1443661141).build()
 
-        request2 = (
-            builder2.date_from(1443651141)
-            .date_to(1443661141)
-            .build()
-        )
+        request2 = builder2.date_from(1443651141).date_to(1443661141).build()
 
         assert request1.domain_id == "domain-1"
         assert request1.tags == ["tag-1"]
