@@ -194,10 +194,12 @@ class TestEmailBuilder:
             .cc("single-cc@example.com", "Single CC")
             .cc([{"email": "array-cc1@example.com", "name": "Array CC 1"}])
             .bcc("single-bcc@example.com")
-            .bcc_many([
-                {"email": "many-bcc1@example.com", "name": "Many BCC 1"},
-                {"email": "many-bcc2@example.com"}
-            ])
+            .bcc_many(
+                [
+                    {"email": "many-bcc1@example.com", "name": "Many BCC 1"},
+                    {"email": "many-bcc2@example.com"},
+                ]
+            )
             .subject("Mixed Usage Test")
             .text("Test message")
             .build()
@@ -222,11 +224,15 @@ class TestEmailBuilder:
         builder = EmailBuilder()
 
         # Test invalid type for cc method
-        with pytest.raises(ValidationError, match="Email must be a string or list of recipient objects"):
+        with pytest.raises(
+            ValidationError, match="Email must be a string or list of recipient objects"
+        ):
             builder.cc(123)  # Invalid type
 
         # Test invalid type for bcc method
-        with pytest.raises(ValidationError, match="Email must be a string or list of recipient objects"):
+        with pytest.raises(
+            ValidationError, match="Email must be a string or list of recipient objects"
+        ):
             builder.bcc({"email": "test@example.com"})  # Dict instead of string or list
 
     def test_content_methods(self):

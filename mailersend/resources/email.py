@@ -58,9 +58,7 @@ class Email(BaseResource):
         self.logger.debug("Sending bulk email request to MailerSend API")
         self.logger.debug("Payload: %s", payload)
 
-        response = self.client.request(
-            method="POST", path="bulk-email", body=payload
-        )
+        response = self.client.request(method="POST", path="bulk-email", body=payload)
 
         return self._create_response(response)
 
@@ -76,8 +74,6 @@ class Email(BaseResource):
         """
         self.logger.debug("Getting bulk email status")
 
-        response = self.client.request(
-            method="GET", path=f"bulk-email/{bulk_email_id}"
-        )
+        response = self.client.request(method="GET", path=f"bulk-email/{bulk_email_id}")
 
         return self._create_response(response)

@@ -54,9 +54,7 @@ class Users(BaseResource):
         self.logger.debug("Getting user: %s", request.user_id)
 
         # Make API call
-        response = self.client.request(
-            method="GET", path=f"users/{request.user_id}"
-        )
+        response = self.client.request(method="GET", path=f"users/{request.user_id}")
 
         # Create standardized response
         return self._create_response(response)
@@ -115,9 +113,7 @@ class Users(BaseResource):
         self.logger.debug("Deleting user: %s", request.user_id)
 
         # Make API call
-        response = self.client.request(
-            method="DELETE", path=f"users/{request.user_id}"
-        )
+        response = self.client.request(method="DELETE", path=f"users/{request.user_id}")
 
         # Create standardized response
         return self._create_response(response, None)

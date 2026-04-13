@@ -76,7 +76,9 @@ class DmarcMonitoring(BaseResource):
         body = request.model_dump(
             by_alias=True, exclude_none=True, exclude={"monitor_id"}
         )
-        self.logger.debug("Updating DMARC monitor %s with body: %s", request.monitor_id, body)
+        self.logger.debug(
+            "Updating DMARC monitor %s with body: %s", request.monitor_id, body
+        )
 
         response = self.client.request(
             method="PUT", path=f"dmarc-monitoring/{request.monitor_id}", body=body

@@ -26,9 +26,7 @@ class SmsMessages(BaseResource):
             request.query_params.limit,
         )
 
-        response = self.client.request(
-            method="GET", path="sms-messages", params=params
-        )
+        response = self.client.request(method="GET", path="sms-messages", params=params)
 
         return self._create_response(response)
 

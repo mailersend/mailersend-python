@@ -480,7 +480,9 @@ class TestModelValidation:
     def test_update_request_requires_wanted_dmarc_record(self):
         """Test DmarcMonitoringUpdateRequest raises error for empty wanted_dmarc_record."""
         with pytest.raises(Exception):
-            DmarcMonitoringUpdateRequest(monitor_id="monitor-123", wanted_dmarc_record="")
+            DmarcMonitoringUpdateRequest(
+                monitor_id="monitor-123", wanted_dmarc_record=""
+            )
 
     def test_list_query_params_default_values(self):
         """Test DmarcMonitoringListQueryParams has correct defaults."""

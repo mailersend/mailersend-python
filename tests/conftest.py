@@ -17,53 +17,47 @@ def sanitize_response_body(response):
     try:
         # Get the response body - handle different VCR formats
         body = None
-        if response.get('body'):
-            if isinstance(response['body'], dict):
-                body = response['body'].get('string')
+        if response.get("body"):
+            if isinstance(response["body"], dict):
+                body = response["body"].get("string")
             else:
-                body = response['body']
-        
+                body = response["body"]
+
         if not body:
             return response
-            
+
         # Convert bytes to string if needed
         if isinstance(body, bytes):
-            body = body.decode('utf-8')
-        
+            body = body.decode("utf-8")
+
         # Only process if it looks like JSON (contains accessToken)
-        if 'accessToken' in body or 'mlsn.' in body:
+        if "accessToken" in body or "mlsn." in body:
             # Replace accessToken values
             body = re.sub(
                 r'"accessToken":"mlsn\.[a-f0-9]+"',
                 '"accessToken":"***FILTERED***"',
-                body
+                body,
             )
-            
+
             # Replace any other mlsn tokens
-            body = re.sub(
-                r'"mlsn\.[a-f0-9]{60,}"',
-                '"***FILTERED***"',
-                body
-            )
-            
+            body = re.sub(r'"mlsn\.[a-f0-9]{60,}"', '"***FILTERED***"', body)
+
             # Replace preview tokens
             body = re.sub(
-                r'"preview":"mlsn\.[a-f0-9]+"',
-                '"preview":"***FILTERED***"',
-                body
+                r'"preview":"mlsn\.[a-f0-9]+"', '"preview":"***FILTERED***"', body
             )
-            
+
             # Update the response body (convert back to bytes for VCR)
-            if isinstance(response['body'], dict):
-                response['body']['string'] = body.encode('utf-8')
+            if isinstance(response["body"], dict):
+                response["body"]["string"] = body.encode("utf-8")
             else:
-                response['body'] = body.encode('utf-8')
-        
+                response["body"] = body.encode("utf-8")
+
     except Exception as e:
         print(f"[VCR FILTER] Error sanitizing response: {e}")
         # Don't fail tests if filtering fails
         pass
-    
+
     return response
 
 
@@ -77,6 +71,7 @@ vcr = VCR(
     serializer="yaml",
     before_record_response=sanitize_response_body,
 )
+
 
 # Create a pytest fixture for the API key
 @pytest.fixture

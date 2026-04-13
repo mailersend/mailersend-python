@@ -19,9 +19,7 @@ from mailersend.builders.inbound import InboundBuilder
 @pytest.fixture
 def basic_inbound_list_request():
     """Basic inbound list request"""
-    return InboundListRequest(
-        query_params=InboundListQueryParams(page=1, limit=10)
-    )
+    return InboundListRequest(query_params=InboundListQueryParams(page=1, limit=10))
 
 
 @pytest.fixture
@@ -50,8 +48,10 @@ def sample_inbound_data(test_domain_id):
         "match_filter": InboundFilterGroup(type="match_all"),
         "match_type": "all",
         "forwards": [
-            InboundForward(type="email", value=os.environ.get("SDK_FROM_EMAIL", "test@example.com"))
-        ]
+            InboundForward(
+                type="email", value=os.environ.get("SDK_FROM_EMAIL", "test@example.com")
+            )
+        ],
     }
 
 
@@ -66,28 +66,24 @@ def sample_inbound_data_with_domain(test_domain_id):
         "inbound_priority": 50,
         "catch_filter": InboundFilterGroup(
             type="catch_recipient",
-            filters=[
-                {
-                    "comparer": "equal",
-                    "value": "support@example.com"
-                }
-            ]
+            filters=[{"comparer": "equal", "value": "support@example.com"}],
         ),
         "catch_type": "all",
         "match_filter": InboundFilterGroup(
             type="match_sender",
-            filters=[
-                {
-                    "comparer": "contains",
-                    "value": "@trusted.com"
-                }
-            ]
+            filters=[{"comparer": "contains", "value": "@trusted.com"}],
         ),
         "match_type": "all",
         "forwards": [
-            InboundForward(type="email", value=os.environ.get("SDK_FROM_EMAIL", "test@example.com")),
-            InboundForward(type="webhook", value="https://example.com/webhook", secret="webhook-secret")
-        ]
+            InboundForward(
+                type="email", value=os.environ.get("SDK_FROM_EMAIL", "test@example.com")
+            ),
+            InboundForward(
+                type="webhook",
+                value="https://example.com/webhook",
+                secret="webhook-secret",
+            ),
+        ],
     }
 
 
@@ -146,9 +142,7 @@ class TestInboundIntegration:
         """Test listing inbound routes filtered by domain."""
         request = InboundListRequest(
             query_params=InboundListQueryParams(
-                page=1, 
-                limit=10, 
-                domain_id=test_domain_id
+                page=1, limit=10, domain_id=test_domain_id
             )
         )
 
@@ -162,17 +156,23 @@ class TestInboundIntegration:
     def test_get_inbound_route_not_found(self, email_client, inbound_get_request):
         """Test getting a non-existent inbound route returns 404."""
         from mailersend.exceptions import ResourceNotFoundError
-        
+
         with pytest.raises(ResourceNotFoundError) as exc_info:
             email_client.inbound.get(inbound_get_request)
 
-        assert "not found" in str(exc_info.value).lower() or "404" in str(exc_info.value) or "could not be found" in str(exc_info.value).lower()
+        assert (
+            "not found" in str(exc_info.value).lower()
+            or "404" in str(exc_info.value)
+            or "could not be found" in str(exc_info.value).lower()
+        )
 
     @vcr.use_cassette("inbound_create_invalid_domain.yaml")
-    def test_create_inbound_route_invalid_domain(self, email_client, sample_inbound_data):
+    def test_create_inbound_route_invalid_domain(
+        self, email_client, sample_inbound_data
+    ):
         """Test creating inbound route with invalid domain ID returns 422."""
         from mailersend.exceptions import BadRequestError
-        
+
         request = InboundCreateRequest(
             domain_id="invalid-domain-id",
             **{k: v for k, v in sample_inbound_data.items() if k != "domain_id"}
@@ -182,13 +182,17 @@ class TestInboundIntegration:
             email_client.inbound.create(request)
 
         error_str = str(exc_info.value).lower()
-        assert "domain" in error_str and ("invalid" in error_str or "required" in error_str or "not found" in error_str)
+        assert "domain" in error_str and (
+            "invalid" in error_str
+            or "required" in error_str
+            or "not found" in error_str
+        )
 
     @vcr.use_cassette("inbound_update_not_found.yaml")
     def test_update_inbound_route_not_found(self, email_client, sample_inbound_data):
         """Test updating non-existent inbound route returns 404."""
         from mailersend.exceptions import ResourceNotFoundError
-        
+
         request = InboundUpdateRequest(
             inbound_id="test-inbound-id",
             **{k: v for k, v in sample_inbound_data.items() if k != "domain_id"}
@@ -197,21 +201,27 @@ class TestInboundIntegration:
         with pytest.raises(ResourceNotFoundError) as exc_info:
             email_client.inbound.update(request)
 
-        assert "not found" in str(exc_info.value).lower() or "404" in str(exc_info.value) or "could not be found" in str(exc_info.value).lower()
+        assert (
+            "not found" in str(exc_info.value).lower()
+            or "404" in str(exc_info.value)
+            or "could not be found" in str(exc_info.value).lower()
+        )
 
     @vcr.use_cassette("inbound_delete_not_found.yaml")
     def test_delete_inbound_route_not_found(self, email_client, inbound_get_request):
         """Test deleting non-existent inbound route returns 404."""
         from mailersend.exceptions import ResourceNotFoundError
-        
-        delete_request = InboundDeleteRequest(
-            inbound_id=inbound_get_request.inbound_id
-        )
+
+        delete_request = InboundDeleteRequest(inbound_id=inbound_get_request.inbound_id)
 
         with pytest.raises(ResourceNotFoundError) as exc_info:
             email_client.inbound.delete(delete_request)
 
-        assert "not found" in str(exc_info.value).lower() or "404" in str(exc_info.value) or "could not be found" in str(exc_info.value).lower()
+        assert (
+            "not found" in str(exc_info.value).lower()
+            or "404" in str(exc_info.value)
+            or "could not be found" in str(exc_info.value).lower()
+        )
 
     @vcr.use_cassette("inbound_validation_error.yaml")
     def test_list_inbound_routes_validation_error(self, email_client):
@@ -222,10 +232,7 @@ class TestInboundIntegration:
 
         # Should raise an AttributeError for invalid request type
         error_str = str(exc_info.value).lower()
-        assert (
-            "attribute" in error_str
-            or "to_query_params" in error_str
-        )
+        assert "attribute" in error_str or "to_query_params" in error_str
 
     @vcr.use_cassette("inbound_api_response_structure.yaml")
     def test_api_response_structure(self, email_client, basic_inbound_list_request):
@@ -249,7 +256,9 @@ class TestInboundIntegration:
             assert len(response.request_id) > 0
 
     @vcr.use_cassette("inbound_empty_result.yaml")
-    def test_list_inbound_routes_empty_result(self, email_client, basic_inbound_list_request):
+    def test_list_inbound_routes_empty_result(
+        self, email_client, basic_inbound_list_request
+    ):
         """Test listing inbound routes when no routes exist."""
         response = email_client.inbound.list(basic_inbound_list_request)
 
@@ -271,7 +280,7 @@ class TestInboundIntegration:
                 domain_enabled=False,
                 catch_filter=InboundFilterGroup(type="catch_all"),
                 match_filter=InboundFilterGroup(type="match_all"),
-                forwards=[InboundForward(type="email", value="test@example.com")]
+                forwards=[InboundForward(type="email", value="test@example.com")],
             )
         assert "domain id is required" in str(exc_info.value).lower()
 
@@ -283,7 +292,7 @@ class TestInboundIntegration:
                 domain_enabled=False,
                 catch_filter=InboundFilterGroup(type="catch_all"),
                 match_filter=InboundFilterGroup(type="match_all"),
-                forwards=[InboundForward(type="email", value="test@example.com")]
+                forwards=[InboundForward(type="email", value="test@example.com")],
             )
         assert "name is required" in str(exc_info.value).lower()
 
@@ -295,7 +304,7 @@ class TestInboundIntegration:
                 domain_enabled=False,
                 catch_filter=InboundFilterGroup(type="catch_all"),
                 match_filter=InboundFilterGroup(type="match_all"),
-                forwards=[]
+                forwards=[],
             )
         assert "at least one forward is required" in str(exc_info.value).lower()
 
@@ -307,9 +316,12 @@ class TestInboundIntegration:
                 domain_enabled=True,
                 catch_filter=InboundFilterGroup(type="catch_all"),
                 match_filter=InboundFilterGroup(type="match_all"),
-                forwards=[InboundForward(type="email", value="test@example.com")]
+                forwards=[InboundForward(type="email", value="test@example.com")],
             )
-        assert "inbound domain is required when domain is enabled" in str(exc_info.value).lower()
+        assert (
+            "inbound domain is required when domain is enabled"
+            in str(exc_info.value).lower()
+        )
 
         # Test domain enabled without inbound_priority
         with pytest.raises(ValueError) as exc_info:
@@ -320,9 +332,12 @@ class TestInboundIntegration:
                 inbound_domain="test.com",
                 catch_filter=InboundFilterGroup(type="catch_all"),
                 match_filter=InboundFilterGroup(type="match_all"),
-                forwards=[InboundForward(type="email", value="test@example.com")]
+                forwards=[InboundForward(type="email", value="test@example.com")],
             )
-        assert "inbound priority is required when domain is enabled" in str(exc_info.value).lower()
+        assert (
+            "inbound priority is required when domain is enabled"
+            in str(exc_info.value).lower()
+        )
 
 
 class TestInboundBuilderIntegration:
@@ -333,9 +348,9 @@ class TestInboundBuilderIntegration:
         """Test basic inbound list using builder."""
         builder = InboundBuilder()
         request = builder.page(1).limit(10).build_list_request()
-        
+
         response = email_client.inbound.list(request)
-        
+
         assert isinstance(response, APIResponse)
         assert response.status_code == 200
 
@@ -343,10 +358,12 @@ class TestInboundBuilderIntegration:
     def test_builder_list_with_domain_filter(self, email_client, test_domain_id):
         """Test inbound list with domain filter using builder."""
         builder = InboundBuilder()
-        request = builder.page(1).limit(10).domain_id(test_domain_id).build_list_request()
-        
+        request = (
+            builder.page(1).limit(10).domain_id(test_domain_id).build_list_request()
+        )
+
         response = email_client.inbound.list(request)
-        
+
         assert isinstance(response, APIResponse)
         assert response.status_code == 200
 
@@ -354,10 +371,10 @@ class TestInboundBuilderIntegration:
     def test_builder_get_not_found(self, email_client):
         """Test getting non-existent inbound route using builder."""
         from mailersend.exceptions import ResourceNotFoundError
-        
+
         builder = InboundBuilder()
         request = builder.inbound_id("test-inbound-id").build_get_request()
-        
+
         with pytest.raises(ResourceNotFoundError):
             email_client.inbound.get(request)
 
@@ -365,16 +382,17 @@ class TestInboundBuilderIntegration:
     def test_builder_create_invalid_domain(self, email_client):
         """Test creating inbound route with invalid domain using builder."""
         from mailersend.exceptions import BadRequestError
-        
+
         builder = InboundBuilder()
-        request = (builder
-            .domain_id("invalid-domain-id")
+        request = (
+            builder.domain_id("invalid-domain-id")
             .name("Test Route")
             .domain_enabled(False)
             .catch_all()
             .match_all()
             .add_email_forward("test@example.com")
-            .build_create_request())
-        
+            .build_create_request()
+        )
+
         with pytest.raises(BadRequestError):
             email_client.inbound.create(request)
