@@ -25,6 +25,7 @@ from .sms_recipients import SmsRecipients
 from .sms_webhooks import SmsWebhooks
 from .sms_inbounds import SmsInbounds
 from .other import Other
+from .dmarc_monitoring import DmarcMonitoring
 
 __all__ = [
     "BaseResource",
@@ -50,4 +51,5 @@ __all__ = [
     "SmsWebhooks",
     "SmsInbounds",
     "Other",
+    "DmarcMonitoring",
 ]
