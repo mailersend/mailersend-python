@@ -5,6 +5,7 @@ A comprehensive Python SDK for the MailerSend API.
 """
 
 from .client import MailerSendClient
+from .async_client import AsyncMailerSendClient
 
 # Import all builders for better UX - users can import everything from main module
 from .builders.email import EmailBuilder
@@ -65,8 +66,9 @@ from .exceptions import (
 __version__ = "2.0.0"
 
 __all__ = [
-    # Core client
+    # Core clients
     "MailerSendClient",
+    "AsyncMailerSendClient",
     # Builders - All available from main module for better UX
     "EmailBuilder",
     "ActivityBuilder",

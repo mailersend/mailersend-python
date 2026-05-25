@@ -1,11 +1,10 @@
-from typing import Optional
-import requests
+from typing import Any, Optional
 
 
 class MailerSendError(Exception):
     """Base exception for all MailerSend API errors."""
 
-    def __init__(self, message: str, response: Optional[requests.Response] = None):
+    def __init__(self, message: str, response: Optional[Any] = None):
         self.message = message
         self.response = response
         super().__init__(self.message)

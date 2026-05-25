@@ -2,7 +2,7 @@
 SMS Activity API resource.
 """
 
-from .base import BaseResource
+from .base import AsyncBaseResource, BaseResource
 from ..models.sms_activity import SmsActivityListRequest, SmsMessageGetRequest
 from ..models.base import APIResponse
 
@@ -52,4 +52,39 @@ class SmsActivity(BaseResource):
             method="GET", path=f"sms-messages/{request.sms_message_id}"
         )
 
+        return self._create_response(response)
+
+
+class AsyncSmsActivity(AsyncBaseResource):
+    """Async resource for SMS Activity API endpoints."""
+
+    async def list(self, request: SmsActivityListRequest) -> APIResponse:
+        """
+        Get a list of SMS activities.
+
+        Args:
+            request: SMS activity list request
+
+        Returns:
+            API response with SMS activities
+        """
+        params = request.to_query_params()
+        response = await self.client.request(
+            method="GET", path="sms-activity", params=params
+        )
+        return self._create_response(response)
+
+    async def get(self, request: SmsMessageGetRequest) -> APIResponse:
+        """
+        Get activity of a single SMS message.
+
+        Args:
+            request: SMS message get request
+
+        Returns:
+            API response with SMS message activity
+        """
+        response = await self.client.request(
+            method="GET", path=f"sms-messages/{request.sms_message_id}"
+        )
         return self._create_response(response)

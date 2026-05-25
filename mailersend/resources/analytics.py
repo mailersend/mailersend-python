@@ -2,7 +2,7 @@
 
 from typing import Dict, Any, Optional
 
-from .base import BaseResource
+from .base import AsyncBaseResource, BaseResource
 from ..models.analytics import AnalyticsRequest
 from ..models.base import APIResponse
 
@@ -128,4 +128,76 @@ class Analytics(BaseResource):
             params.pop(field, None)
             params.pop(f"{field}[]", None)
 
+        return params
+
+
+class AsyncAnalytics(AsyncBaseResource):
+    """Async client for interacting with the MailerSend Analytics API."""
+
+    async def get_activity_by_date(self, request: AnalyticsRequest) -> APIResponse:
+        """
+        Retrieve analytics data grouped by date.
+
+        Args:
+            request: AnalyticsRequest with date range and filtering options
+
+        Returns:
+            APIResponse with activity data grouped by date
+        """
+        params = self._build_query_params(request)
+        response = await self.client.request("GET", "analytics/date", params=params)
+        return self._create_response(response)
+
+    async def get_opens_by_country(self, request: AnalyticsRequest) -> APIResponse:
+        """
+        Retrieve analytics data grouped by country.
+
+        Args:
+            request: AnalyticsRequest with date range and filtering options
+
+        Returns:
+            APIResponse with opens data grouped by country
+        """
+        params = self._build_query_params(request, exclude_fields=["event", "group_by"])
+        response = await self.client.request("GET", "analytics/country", params=params)
+        return self._create_response(response)
+
+    async def get_opens_by_user_agent(self, request: AnalyticsRequest) -> APIResponse:
+        """
+        Retrieve analytics data grouped by user agent name.
+
+        Args:
+            request: AnalyticsRequest with date range and filtering options
+
+        Returns:
+            APIResponse with opens data grouped by user agent
+        """
+        params = self._build_query_params(request, exclude_fields=["event", "group_by"])
+        response = await self.client.request("GET", "analytics/ua-name", params=params)
+        return self._create_response(response)
+
+    async def get_opens_by_reading_environment(
+        self, request: AnalyticsRequest
+    ) -> APIResponse:
+        """
+        Retrieve analytics data grouped by reading environment.
+
+        Args:
+            request: AnalyticsRequest with date range and filtering options
+
+        Returns:
+            APIResponse with opens data grouped by reading environment
+        """
+        params = self._build_query_params(request, exclude_fields=["event", "group_by"])
+        response = await self.client.request("GET", "analytics/ua-type", params=params)
+        return self._create_response(response)
+
+    def _build_query_params(
+        self, request: AnalyticsRequest, exclude_fields: Optional[list] = None
+    ) -> Dict[str, Any]:
+        exclude_fields = exclude_fields or []
+        params = request.model_dump(by_alias=True, exclude_none=True)
+        for field in exclude_fields:
+            params.pop(field, None)
+            params.pop(f"{field}[]", None)
         return params

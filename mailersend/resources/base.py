@@ -1,8 +1,7 @@
 import logging
-from typing import Dict, Any, Optional, Union, List, TypeVar, Type, ClassVar
+from typing import Any, Dict, Optional, Union, List, TypeVar, Type, ClassVar
 from ..models.base import BaseModel, ModelList, APIResponse
 from ..logging import get_logger
-import requests
 
 T = TypeVar("T", bound=BaseModel)
 
@@ -23,9 +22,7 @@ class BaseResource:
         self.client = client
         self.logger = logger or get_logger()
 
-    def _create_response(
-        self, response: requests.Response, data: Any = None
-    ) -> APIResponse:
+    def _create_response(self, response: Any, data: Any = None) -> APIResponse:
         """
         Create unified APIResponse object from HTTP response.
 
@@ -53,9 +50,7 @@ class BaseResource:
             ),
         )
 
-    def _parse_int_header(
-        self, response: requests.Response, header: str
-    ) -> Optional[int]:
+    def _parse_int_header(self, response: Any, header: str) -> Optional[int]:
         """
         Safely parse integer header value.
 
@@ -110,3 +105,9 @@ class BaseResource:
             return [cls(**item) for item in response_data]
 
         return response_data
+
+
+class AsyncBaseResource(BaseResource):
+    """Base class for all async API resources."""
+
+    pass

@@ -1,6 +1,6 @@
 """SMS Numbers resource"""
 
-from .base import BaseResource
+from .base import AsyncBaseResource, BaseResource
 from ..models.sms_numbers import (
     SmsNumbersListRequest,
     SmsNumberGetRequest,
@@ -93,4 +93,71 @@ class SmsNumbers(BaseResource):
             method="DELETE", path=f"sms-numbers/{request.sms_number_id}"
         )
 
+        return self._create_response(response)
+
+
+class AsyncSmsNumbers(AsyncBaseResource):
+    """Async client for the MailerSend SMS Phone Numbers API."""
+
+    async def list(self, request: SmsNumbersListRequest) -> APIResponse:
+        """
+        Get a list of SMS phone numbers.
+
+        Args:
+            request: SmsNumbersListRequest with query parameters
+
+        Returns:
+            APIResponse with SMS phone numbers list and metadata
+        """
+        params = request.to_query_params()
+        response = await self.client.request(
+            method="GET", path="sms-numbers", params=params
+        )
+        return self._create_response(response)
+
+    async def get(self, request: SmsNumberGetRequest) -> APIResponse:
+        """
+        Get a specific SMS phone number.
+
+        Args:
+            request: SmsNumberGetRequest with SMS number ID
+
+        Returns:
+            APIResponse with SMS phone number data and metadata
+        """
+        response = await self.client.request(
+            method="GET", path=f"sms-numbers/{request.sms_number_id}"
+        )
+        return self._create_response(response)
+
+    async def update(self, request: SmsNumberUpdateRequest) -> APIResponse:
+        """
+        Update a specific SMS phone number.
+
+        Args:
+            request: SmsNumberUpdateRequest with SMS number ID and update data
+
+        Returns:
+            APIResponse with updated SMS phone number data and metadata
+        """
+        response = await self.client.request(
+            method="PUT",
+            path=f"sms-numbers/{request.sms_number_id}",
+            body=request.to_json(),
+        )
+        return self._create_response(response)
+
+    async def delete(self, request: SmsNumberDeleteRequest) -> APIResponse:
+        """
+        Delete a specific SMS phone number.
+
+        Args:
+            request: SmsNumberDeleteRequest with SMS number ID
+
+        Returns:
+            APIResponse with deletion confirmation and metadata
+        """
+        response = await self.client.request(
+            method="DELETE", path=f"sms-numbers/{request.sms_number_id}"
+        )
         return self._create_response(response)

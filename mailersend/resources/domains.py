@@ -2,7 +2,7 @@
 
 from typing import Optional
 
-from .base import BaseResource
+from .base import AsyncBaseResource, BaseResource
 from ..models.domains import (
     DomainListRequest,
     DomainCreateRequest,
@@ -201,4 +201,146 @@ class Domains(BaseResource):
             method="GET", path=f"domains/{request.domain_id}/verify"
         )
 
+        return self._create_response(response)
+
+
+class AsyncDomains(AsyncBaseResource):
+    """Async client for interacting with the MailerSend Domains API."""
+
+    async def list_domains(
+        self, request: Optional[DomainListRequest] = None
+    ) -> APIResponse:
+        """
+        Retrieve a list of domains.
+
+        Args:
+            request: Optional DomainListRequest with filtering and pagination options
+
+        Returns:
+            APIResponse with list of domains
+        """
+        if not request:
+            query_params = DomainListQueryParams()
+            params = query_params.to_query_params()
+        else:
+            params = request.to_query_params()
+        response = await self.client.request(
+            method="GET", path="domains", params=params
+        )
+        return self._create_response(response)
+
+    async def get_domain(self, request: DomainGetRequest) -> APIResponse:
+        """
+        Retrieve information about a single domain.
+
+        Args:
+            request: DomainGetRequest with domain ID
+
+        Returns:
+            APIResponse with domain information
+        """
+        response = await self.client.request(
+            method="GET", path=f"domains/{request.domain_id}"
+        )
+        return self._create_response(response)
+
+    async def create_domain(self, request: DomainCreateRequest) -> APIResponse:
+        """
+        Create a new domain.
+
+        Args:
+            request: DomainCreateRequest with domain creation details
+
+        Returns:
+            APIResponse with created domain information
+        """
+        body = request.model_dump(by_alias=True, exclude_none=True)
+        response = await self.client.request(method="POST", path="domains", body=body)
+        return self._create_response(response)
+
+    async def delete_domain(self, request: DomainDeleteRequest) -> APIResponse:
+        """
+        Delete a domain.
+
+        Args:
+            request: DomainDeleteRequest with domain ID to delete
+
+        Returns:
+            APIResponse (204 No Content on success)
+        """
+        response = await self.client.request(
+            method="DELETE", path=f"domains/{request.domain_id}"
+        )
+        return self._create_response(response)
+
+    async def get_domain_recipients(
+        self, request: DomainRecipientsRequest
+    ) -> APIResponse:
+        """
+        Retrieve recipients for a domain.
+
+        Args:
+            request: DomainRecipientsRequest with domain ID and pagination options
+
+        Returns:
+            APIResponse with list of domain recipients
+        """
+        params = request.to_query_params()
+        response = await self.client.request(
+            method="GET", path=f"domains/{request.domain_id}/recipients", params=params
+        )
+        return self._create_response(response)
+
+    async def update_domain_settings(
+        self, request: DomainUpdateSettingsRequest
+    ) -> APIResponse:
+        """
+        Update domain settings.
+
+        Args:
+            request: DomainUpdateSettingsRequest with domain ID and settings to update
+
+        Returns:
+            APIResponse with updated domain information
+        """
+        body = request.model_dump(
+            by_alias=True, exclude_none=True, exclude={"domain_id"}
+        )
+        response = await self.client.request(
+            method="PUT", path=f"domains/{request.domain_id}/settings", body=body
+        )
+        return self._create_response(response)
+
+    async def get_domain_dns_records(
+        self, request: DomainDnsRecordsRequest
+    ) -> APIResponse:
+        """
+        Retrieve DNS records for a domain.
+
+        Args:
+            request: DomainDnsRecordsRequest with domain ID
+
+        Returns:
+            APIResponse with domain DNS records
+        """
+        response = await self.client.request(
+            method="GET", path=f"domains/{request.domain_id}/dns-records"
+        )
+        return self._create_response(response)
+
+    async def get_domain_verification_status(
+        self, request: DomainVerificationRequest
+    ) -> APIResponse:
+        """
+        Retrieve verification status for a domain.
+
+        Args:
+            request: DomainVerificationRequest with domain ID
+
+        Returns:
+            APIResponse with domain verification status
+        """
+        response = await self.client.request(
+            method="GET", path=f"domains/{request.domain_id}/verify"
+        )
         return self._create_response(response)

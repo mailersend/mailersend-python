@@ -2,7 +2,7 @@
 
 from typing import Optional
 
-from .base import BaseResource
+from .base import AsyncBaseResource, BaseResource
 from ..models.base import APIResponse
 from ..models.dmarc_monitoring import (
     DmarcMonitoringListRequest,
@@ -212,6 +212,180 @@ class DmarcMonitoring(BaseResource):
         )
 
         response = self.client.request(
+            method="DELETE",
+            path=f"dmarc-monitoring/{request.monitor_id}/favorite/{request.ip}",
+        )
+        return self._create_response(response)
+
+
+class AsyncDmarcMonitoring(AsyncBaseResource):
+    """Async client for the MailerSend DMARC Monitoring API."""
+
+    async def list_monitors(
+        self, request: Optional[DmarcMonitoringListRequest] = None
+    ) -> APIResponse:
+        """
+        Retrieve a list of DMARC monitors.
+
+        Args:
+            request: Optional DmarcMonitoringListRequest with pagination options
+
+        Returns:
+            APIResponse with list of monitors
+        """
+        if request is None:
+            request = DmarcMonitoringListRequest(
+                query_params=DmarcMonitoringListQueryParams()
+            )
+        params = request.to_query_params()
+        response = await self.client.request(
+            method="GET", path="dmarc-monitoring", params=params
+        )
+        return self._create_response(response)
+
+    async def create_monitor(
+        self, request: DmarcMonitoringCreateRequest
+    ) -> APIResponse:
+        """
+        Create a new DMARC monitor.
+
+        Args:
+            request: DmarcMonitoringCreateRequest with domain_id
+
+        Returns:
+            APIResponse with created monitor information
+        """
+        body = request.model_dump(by_alias=True, exclude_none=True)
+        response = await self.client.request(
+            method="POST", path="dmarc-monitoring", body=body
+        )
+        return self._create_response(response)
+
+    async def update_monitor(
+        self, request: DmarcMonitoringUpdateRequest
+    ) -> APIResponse:
+        """
+        Update a DMARC monitor.
+
+        Args:
+            request: DmarcMonitoringUpdateRequest with monitor_id and wanted_dmarc_record
+
+        Returns:
+            APIResponse with updated monitor information
+        """
+        body = request.model_dump(
+            by_alias=True, exclude_none=True, exclude={"monitor_id"}
+        )
+        response = await self.client.request(
+            method="PUT", path=f"dmarc-monitoring/{request.monitor_id}", body=body
+        )
+        return self._create_response(response)
+
+    async def delete_monitor(
+        self, request: DmarcMonitoringDeleteRequest
+    ) -> APIResponse:
+        """
+        Delete a DMARC monitor.
+
+        Args:
+            request: DmarcMonitoringDeleteRequest with monitor_id
+
+        Returns:
+            APIResponse
+        """
+        response = await self.client.request(
+            method="DELETE", path=f"dmarc-monitoring/{request.monitor_id}"
+        )
+        return self._create_response(response)
+
+    async def get_aggregated_report(
+        self, request: DmarcMonitoringReportRequest
+    ) -> APIResponse:
+        """
+        Get aggregated DMARC reports for a monitor.
+
+        Args:
+            request: DmarcMonitoringReportRequest with monitor_id and pagination options
+
+        Returns:
+            APIResponse with aggregated report data
+        """
+        params = request.to_query_params()
+        response = await self.client.request(
+            method="GET",
+            path=f"dmarc-monitoring/{request.monitor_id}/report",
+            params=params,
+        )
+        return self._create_response(response)
+
+    async def get_ip_report(
+        self, request: DmarcMonitoringIpReportRequest
+    ) -> APIResponse:
+        """
+        Get IP-specific DMARC reports for a monitor.
+
+        Args:
+            request: DmarcMonitoringIpReportRequest with monitor_id, ip, and pagination options
+
+        Returns:
+            APIResponse with IP-specific report data
+        """
+        params = request.to_query_params()
+        response = await self.client.request(
+            method="GET",
+            path=f"dmarc-monitoring/{request.monitor_id}/report/{request.ip}",
+            params=params,
+        )
+        return self._create_response(response)
+
+    async def get_report_sources(
+        self, request: DmarcMonitoringReportSourcesRequest
+    ) -> APIResponse:
+        """
+        Get report sources for a DMARC monitor.
+
+        Args:
+            request: DmarcMonitoringReportSourcesRequest with monitor_id
+
+        Returns:
+            APIResponse with report sources data
+        """
+        response = await self.client.request(
+            method="GET", path=f"dmarc-monitoring/{request.monitor_id}/report-sources"
+        )
+        return self._create_response(response)
+
+    async def mark_ip_favorite(
+        self, request: DmarcMonitoringFavoriteRequest
+    ) -> APIResponse:
+        """
+        Mark an IP address as favorite for a DMARC monitor.
+
+        Args:
+            request: DmarcMonitoringFavoriteRequest with monitor_id and ip
+
+        Returns:
+            APIResponse
+        """
+        response = await self.client.request(
+            method="PUT",
+            path=f"dmarc-monitoring/{request.monitor_id}/favorite/{request.ip}",
+        )
+        return self._create_response(response)
+
+    async def remove_ip_favorite(
+        self, request: DmarcMonitoringFavoriteRequest
+    ) -> APIResponse:
+        """
+        Remove an IP address from favorites for a DMARC monitor.
+
+        Args:
+            request: DmarcMonitoringFavoriteRequest with monitor_id and ip
+
+        Returns:
+            APIResponse
+        """
+        response = await self.client.request(
             method="DELETE",
             path=f"dmarc-monitoring/{request.monitor_id}/favorite/{request.ip}",
         )

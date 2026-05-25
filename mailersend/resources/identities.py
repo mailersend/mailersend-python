@@ -11,7 +11,7 @@ from ..models.identities import (
     IdentityDeleteByEmailRequest,
 )
 from ..models.base import APIResponse
-from .base import BaseResource
+from .base import AsyncBaseResource, BaseResource
 
 
 class IdentitiesResource(BaseResource):
@@ -210,4 +210,144 @@ class IdentitiesResource(BaseResource):
             method="DELETE", path=f"identities/email/{request.email}"
         )
 
+        return self._create_response(response)
+
+
+class AsyncIdentitiesResource(AsyncBaseResource):
+    """Async resource for managing sender identities."""
+
+    async def list_identities(self, request: IdentityListRequest) -> APIResponse:
+        """
+        Get a list of sender identities.
+
+        Args:
+            request: The identity list request containing filtering and pagination parameters
+
+        Returns:
+            APIResponse containing the identities list response
+        """
+        params = request.to_query_params()
+        response = await self.client.request(
+            method="GET", path="identities", params=params if params else None
+        )
+        return self._create_response(response)
+
+    async def create_identity(self, request: IdentityCreateRequest) -> APIResponse:
+        """
+        Create a new sender identity.
+
+        Args:
+            request: The identity creation request with all required data
+
+        Returns:
+            APIResponse containing the created identity response
+        """
+        data = request.model_dump(by_alias=True, exclude_none=True)
+        response = await self.client.request(
+            method="POST", path="identities", body=data
+        )
+        return self._create_response(response)
+
+    async def get_identity(self, request: IdentityGetRequest) -> APIResponse:
+        """
+        Get a single sender identity by ID.
+
+        Args:
+            request: The identity get request with identity ID
+
+        Returns:
+            APIResponse containing the identity data
+        """
+        response = await self.client.request(
+            method="GET", path=f"identities/{request.identity_id}"
+        )
+        return self._create_response(response)
+
+    async def get_identity_by_email(
+        self, request: IdentityGetByEmailRequest
+    ) -> APIResponse:
+        """
+        Get a single sender identity by email.
+
+        Args:
+            request: The identity get by email request
+
+        Returns:
+            APIResponse containing the identity data
+        """
+        response = await self.client.request(
+            method="GET", path=f"identities/email/{request.email}"
+        )
+        return self._create_response(response)
+
+    async def update_identity(self, request: IdentityUpdateRequest) -> APIResponse:
+        """
+        Update a sender identity by ID.
+
+        Args:
+            request: The identity update request with identity ID and update data
+
+        Returns:
+            APIResponse containing the updated identity
+        """
+        data = request.model_dump(
+            by_alias=True, exclude_none=True, exclude={"identity_id"}
+        )
+        response = await self.client.request(
+            method="PUT",
+            path=f"identities/{request.identity_id}",
+            body=data if data else None,
+        )
+        return self._create_response(response)
+
+    async def update_identity_by_email(
+        self, request: IdentityUpdateByEmailRequest
+    ) -> APIResponse:
+        """
+        Update a sender identity by email.
+
+        Args:
+            request: The identity update by email request
+
+        Returns:
+            APIResponse containing the updated identity
+        """
+        data = request.model_dump(by_alias=True, exclude_none=True, exclude={"email"})
+        response = await self.client.request(
+            method="PUT",
+            path=f"identities/email/{request.email}",
+            body=data if data else None,
+        )
+        return self._create_response(response)
+
+    async def delete_identity(self, request: IdentityDeleteRequest) -> APIResponse:
+        """
+        Delete a sender identity by ID.
+
+        Args:
+            request: The identity delete request with identity ID
+
+        Returns:
+            APIResponse containing the deletion result
+        """
+        response = await self.client.request(
+            method="DELETE", path=f"identities/{request.identity_id}"
+        )
+        return self._create_response(response)
+
+    async def delete_identity_by_email(
+        self, request: IdentityDeleteByEmailRequest
+    ) -> APIResponse:
+        """
+        Delete a sender identity by email.
+
+        Args:
+            request: The identity delete by email request
+
+        Returns:
+            APIResponse containing the deletion result
+        """
+        response = await self.client.request(
+            method="DELETE", path=f"identities/email/{request.email}"
+        )
         return self._create_response(response)
