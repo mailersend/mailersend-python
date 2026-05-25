@@ -175,7 +175,11 @@ class TestWebhooksBuilder:
             "recipient.on_hold_added",
             "recipient.on_hold_removed",
         ]
-        expected_all_events = expected_activity_events + expected_system_events + expected_recipient_events
+        expected_all_events = (
+            expected_activity_events
+            + expected_system_events
+            + expected_recipient_events
+        )
         assert builder._events == expected_all_events
 
     def test_method_chaining(self):

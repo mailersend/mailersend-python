@@ -2,7 +2,7 @@
 
 from typing import Optional
 
-from .base import BaseResource
+from .base import AsyncBaseResource, BaseResource
 from ..models.base import APIResponse
 from ..models.templates import (
     TemplatesListRequest,
@@ -89,4 +89,58 @@ class Templates(BaseResource):
         )
 
         # Create standardized response
+        return self._create_response(response)
+
+
+class AsyncTemplates(AsyncBaseResource):
+    """Async client for interacting with the MailerSend Templates API."""
+
+    async def list_templates(
+        self, request: Optional[TemplatesListRequest] = None
+    ) -> APIResponse:
+        """
+        Retrieve a list of templates.
+
+        Args:
+            request: Optional TemplatesListRequest with filtering and pagination options
+
+        Returns:
+            APIResponse with TemplatesListResponse data
+        """
+        if request is None:
+            request = TemplatesListRequest()
+        params = request.to_query_params()
+        response = await self.client.request(
+            method="GET", path="templates", params=params
+        )
+        return self._create_response(response)
+
+    async def get_template(self, request: TemplateGetRequest) -> APIResponse:
+        """
+        Retrieve information about a single template.
+
+        Args:
+            request: TemplateGetRequest with template ID
+
+        Returns:
+            APIResponse with TemplateResponse data
+        """
+        response = await self.client.request(
+            method="GET", path=f"templates/{request.template_id}"
+        )
+        return self._create_response(response)
+
+    async def delete_template(self, request: TemplateDeleteRequest) -> APIResponse:
+        """
+        Delete a template.
+
+        Args:
+            request: TemplateDeleteRequest with template ID to delete
+
+        Returns:
+            APIResponse with empty data
+        """
+        response = await self.client.request(
+            method="DELETE", path=f"templates/{request.template_id}"
+        )
         return self._create_response(response)

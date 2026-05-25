@@ -1,6 +1,6 @@
 """Messages resource"""
 
-from .base import BaseResource
+from .base import AsyncBaseResource, BaseResource
 from ..models.messages import (
     MessagesListRequest,
     MessageGetRequest,
@@ -56,4 +56,39 @@ class Messages(BaseResource):
             method="GET", path=f"messages/{request.message_id}"
         )
 
+        return self._create_response(response)
+
+
+class AsyncMessages(AsyncBaseResource):
+    """Async client for interacting with the MailerSend Messages API."""
+
+    async def list_messages(self, request: MessagesListRequest) -> APIResponse:
+        """
+        Retrieve a list of messages.
+
+        Args:
+            request: MessagesListRequest with pagination options
+
+        Returns:
+            APIResponse containing the messages list response
+        """
+        params = request.to_query_params()
+        response = await self.client.request(
+            method="GET", path="messages", params=params if params else None
+        )
+        return self._create_response(response)
+
+    async def get_message(self, request: MessageGetRequest) -> APIResponse:
+        """
+        Retrieve information about a single message.
+
+        Args:
+            request: MessageGetRequest with message ID
+
+        Returns:
+            APIResponse containing the message response
+        """
+        response = await self.client.request(
+            method="GET", path=f"messages/{request.message_id}"
+        )
         return self._create_response(response)

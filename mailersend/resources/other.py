@@ -1,6 +1,6 @@
 """Other endpoints resource"""
 
-from .base import BaseResource
+from .base import AsyncBaseResource, BaseResource
 from ..models.base import APIResponse
 
 
@@ -22,4 +22,18 @@ class Other(BaseResource):
 
         response = self.client.request(method="GET", path="api-quota")
 
+        return self._create_response(response)
+
+
+class AsyncOther(AsyncBaseResource):
+    """Async client for other MailerSend API endpoints."""
+
+    async def get_quota(self) -> APIResponse:
+        """
+        Get API quota information.
+
+        Returns:
+            APIResponse with quota information including remaining requests
+        """
+        response = await self.client.request(method="GET", path="api-quota")
         return self._create_response(response)
