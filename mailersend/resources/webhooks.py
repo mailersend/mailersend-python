@@ -1,6 +1,6 @@
 """Webhooks resource for MailerSend SDK."""
 
-from .base import AsyncBaseResource, BaseResource
+from .base import BaseResource
 from ..models.base import APIResponse
 from ..models.webhooks import (
     WebhooksListRequest,
@@ -32,10 +32,7 @@ class Webhooks(BaseResource):
         self.logger.debug("Listing webhooks with params: %s", params)
 
         # Make API call
-        response = self.client.request(method="GET", path="webhooks", params=params)
-
-        # Create standardized response
-        return self._create_response(response)
+        return self._request(method="GET", path="webhooks", params=params)
 
     def get_webhook(self, request: WebhookGetRequest) -> APIResponse:
         """Get a single webhook by ID.
@@ -50,12 +47,9 @@ class Webhooks(BaseResource):
         self.logger.debug("Webhook get request: %s", request)
 
         # Make API call
-        response = self.client.request(
+        return self._request(
             method="GET", path=f"webhooks/{request.webhook_id}"
         )
-
-        # Create standardized response
-        return self._create_response(response)
 
     def create_webhook(self, request: WebhookCreateRequest) -> APIResponse:
         """Create a new webhook.
@@ -74,10 +68,7 @@ class Webhooks(BaseResource):
         self.logger.debug("Creating webhook: %s", request.name)
 
         # Make API call
-        response = self.client.request(method="POST", path="webhooks", body=data)
-
-        # Create standardized response
-        return self._create_response(response)
+        return self._request(method="POST", path="webhooks", body=data)
 
     def update_webhook(self, request: WebhookUpdateRequest) -> APIResponse:
         """Update an existing webhook.
@@ -97,12 +88,9 @@ class Webhooks(BaseResource):
         self.logger.debug("Updating webhook: %s", data)
 
         # Make API call
-        response = self.client.request(
+        return self._request(
             method="PUT", path=f"webhooks/{request.webhook_id}", body=data
         )
-
-        # Create standardized response
-        return self._create_response(response)
 
     def delete_webhook(self, request: WebhookDeleteRequest) -> APIResponse:
         """Delete a webhook.
@@ -117,84 +105,9 @@ class Webhooks(BaseResource):
         self.logger.debug("Webhook delete request: %s", request)
 
         # Make API call
-        response = self.client.request(
+        return self._request(
             method="DELETE", path=f"webhooks/{request.webhook_id}"
         )
 
-        # Create standardized response
-        return self._create_response(response)
 
-
-class AsyncWebhooks(AsyncBaseResource):
-    """Async Webhooks API resource."""
-
-    async def list_webhooks(self, request: WebhooksListRequest) -> APIResponse:
-        """List webhooks for a domain.
-
-        Args:
-            request: The webhooks list request
-
-        Returns:
-            APIResponse with WebhooksListResponse data
-        """
-        params = request.to_query_params()
-        response = await self.client.request(
-            method="GET", path="webhooks", params=params
-        )
-        return self._create_response(response)
-
-    async def get_webhook(self, request: WebhookGetRequest) -> APIResponse:
-        """Get a single webhook by ID.
-
-        Args:
-            request: The webhook get request
-
-        Returns:
-            APIResponse with WebhookResponse data
-        """
-        response = await self.client.request(
-            method="GET", path=f"webhooks/{request.webhook_id}"
-        )
-        return self._create_response(response)
-
-    async def create_webhook(self, request: WebhookCreateRequest) -> APIResponse:
-        """Create a new webhook.
-
-        Args:
-            request: The webhook create request
-
-        Returns:
-            APIResponse with WebhookResponse data
-        """
-        data = request.model_dump(exclude_none=True)
-        response = await self.client.request(method="POST", path="webhooks", body=data)
-        return self._create_response(response)
-
-    async def update_webhook(self, request: WebhookUpdateRequest) -> APIResponse:
-        """Update an existing webhook.
-
-        Args:
-            request: The webhook update request
-
-        Returns:
-            APIResponse with WebhookResponse data
-        """
-        data = request.model_dump(exclude_none=True, exclude={"webhook_id"})
-        response = await self.client.request(
-            method="PUT", path=f"webhooks/{request.webhook_id}", body=data
-        )
-        return self._create_response(response)
-
-    async def delete_webhook(self, request: WebhookDeleteRequest) -> APIResponse:
-        """Delete a webhook.
-
-        Args:
-            request: The webhook delete request
-
-        Returns:
-            APIResponse with empty data
-        """
-        response = await self.client.request(
-            method="DELETE", path=f"webhooks/{request.webhook_id}"
-        )
-        return self._create_response(response)
+AsyncWebhooks = Webhooks

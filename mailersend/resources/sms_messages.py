@@ -1,6 +1,6 @@
 """SMS Messages resource."""
 
-from .base import AsyncBaseResource, BaseResource
+from .base import BaseResource
 from ..models.sms_messages import SmsMessagesListRequest, SmsMessageGetRequest
 from ..models.base import APIResponse
 
@@ -26,9 +26,7 @@ class SmsMessages(BaseResource):
             request.query_params.limit,
         )
 
-        response = self.client.request(method="GET", path="sms-messages", params=params)
-
-        return self._create_response(response)
+        return self._request(method="GET", path="sms-messages", params=params)
 
     def get_sms_message(self, request: SmsMessageGetRequest) -> APIResponse:
         """
@@ -42,43 +40,9 @@ class SmsMessages(BaseResource):
         """
         self.logger.debug("Getting SMS message: %s", request.sms_message_id)
 
-        response = self.client.request(
+        return self._request(
             method="GET", path=f"sms-messages/{request.sms_message_id}"
         )
 
-        return self._create_response(response)
 
-
-class AsyncSmsMessages(AsyncBaseResource):
-    """Async SMS Messages resource."""
-
-    async def list_sms_messages(self, request: SmsMessagesListRequest) -> APIResponse:
-        """
-        List SMS messages.
-
-        Args:
-            request: SmsMessagesListRequest object containing query parameters
-
-        Returns:
-            APIResponse: Response containing list of SMS messages
-        """
-        params = request.to_query_params()
-        response = await self.client.request(
-            method="GET", path="sms-messages", params=params
-        )
-        return self._create_response(response)
-
-    async def get_sms_message(self, request: SmsMessageGetRequest) -> APIResponse:
-        """
-        Get a single SMS message.
-
-        Args:
-            request: SmsMessageGetRequest object containing SMS message ID
-
-        Returns:
-            APIResponse: Response containing SMS message details
-        """
-        response = await self.client.request(
-            method="GET", path=f"sms-messages/{request.sms_message_id}"
-        )
-        return self._create_response(response)
+AsyncSmsMessages = SmsMessages

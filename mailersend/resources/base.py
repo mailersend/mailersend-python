@@ -1,5 +1,6 @@
+import inspect
 import logging
-from typing import Any, Dict, Optional, Union, List, TypeVar, Type, ClassVar
+from typing import Any, Dict, Optional, Union, TypeVar, Type, ClassVar
 from ..models.base import BaseModel, ModelList, APIResponse
 from ..logging import get_logger
 
@@ -49,6 +50,26 @@ class BaseResource:
                 response, "x-apiquota-remaining"
             ),
         )
+
+    def _request(self, method, path, params=None, body=None, data=None) -> Any:
+        kwargs = {"method": method, "path": path}
+        if params is not None:
+            kwargs["params"] = params
+        if body is not None:
+            kwargs["body"] = body
+        result = self.client.request(**kwargs)
+
+        if inspect.isawaitable(result):
+            async def resolve():
+                response = await result
+                if data is not None:
+                    return self._create_response(response, data(response))
+                return self._create_response(response)
+            return resolve()
+
+        if data is not None:
+            return self._create_response(result, data(result))
+        return self._create_response(result)
 
     def _parse_int_header(self, response: Any, header: str) -> Optional[int]:
         """

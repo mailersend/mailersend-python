@@ -38,7 +38,8 @@ class TestAsyncAnalytics:
     async def test_get_activity_by_date_calls_correct_endpoint(self):
         await self.resource.get_activity_by_date(_make_request())
         call = self.mock_client.request.call_args
-        assert call.args == ("GET", "analytics/date")
+        assert call.kwargs["method"] == "GET"
+        assert call.kwargs["path"] == "analytics/date"
 
     async def test_get_activity_by_date_passes_params(self):
         await self.resource.get_activity_by_date(_make_request())
@@ -54,7 +55,8 @@ class TestAsyncAnalytics:
     async def test_get_opens_by_country_calls_correct_endpoint(self):
         await self.resource.get_opens_by_country(_make_request())
         call = self.mock_client.request.call_args
-        assert call.args == ("GET", "analytics/country")
+        assert call.kwargs["method"] == "GET"
+        assert call.kwargs["path"] == "analytics/country"
 
     async def test_get_opens_by_country_excludes_event_and_group_by(self):
         await self.resource.get_opens_by_country(_make_request())
@@ -71,7 +73,8 @@ class TestAsyncAnalytics:
     async def test_get_opens_by_user_agent_calls_correct_endpoint(self):
         await self.resource.get_opens_by_user_agent(_make_request())
         call = self.mock_client.request.call_args
-        assert call.args == ("GET", "analytics/ua-name")
+        assert call.kwargs["method"] == "GET"
+        assert call.kwargs["path"] == "analytics/ua-name"
 
     async def test_get_opens_by_reading_environment_returns_api_response(self):
         result = await self.resource.get_opens_by_reading_environment(_make_request())
@@ -80,4 +83,5 @@ class TestAsyncAnalytics:
     async def test_get_opens_by_reading_environment_calls_correct_endpoint(self):
         await self.resource.get_opens_by_reading_environment(_make_request())
         call = self.mock_client.request.call_args
-        assert call.args == ("GET", "analytics/ua-type")
+        assert call.kwargs["method"] == "GET"
+        assert call.kwargs["path"] == "analytics/ua-type"
