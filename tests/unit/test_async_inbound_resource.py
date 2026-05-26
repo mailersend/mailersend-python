@@ -1,8 +1,8 @@
-"""Tests for AsyncInboundResource."""
+"""Tests for InboundResource."""
 
 from unittest.mock import AsyncMock, MagicMock
 
-from mailersend.resources.inbound import AsyncInboundResource
+from mailersend.resources.inbound import InboundResource
 from mailersend.models.base import APIResponse
 from mailersend.models.inbound import (
     InboundListRequest,
@@ -34,10 +34,10 @@ def _make_forward():
     return InboundForward(type="email", value="forward@example.com")
 
 
-class TestAsyncInboundResource:
+class TestInboundResource:
     def setup_method(self):
         self.mock_client = _make_mock_client()
-        self.resource = AsyncInboundResource(self.mock_client)
+        self.resource = InboundResource(self.mock_client)
 
     async def test_list_returns_api_response(self):
         request = InboundListRequest(query_params=InboundListQueryParams())

@@ -186,4 +186,3 @@ class Domains(BaseResource):
         )
 
 
-AsyncDomains = Domains

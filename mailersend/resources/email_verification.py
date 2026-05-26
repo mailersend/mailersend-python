@@ -202,4 +202,3 @@ class EmailVerification(BaseResource):
         )
 
 
-AsyncEmailVerification = EmailVerification

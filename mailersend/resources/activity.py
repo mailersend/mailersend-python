@@ -48,4 +48,3 @@ class Activity(BaseResource):
         return self._request(method="GET", path=f"activities/{request.activity_id}")
 
 
-AsyncActivity = Activity

@@ -1,8 +1,8 @@
-"""Tests for AsyncDomains resource."""
+"""Tests for Domains resource."""
 
 from unittest.mock import AsyncMock, MagicMock
 
-from mailersend.resources.domains import AsyncDomains
+from mailersend.resources.domains import Domains
 from mailersend.models.domains import (
     DomainListRequest,
     DomainListQueryParams,
@@ -28,10 +28,10 @@ def _make_mock_client():
     return client
 
 
-class TestAsyncDomains:
+class TestDomains:
     def setup_method(self):
         self.mock_client = _make_mock_client()
-        self.resource = AsyncDomains(self.mock_client)
+        self.resource = Domains(self.mock_client)
 
     async def test_list_domains_returns_api_response(self):
         result = await self.resource.list_domains()

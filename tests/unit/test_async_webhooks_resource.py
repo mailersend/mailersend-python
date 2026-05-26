@@ -1,8 +1,8 @@
-"""Tests for AsyncWebhooks resource."""
+"""Tests for Webhooks resource."""
 
 from unittest.mock import AsyncMock, MagicMock
 
-from mailersend.resources.webhooks import AsyncWebhooks
+from mailersend.resources.webhooks import Webhooks
 from mailersend.models.base import APIResponse
 from mailersend.models.webhooks import (
     WebhooksListRequest,
@@ -24,10 +24,10 @@ def _make_mock_client():
     return client
 
 
-class TestAsyncWebhooks:
+class TestWebhooks:
     def setup_method(self):
         self.mock_client = _make_mock_client()
-        self.resource = AsyncWebhooks(self.mock_client)
+        self.resource = Webhooks(self.mock_client)
 
     async def test_list_webhooks_returns_api_response(self):
         request = WebhooksListRequest(

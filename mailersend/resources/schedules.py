@@ -81,4 +81,3 @@ class Schedules(BaseResource):
         )
 
 
-AsyncSchedules = Schedules

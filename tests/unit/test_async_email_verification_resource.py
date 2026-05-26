@@ -1,8 +1,8 @@
-"""Tests for AsyncEmailVerification resource."""
+"""Tests for EmailVerification resource."""
 
 from unittest.mock import AsyncMock, MagicMock
 
-from mailersend.resources.email_verification import AsyncEmailVerification
+from mailersend.resources.email_verification import EmailVerification
 from mailersend.models.base import APIResponse
 from mailersend.models.email_verification import (
     EmailVerifyRequest,
@@ -28,10 +28,10 @@ def _make_mock_client():
     return client
 
 
-class TestAsyncEmailVerification:
+class TestEmailVerification:
     def setup_method(self):
         self.mock_client = _make_mock_client()
-        self.resource = AsyncEmailVerification(self.mock_client)
+        self.resource = EmailVerification(self.mock_client)
 
     async def test_verify_email_returns_api_response(self):
         result = await self.resource.verify_email(

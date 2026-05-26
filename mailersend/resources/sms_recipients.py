@@ -69,4 +69,3 @@ class SmsRecipients(BaseResource):
         )
 
 
-AsyncSmsRecipients = SmsRecipients

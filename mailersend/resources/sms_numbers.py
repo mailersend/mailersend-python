@@ -88,4 +88,3 @@ class SmsNumbers(BaseResource):
         )
 
 
-AsyncSmsNumbers = SmsNumbers

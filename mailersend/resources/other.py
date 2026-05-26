@@ -23,4 +23,3 @@ class Other(BaseResource):
         return self._request(method="GET", path="api-quota")
 
 
-AsyncOther = Other

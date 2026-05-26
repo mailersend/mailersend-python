@@ -75,4 +75,3 @@ class Email(BaseResource):
         return self._request(method="GET", path=f"bulk-email/{bulk_email_id}")
 
 
-AsyncEmail = Email

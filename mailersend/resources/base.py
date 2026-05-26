@@ -128,7 +128,4 @@ class BaseResource:
         return response_data
 
 
-class AsyncBaseResource(BaseResource):
-    """Base class for all async API resources."""
-
     pass

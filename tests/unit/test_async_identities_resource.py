@@ -1,8 +1,8 @@
-"""Tests for AsyncIdentitiesResource."""
+"""Tests for IdentitiesResource."""
 
 from unittest.mock import AsyncMock, MagicMock
 
-from mailersend.resources.identities import AsyncIdentitiesResource
+from mailersend.resources.identities import IdentitiesResource
 from mailersend.models.base import APIResponse
 from mailersend.models.identities import (
     IdentityListRequest,
@@ -27,10 +27,10 @@ def _make_mock_client():
     return client
 
 
-class TestAsyncIdentitiesResource:
+class TestIdentitiesResource:
     def setup_method(self):
         self.mock_client = _make_mock_client()
-        self.resource = AsyncIdentitiesResource(self.mock_client)
+        self.resource = IdentitiesResource(self.mock_client)
 
     async def test_list_identities_returns_api_response(self):
         request = IdentityListRequest(query_params=IdentityListQueryParams())

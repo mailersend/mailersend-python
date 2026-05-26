@@ -1,8 +1,8 @@
-"""Tests for AsyncTemplates resource."""
+"""Tests for Templates resource."""
 
 from unittest.mock import AsyncMock, MagicMock
 
-from mailersend.resources.templates import AsyncTemplates
+from mailersend.resources.templates import Templates
 from mailersend.models.base import APIResponse
 from mailersend.models.templates import (
     TemplatesListRequest,
@@ -22,10 +22,10 @@ def _make_mock_client():
     return client
 
 
-class TestAsyncTemplates:
+class TestTemplates:
     def setup_method(self):
         self.mock_client = _make_mock_client()
-        self.resource = AsyncTemplates(self.mock_client)
+        self.resource = Templates(self.mock_client)
 
     async def test_list_templates_returns_api_response(self):
         result = await self.resource.list_templates()

@@ -30,4 +30,3 @@ class SmsSending(BaseResource):
         return self._request(method="POST", path="sms", body=payload)
 
 
-AsyncSmsSending = SmsSending

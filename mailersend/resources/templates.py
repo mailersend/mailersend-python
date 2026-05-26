@@ -83,4 +83,3 @@ class Templates(BaseResource):
         )
 
 
-AsyncTemplates = Templates

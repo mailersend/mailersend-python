@@ -205,4 +205,3 @@ class DmarcMonitoring(BaseResource):
         )
 
 
-AsyncDmarcMonitoring = DmarcMonitoring

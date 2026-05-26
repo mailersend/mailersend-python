@@ -1,8 +1,8 @@
-"""Tests for AsyncSchedules resource."""
+"""Tests for Schedules resource."""
 
 from unittest.mock import AsyncMock, MagicMock
 
-from mailersend.resources.schedules import AsyncSchedules
+from mailersend.resources.schedules import Schedules
 from mailersend.models.base import APIResponse
 from mailersend.models.schedules import (
     SchedulesListRequest,
@@ -22,10 +22,10 @@ def _make_mock_client():
     return client
 
 
-class TestAsyncSchedules:
+class TestSchedules:
     def setup_method(self):
         self.mock_client = _make_mock_client()
-        self.resource = AsyncSchedules(self.mock_client)
+        self.resource = Schedules(self.mock_client)
 
     async def test_list_schedules_returns_api_response(self):
         request = SchedulesListRequest(query_params=SchedulesListQueryParams())

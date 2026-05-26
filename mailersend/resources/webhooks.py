@@ -110,4 +110,3 @@ class Webhooks(BaseResource):
         )
 
 
-AsyncWebhooks = Webhooks
