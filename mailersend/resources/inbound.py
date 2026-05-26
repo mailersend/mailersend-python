@@ -123,4 +123,3 @@ class InboundResource(BaseResource):
         return self._request(method="DELETE", path=f"inbound/{request.inbound_id}")
 
 
-AsyncInboundResource = InboundResource

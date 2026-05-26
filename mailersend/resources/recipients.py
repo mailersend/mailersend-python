@@ -390,4 +390,3 @@ class Recipients(BaseResource):
         )
 
 
-AsyncRecipients = Recipients

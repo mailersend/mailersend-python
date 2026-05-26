@@ -45,4 +45,3 @@ class SmsMessages(BaseResource):
         )
 
 
-AsyncSmsMessages = SmsMessages

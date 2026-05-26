@@ -1,8 +1,8 @@
-"""Tests for AsyncAnalytics resource."""
+"""Tests for Analytics resource."""
 
 from unittest.mock import AsyncMock, MagicMock
 
-from mailersend.resources.analytics import AsyncAnalytics
+from mailersend.resources.analytics import Analytics
 from mailersend.models.analytics import AnalyticsRequest
 from mailersend.models.base import APIResponse
 
@@ -26,10 +26,10 @@ def _make_request():
     )
 
 
-class TestAsyncAnalytics:
+class TestAnalytics:
     def setup_method(self):
         self.mock_client = _make_mock_client()
-        self.resource = AsyncAnalytics(self.mock_client)
+        self.resource = Analytics(self.mock_client)
 
     async def test_get_activity_by_date_returns_api_response(self):
         result = await self.resource.get_activity_by_date(_make_request())

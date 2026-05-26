@@ -53,4 +53,3 @@ class Messages(BaseResource):
         return self._request(method="GET", path=f"messages/{request.message_id}")
 
 
-AsyncMessages = Messages

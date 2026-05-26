@@ -1,8 +1,8 @@
-"""Tests for AsyncUsers resource."""
+"""Tests for Users resource."""
 
 from unittest.mock import AsyncMock, MagicMock
 
-from mailersend.resources.users import AsyncUsers
+from mailersend.resources.users import Users
 from mailersend.models.base import APIResponse
 from mailersend.models.users import (
     UsersListRequest,
@@ -29,10 +29,10 @@ def _make_mock_client():
     return client
 
 
-class TestAsyncUsers:
+class TestUsers:
     def setup_method(self):
         self.mock_client = _make_mock_client()
-        self.resource = AsyncUsers(self.mock_client)
+        self.resource = Users(self.mock_client)
 
     async def test_list_users_returns_api_response(self):
         result = await self.resource.list_users(UsersListRequest())

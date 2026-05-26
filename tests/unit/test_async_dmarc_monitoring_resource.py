@@ -1,8 +1,8 @@
-"""Tests for AsyncDmarcMonitoring resource."""
+"""Tests for DmarcMonitoring resource."""
 
 from unittest.mock import AsyncMock, MagicMock
 
-from mailersend.resources.dmarc_monitoring import AsyncDmarcMonitoring
+from mailersend.resources.dmarc_monitoring import DmarcMonitoring
 from mailersend.models.base import APIResponse
 from mailersend.models.dmarc_monitoring import (
     DmarcMonitoringListRequest,
@@ -28,10 +28,10 @@ def _make_mock_client():
     return client
 
 
-class TestAsyncDmarcMonitoring:
+class TestDmarcMonitoring:
     def setup_method(self):
         self.mock_client = _make_mock_client()
-        self.resource = AsyncDmarcMonitoring(self.mock_client)
+        self.resource = DmarcMonitoring(self.mock_client)
 
     async def test_list_monitors_returns_api_response(self):
         result = await self.resource.list_monitors()

@@ -165,4 +165,3 @@ class Users(BaseResource):
         return self._request(method="DELETE", path=f"invites/{request.invite_id}", data=lambda r: None)
 
 
-AsyncUsers = Users

@@ -197,4 +197,3 @@ class IdentitiesResource(BaseResource):
         )
 
 
-AsyncIdentitiesResource = IdentitiesResource

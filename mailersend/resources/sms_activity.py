@@ -51,4 +51,3 @@ class SmsActivity(BaseResource):
         )
 
 
-AsyncSmsActivity = SmsActivity

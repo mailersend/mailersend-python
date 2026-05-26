@@ -103,4 +103,3 @@ class SmsWebhooks(BaseResource):
         )
 
 
-AsyncSmsWebhooks = SmsWebhooks

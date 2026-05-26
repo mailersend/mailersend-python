@@ -1,9 +1,9 @@
-"""Tests for AsyncEmail resource."""
+"""Tests for Email resource."""
 
 import pytest
 from unittest.mock import AsyncMock, MagicMock
 
-from mailersend.resources.email import AsyncEmail
+from mailersend.resources.email import Email
 from mailersend.models.base import APIResponse
 from mailersend.models.email import EmailRequest, EmailContact
 
@@ -32,10 +32,10 @@ def _make_email_request():
     )
 
 
-class TestAsyncEmail:
+class TestEmail:
     def setup_method(self):
         self.mock_client = _make_mock_client()
-        self.resource = AsyncEmail(self.mock_client)
+        self.resource = Email(self.mock_client)
 
     async def test_send_returns_api_response(self):
         self.mock_client.request.return_value = _make_mock_response()

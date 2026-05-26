@@ -115,4 +115,3 @@ class Tokens(BaseResource):
         return self._request(method="DELETE", path=f"token/{request.token_id}")
 
 
-AsyncTokens = Tokens

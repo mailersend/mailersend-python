@@ -124,4 +124,3 @@ class SmtpUsers(BaseResource):
         )
 
 
-AsyncSmtpUsers = SmtpUsers

@@ -1,8 +1,8 @@
-"""Tests for AsyncActivity resource."""
+"""Tests for Activity resource."""
 
 from unittest.mock import AsyncMock, MagicMock
 
-from mailersend.resources.activity import AsyncActivity
+from mailersend.resources.activity import Activity
 from mailersend.models.activity import (
     ActivityRequest,
     ActivityQueryParams,
@@ -21,10 +21,10 @@ def _make_mock_client():
     return client
 
 
-class TestAsyncActivity:
+class TestActivity:
     def setup_method(self):
         self.mock_client = _make_mock_client()
-        self.resource = AsyncActivity(self.mock_client)
+        self.resource = Activity(self.mock_client)
 
     async def test_get_returns_api_response(self):
         request = ActivityRequest(

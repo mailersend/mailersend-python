@@ -1,8 +1,8 @@
-"""Tests for AsyncOther resource."""
+"""Tests for Other resource."""
 
 from unittest.mock import AsyncMock, MagicMock
 
-from mailersend.resources.other import AsyncOther
+from mailersend.resources.other import Other
 from mailersend.models.base import APIResponse
 
 
@@ -16,10 +16,10 @@ def _make_mock_client():
     return client
 
 
-class TestAsyncOther:
+class TestOther:
     def setup_method(self):
         self.mock_client = _make_mock_client()
-        self.resource = AsyncOther(self.mock_client)
+        self.resource = Other(self.mock_client)
 
     async def test_get_quota_returns_api_response(self):
         result = await self.resource.get_quota()

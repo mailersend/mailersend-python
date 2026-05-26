@@ -96,4 +96,3 @@ class SmsInbounds(BaseResource):
         )
 
 
-AsyncSmsInbounds = SmsInbounds

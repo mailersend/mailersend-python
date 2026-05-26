@@ -15,30 +15,30 @@ from .exceptions import (
     ResourceNotFoundError,
     ServerError,
 )
-from .resources.activity import AsyncActivity
-from .resources.analytics import AsyncAnalytics
-from .resources.dmarc_monitoring import AsyncDmarcMonitoring
-from .resources.domains import AsyncDomains
-from .resources.email import AsyncEmail
-from .resources.email_verification import AsyncEmailVerification
-from .resources.identities import AsyncIdentitiesResource
-from .resources.inbound import AsyncInboundResource
-from .resources.messages import AsyncMessages
-from .resources.other import AsyncOther
-from .resources.recipients import AsyncRecipients
-from .resources.schedules import AsyncSchedules
-from .resources.sms_activity import AsyncSmsActivity
-from .resources.sms_inbounds import AsyncSmsInbounds
-from .resources.sms_messages import AsyncSmsMessages
-from .resources.sms_numbers import AsyncSmsNumbers
-from .resources.sms_recipients import AsyncSmsRecipients
-from .resources.sms_sending import AsyncSmsSending
-from .resources.sms_webhooks import AsyncSmsWebhooks
-from .resources.smtp_users import AsyncSmtpUsers
-from .resources.templates import AsyncTemplates
-from .resources.tokens import AsyncTokens
-from .resources.users import AsyncUsers
-from .resources.webhooks import AsyncWebhooks
+from .resources.activity import Activity
+from .resources.analytics import Analytics
+from .resources.dmarc_monitoring import DmarcMonitoring
+from .resources.domains import Domains
+from .resources.email import Email
+from .resources.email_verification import EmailVerification
+from .resources.identities import IdentitiesResource
+from .resources.inbound import InboundResource
+from .resources.messages import Messages
+from .resources.other import Other
+from .resources.recipients import Recipients
+from .resources.schedules import Schedules
+from .resources.sms_activity import SmsActivity
+from .resources.sms_inbounds import SmsInbounds
+from .resources.sms_messages import SmsMessages
+from .resources.sms_numbers import SmsNumbers
+from .resources.sms_recipients import SmsRecipients
+from .resources.sms_sending import SmsSending
+from .resources.sms_webhooks import SmsWebhooks
+from .resources.smtp_users import SmtpUsers
+from .resources.templates import Templates
+from .resources.tokens import Tokens
+from .resources.users import Users
+from .resources.webhooks import Webhooks
 from .logging import get_logger, RequestLogger
 
 _RETRY_STATUSES = frozenset([429, 500, 502, 503, 504])
@@ -114,30 +114,30 @@ class AsyncMailerSendClient:
             timeout=self.timeout,
         )
 
-        self.emails = AsyncEmail(self)
-        self.activities = AsyncActivity(self)
-        self.analytics = AsyncAnalytics(self)
-        self.domains = AsyncDomains(self)
-        self.identities = AsyncIdentitiesResource(self)
-        self.inbound = AsyncInboundResource(self)
-        self.templates = AsyncTemplates(self)
-        self.tokens = AsyncTokens(self)
-        self.webhooks = AsyncWebhooks(self)
-        self.email_verification = AsyncEmailVerification(self)
-        self.users = AsyncUsers(self)
-        self.messages = AsyncMessages(self)
-        self.recipients = AsyncRecipients(self)
-        self.schedules = AsyncSchedules(self)
-        self.sms_messages = AsyncSmsMessages(self)
-        self.smtp_users = AsyncSmtpUsers(self)
-        self.sms_sending = AsyncSmsSending(self)
-        self.sms_numbers = AsyncSmsNumbers(self)
-        self.sms_activity = AsyncSmsActivity(self)
-        self.sms_inbounds = AsyncSmsInbounds(self)
-        self.sms_recipients = AsyncSmsRecipients(self)
-        self.sms_webhooks = AsyncSmsWebhooks(self)
-        self.api_quota = AsyncOther(self)
-        self.dmarc_monitoring = AsyncDmarcMonitoring(self)
+        self.emails = Email(self)
+        self.activities = Activity(self)
+        self.analytics = Analytics(self)
+        self.domains = Domains(self)
+        self.identities = IdentitiesResource(self)
+        self.inbound = InboundResource(self)
+        self.templates = Templates(self)
+        self.tokens = Tokens(self)
+        self.webhooks = Webhooks(self)
+        self.email_verification = EmailVerification(self)
+        self.users = Users(self)
+        self.messages = Messages(self)
+        self.recipients = Recipients(self)
+        self.schedules = Schedules(self)
+        self.sms_messages = SmsMessages(self)
+        self.smtp_users = SmtpUsers(self)
+        self.sms_sending = SmsSending(self)
+        self.sms_numbers = SmsNumbers(self)
+        self.sms_activity = SmsActivity(self)
+        self.sms_inbounds = SmsInbounds(self)
+        self.sms_recipients = SmsRecipients(self)
+        self.sms_webhooks = SmsWebhooks(self)
+        self.api_quota = Other(self)
+        self.dmarc_monitoring = DmarcMonitoring(self)
 
         self.logger.info("AsyncMailerSendClient initialized successfully")
 

@@ -1,8 +1,8 @@
-"""Tests for AsyncTokens resource."""
+"""Tests for Tokens resource."""
 
 from unittest.mock import AsyncMock, MagicMock
 
-from mailersend.resources.tokens import AsyncTokens
+from mailersend.resources.tokens import Tokens
 from mailersend.models.base import APIResponse
 from mailersend.models.tokens import (
     TokensListRequest,
@@ -25,10 +25,10 @@ def _make_mock_client():
     return client
 
 
-class TestAsyncTokens:
+class TestTokens:
     def setup_method(self):
         self.mock_client = _make_mock_client()
-        self.resource = AsyncTokens(self.mock_client)
+        self.resource = Tokens(self.mock_client)
 
     async def test_list_tokens_returns_api_response(self):
         result = await self.resource.list_tokens(TokensListRequest())

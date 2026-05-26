@@ -1,8 +1,8 @@
-"""Tests for AsyncSmsActivity resource."""
+"""Tests for SmsActivity resource."""
 
 from unittest.mock import AsyncMock, MagicMock
 
-from mailersend.resources.sms_activity import AsyncSmsActivity
+from mailersend.resources.sms_activity import SmsActivity
 from mailersend.models.base import APIResponse
 from mailersend.models.sms_activity import (
     SmsActivityListRequest,
@@ -20,10 +20,10 @@ def _make_mock_client():
     return client
 
 
-class TestAsyncSmsActivity:
+class TestSmsActivity:
     def setup_method(self):
         self.mock_client = _make_mock_client()
-        self.resource = AsyncSmsActivity(self.mock_client)
+        self.resource = SmsActivity(self.mock_client)
 
     async def test_list_returns_api_response(self):
         result = await self.resource.list(SmsActivityListRequest())

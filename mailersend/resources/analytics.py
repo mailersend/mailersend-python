@@ -123,4 +123,3 @@ class Analytics(BaseResource):
         return params
 
 
-AsyncAnalytics = Analytics
