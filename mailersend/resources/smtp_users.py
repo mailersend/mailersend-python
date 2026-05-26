@@ -1,6 +1,6 @@
 """SMTP Users API resource."""
 
-from .base import AsyncBaseResource, BaseResource
+from .base import BaseResource
 from ..models.base import APIResponse
 from ..models.smtp_users import (
     SmtpUsersListRequest,
@@ -33,14 +33,11 @@ class SmtpUsers(BaseResource):
         params = request.to_query_params()
 
         # Make API call
-        response = self.client.request(
+        return self._request(
             method="GET",
             path=f"domains/{request.domain_id}/smtp-users",
             params=params,
         )
-
-        # Create standardized response
-        return self._create_response(response)
 
     def get_smtp_user(self, request: SmtpUserGetRequest) -> APIResponse:
         """Get a single SMTP user.
@@ -58,13 +55,10 @@ class SmtpUsers(BaseResource):
         )
 
         # Make API call
-        response = self.client.request(
+        return self._request(
             method="GET",
             path=f"domains/{request.domain_id}/smtp-users/{request.smtp_user_id}",
         )
-
-        # Create standardized response
-        return self._create_response(response)
 
     def create_smtp_user(self, request: SmtpUserCreateRequest) -> APIResponse:
         """Create an SMTP user.
@@ -80,14 +74,11 @@ class SmtpUsers(BaseResource):
         )
 
         # Make API call
-        response = self.client.request(
+        return self._request(
             method="POST",
             path=f"domains/{request.domain_id}/smtp-users",
             body=request.to_json(),
         )
-
-        # Create standardized response
-        return self._create_response(response)
 
     def update_smtp_user(self, request: SmtpUserUpdateRequest) -> APIResponse:
         """Update an SMTP user.
@@ -105,14 +96,11 @@ class SmtpUsers(BaseResource):
         )
 
         # Make API call
-        response = self.client.request(
+        return self._request(
             method="PUT",
             path=f"domains/{request.domain_id}/smtp-users/{request.smtp_user_id}",
             body=request.to_json(),
         )
-
-        # Create standardized response
-        return self._create_response(response)
 
     def delete_smtp_user(self, request: SmtpUserDeleteRequest) -> APIResponse:
         """Delete an SMTP user.
@@ -130,91 +118,10 @@ class SmtpUsers(BaseResource):
         )
 
         # Make API call
-        response = self.client.request(
+        return self._request(
             method="DELETE",
             path=f"domains/{request.domain_id}/smtp-users/{request.smtp_user_id}",
         )
 
-        # Create standardized response
-        return self._create_response(response)
 
-
-class AsyncSmtpUsers(AsyncBaseResource):
-    """Async SMTP Users API resource."""
-
-    async def list_smtp_users(self, request: SmtpUsersListRequest) -> APIResponse:
-        """List SMTP users for a domain.
-
-        Args:
-            request: The list SMTP users request
-
-        Returns:
-            APIResponse: API response with SMTP users list data
-        """
-        params = request.to_query_params()
-        response = await self.client.request(
-            method="GET", path=f"domains/{request.domain_id}/smtp-users", params=params
-        )
-        return self._create_response(response)
-
-    async def get_smtp_user(self, request: SmtpUserGetRequest) -> APIResponse:
-        """Get a single SMTP user.
-
-        Args:
-            request: The get SMTP user request
-
-        Returns:
-            APIResponse: API response with SMTP user data
-        """
-        response = await self.client.request(
-            method="GET",
-            path=f"domains/{request.domain_id}/smtp-users/{request.smtp_user_id}",
-        )
-        return self._create_response(response)
-
-    async def create_smtp_user(self, request: SmtpUserCreateRequest) -> APIResponse:
-        """Create an SMTP user.
-
-        Args:
-            request: The create SMTP user request
-
-        Returns:
-            APIResponse: API response with SMTP user creation data
-        """
-        response = await self.client.request(
-            method="POST",
-            path=f"domains/{request.domain_id}/smtp-users",
-            body=request.to_json(),
-        )
-        return self._create_response(response)
-
-    async def update_smtp_user(self, request: SmtpUserUpdateRequest) -> APIResponse:
-        """Update an SMTP user.
-
-        Args:
-            request: The update SMTP user request
-
-        Returns:
-            APIResponse: API response with updated SMTP user data
-        """
-        response = await self.client.request(
-            method="PUT",
-            path=f"domains/{request.domain_id}/smtp-users/{request.smtp_user_id}",
-            body=request.to_json(),
-        )
-        return self._create_response(response)
-
-    async def delete_smtp_user(self, request: SmtpUserDeleteRequest) -> APIResponse:
-        """Delete an SMTP user.
-
-        Args:
-            request: The delete SMTP user request
-
-        Returns:
-            APIResponse: API response with delete confirmation
-        """
-        response = await self.client.request(
-            method="DELETE",
-            path=f"domains/{request.domain_id}/smtp-users/{request.smtp_user_id}",
-        )
-        return self._create_response(response)
+AsyncSmtpUsers = SmtpUsers

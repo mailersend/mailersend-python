@@ -56,11 +56,12 @@ class TestAnalyticsResource:
         assert isinstance(result, APIResponse)
         self.mock_client.request.assert_called_once()
         call_args = self.mock_client.request.call_args
-        assert call_args[0] == ("GET", "analytics/date")
-        assert "params" in call_args[1]
+        assert call_args.kwargs["method"] == "GET"
+        assert call_args.kwargs["path"] == "analytics/date"
+        assert "params" in call_args.kwargs
 
         # Check that the right parameters were passed
-        params = call_args[1]["params"]
+        params = call_args.kwargs["params"]
         assert "date_from" in params
         assert "date_to" in params
         assert "tags[]" in params
@@ -122,10 +123,11 @@ class TestAnalyticsResource:
         assert isinstance(result, APIResponse)
         self.mock_client.request.assert_called_once()
         call_args = self.mock_client.request.call_args
-        assert call_args[0] == ("GET", "analytics/country")
+        assert call_args.kwargs["method"] == "GET"
+        assert call_args.kwargs["path"] == "analytics/country"
 
         # Check that excluded fields are not present
-        params = call_args[1]["params"]
+        params = call_args.kwargs["params"]
         assert "event" not in params
         assert "group_by" not in params
         assert "date_from" in params
@@ -162,7 +164,8 @@ class TestAnalyticsResource:
         assert isinstance(result, APIResponse)
         self.mock_client.request.assert_called_once()
         call_args = self.mock_client.request.call_args
-        assert call_args[0] == ("GET", "analytics/ua-name")
+        assert call_args.kwargs["method"] == "GET"
+        assert call_args.kwargs["path"] == "analytics/ua-name"
 
     def test_get_opens_by_reading_environment_success(self):
         """Test successful opens by reading environment request"""
@@ -196,7 +199,8 @@ class TestAnalyticsResource:
         assert isinstance(result, APIResponse)
         self.mock_client.request.assert_called_once()
         call_args = self.mock_client.request.call_args
-        assert call_args[0] == ("GET", "analytics/ua-type")
+        assert call_args.kwargs["method"] == "GET"
+        assert call_args.kwargs["path"] == "analytics/ua-type"
 
     def test_build_query_params_basic(self):
         """Test basic query parameter building"""

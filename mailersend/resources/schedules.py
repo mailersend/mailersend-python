@@ -1,6 +1,6 @@
 """Schedules resource"""
 
-from .base import AsyncBaseResource, BaseResource
+from .base import BaseResource
 from ..models.schedules import (
     SchedulesListRequest,
     ScheduleGetRequest,
@@ -36,13 +36,11 @@ class Schedules(BaseResource):
         )
 
         # Make API request
-        response = self.client.request(
+        return self._request(
             method="GET",
             path="message-schedules",
             params=params if params else None,
         )
-
-        return self._create_response(response)
 
     def get_schedule(self, request: ScheduleGetRequest) -> APIResponse:
         """
@@ -59,11 +57,9 @@ class Schedules(BaseResource):
         )
 
         # Make API request
-        response = self.client.request(
+        return self._request(
             method="GET", path=f"message-schedules/{request.message_id}"
         )
-
-        return self._create_response(response)
 
     def delete_schedule(self, request: ScheduleDeleteRequest) -> APIResponse:
         """
@@ -80,58 +76,9 @@ class Schedules(BaseResource):
         )
 
         # Make API request
-        response = self.client.request(
+        return self._request(
             method="DELETE", path=f"message-schedules/{request.message_id}"
         )
 
-        return self._create_response(response)
 
-
-class AsyncSchedules(AsyncBaseResource):
-    """Async client for interacting with the MailerSend Schedules API."""
-
-    async def list_schedules(self, request: SchedulesListRequest) -> APIResponse:
-        """
-        Retrieve a list of scheduled messages.
-
-        Args:
-            request: SchedulesListRequest with filtering and pagination options
-
-        Returns:
-            APIResponse containing the schedules list response
-        """
-        params = request.to_query_params()
-        response = await self.client.request(
-            method="GET", path="message-schedules", params=params if params else None
-        )
-        return self._create_response(response)
-
-    async def get_schedule(self, request: ScheduleGetRequest) -> APIResponse:
-        """
-        Retrieve information about a single scheduled message.
-
-        Args:
-            request: ScheduleGetRequest with message ID
-
-        Returns:
-            APIResponse containing the schedule response
-        """
-        response = await self.client.request(
-            method="GET", path=f"message-schedules/{request.message_id}"
-        )
-        return self._create_response(response)
-
-    async def delete_schedule(self, request: ScheduleDeleteRequest) -> APIResponse:
-        """
-        Delete a scheduled message.
-
-        Args:
-            request: ScheduleDeleteRequest with message ID to delete
-
-        Returns:
-            APIResponse (204 No Content on success)
-        """
-        response = await self.client.request(
-            method="DELETE", path=f"message-schedules/{request.message_id}"
-        )
-        return self._create_response(response)
+AsyncSchedules = Schedules

@@ -120,20 +120,6 @@ MailerSend Python SDK
     - [Create an email verification list](#create-an-email-verification-list)
     - [Verify a list](#verify-a-list)
     - [Get list results](#get-list-results)
-  - [Webhooks](#webhooks-1)
-    - [Get a list of webhooks](#get-a-list-of-webhooks-1)
-    - [Get a single webhook](#get-a-single-webhook-1)
-    - [Create a Webhook](#create-a-webhook-1)
-    - [Create a disabled webhook](#create-a-disabled-webhook-1)
-    - [Update a Webhook](#update-a-webhook-1)
-    - [Disable/Enable a Webhook](#disableenable-a-webhook-1)
-    - [Delete a Webhook](#delete-a-webhook-1)
-  - [Email Verification](#email-verification-1)
-    - [Get all email verification lists](#get-all-email-verification-lists-1)
-    - [Get a single email verification list](#get-a-single-email-verification-list-1)
-    - [Create an email verification list](#create-an-email-verification-list-1)
-    - [Verify a list](#verify-a-list-1)
-    - [Get list results](#get-list-results-1)
   - [SMS](#sms)
     - [Sending SMS messages](#sending-sms-messages)
   - [SMS Activity](#sms-activity)
@@ -1840,204 +1826,6 @@ request = (EmailVerificationBuilder()
 response = ms.email_verification.get_results(request)
 ```
 
-## Webhooks
-
-### Get a list of webhooks
-
-```python
-from mailersend import MailerSendClient
-from mailersend import WebhooksBuilder
-
-ms = MailerSendClient()
-
-request = (WebhooksBuilder()
-          .domain_id("domain-id")
-          .build_webhooks_list_request())
-
-response = ms.webhooks.list_webhooks(request)
-```
-
-### Get a single webhook
-
-```python
-from mailersend import MailerSendClient
-from mailersend import WebhooksBuilder
-
-ms = MailerSendClient()
-
-request = (WebhooksBuilder()
-          .webhook_id("webhook-id")
-          .build_webhook_get_request())
-
-response = ms.webhooks.get_webhook(request)
-```
-
-### Create a Webhook
-
-```python
-from mailersend import MailerSendClient
-from mailersend import WebhooksBuilder
-
-ms = MailerSendClient()
-
-request = (WebhooksBuilder()
-          .domain_id("domain-id")
-          .url("https://webhook.example.com")
-          .name("My Webhook")
-          .events(["activity.sent", "activity.delivered", "activity.opened"])
-          .enabled(True)
-          .build_webhook_create_request())
-
-response = ms.webhooks.create_webhook(request)
-```
-
-### Create a disabled webhook
-
-```python
-from mailersend import MailerSendClient
-from mailersend import WebhooksBuilder
-
-ms = MailerSendClient()
-
-request = (WebhooksBuilder()
-          .domain_id("domain-id")
-          .url("https://webhook.example.com")
-          .name("Disabled Webhook")
-          .events(["activity.sent", "activity.delivered"])
-          .enabled(False)  # Create disabled
-          .build_webhook_create_request())
-
-response = ms.webhooks.create_webhook(request)
-```
-
-### Update a Webhook
-
-```python
-from mailersend import MailerSendClient
-from mailersend import WebhooksBuilder
-
-ms = MailerSendClient()
-
-request = (WebhooksBuilder()
-          .webhook_id("webhook-id")
-          .name("Updated Webhook Name")
-          .url("https://new-webhook.example.com")
-          .enabled(True)
-          .build_webhook_update_request())
-
-response = ms.webhooks.update_webhook(request)
-```
-
-### Disable/Enable a Webhook
-
-```python
-from mailersend import MailerSendClient
-from mailersend import WebhooksBuilder
-
-ms = MailerSendClient()
-
-# Disable webhook
-request = (WebhooksBuilder()
-          .webhook_id("webhook-id")
-          .enabled(False)
-          .build_webhook_update_request())
-
-response = ms.webhooks.update_webhook(request)
-
-# Enable webhook
-request = (WebhooksBuilder()
-          .webhook_id("webhook-id")
-          .enabled(True)
-          .build_webhook_update_request())
-
-response = ms.webhooks.update_webhook(request)
-```
-
-### Delete a Webhook
-
-```python
-from mailersend import MailerSendClient
-from mailersend import WebhooksBuilder
-
-ms = MailerSendClient()
-
-request = (WebhooksBuilder()
-          .webhook_id("webhook-id")
-          .build_webhook_delete_request())
-
-response = ms.webhooks.delete_webhook(request)
-```
-
-## Email Verification
-
-### Get all email verification lists
-
-```python
-from mailersend import MailerSendClient, EmailVerificationBuilder
-
-ms = MailerSendClient()
-
-request = EmailVerificationBuilder().build_list_request()
-response = ms.email_verification.list_verification_lists(request)
-```
-
-### Get a single email verification list
-
-```python
-from mailersend import MailerSendClient, EmailVerificationBuilder
-
-ms = MailerSendClient()
-
-request = (EmailVerificationBuilder()
-          .verification_list_id("list-id")
-          .build_get_request())
-
-response = ms.email_verification.get_verification_list(request)
-```
-
-### Create an email verification list
-
-```python
-from mailersend import MailerSendClient, EmailVerificationBuilder
-
-ms = MailerSendClient()
-
-request = (EmailVerificationBuilder()
-          .name("My Verification List")
-          .emails(["test1@example.com", "test2@example.com"])
-          .build_create_request())
-
-response = ms.email_verification.create_verification_list(request)
-```
-
-### Verify a list
-
-```python
-from mailersend import MailerSendClient, EmailVerificationBuilder
-
-ms = MailerSendClient()
-
-request = (EmailVerificationBuilder()
-          .verification_list_id("list-id")
-          .build_verify_request())
-
-response = ms.email_verification.verify_list(request)
-```
-
-### Get list results
-
-```python
-from mailersend import MailerSendClient, EmailVerificationBuilder
-
-ms = MailerSendClient()
-
-request = (EmailVerificationBuilder()
-          .verification_list_id("list-id")
-          .build_results_request())
-
-response = ms.email_verification.get_verification_results(request)
-```
-
 ## SMS
 
 ### Sending SMS messages
@@ -2941,7 +2729,7 @@ from mailersend import AsyncMailerSendClient, DomainsBuilder, TemplatesBuilder
 async def main():
     async with AsyncMailerSendClient() as client:
         domains_request = DomainsBuilder().build_list_request()
-        templates_request = TemplatesBuilder().build_list_request()
+        templates_request = TemplatesBuilder().build_templates_list_request()
 
         # Both requests run concurrently
         domains_response, templates_response = await asyncio.gather(
@@ -3050,10 +2838,12 @@ except Exception as e:
 Common error types:
 
 - **ValidationError**: Invalid data in request models (handled by Pydantic)
-- **AuthenticationError**: Invalid or missing API key
-- **RateLimitError**: API rate limit exceeded
-- **APIError**: General API errors (4xx, 5xx responses)
-- **NetworkError**: Network connectivity issues
+- **AuthenticationError**: Invalid or missing API key (401)
+- **RateLimitExceeded**: API rate limit exceeded (429)
+- **BadRequestError**: Malformed or invalid request (400)
+- **ResourceNotFoundError**: Requested resource not found (404)
+- **ServerError**: Server-side error (5xx)
+- **MailerSendError**: Base exception; also raised for network connectivity failures
 
 # Testing
 

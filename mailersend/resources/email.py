@@ -2,7 +2,7 @@
 
 from typing import List
 
-from .base import AsyncBaseResource, BaseResource
+from .base import BaseResource
 from ..models.email import EmailRequest
 from ..models.base import APIResponse
 
@@ -30,12 +30,12 @@ class Email(BaseResource):
         self.logger.debug("Sending email request to MailerSend API")
         self.logger.debug("Payload: %s", payload)
 
-        response = self.client.request(method="POST", path="email", body=payload)
-
-        # Create custom data with email ID from headers
-        email_data = {"id": response.headers.get("x-message-id")}
-
-        return self._create_response(response, email_data)
+        return self._request(
+            method="POST",
+            path="email",
+            body=payload,
+            data=lambda r: {"id": r.headers.get("x-message-id")},
+        )
 
     def send_bulk(self, emails: List[EmailRequest]) -> APIResponse:
         """
@@ -58,9 +58,7 @@ class Email(BaseResource):
         self.logger.debug("Sending bulk email request to MailerSend API")
         self.logger.debug("Payload: %s", payload)
 
-        response = self.client.request(method="POST", path="bulk-email", body=payload)
-
-        return self._create_response(response)
+        return self._request(method="POST", path="bulk-email", body=payload)
 
     def get_bulk_status(self, bulk_email_id: str) -> APIResponse:
         """
@@ -74,61 +72,7 @@ class Email(BaseResource):
         """
         self.logger.debug("Getting bulk email status")
 
-        response = self.client.request(method="GET", path=f"bulk-email/{bulk_email_id}")
-
-        return self._create_response(response)
+        return self._request(method="GET", path=f"bulk-email/{bulk_email_id}")
 
 
-class AsyncEmail(AsyncBaseResource):
-    """Async client for interacting with the MailerSend Email API."""
-
-    async def send(self, email: EmailRequest) -> APIResponse:
-        """
-        Send a single email.
-
-        Args:
-            email: A fully-validated EmailRequest object
-
-        Returns:
-            APIResponse with email ID and metadata
-        """
-        self.logger.debug("Preparing to send email")
-        payload = email.model_dump(by_alias=True, exclude_none=True)
-        self.logger.debug("Sending email request to MailerSend API")
-        response = await self.client.request(method="POST", path="email", body=payload)
-        email_data = {"id": response.headers.get("x-message-id")}
-        return self._create_response(response, email_data)
-
-    async def send_bulk(self, emails: List[EmailRequest]) -> APIResponse:
-        """
-        Send multiple emails in one request.
-
-        Args:
-            emails: List of EmailRequest objects to send
-
-        Returns:
-            APIResponse with bulk email information and metadata
-        """
-        self.logger.debug("Preparing to send emails in bulk")
-        payload = [e.model_dump(by_alias=True, exclude_none=True) for e in emails]
-        self.logger.debug("Sending bulk email request to MailerSend API")
-        response = await self.client.request(
-            method="POST", path="bulk-email", body=payload
-        )
-        return self._create_response(response)
-
-    async def get_bulk_status(self, bulk_email_id: str) -> APIResponse:
-        """
-        Get the status of a bulk email send request.
-
-        Args:
-            bulk_email_id: The ID of the bulk email request
-
-        Returns:
-            APIResponse with bulk email status and metadata
-        """
-        self.logger.debug("Getting bulk email status")
-        response = await self.client.request(
-            method="GET", path=f"bulk-email/{bulk_email_id}"
-        )
-        return self._create_response(response)
+AsyncEmail = Email

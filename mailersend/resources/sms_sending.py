@@ -1,6 +1,6 @@
 """SMS Sending resource"""
 
-from .base import AsyncBaseResource, BaseResource
+from .base import BaseResource
 from ..models.sms_sending import SmsSendRequest
 from ..models.base import APIResponse
 
@@ -27,24 +27,7 @@ class SmsSending(BaseResource):
 
         self.logger.debug("SMS payload: %s", payload)
 
-        response = self.client.request(method="POST", path="sms", body=payload)
-
-        return self._create_response(response)
+        return self._request(method="POST", path="sms", body=payload)
 
 
-class AsyncSmsSending(AsyncBaseResource):
-    """Async client for the MailerSend SMS Sending API."""
-
-    async def send(self, request: SmsSendRequest) -> APIResponse:
-        """
-        Send an SMS message.
-
-        Args:
-            request: SmsSendRequest with SMS details
-
-        Returns:
-            APIResponse with SMS sending response and metadata
-        """
-        payload = request.to_json()
-        response = await self.client.request(method="POST", path="sms", body=payload)
-        return self._create_response(response)
+AsyncSmsSending = SmsSending

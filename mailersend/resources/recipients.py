@@ -13,7 +13,7 @@ from ..models.recipients import (
     RecipientsListQueryParams,
     SuppressionListQueryParams,
 )
-from .base import AsyncBaseResource, BaseResource
+from .base import BaseResource
 
 
 class Recipients(BaseResource):
@@ -31,7 +31,6 @@ class Recipients(BaseResource):
         Returns:
             APIResponse with recipients list
         """
-
         # Use default request if none provided
         if request is None:
             query_params = RecipientsListQueryParams()
@@ -43,9 +42,7 @@ class Recipients(BaseResource):
         self.logger.debug("Listing recipients with params: %s", params)
 
         # Make API call
-        response = self.client.request(method="GET", path="recipients", params=params)
-
-        return self._create_response(response)
+        return self._request(method="GET", path="recipients", params=params)
 
     def get_recipient(self, request: RecipientGetRequest) -> APIResponse:
         """
@@ -57,11 +54,9 @@ class Recipients(BaseResource):
         self.logger.debug("Getting recipient: %s", request.recipient_id)
 
         # Make API call
-        response = self.client.request(
+        return self._request(
             method="GET", path=f"recipients/{request.recipient_id}"
         )
-
-        return self._create_response(response)
 
     def delete_recipient(self, request: RecipientDeleteRequest) -> APIResponse:
         """
@@ -76,11 +71,9 @@ class Recipients(BaseResource):
         self.logger.debug("Deleting recipient: %s", request.recipient_id)
 
         # Make API call
-        response = self.client.request(
+        return self._request(
             method="DELETE", path=f"recipients/{request.recipient_id}"
         )
-
-        return self._create_response(response)
 
     def list_blocklist(
         self, request: Optional[SuppressionListRequest] = None
@@ -105,11 +98,9 @@ class Recipients(BaseResource):
         self.logger.debug("Listing blocklist with params: %s", params)
 
         # Make API call
-        response = self.client.request(
+        return self._request(
             method="GET", path="suppressions/blocklist", params=params
         )
-
-        return self._create_response(response)
 
     def list_hard_bounces(
         self, request: Optional[SuppressionListRequest] = None
@@ -134,11 +125,9 @@ class Recipients(BaseResource):
         self.logger.debug("Listing hard bounces with params: %s", params)
 
         # Make API call
-        response = self.client.request(
+        return self._request(
             method="GET", path="suppressions/hard-bounces", params=params
         )
-
-        return self._create_response(response)
 
     def list_spam_complaints(
         self, request: Optional[SuppressionListRequest] = None
@@ -163,11 +152,9 @@ class Recipients(BaseResource):
         self.logger.debug("Listing spam complaints with params: %s", params)
 
         # Make API call
-        response = self.client.request(
+        return self._request(
             method="GET", path="suppressions/spam-complaints", params=params
         )
-
-        return self._create_response(response)
 
     def list_unsubscribes(
         self, request: Optional[SuppressionListRequest] = None
@@ -192,11 +179,9 @@ class Recipients(BaseResource):
         self.logger.debug("Listing unsubscribes with params: %s", params)
 
         # Make API call
-        response = self.client.request(
+        return self._request(
             method="GET", path="suppressions/unsubscribes", params=params
         )
-
-        return self._create_response(response)
 
     def list_on_hold(
         self, request: Optional[SuppressionListRequest] = None
@@ -221,11 +206,9 @@ class Recipients(BaseResource):
         self.logger.debug("Listing on-hold entries with params: %s", params)
 
         # Make API call
-        response = self.client.request(
+        return self._request(
             method="GET", path="suppressions/on-hold-list", params=params
         )
-
-        return self._create_response(response)
 
     def add_to_blocklist(self, request: SuppressionAddRequest) -> APIResponse:
         """
@@ -242,11 +225,7 @@ class Recipients(BaseResource):
         self.logger.debug("Adding to blocklist with body: %s", body)
 
         # Make API call
-        response = self.client.request(
-            method="POST", path="suppressions/blocklist", body=body
-        )
-
-        return self._create_response(response)
+        return self._request(method="POST", path="suppressions/blocklist", body=body)
 
     def add_hard_bounces(self, request: SuppressionAddRequest) -> APIResponse:
         """
@@ -264,11 +243,9 @@ class Recipients(BaseResource):
         self.logger.debug("Adding hard bounces with body: %s", body)
 
         # Make API call
-        response = self.client.request(
+        return self._request(
             method="POST", path="suppressions/hard-bounces", body=body
         )
-
-        return self._create_response(response)
 
     def add_spam_complaints(self, request: SuppressionAddRequest) -> APIResponse:
         """
@@ -287,11 +264,9 @@ class Recipients(BaseResource):
         self.logger.debug("Adding spam complaints with body: %s", body)
 
         # Make API call
-        response = self.client.request(
+        return self._request(
             method="POST", path="suppressions/spam-complaints", body=body
         )
-
-        return self._create_response(response)
 
     def add_unsubscribes(self, request: SuppressionAddRequest) -> APIResponse:
         """
@@ -309,11 +284,9 @@ class Recipients(BaseResource):
         self.logger.debug("Adding unsubscribes with body: %s", body)
 
         # Make API call
-        response = self.client.request(
+        return self._request(
             method="POST", path="suppressions/unsubscribes", body=body
         )
-
-        return self._create_response(response)
 
     def delete_from_blocklist(self, request: SuppressionDeleteRequest) -> APIResponse:
         """
@@ -331,11 +304,9 @@ class Recipients(BaseResource):
         self.logger.debug("Deleting from blocklist with body: %s", body)
 
         # Make API call
-        response = self.client.request(
+        return self._request(
             method="DELETE", path="suppressions/blocklist", body=body
         )
-
-        return self._create_response(response)
 
     def delete_hard_bounces(self, request: SuppressionDeleteRequest) -> APIResponse:
         """
@@ -353,11 +324,9 @@ class Recipients(BaseResource):
         self.logger.debug("Deleting hard bounces with body: %s", body)
 
         # Make API call
-        response = self.client.request(
+        return self._request(
             method="DELETE", path="suppressions/hard-bounces", body=body
         )
-
-        return self._create_response(response)
 
     def delete_spam_complaints(self, request: SuppressionDeleteRequest) -> APIResponse:
         """
@@ -376,11 +345,9 @@ class Recipients(BaseResource):
         self.logger.debug("Deleting spam complaints with body: %s", body)
 
         # Make API call
-        response = self.client.request(
+        return self._request(
             method="DELETE", path="suppressions/spam-complaints", body=body
         )
-
-        return self._create_response(response)
 
     def delete_unsubscribes(self, request: SuppressionDeleteRequest) -> APIResponse:
         """
@@ -398,11 +365,9 @@ class Recipients(BaseResource):
         self.logger.debug("Deleting unsubscribes with body: %s", body)
 
         # Make API call
-        response = self.client.request(
+        return self._request(
             method="DELETE", path="suppressions/unsubscribes", body=body
         )
-
-        return self._create_response(response)
 
     def delete_from_on_hold(self, request: SuppressionDeleteRequest) -> APIResponse:
         """
@@ -420,316 +385,9 @@ class Recipients(BaseResource):
         self.logger.debug("Deleting from on-hold with body: %s", body)
 
         # Make API call
-        response = self.client.request(
+        return self._request(
             method="DELETE", path="suppressions/on-hold-list", body=body
         )
 
-        return self._create_response(response)
 
-
-class AsyncRecipients(AsyncBaseResource):
-    """Async Recipients API resource."""
-
-    async def list_recipients(
-        self, request: Optional[RecipientsListRequest] = None
-    ) -> APIResponse:
-        """
-        List recipients with optional filtering.
-
-        Args:
-            request: Request parameters for listing recipients (optional)
-
-        Returns:
-            APIResponse with recipients list
-        """
-        if request is None:
-            request = RecipientsListRequest(query_params=RecipientsListQueryParams())
-        params = request.to_query_params()
-        response = await self.client.request(
-            method="GET", path="recipients", params=params
-        )
-        return self._create_response(response)
-
-    async def get_recipient(self, request: RecipientGetRequest) -> APIResponse:
-        """
-        Get a single recipient by ID.
-
-        Args:
-            request: Request parameters for getting recipient
-
-        Returns:
-            APIResponse with recipient data
-        """
-        response = await self.client.request(
-            method="GET", path=f"recipients/{request.recipient_id}"
-        )
-        return self._create_response(response)
-
-    async def delete_recipient(self, request: RecipientDeleteRequest) -> APIResponse:
-        """
-        Delete a recipient.
-
-        Args:
-            request: Request parameters for deleting recipient
-
-        Returns:
-            APIResponse with empty data
-        """
-        response = await self.client.request(
-            method="DELETE", path=f"recipients/{request.recipient_id}"
-        )
-        return self._create_response(response)
-
-    async def list_blocklist(
-        self, request: Optional[SuppressionListRequest] = None
-    ) -> APIResponse:
-        """
-        List blocklist entries.
-
-        Args:
-            request: Request parameters for listing blocklist entries (optional)
-
-        Returns:
-            APIResponse with blocklist entries
-        """
-        if request is None:
-            request = SuppressionListRequest(query_params=SuppressionListQueryParams())
-        params = request.to_query_params()
-        response = await self.client.request(
-            method="GET", path="suppressions/blocklist", params=params
-        )
-        return self._create_response(response)
-
-    async def list_hard_bounces(
-        self, request: Optional[SuppressionListRequest] = None
-    ) -> APIResponse:
-        """
-        List hard bounces.
-
-        Args:
-            request: Request parameters for listing hard bounces (optional)
-
-        Returns:
-            APIResponse with hard bounces
-        """
-        if request is None:
-            request = SuppressionListRequest(query_params=SuppressionListQueryParams())
-        params = request.to_query_params()
-        response = await self.client.request(
-            method="GET", path="suppressions/hard-bounces", params=params
-        )
-        return self._create_response(response)
-
-    async def list_spam_complaints(
-        self, request: Optional[SuppressionListRequest] = None
-    ) -> APIResponse:
-        """
-        List spam complaints.
-
-        Args:
-            request: Request parameters for listing spam complaints (optional)
-
-        Returns:
-            APIResponse with spam complaints
-        """
-        if request is None:
-            request = SuppressionListRequest(query_params=SuppressionListQueryParams())
-        params = request.to_query_params()
-        response = await self.client.request(
-            method="GET", path="suppressions/spam-complaints", params=params
-        )
-        return self._create_response(response)
-
-    async def list_unsubscribes(
-        self, request: Optional[SuppressionListRequest] = None
-    ) -> APIResponse:
-        """
-        List unsubscribes.
-
-        Args:
-            request: Request parameters for listing unsubscribes (optional)
-
-        Returns:
-            APIResponse with unsubscribes
-        """
-        if request is None:
-            request = SuppressionListRequest(query_params=SuppressionListQueryParams())
-        params = request.to_query_params()
-        response = await self.client.request(
-            method="GET", path="suppressions/unsubscribes", params=params
-        )
-        return self._create_response(response)
-
-    async def list_on_hold(
-        self, request: Optional[SuppressionListRequest] = None
-    ) -> APIResponse:
-        """
-        List on-hold entries.
-
-        Args:
-            request: Request parameters for listing on-hold entries (optional)
-
-        Returns:
-            APIResponse with on-hold entries
-        """
-        if request is None:
-            request = SuppressionListRequest(query_params=SuppressionListQueryParams())
-        params = request.to_query_params()
-        response = await self.client.request(
-            method="GET", path="suppressions/on-hold-list", params=params
-        )
-        return self._create_response(response)
-
-    async def add_to_blocklist(self, request: SuppressionAddRequest) -> APIResponse:
-        """
-        Add entries to blocklist.
-
-        Args:
-            request: Request parameters for adding to blocklist
-
-        Returns:
-            APIResponse with added entries
-        """
-        body = request.model_dump(by_alias=True, exclude_none=True)
-        response = await self.client.request(
-            method="POST", path="suppressions/blocklist", body=body
-        )
-        return self._create_response(response)
-
-    async def add_hard_bounces(self, request: SuppressionAddRequest) -> APIResponse:
-        """
-        Add hard bounces.
-
-        Args:
-            request: Request parameters for adding hard bounces
-
-        Returns:
-            APIResponse with added entries
-        """
-        body = request.model_dump(by_alias=True, exclude_none=True)
-        response = await self.client.request(
-            method="POST", path="suppressions/hard-bounces", body=body
-        )
-        return self._create_response(response)
-
-    async def add_spam_complaints(self, request: SuppressionAddRequest) -> APIResponse:
-        """
-        Add spam complaints.
-
-        Args:
-            request: Request parameters for adding spam complaints
-
-        Returns:
-            APIResponse with added entries
-        """
-        body = request.model_dump(by_alias=True, exclude_none=True)
-        response = await self.client.request(
-            method="POST", path="suppressions/spam-complaints", body=body
-        )
-        return self._create_response(response)
-
-    async def add_unsubscribes(self, request: SuppressionAddRequest) -> APIResponse:
-        """
-        Add unsubscribes.
-
-        Args:
-            request: Request parameters for adding unsubscribes
-
-        Returns:
-            APIResponse with added entries
-        """
-        body = request.model_dump(by_alias=True, exclude_none=True)
-        response = await self.client.request(
-            method="POST", path="suppressions/unsubscribes", body=body
-        )
-        return self._create_response(response)
-
-    async def delete_from_blocklist(
-        self, request: SuppressionDeleteRequest
-    ) -> APIResponse:
-        """
-        Delete entries from blocklist.
-
-        Args:
-            request: Request parameters for deleting from blocklist
-
-        Returns:
-            APIResponse with deleted entries
-        """
-        body = request.model_dump(by_alias=True, exclude_none=True)
-        response = await self.client.request(
-            method="DELETE", path="suppressions/blocklist", body=body
-        )
-        return self._create_response(response)
-
-    async def delete_hard_bounces(
-        self, request: SuppressionDeleteRequest
-    ) -> APIResponse:
-        """
-        Delete hard bounces.
-
-        Args:
-            request: Request parameters for deleting hard bounces
-
-        Returns:
-            APIResponse with deleted entries
-        """
-        body = request.model_dump(exclude_none=True, exclude={"domain_id"})
-        response = await self.client.request(
-            method="DELETE", path="suppressions/hard-bounces", body=body
-        )
-        return self._create_response(response)
-
-    async def delete_spam_complaints(
-        self, request: SuppressionDeleteRequest
-    ) -> APIResponse:
-        """
-        Delete spam complaints.
-
-        Args:
-            request: Request parameters for deleting spam complaints
-
-        Returns:
-            APIResponse with deleted entries
-        """
-        body = request.model_dump(exclude_none=True, exclude={"domain_id"})
-        response = await self.client.request(
-            method="DELETE", path="suppressions/spam-complaints", body=body
-        )
-        return self._create_response(response)
-
-    async def delete_unsubscribes(
-        self, request: SuppressionDeleteRequest
-    ) -> APIResponse:
-        """
-        Delete unsubscribes.
-
-        Args:
-            request: Request parameters for deleting unsubscribes
-
-        Returns:
-            APIResponse with deleted entries
-        """
-        body = request.model_dump(exclude_none=True, exclude={"domain_id"})
-        response = await self.client.request(
-            method="DELETE", path="suppressions/unsubscribes", body=body
-        )
-        return self._create_response(response)
-
-    async def delete_from_on_hold(
-        self, request: SuppressionDeleteRequest
-    ) -> APIResponse:
-        """
-        Delete entries from on-hold list.
-
-        Args:
-            request: Request parameters for deleting from on-hold
-
-        Returns:
-            APIResponse with deleted entries
-        """
-        body = request.model_dump(exclude_none=True, exclude={"domain_id"})
-        response = await self.client.request(
-            method="DELETE", path="suppressions/on-hold-list", body=body
-        )
-        return self._create_response(response)
+AsyncRecipients = Recipients
