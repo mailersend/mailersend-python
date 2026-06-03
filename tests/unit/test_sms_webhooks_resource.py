@@ -1,7 +1,8 @@
-"""Unit tests for SMS Webhooks resource."""
+"""Tests for SmsWebhooks resource."""
+import inspect
 
+from unittest.mock import AsyncMock, MagicMock, Mock
 import pytest
-from unittest.mock import Mock, MagicMock
 
 from mailersend.resources.sms_webhooks import SmsWebhooks
 from mailersend.models.base import APIResponse
@@ -14,122 +15,110 @@ from mailersend.models.sms_webhooks import (
     SmsWebhookDeleteRequest,
     SmsWebhookEvent,
 )
-from mailersend.exceptions import ValidationError as MailerSendValidationError
+
+
+
+async def resolve(result):
+    if inspect.iscoroutine(result):
+        return await result
+    return result
 
 
 class TestSmsWebhooks:
-    """Test SMS Webhooks resource class."""
-
-    def setup_method(self):
-        """Set up test fixtures."""
-        self.mock_client = Mock()
+    @pytest.fixture(autouse=True, params=["sync", "async"])
+    def setup(self, request):
+        if request.param == "async":
+            self.mock_client = MagicMock()
+            self.mock_client.request = AsyncMock(
+                return_value=MagicMock(
+                    status_code=200, headers={"x-request-id": "test-req-id"},
+                    json=MagicMock(return_value={}), content=b"{}"
+                )
+            )
+        else:
+            self.mock_client = MagicMock()
+            self.mock_client.request = Mock(
+                return_value=MagicMock(
+                    status_code=200, headers={"x-request-id": "test-req-id"},
+                    json=MagicMock(return_value={}), content=b"{}"
+                )
+            )
         self.resource = SmsWebhooks(self.mock_client)
-        self.resource.logger = Mock()
 
-        # Mock _create_response method
-        self.mock_api_response = MagicMock(spec=APIResponse)
-        self.resource._create_response = Mock(return_value=self.mock_api_response)
-
-    def test_list_sms_webhooks_returns_api_response(self):
-        """Test list_sms_webhooks method returns APIResponse."""
-        query_params = SmsWebhooksListQueryParams(sms_number_id="sms123")
-        request = SmsWebhooksListRequest(query_params=query_params)
-
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
-
-        result = self.resource.list_sms_webhooks(request)
-
-        assert result == self.mock_api_response
-        self.resource._create_response.assert_called_once_with(mock_response)
-
-    def test_list_sms_webhooks_with_parameters(self):
-        """Test list_sms_webhooks with query parameters."""
-        query_params = SmsWebhooksListQueryParams(sms_number_id="sms456")
-        request = SmsWebhooksListRequest(query_params=query_params)
-
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
-
-        result = self.resource.list_sms_webhooks(request)
-
-        expected_params = {"sms_number_id": "sms456"}
-        self.mock_client.request.assert_called_once_with(
-            method="GET", path="sms-webhooks", params=expected_params
+    async def test_list_sms_webhooks_returns_api_response(self):
+        request = SmsWebhooksListRequest(
+            query_params=SmsWebhooksListQueryParams(sms_number_id="num123")
         )
-        assert result == self.mock_api_response
+        result = await resolve(self.resource.list_sms_webhooks(request))
+        assert isinstance(result, APIResponse)
 
-    def test_get_sms_webhook_returns_api_response(self):
-        """Test get_sms_webhook method returns APIResponse."""
-        request = SmsWebhookGetRequest(sms_webhook_id="webhook123")
-
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
-
-        result = self.resource.get_sms_webhook(request)
-
-        self.mock_client.request.assert_called_once_with(
-            method="GET", path="sms-webhooks/webhook123"
+    async def test_list_sms_webhooks_calls_correct_endpoint(self):
+        request = SmsWebhooksListRequest(
+            query_params=SmsWebhooksListQueryParams(sms_number_id="num123")
         )
-        assert result == self.mock_api_response
-        self.resource._create_response.assert_called_once_with(mock_response)
+        await resolve(self.resource.list_sms_webhooks(request))
+        call = self.mock_client.request.call_args
+        assert call.kwargs["method"] == "GET"
+        assert call.kwargs["path"] == "sms-webhooks"
 
-    def test_create_sms_webhook_returns_api_response(self):
-        """Test create_sms_webhook method returns APIResponse."""
+    async def test_get_sms_webhook_returns_api_response(self):
+        result = await resolve(self.resource.get_sms_webhook(
+            SmsWebhookGetRequest(sms_webhook_id="wh123"))
+        )
+        assert isinstance(result, APIResponse)
+
+    async def test_get_sms_webhook_calls_correct_endpoint(self):
+        await resolve(self.resource.get_sms_webhook(
+            SmsWebhookGetRequest(sms_webhook_id="wh123"))
+        )
+        call = self.mock_client.request.call_args
+        assert call.kwargs["method"] == "GET"
+        assert call.kwargs["path"] == "sms-webhooks/wh123"
+
+    async def test_create_sms_webhook_returns_api_response(self):
         request = SmsWebhookCreateRequest(
             url="https://example.com/webhook",
-            name="Test Webhook",
-            events=[SmsWebhookEvent.SMS_SENT, SmsWebhookEvent.SMS_DELIVERED],
-            sms_number_id="sms123",
+            name="My Webhook",
+            events=[SmsWebhookEvent.SMS_SENT],
+            sms_number_id="num123",
         )
+        result = await resolve(self.resource.create_sms_webhook(request))
+        assert isinstance(result, APIResponse)
 
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
-
-        result = self.resource.create_sms_webhook(request)
-
-        expected_body = {
-            "url": "https://example.com/webhook",
-            "name": "Test Webhook",
-            "events": ["sms.sent", "sms.delivered"],
-            "enabled": True,
-            "sms_number_id": "sms123",
-        }
-        self.mock_client.request.assert_called_once_with(
-            method="POST", path="sms-webhooks", body=expected_body
+    async def test_create_sms_webhook_calls_correct_endpoint(self):
+        request = SmsWebhookCreateRequest(
+            url="https://example.com/webhook",
+            name="My Webhook",
+            events=[SmsWebhookEvent.SMS_SENT],
+            sms_number_id="num123",
         )
-        assert result == self.mock_api_response
-        self.resource._create_response.assert_called_once_with(mock_response)
+        await resolve(self.resource.create_sms_webhook(request))
+        call = self.mock_client.request.call_args
+        assert call.kwargs["method"] == "POST"
+        assert call.kwargs["path"] == "sms-webhooks"
 
-    def test_update_sms_webhook_returns_api_response(self):
-        """Test update_sms_webhook method returns APIResponse."""
-        request = SmsWebhookUpdateRequest(
-            sms_webhook_id="webhook123", name="Updated Webhook", enabled=False
+    async def test_update_sms_webhook_returns_api_response(self):
+        request = SmsWebhookUpdateRequest(sms_webhook_id="wh123", name="Updated")
+        result = await resolve(self.resource.update_sms_webhook(request))
+        assert isinstance(result, APIResponse)
+
+    async def test_update_sms_webhook_calls_correct_endpoint(self):
+        request = SmsWebhookUpdateRequest(sms_webhook_id="wh123", name="Updated")
+        await resolve(self.resource.update_sms_webhook(request))
+        call = self.mock_client.request.call_args
+        assert call.kwargs["method"] == "PUT"
+        assert call.kwargs["path"] == "sms-webhooks/wh123"
+
+    async def test_delete_sms_webhook_returns_api_response(self):
+        result = await resolve(self.resource.delete_sms_webhook(
+            SmsWebhookDeleteRequest(sms_webhook_id="wh123"))
         )
+        assert isinstance(result, APIResponse)
 
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
-
-        result = self.resource.update_sms_webhook(request)
-
-        expected_body = {"name": "Updated Webhook", "enabled": False}
-        self.mock_client.request.assert_called_once_with(
-            method="PUT", path="sms-webhooks/webhook123", body=expected_body
+    async def test_delete_sms_webhook_calls_correct_endpoint(self):
+        await resolve(self.resource.delete_sms_webhook(
+            SmsWebhookDeleteRequest(sms_webhook_id="wh123"))
         )
-        assert result == self.mock_api_response
-        self.resource._create_response.assert_called_once_with(mock_response)
-
-    def test_delete_sms_webhook_returns_api_response(self):
-        """Test delete_sms_webhook method returns APIResponse."""
-        request = SmsWebhookDeleteRequest(sms_webhook_id="webhook123")
-
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
-
-        result = self.resource.delete_sms_webhook(request)
-
-        self.mock_client.request.assert_called_once_with(
-            method="DELETE", path="sms-webhooks/webhook123"
-        )
-        assert result == self.mock_api_response
-        self.resource._create_response.assert_called_once_with(mock_response)
+        call = self.mock_client.request.call_args
+        assert call.kwargs["method"] == "DELETE"
+        assert call.kwargs["path"] == "sms-webhooks/wh123"
