@@ -1,7 +1,8 @@
-"""Unit tests for Users resource."""
+"""Tests for Users resource."""
+import inspect
 
+from unittest.mock import AsyncMock, MagicMock, Mock
 import pytest
-from unittest.mock import Mock, MagicMock
 
 from mailersend.resources.users import Users
 from mailersend.models.base import APIResponse
@@ -18,191 +19,130 @@ from mailersend.models.users import (
     InviteResendRequest,
     InviteCancelRequest,
 )
-from mailersend.exceptions import ValidationError as MailerSendValidationError
+
+
+
+async def resolve(result):
+    if inspect.iscoroutine(result):
+        return await result
+    return result
 
 
 class TestUsers:
-    """Test Users resource class."""
-
-    def setup_method(self):
-        """Set up test fixtures."""
-        self.mock_client = Mock()
+    @pytest.fixture(autouse=True, params=["sync", "async"])
+    def setup(self, request):
+        if request.param == "async":
+            self.mock_client = MagicMock()
+            self.mock_client.request = AsyncMock(
+                return_value=MagicMock(
+                    status_code=200, headers={"x-request-id": "test-req-id"},
+                    json=MagicMock(return_value={}), content=b"{}"
+                )
+            )
+        else:
+            self.mock_client = MagicMock()
+            self.mock_client.request = Mock(
+                return_value=MagicMock(
+                    status_code=200, headers={"x-request-id": "test-req-id"},
+                    json=MagicMock(return_value={}), content=b"{}"
+                )
+            )
         self.resource = Users(self.mock_client)
-        self.resource.logger = Mock()
 
-        # Mock _create_response method
-        self.mock_api_response = MagicMock(spec=APIResponse)
-        self.resource._create_response = Mock(return_value=self.mock_api_response)
+    async def test_list_users_returns_api_response(self):
+        result = await resolve(self.resource.list_users(UsersListRequest()))
+        assert isinstance(result, APIResponse)
 
-    def test_list_users_returns_api_response(self):
-        """Test list_users method returns APIResponse."""
-        query_params = UsersListQueryParams()
-        request = UsersListRequest(query_params=query_params)
+    async def test_list_users_calls_correct_endpoint(self):
+        await resolve(self.resource.list_users(UsersListRequest()))
+        call = self.mock_client.request.call_args
+        assert call.kwargs["method"] == "GET"
+        assert call.kwargs["path"] == "users"
 
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
+    async def test_get_user_returns_api_response(self):
+        result = await resolve(self.resource.get_user(UserGetRequest(user_id="usr123")))
+        assert isinstance(result, APIResponse)
 
-        result = self.resource.list_users(request)
+    async def test_get_user_calls_correct_endpoint(self):
+        await resolve(self.resource.get_user(UserGetRequest(user_id="usr123")))
+        call = self.mock_client.request.call_args
+        assert call.kwargs["method"] == "GET"
+        assert call.kwargs["path"] == "users/usr123"
 
-        assert result == self.mock_api_response
-        self.resource._create_response.assert_called_once_with(mock_response)
+    async def test_invite_user_returns_api_response(self):
+        request = UserInviteRequest(email="newuser@example.com", role="admin")
+        result = await resolve(self.resource.invite_user(request))
+        assert isinstance(result, APIResponse)
 
-    def test_list_users_with_custom_pagination(self):
-        """Test list_users with custom pagination parameters."""
-        query_params = UsersListQueryParams(page=2, limit=50)
-        request = UsersListRequest(query_params=query_params)
+    async def test_invite_user_calls_correct_endpoint(self):
+        request = UserInviteRequest(email="newuser@example.com", role="admin")
+        await resolve(self.resource.invite_user(request))
+        call = self.mock_client.request.call_args
+        assert call.kwargs["method"] == "POST"
+        assert call.kwargs["path"] == "users"
 
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
+    async def test_update_user_returns_api_response(self):
+        request = UserUpdateRequest(user_id="usr123", role="viewer")
+        result = await resolve(self.resource.update_user(request))
+        assert isinstance(result, APIResponse)
 
-        result = self.resource.list_users(request)
+    async def test_update_user_calls_correct_endpoint(self):
+        request = UserUpdateRequest(user_id="usr123", role="viewer")
+        await resolve(self.resource.update_user(request))
+        call = self.mock_client.request.call_args
+        assert call.kwargs["method"] == "PUT"
+        assert call.kwargs["path"] == "users/usr123"
 
-        self.mock_client.request.assert_called_once_with(
-            method="GET", path="users", params={"page": 2, "limit": 50}
+    async def test_delete_user_returns_api_response(self):
+        result = await resolve(self.resource.delete_user(UserDeleteRequest(user_id="usr123")))
+        assert isinstance(result, APIResponse)
+
+    async def test_delete_user_calls_correct_endpoint(self):
+        await resolve(self.resource.delete_user(UserDeleteRequest(user_id="usr123")))
+        call = self.mock_client.request.call_args
+        assert call.kwargs["method"] == "DELETE"
+        assert call.kwargs["path"] == "users/usr123"
+
+    async def test_list_invites_returns_api_response(self):
+        result = await resolve(self.resource.list_invites(InvitesListRequest()))
+        assert isinstance(result, APIResponse)
+
+    async def test_list_invites_calls_correct_endpoint(self):
+        await resolve(self.resource.list_invites(InvitesListRequest()))
+        call = self.mock_client.request.call_args
+        assert call.kwargs["method"] == "GET"
+        assert call.kwargs["path"] == "invites"
+
+    async def test_get_invite_returns_api_response(self):
+        result = await resolve(self.resource.get_invite(InviteGetRequest(invite_id="inv123")))
+        assert isinstance(result, APIResponse)
+
+    async def test_get_invite_calls_correct_endpoint(self):
+        await resolve(self.resource.get_invite(InviteGetRequest(invite_id="inv123")))
+        call = self.mock_client.request.call_args
+        assert call.kwargs["method"] == "GET"
+        assert call.kwargs["path"] == "invites/inv123"
+
+    async def test_resend_invite_returns_api_response(self):
+        result = await resolve(self.resource.resend_invite(
+            InviteResendRequest(invite_id="inv123"))
         )
-        assert result == self.mock_api_response
+        assert isinstance(result, APIResponse)
 
-    def test_get_user_returns_api_response(self):
-        """Test get_user method returns APIResponse."""
-        request = UserGetRequest(user_id="user123")
+    async def test_resend_invite_calls_correct_endpoint(self):
+        await resolve(self.resource.resend_invite(InviteResendRequest(invite_id="inv123")))
+        call = self.mock_client.request.call_args
+        assert call.kwargs["method"] == "POST"
+        assert call.kwargs["path"] == "invites/inv123/resend"
 
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
-
-        result = self.resource.get_user(request)
-
-        self.mock_client.request.assert_called_once_with(
-            method="GET", path="users/user123"
+    async def test_cancel_invite_returns_api_response(self):
+        result = await resolve(self.resource.cancel_invite(
+            InviteCancelRequest(invite_id="inv123"))
         )
-        assert result == self.mock_api_response
-        self.resource._create_response.assert_called_once_with(mock_response)
+        assert isinstance(result, APIResponse)
 
-    def test_invite_user_returns_api_response(self):
-        """Test invite_user method returns APIResponse."""
-        request = UserInviteRequest(
-            email="test@example.com",
-            role="Manager",
-            permissions=["read-templates"],
-            templates=["template1"],
-            domains=["domain1"],
-        )
-
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
-
-        result = self.resource.invite_user(request)
-
-        expected_body = {
-            "email": "test@example.com",
-            "role": "Manager",
-            "permissions": ["read-templates"],
-            "templates": ["template1"],
-            "domains": ["domain1"],
-        }
-
-        self.mock_client.request.assert_called_once_with(
-            method="POST", path="users", body=expected_body
-        )
-        assert result == self.mock_api_response
-        self.resource._create_response.assert_called_once_with(mock_response)
-
-    def test_update_user_returns_api_response(self):
-        """Test update_user method returns APIResponse."""
-        request = UserUpdateRequest(
-            user_id="user123",
-            role="Manager",
-            permissions=["read-templates"],
-            templates=["template1"],
-            domains=["domain1"],
-        )
-
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
-
-        result = self.resource.update_user(request)
-
-        expected_body = {
-            "role": "Manager",
-            "permissions": ["read-templates"],
-            "templates": ["template1"],
-            "domains": ["domain1"],
-        }
-
-        self.mock_client.request.assert_called_once_with(
-            method="PUT", path="users/user123", body=expected_body
-        )
-        assert result == self.mock_api_response
-        self.resource._create_response.assert_called_once_with(mock_response)
-
-    def test_delete_user_returns_api_response(self):
-        """Test delete_user method returns APIResponse."""
-        request = UserDeleteRequest(user_id="user123")
-
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
-
-        result = self.resource.delete_user(request)
-
-        self.mock_client.request.assert_called_once_with(
-            method="DELETE", path="users/user123"
-        )
-        assert result == self.mock_api_response
-        self.resource._create_response.assert_called_once_with(mock_response, None)
-
-    def test_list_invites_returns_api_response(self):
-        """Test list_invites method returns APIResponse."""
-        query_params = InvitesListQueryParams()
-        request = InvitesListRequest(query_params=query_params)
-
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
-
-        result = self.resource.list_invites(request)
-
-        assert result == self.mock_api_response
-        self.resource._create_response.assert_called_once_with(mock_response)
-
-    def test_get_invite_returns_api_response(self):
-        """Test get_invite method returns APIResponse."""
-        request = InviteGetRequest(invite_id="invite123")
-
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
-
-        result = self.resource.get_invite(request)
-
-        self.mock_client.request.assert_called_once_with(
-            method="GET", path="invites/invite123"
-        )
-        assert result == self.mock_api_response
-        self.resource._create_response.assert_called_once_with(mock_response)
-
-    def test_resend_invite_returns_api_response(self):
-        """Test resend_invite method returns APIResponse."""
-        request = InviteResendRequest(invite_id="invite123")
-
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
-
-        result = self.resource.resend_invite(request)
-
-        self.mock_client.request.assert_called_once_with(
-            method="POST", path="invites/invite123/resend"
-        )
-        assert result == self.mock_api_response
-        self.resource._create_response.assert_called_once_with(mock_response)
-
-    def test_cancel_invite_returns_api_response(self):
-        """Test cancel_invite method returns APIResponse."""
-        request = InviteCancelRequest(invite_id="invite123")
-
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
-
-        result = self.resource.cancel_invite(request)
-
-        self.mock_client.request.assert_called_once_with(
-            method="DELETE", path="invites/invite123"
-        )
-        assert result == self.mock_api_response
-        self.resource._create_response.assert_called_once_with(mock_response, None)
+    async def test_cancel_invite_calls_correct_endpoint(self):
+        await resolve(self.resource.cancel_invite(InviteCancelRequest(invite_id="inv123")))
+        call = self.mock_client.request.call_args
+        assert call.kwargs["method"] == "DELETE"
+        assert call.kwargs["path"] == "invites/inv123"

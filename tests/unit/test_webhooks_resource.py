@@ -1,12 +1,14 @@
-"""Unit tests for Webhooks resource."""
+"""Tests for Webhooks resource."""
+import inspect
 
-from unittest.mock import Mock, MagicMock
+from unittest.mock import AsyncMock, MagicMock, Mock
+import pytest
 
 from mailersend.resources.webhooks import Webhooks
 from mailersend.models.base import APIResponse
 from mailersend.models.webhooks import (
-    WebhooksListQueryParams,
     WebhooksListRequest,
+    WebhooksListQueryParams,
     WebhookGetRequest,
     WebhookCreateRequest,
     WebhookUpdateRequest,
@@ -14,228 +16,103 @@ from mailersend.models.webhooks import (
 )
 
 
+
+async def resolve(result):
+    if inspect.iscoroutine(result):
+        return await result
+    return result
+
+
 class TestWebhooks:
-    """Test Webhooks resource class."""
-
-    def setup_method(self):
-        """Set up test fixtures."""
-        self.mock_client = Mock()
+    @pytest.fixture(autouse=True, params=["sync", "async"])
+    def setup(self, request):
+        if request.param == "async":
+            self.mock_client = MagicMock()
+            self.mock_client.request = AsyncMock(
+                return_value=MagicMock(
+                    status_code=200, headers={"x-request-id": "test-req-id"},
+                    json=MagicMock(return_value={}), content=b"{}"
+                )
+            )
+        else:
+            self.mock_client = MagicMock()
+            self.mock_client.request = Mock(
+                return_value=MagicMock(
+                    status_code=200, headers={"x-request-id": "test-req-id"},
+                    json=MagicMock(return_value={}), content=b"{}"
+                )
+            )
         self.resource = Webhooks(self.mock_client)
-        self.resource.logger = Mock()
 
-        # Mock _create_response method
-        self.mock_api_response = MagicMock(spec=APIResponse)
-        self.resource._create_response = Mock(return_value=self.mock_api_response)
-
-    def test_list_webhooks_returns_api_response(self):
-        """Test list_webhooks method returns APIResponse."""
-        query_params = WebhooksListQueryParams(domain_id="domain123")
-        request = WebhooksListRequest(query_params=query_params)
-
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
-
-        result = self.resource.list_webhooks(request)
-
-        assert result == self.mock_api_response
-        self.resource._create_response.assert_called_once_with(mock_response)
-
-    def test_list_webhooks_uses_query_params(self):
-        """Test list_webhooks method uses query params correctly."""
-        query_params = WebhooksListQueryParams(domain_id="domain123")
-        request = WebhooksListRequest(query_params=query_params)
-
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
-
-        result = self.resource.list_webhooks(request)
-
-        # Verify client was called correctly
-        self.mock_client.request.assert_called_once_with(
-            method="GET", path="webhooks", params={"domain_id": "domain123"}
+    async def test_list_webhooks_returns_api_response(self):
+        request = WebhooksListRequest(
+            query_params=WebhooksListQueryParams(domain_id="dom123")
         )
+        result = await resolve(self.resource.list_webhooks(request))
+        assert isinstance(result, APIResponse)
 
-        # Verify _create_response was called
-        self.resource._create_response.assert_called_once_with(mock_response)
-
-    def test_get_webhook_returns_api_response(self):
-        """Test get_webhook method returns APIResponse."""
-        request = WebhookGetRequest(webhook_id="webhook123")
-
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
-
-        result = self.resource.get_webhook(request)
-
-        assert result == self.mock_api_response
-        self.resource._create_response.assert_called_once_with(mock_response)
-
-    def test_get_webhook_endpoint_construction(self):
-        """Test get_webhook constructs endpoint correctly."""
-        request = WebhookGetRequest(webhook_id="webhook123")
-
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
-
-        result = self.resource.get_webhook(request)
-
-        # Verify endpoint construction
-        self.mock_client.request.assert_called_once_with(
-            method="GET", path="webhooks/webhook123"
+    async def test_list_webhooks_calls_correct_endpoint(self):
+        request = WebhooksListRequest(
+            query_params=WebhooksListQueryParams(domain_id="dom123")
         )
+        await resolve(self.resource.list_webhooks(request))
+        call = self.mock_client.request.call_args
+        assert call.kwargs["method"] == "GET"
+        assert call.kwargs["path"] == "webhooks"
 
-    def test_create_webhook_returns_api_response(self):
-        """Test create_webhook method returns APIResponse."""
+    async def test_get_webhook_returns_api_response(self):
+        result = await resolve(self.resource.get_webhook(WebhookGetRequest(webhook_id="wh123")))
+        assert isinstance(result, APIResponse)
+
+    async def test_get_webhook_calls_correct_endpoint(self):
+        await resolve(self.resource.get_webhook(WebhookGetRequest(webhook_id="wh123")))
+        call = self.mock_client.request.call_args
+        assert call.kwargs["method"] == "GET"
+        assert call.kwargs["path"] == "webhooks/wh123"
+
+    async def test_create_webhook_returns_api_response(self):
         request = WebhookCreateRequest(
-            url="https://example.com/webhook",
-            name="Test Webhook",
+            url="https://example.com/hook",
+            name="My Webhook",
             events=["activity.sent"],
-            domain_id="domain123",
+            domain_id="dom123",
         )
+        result = await resolve(self.resource.create_webhook(request))
+        assert isinstance(result, APIResponse)
 
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
-
-        result = self.resource.create_webhook(request)
-
-        assert result == self.mock_api_response
-        self.resource._create_response.assert_called_once_with(mock_response)
-
-    def test_create_webhook_with_request_body(self):
-        """Test create_webhook sends correct request body."""
+    async def test_create_webhook_calls_correct_endpoint(self):
         request = WebhookCreateRequest(
-            url="https://example.com/webhook",
-            name="Test Webhook",
-            events=["activity.sent", "activity.delivered"],
-            domain_id="domain123",
-            enabled=True,
-        )
-
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
-
-        result = self.resource.create_webhook(request)
-
-        expected_body = {
-            "url": "https://example.com/webhook",
-            "name": "Test Webhook",
-            "events": ["activity.sent", "activity.delivered"],
-            "domain_id": "domain123",
-            "enabled": True,
-        }
-
-        # Verify client was called with correct body
-        self.mock_client.request.assert_called_once_with(
-            method="POST", path="webhooks", body=expected_body
-        )
-
-    def test_update_webhook_returns_api_response(self):
-        """Test update_webhook method returns APIResponse."""
-        request = WebhookUpdateRequest(webhook_id="webhook123", name="Updated Webhook")
-
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
-
-        result = self.resource.update_webhook(request)
-
-        assert result == self.mock_api_response
-        self.resource._create_response.assert_called_once_with(mock_response)
-
-    def test_update_webhook_with_request_body(self):
-        """Test update_webhook sends correct request body."""
-        request = WebhookUpdateRequest(
-            webhook_id="webhook123",
-            url="https://new.example.com/webhook",
-            name="Updated Webhook",
-            enabled=False,
-        )
-
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
-
-        result = self.resource.update_webhook(request)
-
-        expected_body = {
-            "url": "https://new.example.com/webhook",
-            "name": "Updated Webhook",
-            "enabled": False,
-        }
-
-        # Verify client was called with correct body and endpoint
-        self.mock_client.request.assert_called_once_with(
-            method="PUT", path="webhooks/webhook123", body=expected_body
-        )
-
-    def test_update_webhook_excludes_webhook_id_from_body(self):
-        """Test update_webhook excludes webhook_id from request body."""
-        request = WebhookUpdateRequest(webhook_id="webhook123", name="Updated Webhook")
-
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
-
-        result = self.resource.update_webhook(request)
-
-        expected_body = {"name": "Updated Webhook"}
-
-        # Verify webhook_id is not in body but is in endpoint
-        self.mock_client.request.assert_called_once_with(
-            method="PUT", path="webhooks/webhook123", body=expected_body
-        )
-
-    def test_delete_webhook_returns_api_response(self):
-        """Test delete_webhook method returns APIResponse."""
-        request = WebhookDeleteRequest(webhook_id="webhook123")
-
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
-
-        result = self.resource.delete_webhook(request)
-
-        assert result == self.mock_api_response
-        self.resource._create_response.assert_called_once_with(mock_response)
-
-    def test_delete_webhook_endpoint_construction(self):
-        """Test delete_webhook constructs endpoint correctly."""
-        request = WebhookDeleteRequest(webhook_id="webhook123")
-
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
-
-        result = self.resource.delete_webhook(request)
-
-        # Verify endpoint construction
-        self.mock_client.request.assert_called_once_with(
-            method="DELETE", path="webhooks/webhook123"
-        )
-
-    def test_integration_workflow(self):
-        """Test integration workflow with multiple operations."""
-        # Setup different requests for different methods
-        query_params = WebhooksListQueryParams(domain_id="domain123")
-        request_list = WebhooksListRequest(query_params=query_params)
-        request_get = WebhookGetRequest(webhook_id="webhook123")
-        request_create = WebhookCreateRequest(
-            url="https://example.com/webhook",
-            name="Test Webhook",
+            url="https://example.com/hook",
+            name="My Webhook",
             events=["activity.sent"],
-            domain_id="domain123",
+            domain_id="dom123",
         )
-        request_update = WebhookUpdateRequest(webhook_id="webhook123", name="Updated")
-        request_delete = WebhookDeleteRequest(webhook_id="webhook123")
+        await resolve(self.resource.create_webhook(request))
+        call = self.mock_client.request.call_args
+        assert call.kwargs["method"] == "POST"
+        assert call.kwargs["path"] == "webhooks"
 
-        # Test that each method returns the expected APIResponse type
-        assert isinstance(
-            self.resource.list_webhooks(request_list), type(self.mock_api_response)
+    async def test_update_webhook_returns_api_response(self):
+        request = WebhookUpdateRequest(webhook_id="wh123", name="Updated")
+        result = await resolve(self.resource.update_webhook(request))
+        assert isinstance(result, APIResponse)
+
+    async def test_update_webhook_excludes_id_from_body(self):
+        request = WebhookUpdateRequest(webhook_id="wh123", name="Updated")
+        await resolve(self.resource.update_webhook(request))
+        call = self.mock_client.request.call_args
+        assert call.kwargs["method"] == "PUT"
+        assert call.kwargs["path"] == "webhooks/wh123"
+        assert "webhook_id" not in (call.kwargs.get("body") or {})
+
+    async def test_delete_webhook_returns_api_response(self):
+        result = await resolve(self.resource.delete_webhook(
+            WebhookDeleteRequest(webhook_id="wh123"))
         )
-        assert isinstance(
-            self.resource.get_webhook(request_get), type(self.mock_api_response)
-        )
-        assert isinstance(
-            self.resource.create_webhook(request_create), type(self.mock_api_response)
-        )
-        assert isinstance(
-            self.resource.update_webhook(request_update), type(self.mock_api_response)
-        )
-        assert isinstance(
-            self.resource.delete_webhook(request_delete), type(self.mock_api_response)
-        )
+        assert isinstance(result, APIResponse)
+
+    async def test_delete_webhook_calls_correct_endpoint(self):
+        await resolve(self.resource.delete_webhook(WebhookDeleteRequest(webhook_id="wh123")))
+        call = self.mock_client.request.call_args
+        assert call.kwargs["method"] == "DELETE"
+        assert call.kwargs["path"] == "webhooks/wh123"

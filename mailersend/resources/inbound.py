@@ -34,11 +34,9 @@ class InboundResource(BaseResource):
         )
 
         # Make API request
-        response = self.client.request(
+        return self._request(
             method="GET", path="inbound", params=params if params else None
         )
-
-        return self._create_response(response)
 
     def get(self, request: InboundGetRequest) -> APIResponse:
         """
@@ -55,11 +53,7 @@ class InboundResource(BaseResource):
         )
 
         # Make API request
-        response = self.client.request(
-            method="GET", path=f"inbound/{request.inbound_id}"
-        )
-
-        return self._create_response(response)
+        return self._request(method="GET", path=f"inbound/{request.inbound_id}")
 
     def create(self, request: InboundCreateRequest) -> APIResponse:
         """
@@ -82,9 +76,7 @@ class InboundResource(BaseResource):
         )
 
         # Make API request
-        response = self.client.request(method="POST", path="inbound", body=data)
-
-        return self._create_response(response)
+        return self._request(method="POST", path="inbound", body=data)
 
     def update(self, request: InboundUpdateRequest) -> APIResponse:
         """
@@ -109,11 +101,9 @@ class InboundResource(BaseResource):
         )
 
         # Make API request
-        response = self.client.request(
+        return self._request(
             method="PUT", path=f"inbound/{request.inbound_id}", body=data
         )
-
-        return self._create_response(response)
 
     def delete(self, request: InboundDeleteRequest) -> APIResponse:
         """
@@ -130,8 +120,6 @@ class InboundResource(BaseResource):
         )
 
         # Make API request
-        response = self.client.request(
-            method="DELETE", path=f"inbound/{request.inbound_id}"
-        )
+        return self._request(method="DELETE", path=f"inbound/{request.inbound_id}")
 
-        return self._create_response(response)
+

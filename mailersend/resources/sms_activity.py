@@ -31,9 +31,7 @@ class SmsActivity(BaseResource):
         self.logger.debug("Listing SMS activities with params: %s", params)
 
         # Make API request
-        response = self.client.request(method="GET", path="sms-activity", params=params)
-
-        return self._create_response(response)
+        return self._request(method="GET", path="sms-activity", params=params)
 
     def get(self, request: SmsMessageGetRequest) -> APIResponse:
         """
@@ -48,8 +46,8 @@ class SmsActivity(BaseResource):
         self.logger.debug("Getting SMS message activity: %s", request.sms_message_id)
 
         # Make API request
-        response = self.client.request(
+        return self._request(
             method="GET", path=f"sms-messages/{request.sms_message_id}"
         )
 
-        return self._create_response(response)
+

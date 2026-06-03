@@ -37,11 +37,9 @@ class IdentitiesResource(BaseResource):
         )
 
         # Make API request
-        response = self.client.request(
+        return self._request(
             method="GET", path="identities", params=params if params else None
         )
-
-        return self._create_response(response)
 
     def create_identity(self, request: IdentityCreateRequest) -> APIResponse:
         """
@@ -64,9 +62,7 @@ class IdentitiesResource(BaseResource):
         )
 
         # Make API request
-        response = self.client.request(method="POST", path="identities", body=data)
-
-        return self._create_response(response)
+        return self._request(method="POST", path="identities", body=data)
 
     def get_identity(self, request: IdentityGetRequest) -> APIResponse:
         """
@@ -81,11 +77,9 @@ class IdentitiesResource(BaseResource):
         self.logger.debug("Preparing to get identity with ID: %s", request.identity_id)
 
         # Make API request
-        response = self.client.request(
+        return self._request(
             method="GET", path=f"identities/{request.identity_id}"
         )
-
-        return self._create_response(response)
 
     def get_identity_by_email(self, request: IdentityGetByEmailRequest) -> APIResponse:
         """
@@ -100,11 +94,9 @@ class IdentitiesResource(BaseResource):
         self.logger.debug("Preparing to get identity by email: %s", request.email)
 
         # Make API request
-        response = self.client.request(
+        return self._request(
             method="GET", path=f"identities/email/{request.email}"
         )
-
-        return self._create_response(response)
 
     def update_identity(self, request: IdentityUpdateRequest) -> APIResponse:
         """
@@ -131,13 +123,11 @@ class IdentitiesResource(BaseResource):
         )
 
         # Make API request
-        response = self.client.request(
+        return self._request(
             method="PUT",
             path=f"identities/{request.identity_id}",
             body=data if data else None,
         )
-
-        return self._create_response(response)
 
     def update_identity_by_email(
         self, request: IdentityUpdateByEmailRequest
@@ -162,13 +152,11 @@ class IdentitiesResource(BaseResource):
         )
 
         # Make API request
-        response = self.client.request(
+        return self._request(
             method="PUT",
             path=f"identities/email/{request.email}",
             body=data if data else None,
         )
-
-        return self._create_response(response)
 
     def delete_identity(self, request: IdentityDeleteRequest) -> APIResponse:
         """
@@ -185,11 +173,9 @@ class IdentitiesResource(BaseResource):
         )
 
         # Make API request
-        response = self.client.request(
+        return self._request(
             method="DELETE", path=f"identities/{request.identity_id}"
         )
-
-        return self._create_response(response)
 
     def delete_identity_by_email(
         self, request: IdentityDeleteByEmailRequest
@@ -206,8 +192,8 @@ class IdentitiesResource(BaseResource):
         self.logger.debug("Preparing to delete identity by email: %s", request.email)
 
         # Make API request
-        response = self.client.request(
+        return self._request(
             method="DELETE", path=f"identities/email/{request.email}"
         )
 
-        return self._create_response(response)
+

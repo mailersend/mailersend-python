@@ -5,6 +5,7 @@ MailerSend Python SDK
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 
 # Table of Contents
+
 - [Table of Contents](#table-of-contents)
 - [Installation](#installation)
   - [Requirements](#requirements)
@@ -17,6 +18,7 @@ MailerSend Python SDK
   - [Builder Pattern](#builder-pattern)
   - [Resource Classes](#resource-classes)
   - [Request and Response Models](#request-and-response-models)
+  - [Async Support](#async-support)
 - [Response Data Access](#response-data-access)
   - [Multiple Access Patterns](#multiple-access-patterns)
     - [Dict-like Access](#dict-like-access)
@@ -119,20 +121,6 @@ MailerSend Python SDK
     - [Create an email verification list](#create-an-email-verification-list)
     - [Verify a list](#verify-a-list)
     - [Get list results](#get-list-results)
-  - [Webhooks](#webhooks-1)
-    - [Get a list of webhooks](#get-a-list-of-webhooks-1)
-    - [Get a single webhook](#get-a-single-webhook-1)
-    - [Create a Webhook](#create-a-webhook-1)
-    - [Create a disabled webhook](#create-a-disabled-webhook-1)
-    - [Update a Webhook](#update-a-webhook-1)
-    - [Disable/Enable a Webhook](#disableenable-a-webhook-1)
-    - [Delete a Webhook](#delete-a-webhook-1)
-  - [Email Verification](#email-verification-1)
-    - [Get all email verification lists](#get-all-email-verification-lists-1)
-    - [Get a single email verification list](#get-a-single-email-verification-list-1)
-    - [Create an email verification list](#create-an-email-verification-list-1)
-    - [Verify a list](#verify-a-list-1)
-    - [Get list results](#get-list-results-1)
   - [SMS](#sms)
     - [Sending SMS messages](#sending-sms-messages)
   - [SMS Activity](#sms-activity)
@@ -194,6 +182,11 @@ MailerSend Python SDK
     - [Remove IP from favorites](#remove-ip-from-favorites)
   - [Other Endpoints](#other-endpoints)
     - [Get API Quota](#get-api-quota)
+  - [Async Usage](#async-usage)
+    - [Basic Async Usage](#basic-async-usage)
+    - [Concurrent Requests](#concurrent-requests)
+    - [Async Error Handling](#async-error-handling)
+    - [Async Debug Logging](#async-debug-logging)
 - [Error Handling](#error-handling)
 - [Testing](#testing)
   - [Running Unit Tests](#running-unit-tests)
@@ -212,7 +205,7 @@ pip install mailersend
 
 ## Requirements
 
-- Python 3.7+
+- Python 3.10+
 - An API Key from [mailersend.com](https://www.mailersend.com)
 
 ## Authentication
@@ -278,7 +271,7 @@ ms = MailerSendClient(api_key="your-api-key")
 
 # SDK Architecture
 
-The MailerSend Python SDK v2 introduces a modern, clean architecture that follows industry best practices:
+The MailerSend Python SDK v2 introduces a modern, clean architecture that follows industry best practices. Both a synchronous client (`MailerSendClient`) and an async client (`AsyncMailerSendClient`) are available — they share the same resources, builders, and models.
 
 ## Builder Pattern
 
@@ -309,7 +302,7 @@ Each API endpoint group has its own resource class that provides clean method in
 ```python
 # Access different API resources
 ms.sms_recipients    # SMS Recipients operations
-ms.sms_webhooks      # SMS Webhooks operations  
+ms.sms_webhooks      # SMS Webhooks operations
 ms.sms_inbounds      # SMS Inbound Routing operations
 ms.email             # Email operations
 ms.domains           # Domain operations
@@ -328,6 +321,32 @@ print(response.number)       # Validated phone number
 print(response.created_at)   # Validated datetime object
 ```
 
+## Async Support
+
+The SDK ships an async client built on [`httpx`](https://www.python-httpx.org/) for use in async applications (FastAPI, asyncio, etc.). It exposes the exact same resource namespaces and builder/model interfaces as the sync client.
+
+```python
+from mailersend import AsyncMailerSendClient
+
+# Recommended — use as an async context manager
+async with AsyncMailerSendClient() as client:
+    response = await client.emails.send(email_request)
+    print(response["id"])
+```
+
+The async client accepts the same configuration parameters:
+
+```python
+client = AsyncMailerSendClient(
+    api_key="your_api_key",  # or set MAILERSEND_API_KEY env var
+    timeout=30,
+    max_retries=3,
+    debug=True,
+)
+```
+
+Retries, rate-limit handling, and the error exception hierarchy (`AuthenticationError`, `RateLimitExceeded`, `ServerError`, etc.) behave identically to the sync client.
+
 <a name="response-data-access"></a>
 
 # Response Data Access
@@ -337,6 +356,7 @@ The MailerSend SDK provides flexible ways to access and work with API response d
 ## Multiple Access Patterns
 
 ### Dict-like Access
+
 Access response data using dictionary-style syntax:
 
 ```python
@@ -362,6 +382,7 @@ if "error" in response:
 ```
 
 ### Attribute Access
+
 Access data using dot notation for cleaner code:
 
 ```python
@@ -376,6 +397,7 @@ if hasattr(response, 'sms') and response.sms:
 ```
 
 ### Safe Access with Defaults
+
 Use the `get()` method for safe access with fallback values:
 
 ```python
@@ -390,6 +412,7 @@ current_page = meta_info.get("page", 1)
 ```
 
 ### Handling Method Name Conflicts
+
 When response data contains fields that conflict with built-in methods, use the `data_` prefix:
 
 ```python
@@ -413,6 +436,7 @@ value_list = response.data_values
 ## Data Format Conversion
 
 ### Convert to Dictionary
+
 Get the complete response as a dictionary:
 
 ```python
@@ -437,6 +461,7 @@ headers_only = response_dict["headers"]
 ```
 
 ### Convert to JSON
+
 Get JSON string representation with various formatting options:
 
 ```python
@@ -455,6 +480,7 @@ json_string = json.dumps(response)
 ```
 
 ### Extract Raw Data
+
 Access just the API response data without metadata:
 
 ```python
@@ -474,6 +500,7 @@ else:
 ## Headers and Metadata
 
 ### Access Response Headers
+
 Headers can be accessed in multiple ways with automatic case handling:
 
 ```python
@@ -494,6 +521,7 @@ retry_after = response.headers.get("retry-after", "0")
 ```
 
 ### Response Metadata
+
 Access useful metadata about the API response:
 
 ```python
@@ -518,6 +546,7 @@ if "meta" in response.data:
 ## Error Handling with Responses
 
 ### Check Response Status
+
 Always check if the response was successful:
 
 ```python
@@ -528,33 +557,34 @@ ms = MailerSendClient()
 try:
     email = EmailBuilder().from_email("sender@domain.com").build()
     response = ms.emails.send(email)
-    
+
     if response.success:
         email_id = response.id
         remaining_quota = response.rate_limit_remaining
     else:
         status_code = response.status_code
         error_details = response.data
-        
+
         # Handle rate limiting
         if response.status_code == 429 and response.retry_after:
             retry_seconds = response.retry_after
-            
+
 except Exception as e:
     # Handle exception
 ```
 
 ### Access Error Information
+
 When requests fail, error details are available in the response:
 
 ```python
 if not response.success:
     error_data = response.data
-    
+
     # API error response structure
     error_message = error_data.get("message", "Unknown error")
     error_code = error_data.get("code")
-    
+
     # Validation errors (422 responses)
     if "errors" in error_data:
         for field, messages in error_data["errors"].items():
@@ -575,7 +605,7 @@ users_response = ms.users.list_users(request)
 if users_response.success:
     users = users_response.data["data"]  # Array of users
     total_count = users_response.data["meta"]["total"]
-    
+
     for user in users:
         user_name = user['name']
         user_email = user['email']
@@ -1543,7 +1573,7 @@ from mailersend import MailerSendClient, RecipientsBuilder
 
 ms = MailerSendClient()
 
-# Delete specific entries by IDs  
+# Delete specific entries by IDs
 request = (RecipientsBuilder()
           .domain_id("domain-id")
           .ids(["recipient-id"])
@@ -1823,204 +1853,6 @@ request = (EmailVerificationBuilder()
 response = ms.email_verification.get_results(request)
 ```
 
-## Webhooks
-
-### Get a list of webhooks
-
-```python
-from mailersend import MailerSendClient
-from mailersend import WebhooksBuilder
-
-ms = MailerSendClient()
-
-request = (WebhooksBuilder()
-          .domain_id("domain-id")
-          .build_webhooks_list_request())
-
-response = ms.webhooks.list_webhooks(request)
-```
-
-### Get a single webhook
-
-```python
-from mailersend import MailerSendClient
-from mailersend import WebhooksBuilder
-
-ms = MailerSendClient()
-
-request = (WebhooksBuilder()
-          .webhook_id("webhook-id")
-          .build_webhook_get_request())
-
-response = ms.webhooks.get_webhook(request)
-```
-
-### Create a Webhook
-
-```python
-from mailersend import MailerSendClient
-from mailersend import WebhooksBuilder
-
-ms = MailerSendClient()
-
-request = (WebhooksBuilder()
-          .domain_id("domain-id")
-          .url("https://webhook.example.com")
-          .name("My Webhook")
-          .events(["activity.sent", "activity.delivered", "activity.opened"])
-          .enabled(True)
-          .build_webhook_create_request())
-
-response = ms.webhooks.create_webhook(request)
-```
-
-### Create a disabled webhook
-
-```python
-from mailersend import MailerSendClient
-from mailersend import WebhooksBuilder
-
-ms = MailerSendClient()
-
-request = (WebhooksBuilder()
-          .domain_id("domain-id")
-          .url("https://webhook.example.com")
-          .name("Disabled Webhook")
-          .events(["activity.sent", "activity.delivered"])
-          .enabled(False)  # Create disabled
-          .build_webhook_create_request())
-
-response = ms.webhooks.create_webhook(request)
-```
-
-### Update a Webhook
-
-```python
-from mailersend import MailerSendClient
-from mailersend import WebhooksBuilder
-
-ms = MailerSendClient()
-
-request = (WebhooksBuilder()
-          .webhook_id("webhook-id")
-          .name("Updated Webhook Name")
-          .url("https://new-webhook.example.com")
-          .enabled(True)
-          .build_webhook_update_request())
-
-response = ms.webhooks.update_webhook(request)
-```
-
-### Disable/Enable a Webhook
-
-```python
-from mailersend import MailerSendClient
-from mailersend import WebhooksBuilder
-
-ms = MailerSendClient()
-
-# Disable webhook
-request = (WebhooksBuilder()
-          .webhook_id("webhook-id")
-          .enabled(False)
-          .build_webhook_update_request())
-
-response = ms.webhooks.update_webhook(request)
-
-# Enable webhook
-request = (WebhooksBuilder()
-          .webhook_id("webhook-id")
-          .enabled(True)
-          .build_webhook_update_request())
-
-response = ms.webhooks.update_webhook(request)
-```
-
-### Delete a Webhook
-
-```python
-from mailersend import MailerSendClient
-from mailersend import WebhooksBuilder
-
-ms = MailerSendClient()
-
-request = (WebhooksBuilder()
-          .webhook_id("webhook-id")
-          .build_webhook_delete_request())
-
-response = ms.webhooks.delete_webhook(request)
-```
-
-## Email Verification
-
-### Get all email verification lists
-
-```python
-from mailersend import MailerSendClient, EmailVerificationBuilder
-
-ms = MailerSendClient()
-
-request = EmailVerificationBuilder().build_list_request()
-response = ms.email_verification.list_verification_lists(request)
-```
-
-### Get a single email verification list
-
-```python
-from mailersend import MailerSendClient, EmailVerificationBuilder
-
-ms = MailerSendClient()
-
-request = (EmailVerificationBuilder()
-          .verification_list_id("list-id")
-          .build_get_request())
-
-response = ms.email_verification.get_verification_list(request)
-```
-
-### Create an email verification list
-
-```python
-from mailersend import MailerSendClient, EmailVerificationBuilder
-
-ms = MailerSendClient()
-
-request = (EmailVerificationBuilder()
-          .name("My Verification List")
-          .emails(["test1@example.com", "test2@example.com"])
-          .build_create_request())
-
-response = ms.email_verification.create_verification_list(request)
-```
-
-### Verify a list
-
-```python
-from mailersend import MailerSendClient, EmailVerificationBuilder
-
-ms = MailerSendClient()
-
-request = (EmailVerificationBuilder()
-          .verification_list_id("list-id")
-          .build_verify_request())
-
-response = ms.email_verification.verify_list(request)
-```
-
-### Get list results
-
-```python
-from mailersend import MailerSendClient, EmailVerificationBuilder
-
-ms = MailerSendClient()
-
-request = (EmailVerificationBuilder()
-          .verification_list_id("list-id")
-          .build_results_request())
-
-response = ms.email_verification.get_verification_results(request)
-```
-
 ## SMS
 
 ### Sending SMS messages
@@ -2050,7 +1882,7 @@ request = (SmsSendingBuilder()
                   "data": {"name": "John", "order_id": "12345"}
               },
               {
-                  "phone_number": "+1234567891", 
+                  "phone_number": "+1234567891",
                   "data": {"name": "Jane", "order_id": "12346"}
               }
           ])
@@ -2840,6 +2672,164 @@ ms = MailerSendClient()
 response = ms.api_quota.get_quota()
 ```
 
+<a name="async-usage"></a>
+
+## Async Usage
+
+The `AsyncMailerSendClient` exposes the same resources and methods as the synchronous `MailerSendClient` — prefixed with `async`/`await` — so you can use it anywhere `asyncio` is available.
+
+### Basic Async Usage
+
+Use `AsyncMailerSendClient` as an async context manager (recommended) to ensure the underlying HTTP connection is properly closed:
+
+```python
+import asyncio
+from mailersend import AsyncMailerSendClient, EmailBuilder
+
+async def main():
+    async with AsyncMailerSendClient() as client:
+        email = (EmailBuilder()
+                 .from_email("sender@domain.com", "Your Name")
+                 .to_many([{"email": "recipient@domain.com", "name": "Recipient"}])
+                 .subject("Hello from MailerSend!")
+                 .html("<h1>Hello World!</h1>")
+                 .text("Hello World!")
+                 .build())
+
+        response = await client.emails.send(email)
+        print(response.status_code)
+
+asyncio.run(main())
+```
+
+If you prefer to manage the lifecycle manually, call `await client.close()` when finished:
+
+```python
+from mailersend import AsyncMailerSendClient
+
+client = AsyncMailerSendClient(api_key="your-api-key")
+
+try:
+    response = await client.api_quota.get_quota()
+finally:
+    await client.close()
+```
+
+All resources available on `MailerSendClient` are also available on `AsyncMailerSendClient`:
+
+```python
+async with AsyncMailerSendClient() as client:
+    client.emails            # Email operations
+    client.activities        # Activity operations
+    client.analytics         # Analytics operations
+    client.domains           # Domain operations
+    client.identities        # Sender identity operations
+    client.inbound           # Inbound route operations
+    client.templates         # Template operations
+    client.tokens            # Token operations
+    client.webhooks          # Webhook operations
+    client.email_verification  # Email verification operations
+    client.users             # User operations
+    client.messages          # Message operations
+    client.recipients        # Recipient & suppression operations
+    client.schedules         # Scheduled message operations
+    client.smtp_users        # SMTP user operations
+    client.sms_sending       # SMS sending operations
+    client.sms_numbers       # SMS phone number operations
+    client.sms_activity      # SMS activity operations
+    client.sms_inbounds      # SMS inbound routing operations
+    client.sms_recipients    # SMS recipient operations
+    client.sms_webhooks      # SMS webhook operations
+    client.sms_messages      # SMS message operations
+    client.api_quota         # API quota operations
+    client.dmarc_monitoring  # DMARC monitoring operations
+```
+
+### Concurrent Requests
+
+The main benefit of `AsyncMailerSendClient` is the ability to run multiple API calls concurrently with `asyncio.gather`:
+
+```python
+import asyncio
+from mailersend import AsyncMailerSendClient, DomainsBuilder, TemplatesBuilder
+
+async def main():
+    async with AsyncMailerSendClient() as client:
+        domains_request = DomainsBuilder().build_list_request()
+        templates_request = TemplatesBuilder().build_templates_list_request()
+
+        # Both requests run concurrently
+        domains_response, templates_response = await asyncio.gather(
+            client.domains.list_domains(domains_request),
+            client.templates.list_templates(templates_request),
+        )
+
+        print(f"Domains: {domains_response.data}")
+        print(f"Templates: {templates_response.data}")
+
+asyncio.run(main())
+```
+
+### Async Error Handling
+
+`AsyncMailerSendClient` raises the same exception types as the synchronous client:
+
+```python
+import asyncio
+from mailersend import AsyncMailerSendClient
+from mailersend.exceptions import (
+    AuthenticationError,
+    RateLimitExceeded,
+    ResourceNotFoundError,
+    BadRequestError,
+    ServerError,
+    MailerSendError,
+)
+
+async def main():
+    async with AsyncMailerSendClient() as client:
+        try:
+            response = await client.api_quota.get_quota()
+        except AuthenticationError:
+            print("Invalid API key")
+        except RateLimitExceeded as e:
+            print(f"Rate limit hit: {e}")
+        except ResourceNotFoundError:
+            print("Resource not found")
+        except BadRequestError as e:
+            print(f"Bad request: {e}")
+        except ServerError as e:
+            print(f"Server error: {e}")
+        except MailerSendError as e:
+            print(f"Unexpected error: {e}")
+
+asyncio.run(main())
+```
+
+The client automatically retries transient errors (429, 500, 502, 503, 504) with exponential backoff. For 429 responses the `Retry-After` header is respected if present.
+
+### Async Debug Logging
+
+Debug logging works the same way as the synchronous client:
+
+```python
+import asyncio
+from mailersend import AsyncMailerSendClient
+
+async def main():
+    # Enable debug at construction time
+    async with AsyncMailerSendClient(debug=True) as client:
+        response = await client.api_quota.get_quota()
+
+    # Or toggle at runtime
+    async with AsyncMailerSendClient() as client:
+        client.enable_debug()
+        response = await client.api_quota.get_quota()
+        client.disable_debug()
+
+asyncio.run(main())
+```
+
 <a name="error-handling"></a>
 
 # Error Handling
@@ -2860,14 +2850,14 @@ try:
              .subject("Test")
              .html("<h1>Test</h1>")
              .build())
-    
+
     response = ms.emails.send(email)
-    
+
 except MailerSendError as e:
     print(f"MailerSend API Error: {e}")
     print(f"Status Code: {e.status_code}")
     print(f"Error Details: {e.details}")
-    
+
 except Exception as e:
     print(f"Unexpected error: {e}")
 ```
@@ -2875,10 +2865,12 @@ except Exception as e:
 Common error types:
 
 - **ValidationError**: Invalid data in request models (handled by Pydantic)
-- **AuthenticationError**: Invalid or missing API key
-- **RateLimitError**: API rate limit exceeded
-- **APIError**: General API errors (4xx, 5xx responses)
-- **NetworkError**: Network connectivity issues
+- **AuthenticationError**: Invalid or missing API key (401)
+- **RateLimitExceeded**: API rate limit exceeded (429)
+- **BadRequestError**: Malformed or invalid request (400)
+- **ResourceNotFoundError**: Requested resource not found (404)
+- **ServerError**: Server-side error (5xx)
+- **MailerSendError**: Base exception; also raised for network connectivity failures
 
 # Testing
 
@@ -2919,36 +2911,36 @@ def test_list_sms_recipients():
 
 # Available endpoints
 
-| Feature group         | Endpoint                                | Available |
-|-----------------------|-----------------------------------------|-----------|
-| Activity              | `GET activity`                          | ✅         |
-| Analytics             | `GET analytics`                         | ✅         |
-| Domains               | `{GET, POST, PUT, DELETE} domains`      | ✅         |
-| Email                 | `POST send`                             | ✅         |
-| Email Verification    | `{GET, POST, PUT} email-verification`   | ✅         |
-| Bulk Email           | `POST bulk-email`                       | ✅         |
-| Inbound Routes       | `{GET, POST, PUT, DELETE} inbound`      | ✅         |
-| Messages             | `GET messages`                          | ✅         |
-| Scheduled Messages   | `{GET, DELETE} scheduled-messages`      | ✅         |
-| Recipients           | `{GET, POST, DELETE} recipients`        | ✅         |
-| Templates            | `{GET, DELETE} templates`               | ✅         |
-| Tokens               | `{POST, PUT, DELETE} tokens`            | ✅         |
-| SMTP Users           | `{GET, POST, PUT, DELETE} smtp-users`   | ✅         |
-| Users                | `{GET, POST, PUT, DELETE} users`        | ✅         |
-| User Invites         | `{GET, POST, DELETE} invites`           | ✅         |
-| Webhooks             | `{GET, POST, PUT, DELETE} webhooks`     | ✅         |
-| SMS Sending          | `POST sms`                              | ✅         |
-| SMS Activity         | `GET sms-activity`                      | ✅         |
-| SMS Phone Numbers    | `{GET, PUT, DELETE} sms-numbers`        | ✅         |
-| SMS Recipients       | `{GET, PUT} sms-recipients`             | ✅         |
-| SMS Messages         | `GET sms-messages`                      | ✅         |
-| SMS Webhooks         | `{GET, POST, PUT, DELETE} sms-webhooks` | ✅         |
-| SMS Inbound Routing  | `{GET, POST, PUT, DELETE} sms-inbounds` | ✅         |
-| Sender Identities    | `{GET, POST, PUT, DELETE} identities`   | ✅         |
-| API Quota            | `GET api-quota`                         | ✅         |
-| DMARC Monitoring     | `{GET, POST, PUT, DELETE} dmarc-monitoring` | ✅     |
+| Feature group       | Endpoint                                    | Available |
+| ------------------- | ------------------------------------------- | --------- |
+| Activity            | `GET activity`                              | ✅        |
+| Analytics           | `GET analytics`                             | ✅        |
+| Domains             | `{GET, POST, PUT, DELETE} domains`          | ✅        |
+| Email               | `POST send`                                 | ✅        |
+| Email Verification  | `{GET, POST, PUT} email-verification`       | ✅        |
+| Bulk Email          | `POST bulk-email`                           | ✅        |
+| Inbound Routes      | `{GET, POST, PUT, DELETE} inbound`          | ✅        |
+| Messages            | `GET messages`                              | ✅        |
+| Scheduled Messages  | `{GET, DELETE} scheduled-messages`          | ✅        |
+| Recipients          | `{GET, POST, DELETE} recipients`            | ✅        |
+| Templates           | `{GET, DELETE} templates`                   | ✅        |
+| Tokens              | `{POST, PUT, DELETE} tokens`                | ✅        |
+| SMTP Users          | `{GET, POST, PUT, DELETE} smtp-users`       | ✅        |
+| Users               | `{GET, POST, PUT, DELETE} users`            | ✅        |
+| User Invites        | `{GET, POST, DELETE} invites`               | ✅        |
+| Webhooks            | `{GET, POST, PUT, DELETE} webhooks`         | ✅        |
+| SMS Sending         | `POST sms`                                  | ✅        |
+| SMS Activity        | `GET sms-activity`                          | ✅        |
+| SMS Phone Numbers   | `{GET, PUT, DELETE} sms-numbers`            | ✅        |
+| SMS Recipients      | `{GET, PUT} sms-recipients`                 | ✅        |
+| SMS Messages        | `GET sms-messages`                          | ✅        |
+| SMS Webhooks        | `{GET, POST, PUT, DELETE} sms-webhooks`     | ✅        |
+| SMS Inbound Routing | `{GET, POST, PUT, DELETE} sms-inbounds`     | ✅        |
+| Sender Identities   | `{GET, POST, PUT, DELETE} identities`       | ✅        |
+| API Quota           | `GET api-quota`                             | ✅        |
+| DMARC Monitoring    | `{GET, POST, PUT, DELETE} dmarc-monitoring` | ✅        |
 
-*All endpoints are available and fully tested. Refer to [official API docs](https://developers.mailersend.com/) for the most up-to-date API specifications.*
+_All endpoints are available and fully tested. Refer to [official API docs](https://developers.mailersend.com/) for the most up-to-date API specifications._
 
 <a name="support-and-feedback"></a>
 

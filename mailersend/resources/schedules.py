@@ -36,13 +36,11 @@ class Schedules(BaseResource):
         )
 
         # Make API request
-        response = self.client.request(
+        return self._request(
             method="GET",
             path="message-schedules",
             params=params if params else None,
         )
-
-        return self._create_response(response)
 
     def get_schedule(self, request: ScheduleGetRequest) -> APIResponse:
         """
@@ -59,11 +57,9 @@ class Schedules(BaseResource):
         )
 
         # Make API request
-        response = self.client.request(
+        return self._request(
             method="GET", path=f"message-schedules/{request.message_id}"
         )
-
-        return self._create_response(response)
 
     def delete_schedule(self, request: ScheduleDeleteRequest) -> APIResponse:
         """
@@ -80,8 +76,8 @@ class Schedules(BaseResource):
         )
 
         # Make API request
-        response = self.client.request(
+        return self._request(
             method="DELETE", path=f"message-schedules/{request.message_id}"
         )
 
-        return self._create_response(response)
+

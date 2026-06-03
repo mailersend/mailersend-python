@@ -27,8 +27,7 @@ class SmsInbounds(BaseResource):
 
         self.logger.debug("Listing SMS inbounds with filters: %s", params)
 
-        response = self.client.request(method="GET", path="sms-inbounds", params=params)
-        return self._create_response(response)
+        return self._request(method="GET", path="sms-inbounds", params=params)
 
     def get_sms_inbound(self, request: SmsInboundGetRequest) -> APIResponse:
         """Get a single SMS inbound route.
@@ -41,11 +40,9 @@ class SmsInbounds(BaseResource):
         """
         self.logger.debug("Getting SMS inbound: %s", request.sms_inbound_id)
 
-        response = self.client.request(
+        return self._request(
             method="GET", path=f"sms-inbounds/{request.sms_inbound_id}"
         )
-
-        return self._create_response(response)
 
     def create_sms_inbound(self, request: SmsInboundCreateRequest) -> APIResponse:
         """Create a new SMS inbound route.
@@ -62,11 +59,9 @@ class SmsInbounds(BaseResource):
             request.sms_number_id,
         )
 
-        response = self.client.request(
+        return self._request(
             method="POST", path="sms-inbounds", body=request.to_request_body()
         )
-
-        return self._create_response(response)
 
     def update_sms_inbound(self, request: SmsInboundUpdateRequest) -> APIResponse:
         """Update an existing SMS inbound route.
@@ -79,13 +74,11 @@ class SmsInbounds(BaseResource):
         """
         self.logger.debug("Updating SMS inbound: %s", request.sms_inbound_id)
 
-        response = self.client.request(
+        return self._request(
             method="PUT",
             path=f"sms-inbounds/{request.sms_inbound_id}",
             body=request.to_request_body(),
         )
-
-        return self._create_response(response)
 
     def delete_sms_inbound(self, request: SmsInboundDeleteRequest) -> APIResponse:
         """Delete an SMS inbound route.
@@ -98,8 +91,8 @@ class SmsInbounds(BaseResource):
         """
         self.logger.debug("Deleting SMS inbound: %s", request.sms_inbound_id)
 
-        response = self.client.request(
+        return self._request(
             method="DELETE", path=f"sms-inbounds/{request.sms_inbound_id}"
         )
 
-        return self._create_response(response)
+

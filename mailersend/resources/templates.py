@@ -45,10 +45,7 @@ class Templates(BaseResource):
         self.logger.debug("Fetching templates with params: %s", params)
 
         # Make API call
-        response = self.client.request(method="GET", path="templates", params=params)
-
-        # Create standardized response
-        return self._create_response(response)
+        return self._request(method="GET", path="templates", params=params)
 
     def get_template(self, request: TemplateGetRequest) -> APIResponse:
         """
@@ -63,12 +60,9 @@ class Templates(BaseResource):
         self.logger.debug("Template get request: %s", request)
 
         # Make API call
-        response = self.client.request(
+        return self._request(
             method="GET", path=f"templates/{request.template_id}"
         )
-
-        # Create standardized response
-        return self._create_response(response)
 
     def delete_template(self, request: TemplateDeleteRequest) -> APIResponse:
         """
@@ -84,9 +78,8 @@ class Templates(BaseResource):
         self.logger.debug("Deleting template: %s", request.template_id)
 
         # Make API call
-        response = self.client.request(
+        return self._request(
             method="DELETE", path=f"templates/{request.template_id}"
         )
 
-        # Create standardized response
-        return self._create_response(response)
+

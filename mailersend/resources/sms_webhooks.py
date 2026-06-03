@@ -31,9 +31,7 @@ class SmsWebhooks(BaseResource):
             request.query_params.sms_number_id,
         )
 
-        response = self.client.request(method="GET", path="sms-webhooks", params=params)
-
-        return self._create_response(response)
+        return self._request(method="GET", path="sms-webhooks", params=params)
 
     def get_sms_webhook(self, request: SmsWebhookGetRequest) -> APIResponse:
         """
@@ -47,11 +45,9 @@ class SmsWebhooks(BaseResource):
         """
         self.logger.debug("Getting SMS webhook: %s", request.sms_webhook_id)
 
-        response = self.client.request(
+        return self._request(
             method="GET", path=f"sms-webhooks/{request.sms_webhook_id}"
         )
-
-        return self._create_response(response)
 
     def create_sms_webhook(self, request: SmsWebhookCreateRequest) -> APIResponse:
         """
@@ -68,11 +64,9 @@ class SmsWebhooks(BaseResource):
             request.sms_number_id,
         )
 
-        response = self.client.request(
+        return self._request(
             method="POST", path="sms-webhooks", body=request.to_request_body()
         )
-
-        return self._create_response(response)
 
     def update_sms_webhook(self, request: SmsWebhookUpdateRequest) -> APIResponse:
         """
@@ -86,13 +80,11 @@ class SmsWebhooks(BaseResource):
         """
         self.logger.debug("Updating SMS webhook: %s", request.sms_webhook_id)
 
-        response = self.client.request(
+        return self._request(
             method="PUT",
             path=f"sms-webhooks/{request.sms_webhook_id}",
             body=request.to_request_body(),
         )
-
-        return self._create_response(response)
 
     def delete_sms_webhook(self, request: SmsWebhookDeleteRequest) -> APIResponse:
         """
@@ -106,8 +98,8 @@ class SmsWebhooks(BaseResource):
         """
         self.logger.debug("Deleting SMS webhook: %s", request.sms_webhook_id)
 
-        response = self.client.request(
+        return self._request(
             method="DELETE", path=f"sms-webhooks/{request.sms_webhook_id}"
         )
 
-        return self._create_response(response)
+

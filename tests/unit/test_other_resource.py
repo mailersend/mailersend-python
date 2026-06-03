@@ -1,12 +1,11 @@
-"""Tests for SmsSending resource."""
+"""Tests for Other resource."""
 import inspect
 
 from unittest.mock import AsyncMock, MagicMock, Mock
 import pytest
 
-from mailersend.resources.sms_sending import SmsSending
+from mailersend.resources.other import Other
 from mailersend.models.base import APIResponse
-from mailersend.models.sms_sending import SmsSendRequest
 
 
 
@@ -16,7 +15,7 @@ async def resolve(result):
     return result
 
 
-class TestSmsSending:
+class TestOther:
     @pytest.fixture(autouse=True, params=["sync", "async"])
     def setup(self, request):
         if request.param == "async":
@@ -35,24 +34,14 @@ class TestSmsSending:
                     json=MagicMock(return_value={}), content=b"{}"
                 )
             )
-        self.resource = SmsSending(self.mock_client)
+        self.resource = Other(self.mock_client)
 
-    async def test_send_returns_api_response(self):
-        request = SmsSendRequest(
-            from_number="+15551234567",
-            to=["+15559876543"],
-            text="Hello from tests",
-        )
-        result = await resolve(self.resource.send(request))
+    async def test_get_quota_returns_api_response(self):
+        result = await resolve(self.resource.get_quota())
         assert isinstance(result, APIResponse)
 
-    async def test_send_calls_correct_endpoint(self):
-        request = SmsSendRequest(
-            from_number="+15551234567",
-            to=["+15559876543"],
-            text="Hello from tests",
-        )
-        await resolve(self.resource.send(request))
+    async def test_get_quota_calls_correct_endpoint(self):
+        await resolve(self.resource.get_quota())
         call = self.mock_client.request.call_args
-        assert call.kwargs["method"] == "POST"
-        assert call.kwargs["path"] == "sms"
+        assert call.kwargs["method"] == "GET"
+        assert call.kwargs["path"] == "api-quota"

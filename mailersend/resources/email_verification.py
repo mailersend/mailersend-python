@@ -12,7 +12,6 @@ from ..models.email_verification import (
     EmailVerificationVerifyRequest,
     EmailVerificationResultsRequest,
 )
-from ..exceptions import ValidationError
 
 
 class EmailVerification(BaseResource):
@@ -35,12 +34,9 @@ class EmailVerification(BaseResource):
         self.logger.debug("Verifying email address: %s", body)
 
         # Make API call
-        response = self.client.request(
+        return self._request(
             method="POST", path="email-verification/verify", body=body
         )
-
-        # Create standardized response
-        return self._create_response(response)
 
     def verify_email_async(self, request: EmailVerifyAsyncRequest) -> APIResponse:
         """Verify a single email address (asynchronous).
@@ -60,12 +56,9 @@ class EmailVerification(BaseResource):
         self.logger.debug("Starting async verification for email: %s", body)
 
         # Make API call
-        response = self.client.request(
+        return self._request(
             method="POST", path="email-verification/verify-async", body=body
         )
-
-        # Create standardized response
-        return self._create_response(response)
 
     def get_async_status(
         self, request: EmailVerificationAsyncStatusRequest
@@ -87,13 +80,10 @@ class EmailVerification(BaseResource):
         )
 
         # Make API call
-        response = self.client.request(
+        return self._request(
             method="GET",
             path=f"email-verification/verify-async/{request.email_verification_id}",
         )
-
-        # Create standardized response
-        return self._create_response(response)
 
     def list_verifications(self, request: EmailVerificationListsRequest) -> APIResponse:
         """List all email verification lists.
@@ -112,12 +102,9 @@ class EmailVerification(BaseResource):
         self.logger.debug("Listing email verification lists with params: %s", params)
 
         # Make API call
-        response = self.client.request(
+        return self._request(
             method="GET", path="email-verification", params=params
         )
-
-        # Create standardized response
-        return self._create_response(response)
 
     def get_verification(self, request: EmailVerificationGetRequest) -> APIResponse:
         """Get a single email verification list.
@@ -136,12 +123,9 @@ class EmailVerification(BaseResource):
         )
 
         # Make API call
-        response = self.client.request(
+        return self._request(
             method="GET", path=f"email-verification/{request.email_verification_id}"
         )
-
-        # Create standardized response
-        return self._create_response(response)
 
     def create_verification(
         self, request: EmailVerificationCreateRequest
@@ -166,12 +150,9 @@ class EmailVerification(BaseResource):
         )
 
         # Make API call
-        response = self.client.request(
+        return self._request(
             method="POST", path="email-verification", body=body
         )
-
-        # Create standardized response
-        return self._create_response(response)
 
     def verify_list(self, request: EmailVerificationVerifyRequest) -> APIResponse:
         """Start verification of an email verification list.
@@ -188,13 +169,10 @@ class EmailVerification(BaseResource):
         )
 
         # Make API call
-        response = self.client.request(
+        return self._request(
             method="GET",
             path=f"email-verification/{request.email_verification_id}/verify",
         )
-
-        # Create standardized response
-        return self._create_response(response)
 
     def get_results(self, request: EmailVerificationResultsRequest) -> APIResponse:
         """Get verification results for an email verification list.
@@ -217,11 +195,10 @@ class EmailVerification(BaseResource):
         )
 
         # Make API call
-        response = self.client.request(
+        return self._request(
             method="GET",
             path=f"email-verification/{request.email_verification_id}/results",
             params=params,
         )
 
-        # Create standardized response
-        return self._create_response(response)
+

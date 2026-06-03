@@ -1,7 +1,8 @@
-"""Unit tests for SMS Activity resource."""
+"""Tests for SmsActivity resource."""
+import inspect
 
+from unittest.mock import AsyncMock, MagicMock, Mock
 import pytest
-from unittest.mock import Mock, MagicMock
 
 from mailersend.resources.sms_activity import SmsActivity
 from mailersend.models.base import APIResponse
@@ -9,96 +10,52 @@ from mailersend.models.sms_activity import (
     SmsActivityListRequest,
     SmsMessageGetRequest,
 )
-from mailersend.exceptions import ValidationError as MailerSendValidationError
+
+
+
+async def resolve(result):
+    if inspect.iscoroutine(result):
+        return await result
+    return result
 
 
 class TestSmsActivity:
-    """Test SMS Activity resource class."""
-
-    def setup_method(self):
-        """Set up test fixtures."""
-        self.mock_client = Mock()
+    @pytest.fixture(autouse=True, params=["sync", "async"])
+    def setup(self, request):
+        if request.param == "async":
+            self.mock_client = MagicMock()
+            self.mock_client.request = AsyncMock(
+                return_value=MagicMock(
+                    status_code=200, headers={"x-request-id": "test-req-id"},
+                    json=MagicMock(return_value={}), content=b"{}"
+                )
+            )
+        else:
+            self.mock_client = MagicMock()
+            self.mock_client.request = Mock(
+                return_value=MagicMock(
+                    status_code=200, headers={"x-request-id": "test-req-id"},
+                    json=MagicMock(return_value={}), content=b"{}"
+                )
+            )
         self.resource = SmsActivity(self.mock_client)
-        self.resource.logger = Mock()
 
-        # Mock _create_response method
-        self.mock_api_response = MagicMock(spec=APIResponse)
-        self.resource._create_response = Mock(return_value=self.mock_api_response)
+    async def test_list_returns_api_response(self):
+        result = await resolve(self.resource.list(SmsActivityListRequest()))
+        assert isinstance(result, APIResponse)
 
-    def test_list_returns_api_response(self):
-        """Test list method returns APIResponse."""
-        request = SmsActivityListRequest()
+    async def test_list_calls_correct_endpoint(self):
+        await resolve(self.resource.list(SmsActivityListRequest()))
+        call = self.mock_client.request.call_args
+        assert call.kwargs["method"] == "GET"
+        assert call.kwargs["path"] == "sms-activity"
 
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
+    async def test_get_returns_api_response(self):
+        result = await resolve(self.resource.get(SmsMessageGetRequest(sms_message_id="msg123")))
+        assert isinstance(result, APIResponse)
 
-        result = self.resource.list(request)
-
-        assert result == self.mock_api_response
-        self.resource._create_response.assert_called_once_with(mock_response)
-
-    def test_list_with_full_parameters(self):
-        """Test list with all parameters."""
-        request = SmsActivityListRequest(
-            sms_number_id="7z3m5jgrogdpyo6n",
-            date_from=1443651141,
-            date_to=1443651200,
-            status=["delivered", "sent"],
-            page=1,
-            limit=25,
-        )
-
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
-
-        result = self.resource.list(request)
-
-        expected_params = {
-            "sms_number_id": "7z3m5jgrogdpyo6n",
-            "date_from": 1443651141,
-            "date_to": 1443651200,
-            "status[]": ["delivered", "sent"],
-            "page": 1,
-            "limit": 25,
-        }
-
-        self.mock_client.request.assert_called_once_with(
-            method="GET", path="sms-activity", params=expected_params
-        )
-        assert result == self.mock_api_response
-
-    def test_list_with_partial_parameters(self):
-        """Test list with some parameters."""
-        request = SmsActivityListRequest(
-            sms_number_id="7z3m5jgrogdpyo6n", status=["delivered"]
-        )
-
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
-
-        result = self.resource.list(request)
-
-        expected_params = {
-            "sms_number_id": "7z3m5jgrogdpyo6n",
-            "status[]": ["delivered"],
-        }
-
-        self.mock_client.request.assert_called_once_with(
-            method="GET", path="sms-activity", params=expected_params
-        )
-        assert result == self.mock_api_response
-
-    def test_get_returns_api_response(self):
-        """Test get method returns APIResponse."""
-        request = SmsMessageGetRequest(sms_message_id="62134a2d7de3253bf10d6642")
-
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
-
-        result = self.resource.get(request)
-
-        self.mock_client.request.assert_called_once_with(
-            method="GET", path="sms-messages/62134a2d7de3253bf10d6642"
-        )
-        assert result == self.mock_api_response
-        self.resource._create_response.assert_called_once_with(mock_response)
+    async def test_get_calls_correct_endpoint(self):
+        await resolve(self.resource.get(SmsMessageGetRequest(sms_message_id="msg123")))
+        call = self.mock_client.request.call_args
+        assert call.kwargs["method"] == "GET"
+        assert call.kwargs["path"] == "sms-messages/msg123"

@@ -32,9 +32,7 @@ class SmsNumbers(BaseResource):
 
         self.logger.debug("Listing SMS phone numbers with params: %s", params)
 
-        response = self.client.request(method="GET", path="sms-numbers", params=params)
-
-        return self._create_response(response)
+        return self._request(method="GET", path="sms-numbers", params=params)
 
     def get(self, request: SmsNumberGetRequest) -> APIResponse:
         """
@@ -48,11 +46,9 @@ class SmsNumbers(BaseResource):
         """
         self.logger.debug("Getting SMS phone number: %s", request.sms_number_id)
 
-        response = self.client.request(
+        return self._request(
             method="GET", path=f"sms-numbers/{request.sms_number_id}"
         )
-
-        return self._create_response(response)
 
     def update(self, request: SmsNumberUpdateRequest) -> APIResponse:
         """
@@ -71,11 +67,9 @@ class SmsNumbers(BaseResource):
 
         self.logger.debug("Updating SMS phone number: %s", payload)
 
-        response = self.client.request(
+        return self._request(
             method="PUT", path=f"sms-numbers/{request.sms_number_id}", body=payload
         )
-
-        return self._create_response(response)
 
     def delete(self, request: SmsNumberDeleteRequest) -> APIResponse:
         """
@@ -89,8 +83,8 @@ class SmsNumbers(BaseResource):
         """
         self.logger.debug("Deleting SMS phone number: %s", request.sms_number_id)
 
-        response = self.client.request(
+        return self._request(
             method="DELETE", path=f"sms-numbers/{request.sms_number_id}"
         )
 
-        return self._create_response(response)
+
