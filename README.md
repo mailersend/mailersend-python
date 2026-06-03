@@ -18,6 +18,7 @@ MailerSend Python SDK
   - [Builder Pattern](#builder-pattern)
   - [Resource Classes](#resource-classes)
   - [Request and Response Models](#request-and-response-models)
+  - [Async Support](#async-support)
 - [Response Data Access](#response-data-access)
   - [Multiple Access Patterns](#multiple-access-patterns)
     - [Dict-like Access](#dict-like-access)
@@ -181,7 +182,7 @@ MailerSend Python SDK
     - [Remove IP from favorites](#remove-ip-from-favorites)
   - [Other Endpoints](#other-endpoints)
     - [Get API Quota](#get-api-quota)
-  - [Async Support](#async-support)
+  - [Async Usage](#async-usage)
     - [Basic Async Usage](#basic-async-usage)
     - [Concurrent Requests](#concurrent-requests)
     - [Async Error Handling](#async-error-handling)
@@ -319,6 +320,32 @@ print(response.id)           # Validated string
 print(response.number)       # Validated phone number
 print(response.created_at)   # Validated datetime object
 ```
+
+## Async Support
+
+The SDK ships an async client built on [`httpx`](https://www.python-httpx.org/) for use in async applications (FastAPI, asyncio, etc.). It exposes the exact same resource namespaces and builder/model interfaces as the sync client.
+
+```python
+from mailersend import AsyncMailerSendClient
+
+# Recommended — use as an async context manager
+async with AsyncMailerSendClient() as client:
+    response = await client.emails.send(email_request)
+    print(response["id"])
+```
+
+The async client accepts the same configuration parameters:
+
+```python
+client = AsyncMailerSendClient(
+    api_key="your_api_key",  # or set MAILERSEND_API_KEY env var
+    timeout=30,
+    max_retries=3,
+    debug=True,
+)
+```
+
+Retries, rate-limit handling, and the error exception hierarchy (`AuthenticationError`, `RateLimitExceeded`, `ServerError`, etc.) behave identically to the sync client.
 
 <a name="response-data-access"></a>
 
@@ -2645,11 +2672,11 @@ ms = MailerSendClient()
 response = ms.api_quota.get_quota()
 ```
 
-<a name="async-support"></a>
+<a name="async-usage"></a>
 
-## Async Support
+## Async Usage
 
-The SDK provides a fully async-compatible client, `AsyncMailerSendClient`, built on `httpx.AsyncClient`. It exposes the same resources and methods as the synchronous `MailerSendClient` — prefixed with `async`/`await` — so you can use it anywhere `asyncio` is available.
+The `AsyncMailerSendClient` exposes the same resources and methods as the synchronous `MailerSendClient` — prefixed with `async`/`await` — so you can use it anywhere `asyncio` is available.
 
 ### Basic Async Usage
 
