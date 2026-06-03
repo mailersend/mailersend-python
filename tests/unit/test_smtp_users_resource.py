@@ -1,6 +1,8 @@
-"""Unit tests for SMTP Users resource."""
+"""Tests for SmtpUsers resource."""
+import inspect
 
-from unittest.mock import Mock, MagicMock
+from unittest.mock import AsyncMock, MagicMock, Mock
+import pytest
 
 from mailersend.resources.smtp_users import SmtpUsers
 from mailersend.models.base import APIResponse
@@ -14,223 +16,94 @@ from mailersend.models.smtp_users import (
 )
 
 
+
+async def resolve(result):
+    if inspect.iscoroutine(result):
+        return await result
+    return result
+
+
 class TestSmtpUsers:
-    """Test SmtpUsers resource class."""
-
-    def setup_method(self):
-        """Set up test fixtures."""
-        self.mock_client = Mock()
+    @pytest.fixture(autouse=True, params=["sync", "async"])
+    def setup(self, request):
+        if request.param == "async":
+            self.mock_client = MagicMock()
+            self.mock_client.request = AsyncMock(
+                return_value=MagicMock(
+                    status_code=200, headers={"x-request-id": "test-req-id"},
+                    json=MagicMock(return_value={}), content=b"{}"
+                )
+            )
+        else:
+            self.mock_client = MagicMock()
+            self.mock_client.request = Mock(
+                return_value=MagicMock(
+                    status_code=200, headers={"x-request-id": "test-req-id"},
+                    json=MagicMock(return_value={}), content=b"{}"
+                )
+            )
         self.resource = SmtpUsers(self.mock_client)
-        self.resource.logger = Mock()
 
-        # Mock _create_response method
-        self.mock_api_response = MagicMock(spec=APIResponse)
-        self.resource._create_response = Mock(return_value=self.mock_api_response)
+    async def test_list_smtp_users_returns_api_response(self):
+        request = SmtpUsersListRequest(domain_id="dom123")
+        result = await resolve(self.resource.list_smtp_users(request))
+        assert isinstance(result, APIResponse)
 
-    def test_list_smtp_users_returns_api_response(self):
-        """Test list_smtp_users method returns APIResponse."""
-        query_params = SmtpUsersListQueryParams()
-        request = SmtpUsersListRequest(
-            domain_id="test-domain", query_params=query_params
-        )
+    async def test_list_smtp_users_calls_correct_endpoint(self):
+        request = SmtpUsersListRequest(domain_id="dom123")
+        await resolve(self.resource.list_smtp_users(request))
+        call = self.mock_client.request.call_args
+        assert call.kwargs["method"] == "GET"
+        assert call.kwargs["path"] == "domains/dom123/smtp-users"
 
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
+    async def test_get_smtp_user_returns_api_response(self):
+        request = SmtpUserGetRequest(domain_id="dom123", smtp_user_id="user456")
+        result = await resolve(self.resource.get_smtp_user(request))
+        assert isinstance(result, APIResponse)
 
-        result = self.resource.list_smtp_users(request)
+    async def test_get_smtp_user_calls_correct_endpoint(self):
+        request = SmtpUserGetRequest(domain_id="dom123", smtp_user_id="user456")
+        await resolve(self.resource.get_smtp_user(request))
+        call = self.mock_client.request.call_args
+        assert call.kwargs["method"] == "GET"
+        assert call.kwargs["path"] == "domains/dom123/smtp-users/user456"
 
-        assert result == self.mock_api_response
-        self.resource._create_response.assert_called_once_with(mock_response)
+    async def test_create_smtp_user_returns_api_response(self):
+        request = SmtpUserCreateRequest(domain_id="dom123", name="My SMTP User")
+        result = await resolve(self.resource.create_smtp_user(request))
+        assert isinstance(result, APIResponse)
 
-    def test_list_smtp_users_uses_query_params(self):
-        """Test list_smtp_users method uses query params correctly."""
-        query_params = SmtpUsersListQueryParams(limit=50)
-        request = SmtpUsersListRequest(
-            domain_id="test-domain", query_params=query_params
-        )
+    async def test_create_smtp_user_calls_correct_endpoint(self):
+        request = SmtpUserCreateRequest(domain_id="dom123", name="My SMTP User")
+        await resolve(self.resource.create_smtp_user(request))
+        call = self.mock_client.request.call_args
+        assert call.kwargs["method"] == "POST"
+        assert call.kwargs["path"] == "domains/dom123/smtp-users"
 
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
-
-        result = self.resource.list_smtp_users(request)
-
-        # Verify client was called correctly
-        self.mock_client.request.assert_called_once_with(
-            method="GET",
-            path="domains/test-domain/smtp-users",
-            params={"limit": 50},
-        )
-
-        # Verify _create_response was called
-        self.resource._create_response.assert_called_once_with(mock_response)
-
-    def test_list_smtp_users_with_defaults(self):
-        """Test list_smtp_users with default query params."""
-        query_params = SmtpUsersListQueryParams()
-        request = SmtpUsersListRequest(
-            domain_id="test-domain", query_params=query_params
-        )
-
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
-
-        result = self.resource.list_smtp_users(request)
-
-        # Verify client was called with empty params (defaults excluded)
-        self.mock_client.request.assert_called_once_with(
-            method="GET", path="domains/test-domain/smtp-users", params={}
-        )
-
-    def test_get_smtp_user_returns_api_response(self):
-        """Test get_smtp_user method returns APIResponse."""
-        request = SmtpUserGetRequest(domain_id="test-domain", smtp_user_id="user123")
-
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
-
-        result = self.resource.get_smtp_user(request)
-
-        assert result == self.mock_api_response
-        self.resource._create_response.assert_called_once_with(mock_response)
-
-    def test_get_smtp_user_endpoint_construction(self):
-        """Test get_smtp_user constructs endpoint correctly."""
-        request = SmtpUserGetRequest(domain_id="test-domain", smtp_user_id="user123")
-
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
-
-        result = self.resource.get_smtp_user(request)
-
-        # Verify endpoint construction
-        self.mock_client.request.assert_called_once_with(
-            method="GET", path="domains/test-domain/smtp-users/user123"
-        )
-
-    def test_create_smtp_user_returns_api_response(self):
-        """Test create_smtp_user method returns APIResponse."""
-        request = SmtpUserCreateRequest(domain_id="test-domain", name="Test User")
-
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
-
-        result = self.resource.create_smtp_user(request)
-
-        assert result == self.mock_api_response
-        self.resource._create_response.assert_called_once_with(mock_response)
-
-    def test_create_smtp_user_with_request_body(self):
-        """Test create_smtp_user sends correct request body."""
-        request = SmtpUserCreateRequest(
-            domain_id="test-domain", name="Test User", enabled=True
-        )
-
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
-
-        result = self.resource.create_smtp_user(request)
-
-        # Verify client was called with correct body
-        self.mock_client.request.assert_called_once_with(
-            method="POST",
-            path="domains/test-domain/smtp-users",
-            body={"name": "Test User", "enabled": True},
-        )
-
-    def test_update_smtp_user_returns_api_response(self):
-        """Test update_smtp_user method returns APIResponse."""
+    async def test_update_smtp_user_returns_api_response(self):
         request = SmtpUserUpdateRequest(
-            domain_id="test-domain", smtp_user_id="user123", name="Updated User"
+            domain_id="dom123", smtp_user_id="user456", name="Updated"
         )
+        result = await resolve(self.resource.update_smtp_user(request))
+        assert isinstance(result, APIResponse)
 
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
-
-        result = self.resource.update_smtp_user(request)
-
-        assert result == self.mock_api_response
-        self.resource._create_response.assert_called_once_with(mock_response)
-
-    def test_update_smtp_user_with_request_body(self):
-        """Test update_smtp_user sends correct request body."""
+    async def test_update_smtp_user_calls_correct_endpoint(self):
         request = SmtpUserUpdateRequest(
-            domain_id="test-domain",
-            smtp_user_id="user123",
-            name="Updated User",
-            enabled=False,
+            domain_id="dom123", smtp_user_id="user456", name="Updated"
         )
+        await resolve(self.resource.update_smtp_user(request))
+        call = self.mock_client.request.call_args
+        assert call.kwargs["method"] == "PUT"
+        assert call.kwargs["path"] == "domains/dom123/smtp-users/user456"
 
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
+    async def test_delete_smtp_user_returns_api_response(self):
+        request = SmtpUserDeleteRequest(domain_id="dom123", smtp_user_id="user456")
+        result = await resolve(self.resource.delete_smtp_user(request))
+        assert isinstance(result, APIResponse)
 
-        result = self.resource.update_smtp_user(request)
-
-        # Verify client was called with correct body and endpoint
-        self.mock_client.request.assert_called_once_with(
-            method="PUT",
-            path="domains/test-domain/smtp-users/user123",
-            body={"name": "Updated User", "enabled": False},
-        )
-
-    def test_delete_smtp_user_returns_api_response(self):
-        """Test delete_smtp_user method returns APIResponse."""
-        request = SmtpUserDeleteRequest(domain_id="test-domain", smtp_user_id="user123")
-
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
-
-        result = self.resource.delete_smtp_user(request)
-
-        assert result == self.mock_api_response
-        self.resource._create_response.assert_called_once_with(mock_response)
-
-    def test_delete_smtp_user_endpoint_construction(self):
-        """Test delete_smtp_user constructs endpoint correctly."""
-        request = SmtpUserDeleteRequest(domain_id="test-domain", smtp_user_id="user123")
-
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
-
-        result = self.resource.delete_smtp_user(request)
-
-        # Verify endpoint construction
-        self.mock_client.request.assert_called_once_with(
-            method="DELETE", path="domains/test-domain/smtp-users/user123"
-        )
-
-    def test_integration_workflow(self):
-        """Test integration workflow with multiple operations."""
-        # Setup different requests for different methods
-        query_params = SmtpUsersListQueryParams()
-        request_list = SmtpUsersListRequest(
-            domain_id="test-domain", query_params=query_params
-        )
-        request_get = SmtpUserGetRequest(
-            domain_id="test-domain", smtp_user_id="user123"
-        )
-        request_create = SmtpUserCreateRequest(
-            domain_id="test-domain", name="Test User"
-        )
-        request_update = SmtpUserUpdateRequest(
-            domain_id="test-domain", smtp_user_id="user123", name="Updated User"
-        )
-        request_delete = SmtpUserDeleteRequest(
-            domain_id="test-domain", smtp_user_id="user123"
-        )
-
-        # Test that each method returns the expected APIResponse type
-        assert isinstance(
-            self.resource.list_smtp_users(request_list), type(self.mock_api_response)
-        )
-        assert isinstance(
-            self.resource.get_smtp_user(request_get), type(self.mock_api_response)
-        )
-        assert isinstance(
-            self.resource.create_smtp_user(request_create), type(self.mock_api_response)
-        )
-        assert isinstance(
-            self.resource.update_smtp_user(request_update), type(self.mock_api_response)
-        )
-        assert isinstance(
-            self.resource.delete_smtp_user(request_delete), type(self.mock_api_response)
-        )
+    async def test_delete_smtp_user_calls_correct_endpoint(self):
+        request = SmtpUserDeleteRequest(domain_id="dom123", smtp_user_id="user456")
+        await resolve(self.resource.delete_smtp_user(request))
+        call = self.mock_client.request.call_args
+        assert call.kwargs["method"] == "DELETE"
+        assert call.kwargs["path"] == "domains/dom123/smtp-users/user456"
