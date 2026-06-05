@@ -436,11 +436,7 @@ class TestDomainsBuilderBuildMethods:
             False
         ).track_content(True).send_paused(False).custom_tracking_enabled(
             True
-        ).precedence_bulk(
-            True
-        ).ignore_duplicated_recipients(
-            False
-        )
+        ).precedence_bulk(True).ignore_duplicated_recipients(False)
 
         request = builder.build_update_settings_request()
 
