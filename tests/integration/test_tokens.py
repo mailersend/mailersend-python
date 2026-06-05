@@ -297,7 +297,8 @@ class TestTokensIntegration:
 
         with pytest.raises(ValidationError) as exc_info:
             TokenUpdateNameRequest(
-                token_id="test-id", name="x" * 51  # Exceeds 50 character limit
+                token_id="test-id",
+                name="x" * 51,  # Exceeds 50 character limit
             )
         assert "string should have at most 50 characters" in str(exc_info.value).lower()
 

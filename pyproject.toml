@@ -33,7 +33,7 @@ upload_to_release = true
 version_variable = "setup.py:__version__"
 
 [tool.ruff]
-line-length = 200
+line-length = 88
 
 [tool.ruff.format]
 # black-compatible defaults

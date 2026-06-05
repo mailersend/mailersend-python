@@ -175,7 +175,7 @@ class TestInboundIntegration:
 
         request = InboundCreateRequest(
             domain_id="invalid-domain-id",
-            **{k: v for k, v in sample_inbound_data.items() if k != "domain_id"}
+            **{k: v for k, v in sample_inbound_data.items() if k != "domain_id"},
         )
 
         with pytest.raises(BadRequestError) as exc_info:
@@ -195,7 +195,7 @@ class TestInboundIntegration:
 
         request = InboundUpdateRequest(
             inbound_id="test-inbound-id",
-            **{k: v for k, v in sample_inbound_data.items() if k != "domain_id"}
+            **{k: v for k, v in sample_inbound_data.items() if k != "domain_id"},
         )
 
         with pytest.raises(ResourceNotFoundError) as exc_info:

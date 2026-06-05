@@ -79,7 +79,7 @@ class TestActivityEmail:
             tags=["newsletter", "marketing"],
             created_at="2023-01-01T00:00:00Z",
             updated_at="2023-01-01T00:00:00Z",
-            recipient=recipient
+            recipient=recipient,
         )
 
         assert email.id == "email-456"
@@ -129,7 +129,7 @@ class TestActivityEmail:
             status="sent",
             created_at="2023-01-01T00:00:00Z",
             updated_at="2023-01-01T00:00:00Z",
-            recipient=recipient
+            recipient=recipient,
         )
 
         assert email.text is None
@@ -170,7 +170,7 @@ class TestActivity:
             status="sent",
             created_at="2023-01-01T00:00:00Z",
             updated_at="2023-01-01T00:00:00Z",
-            recipient=recipient
+            recipient=recipient,
         )
 
         activity = Activity(
