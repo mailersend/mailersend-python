@@ -249,7 +249,8 @@ class TestSmtpUsersIntegration:
         # Test name too long - this will also raise a pydantic ValidationError first
         with pytest.raises(ValidationError) as exc_info:
             SmtpUserCreateRequest(
-                domain_id="test-domain", name="x" * 51  # Exceeds 50 character limit
+                domain_id="test-domain",
+                name="x" * 51,  # Exceeds 50 character limit
             )
         assert "string should have at most 50 characters" in str(exc_info.value).lower()
 
