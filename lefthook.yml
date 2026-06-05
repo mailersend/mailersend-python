@@ -8,6 +8,6 @@ remotes:
 pre-commit:
   parallel: true
   commands:
-    black:
+    ruff:
       glob: "*.py"
-      run: black .
+      run: ruff format .

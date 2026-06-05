@@ -216,7 +216,9 @@ class TestSmsSendingIntegration:
         # Test empty recipients list
         with pytest.raises(ValueError):
             SmsSendRequest(
-                from_number="+1234567890", to=[], text="Test message"  # Empty list
+                from_number="+1234567890",
+                to=[],
+                text="Test message",  # Empty list
             )
 
         # Test too many recipients (over 50)
@@ -232,7 +234,8 @@ class TestSmsSendingIntegration:
         # Test invalid phone number in personalization (no +)
         with pytest.raises(ValueError) as exc_info:
             SmsPersonalization(
-                phone_number="1234567890", data={"name": "John"}  # Missing +
+                phone_number="1234567890",
+                data={"name": "John"},  # Missing +
             )
         assert "e164 format" in str(exc_info.value).lower()
 
