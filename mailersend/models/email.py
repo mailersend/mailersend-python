@@ -62,6 +62,7 @@ class EmailRequest(BaseModel):
     text: Optional[str] = None
     html: Optional[str] = None
     template_id: Optional[str] = None
+    language: Optional[str] = None
     attachments: Optional[List[EmailAttachment]] = None
     tags: Optional[List[str]] = None
     personalization: Optional[List[EmailPersonalization]] = None
