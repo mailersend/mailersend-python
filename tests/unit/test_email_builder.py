@@ -300,6 +300,35 @@ class TestEmailBuilder:
 
         assert email.template_id == "template-123"
 
+    def test_language_method(self):
+        """Test language is set when provided"""
+        email = (
+            EmailBuilder()
+            .from_email("sender@example.com")
+            .to("recipient@example.com")
+            .subject("Language Test")
+            .template("template-123")
+            .language("de")
+            .build()
+        )
+
+        assert email.language == "de"
+        assert "language" in email.model_dump(by_alias=True, exclude_none=True)
+
+    def test_language_omitted_when_not_set(self):
+        """Test language defaults to None and is omitted from the payload"""
+        email = (
+            EmailBuilder()
+            .from_email("sender@example.com")
+            .to("recipient@example.com")
+            .subject("No Language Test")
+            .template("template-123")
+            .build()
+        )
+
+        assert email.language is None
+        assert "language" not in email.model_dump(by_alias=True, exclude_none=True)
+
     def test_attach_file(self):
         """Test file attachment"""
         file_content = b"This is test file content"

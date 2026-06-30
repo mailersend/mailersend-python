@@ -704,6 +704,21 @@ email = (EmailBuilder()
 response = ms.emails.send(email)
 ```
 
+You can also set a `language` code for a template-based email. It is
+only meaningful with a template and is ignored for raw html/text sends.
+Supported codes: `de`, `en`, `es`, `fr`, `it`, `lt`, `nl`, `pl`, `pt-BR`.
+
+```python
+email = (EmailBuilder()
+         .from_email("sender@domain.com", "Your Name")
+         .to_many([{"email": "recipient@domain.com", "name": "Recipient"}])
+         .template("template-id")
+         .language("de")
+         .build())
+
+response = ms.emails.send(email)
+```
+
 ### Personalization
 
 ```python

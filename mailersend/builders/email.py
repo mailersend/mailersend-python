@@ -69,6 +69,7 @@ class EmailBuilder:
         self._html: Optional[str] = None
         self._text: Optional[str] = None
         self._template_id: Optional[str] = None
+        self._language: Optional[str] = None
         self._attachments: List[EmailAttachment] = []
         self._tags: List[str] = []
         self._personalization: List[EmailPersonalization] = []
@@ -345,6 +346,23 @@ class EmailBuilder:
             EmailBuilder instance for chaining
         """
         self._template_id = template_id
+        return self
+
+    def language(self, language: str) -> "EmailBuilder":
+        """
+        Set the language for the email content.
+
+        Only meaningful when sending with a template; ignored for raw
+        html/text sends. Supported codes: de, en, es, fr, it, lt,
+        nl, pl, pt-BR.
+
+        Args:
+            language: Language code (e.g. "de", "fr", "pt-BR")
+
+        Returns:
+            EmailBuilder instance for chaining
+        """
+        self._language = language
         return self
 
     def attach_file(
@@ -680,6 +698,8 @@ class EmailBuilder:
             data["text"] = self._text
         if self._template_id:
             data["template_id"] = self._template_id
+        if self._language:
+            data["language"] = self._language
         if self._attachments:
             data["attachments"] = self._attachments
         if self._tags:
@@ -734,6 +754,7 @@ class EmailBuilder:
         new_builder._html = self._html
         new_builder._text = self._text
         new_builder._template_id = self._template_id
+        new_builder._language = self._language
         new_builder._attachments = self._attachments.copy()
         new_builder._tags = self._tags.copy()
         new_builder._personalization = self._personalization.copy()
