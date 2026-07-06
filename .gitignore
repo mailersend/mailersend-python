@@ -96,3 +96,4 @@ ENV/
 toolset.py
 doctester.py
 .direnv/
+tests/fixutres/
