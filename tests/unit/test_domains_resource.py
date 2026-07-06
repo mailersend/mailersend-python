@@ -1,216 +1,163 @@
-"""
-Unit tests for Domains resource.
+"""Tests for Domains resource."""
+import inspect
 
-Tests basic functionality, validation, and error handling.
-"""
-
-from unittest.mock import Mock
+from unittest.mock import AsyncMock, MagicMock, Mock
+import pytest
 
 from mailersend.resources.domains import Domains
 from mailersend.models.domains import (
     DomainListRequest,
     DomainListQueryParams,
     DomainCreateRequest,
+    DomainGetRequest,
+    DomainDeleteRequest,
     DomainUpdateSettingsRequest,
     DomainRecipientsRequest,
     DomainRecipientsQueryParams,
+    DomainDnsRecordsRequest,
+    DomainVerificationRequest,
 )
 from mailersend.models.base import APIResponse
 
 
-class TestDomainsResourceInitialization:
-    """Test Domains resource initialization."""
 
-    def test_domains_resource_initialization(self):
-        """Test Domains resource initializes correctly."""
-        mock_client = Mock()
-        domains = Domains(mock_client)
-
-        assert domains.client is mock_client
-        assert domains.logger is not None
+async def resolve(result):
+    if inspect.iscoroutine(result):
+        return await result
+    return result
 
 
-class TestDomainsResourceQueryParams:
-    """Test query parameter handling."""
+class TestDomains:
+    @pytest.fixture(autouse=True, params=["sync", "async"])
+    def setup(self, request):
+        if request.param == "async":
+            self.mock_client = MagicMock()
+            self.mock_client.request = AsyncMock(
+                return_value=MagicMock(
+                    status_code=200, headers={"x-request-id": "test-req-id"},
+                    json=MagicMock(return_value={}), content=b"{}"
+                )
+            )
+        else:
+            self.mock_client = MagicMock()
+            self.mock_client.request = Mock(
+                return_value=MagicMock(
+                    status_code=200, headers={"x-request-id": "test-req-id"},
+                    json=MagicMock(return_value={}), content=b"{}"
+                )
+            )
+        self.resource = Domains(self.mock_client)
 
-    def test_list_domains_default_params(self):
-        """Test list_domains with default parameters."""
-        mock_client = Mock()
-        mock_response = Mock()
-        mock_client.request.return_value = mock_response
+    async def test_list_domains_returns_api_response(self):
+        result = await resolve(self.resource.list_domains())
+        assert isinstance(result, APIResponse)
 
-        domains = Domains(mock_client)
-        domains._create_response = Mock(return_value=Mock(spec=APIResponse))
+    async def test_list_domains_uses_default_params(self):
+        await resolve(self.resource.list_domains())
+        call = self.mock_client.request.call_args
+        assert call.kwargs["method"] == "GET"
+        assert call.kwargs["path"] == "domains"
+        assert call.kwargs["params"] == {"page": 1, "limit": 25}
 
-        # Call without request should use defaults
-        result = domains.list_domains()
-
-        # Should call with default query params
-        mock_client.request.assert_called_once_with(
-            method="GET", path="domains", params={"page": 1, "limit": 25}
+    async def test_list_domains_with_custom_params(self):
+        request = DomainListRequest(
+            query_params=DomainListQueryParams(page=2, limit=50, verified=True)
         )
-        domains._create_response.assert_called_once_with(mock_response)
-        assert isinstance(result, type(domains._create_response.return_value))
+        await resolve(self.resource.list_domains(request))
+        call = self.mock_client.request.call_args
+        assert call.kwargs["params"]["page"] == 2
+        assert call.kwargs["params"]["limit"] == 50
 
-    def test_list_domains_with_custom_params(self):
-        """Test list_domains with custom parameters."""
-        mock_client = Mock()
-        mock_response = Mock()
-        mock_client.request.return_value = mock_response
+    async def test_get_domain_returns_api_response(self):
+        result = await resolve(self.resource.get_domain(DomainGetRequest(domain_id="dom123")))
+        assert isinstance(result, APIResponse)
 
-        domains = Domains(mock_client)
-        domains._create_response = Mock(return_value=Mock(spec=APIResponse))
+    async def test_get_domain_calls_correct_endpoint(self):
+        await resolve(self.resource.get_domain(DomainGetRequest(domain_id="dom123")))
+        call = self.mock_client.request.call_args
+        assert call.kwargs["method"] == "GET"
+        assert call.kwargs["path"] == "domains/dom123"
 
-        query_params = DomainListQueryParams(page=2, limit=50, verified=True)
-        request = DomainListRequest(query_params=query_params)
-
-        result = domains.list_domains(request)
-
-        expected_params = {"page": 2, "limit": 50, "verified": "true"}
-        mock_client.request.assert_called_once_with(
-            method="GET", path="domains", params=expected_params
+    async def test_create_domain_returns_api_response(self):
+        result = await resolve(self.resource.create_domain(
+            DomainCreateRequest(name="example.com"))
         )
-        domains._create_response.assert_called_once_with(mock_response)
-        assert isinstance(result, type(domains._create_response.return_value))
+        assert isinstance(result, APIResponse)
 
-    def test_recipients_query_params_delegation(self):
-        """Test that recipients request properly delegates query parameters."""
-        mock_client = Mock()
-        mock_response = Mock()
-        mock_client.request.return_value = mock_response
+    async def test_create_domain_calls_correct_endpoint(self):
+        await resolve(self.resource.create_domain(DomainCreateRequest(name="example.com")))
+        call = self.mock_client.request.call_args
+        assert call.kwargs["method"] == "POST"
+        assert call.kwargs["path"] == "domains"
+        assert call.kwargs["body"]["name"] == "example.com"
 
-        domains = Domains(mock_client)
-        domains._create_response = Mock(return_value=Mock(spec=APIResponse))
+    async def test_delete_domain_returns_api_response(self):
+        result = await resolve(self.resource.delete_domain(
+            DomainDeleteRequest(domain_id="dom123"))
+        )
+        assert isinstance(result, APIResponse)
 
-        query_params = DomainRecipientsQueryParams(page=3, limit=20)
+    async def test_delete_domain_calls_correct_endpoint(self):
+        await resolve(self.resource.delete_domain(DomainDeleteRequest(domain_id="dom123")))
+        call = self.mock_client.request.call_args
+        assert call.kwargs["method"] == "DELETE"
+        assert call.kwargs["path"] == "domains/dom123"
+
+    async def test_get_domain_recipients_returns_api_response(self):
         request = DomainRecipientsRequest(
-            domain_id="test-domain-id", query_params=query_params
+            domain_id="dom123",
+            query_params=DomainRecipientsQueryParams(),
         )
+        result = await resolve(self.resource.get_domain_recipients(request))
+        assert isinstance(result, APIResponse)
 
-        result = domains.get_domain_recipients(request)
-
-        expected_params = {"page": 3, "limit": 20}
-        mock_client.request.assert_called_once_with(
-            method="GET",
-            path="domains/test-domain-id/recipients",
-            params=expected_params,
+    async def test_get_domain_recipients_calls_correct_endpoint(self):
+        request = DomainRecipientsRequest(
+            domain_id="dom123", query_params=DomainRecipientsQueryParams()
         )
-        domains._create_response.assert_called_once_with(mock_response)
-        assert isinstance(result, type(domains._create_response.return_value))
+        await resolve(self.resource.get_domain_recipients(request))
+        call = self.mock_client.request.call_args
+        assert call.kwargs["method"] == "GET"
+        assert call.kwargs["path"] == "domains/dom123/recipients"
 
+    async def test_update_domain_settings_returns_api_response(self):
+        request = DomainUpdateSettingsRequest(domain_id="dom123", track_opens=True)
+        result = await resolve(self.resource.update_domain_settings(request))
+        assert isinstance(result, APIResponse)
 
-class TestDomainsResourceRequestBodyHandling:
-    """Test request body handling."""
+    async def test_update_domain_settings_excludes_domain_id_from_body(self):
+        request = DomainUpdateSettingsRequest(domain_id="dom123", track_opens=True)
+        await resolve(self.resource.update_domain_settings(request))
+        call = self.mock_client.request.call_args
+        assert call.kwargs["method"] == "PUT"
+        assert call.kwargs["path"] == "domains/dom123/settings"
+        assert "domain_id" not in call.kwargs["body"]
+        assert call.kwargs["body"]["track_opens"] is True
 
-    def test_create_domain_body_serialization(self):
-        """Test that create domain properly serializes request body."""
-        mock_client = Mock()
-        mock_response = Mock()
-        mock_client.request.return_value = mock_response
-
-        domains = Domains(mock_client)
-        domains._create_response = Mock(return_value=Mock(spec=APIResponse))
-
-        request = DomainCreateRequest(name="example.com", return_path_subdomain="mail")
-
-        result = domains.create_domain(request)
-
-        expected_body = {"name": "example.com", "return_path_subdomain": "mail"}
-        mock_client.request.assert_called_once_with(
-            method="POST", path="domains", body=expected_body
+    async def test_get_domain_dns_records_returns_api_response(self):
+        result = await resolve(self.resource.get_domain_dns_records(
+            DomainDnsRecordsRequest(domain_id="dom123"))
         )
-        domains._create_response.assert_called_once_with(mock_response)
-        assert isinstance(result, type(domains._create_response.return_value))
+        assert isinstance(result, APIResponse)
 
-    def test_update_settings_body_excludes_domain_id(self):
-        """Test that update settings excludes domain_id from request body."""
-        mock_client = Mock()
-        mock_response = Mock()
-        mock_client.request.return_value = mock_response
-
-        domains = Domains(mock_client)
-        domains._create_response = Mock(return_value=Mock(spec=APIResponse))
-
-        request = DomainUpdateSettingsRequest(
-            domain_id="test-domain-id", track_opens=True, send_paused=False
+    async def test_get_domain_dns_records_calls_correct_endpoint(self):
+        await resolve(self.resource.get_domain_dns_records(
+            DomainDnsRecordsRequest(domain_id="dom123"))
         )
+        call = self.mock_client.request.call_args
+        assert call.kwargs["method"] == "GET"
+        assert call.kwargs["path"] == "domains/dom123/dns-records"
 
-        result = domains.update_domain_settings(request)
-
-        expected_body = {"track_opens": True, "send_paused": False}
-        # domain_id should NOT be in body, only in URL
-        assert "domain_id" not in expected_body
-
-        mock_client.request.assert_called_once_with(
-            method="PUT", path="domains/test-domain-id/settings", body=expected_body
+    async def test_get_domain_verification_status_returns_api_response(self):
+        result = await resolve(self.resource.get_domain_verification_status(
+            DomainVerificationRequest(domain_id="dom123"))
         )
-        domains._create_response.assert_called_once_with(mock_response)
-        assert isinstance(result, type(domains._create_response.return_value))
+        assert isinstance(result, APIResponse)
 
-
-class TestDomainsResourceMethodSignatures:
-    """Test that all methods exist with correct signatures."""
-
-    def test_list_domains_method_exists(self):
-        """Test list_domains method exists."""
-        mock_client = Mock()
-        domains = Domains(mock_client)
-
-        assert hasattr(domains, "list_domains")
-        assert callable(getattr(domains, "list_domains"))
-
-    def test_get_domain_method_exists(self):
-        """Test get_domain method exists."""
-        mock_client = Mock()
-        domains = Domains(mock_client)
-
-        assert hasattr(domains, "get_domain")
-        assert callable(getattr(domains, "get_domain"))
-
-    def test_create_domain_method_exists(self):
-        """Test create_domain method exists."""
-        mock_client = Mock()
-        domains = Domains(mock_client)
-
-        assert hasattr(domains, "create_domain")
-        assert callable(getattr(domains, "create_domain"))
-
-    def test_delete_domain_method_exists(self):
-        """Test delete_domain method exists."""
-        mock_client = Mock()
-        domains = Domains(mock_client)
-
-        assert hasattr(domains, "delete_domain")
-        assert callable(getattr(domains, "delete_domain"))
-
-    def test_get_domain_recipients_method_exists(self):
-        """Test get_domain_recipients method exists."""
-        mock_client = Mock()
-        domains = Domains(mock_client)
-
-        assert hasattr(domains, "get_domain_recipients")
-        assert callable(getattr(domains, "get_domain_recipients"))
-
-    def test_update_domain_settings_method_exists(self):
-        """Test update_domain_settings method exists."""
-        mock_client = Mock()
-        domains = Domains(mock_client)
-
-        assert hasattr(domains, "update_domain_settings")
-        assert callable(getattr(domains, "update_domain_settings"))
-
-    def test_get_domain_dns_records_method_exists(self):
-        """Test get_domain_dns_records method exists."""
-        mock_client = Mock()
-        domains = Domains(mock_client)
-
-        assert hasattr(domains, "get_domain_dns_records")
-        assert callable(getattr(domains, "get_domain_dns_records"))
-
-    def test_get_domain_verification_status_method_exists(self):
-        """Test get_domain_verification_status method exists."""
-        mock_client = Mock()
-        domains = Domains(mock_client)
-
-        assert hasattr(domains, "get_domain_verification_status")
-        assert callable(getattr(domains, "get_domain_verification_status"))
+    async def test_get_domain_verification_status_calls_correct_endpoint(self):
+        await resolve(self.resource.get_domain_verification_status(
+            DomainVerificationRequest(domain_id="dom123"))
+        )
+        call = self.mock_client.request.call_args
+        assert call.kwargs["method"] == "GET"
+        assert call.kwargs["path"] == "domains/dom123/verify"

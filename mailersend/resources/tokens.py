@@ -32,10 +32,7 @@ class Tokens(BaseResource):
         params = request.to_query_params()
 
         # Make API call
-        response = self.client.request(method="GET", path="token", params=params)
-
-        # Create standardized response
-        return self._create_response(response)
+        return self._request(method="GET", path="token", params=params)
 
     def get_token(self, request: TokenGetRequest) -> APIResponse:
         """Get a single API token.
@@ -49,10 +46,7 @@ class Tokens(BaseResource):
         self.logger.info("Getting token: %s", request.token_id)
 
         # Make API call
-        response = self.client.request(method="GET", path=f"token/{request.token_id}")
-
-        # Create standardized response
-        return self._create_response(response)
+        return self._request(method="GET", path=f"token/{request.token_id}")
 
     def create_token(self, request: TokenCreateRequest) -> APIResponse:
         """Create an API token.
@@ -68,12 +62,7 @@ class Tokens(BaseResource):
         )
 
         # Make API call
-        response = self.client.request(
-            method="POST", path="token", body=request.to_json()
-        )
-
-        # Create standardized response
-        return self._create_response(response)
+        return self._request(method="POST", path="token", body=request.to_json())
 
     def update_token(self, request: TokenUpdateRequest) -> APIResponse:
         """Update an API token status.
@@ -89,14 +78,11 @@ class Tokens(BaseResource):
         )
 
         # Make API call
-        response = self.client.request(
+        return self._request(
             method="PUT",
             path=f"token/{request.token_id}/settings",
             body=request.to_json(),
         )
-
-        # Create standardized response
-        return self._create_response(response)
 
     def update_token_name(self, request: TokenUpdateNameRequest) -> APIResponse:
         """Update an API token name.
@@ -110,12 +96,9 @@ class Tokens(BaseResource):
         self.logger.info("Updating token name: {request.token_id} to: %s", request.name)
 
         # Make API call
-        response = self.client.request(
+        return self._request(
             method="PUT", path=f"token/{request.token_id}", body=request.to_json()
         )
-
-        # Create standardized response
-        return self._create_response(response)
 
     def delete_token(self, request: TokenDeleteRequest) -> APIResponse:
         """Delete an API token.
@@ -129,9 +112,6 @@ class Tokens(BaseResource):
         self.logger.info("Deleting token: %s", request.token_id)
 
         # Make API call
-        response = self.client.request(
-            method="DELETE", path=f"token/{request.token_id}"
-        )
+        return self._request(method="DELETE", path=f"token/{request.token_id}")
 
-        # Create standardized response
-        return self._create_response(response)
+

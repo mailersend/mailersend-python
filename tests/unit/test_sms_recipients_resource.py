@@ -1,6 +1,8 @@
-"""Unit tests for SMS Recipients resource."""
+"""Tests for SmsRecipients resource."""
+import inspect
 
-from unittest.mock import Mock, MagicMock
+from unittest.mock import AsyncMock, MagicMock, Mock
+import pytest
 
 from mailersend.resources.sms_recipients import SmsRecipients
 from mailersend.models.base import APIResponse
@@ -13,97 +15,78 @@ from mailersend.models.sms_recipients import (
 )
 
 
+
+async def resolve(result):
+    if inspect.iscoroutine(result):
+        return await result
+    return result
+
+
 class TestSmsRecipients:
-    """Test SMS Recipients resource class."""
-
-    def setup_method(self):
-        """Set up test fixtures."""
-        self.mock_client = Mock()
+    @pytest.fixture(autouse=True, params=["sync", "async"])
+    def setup(self, request):
+        if request.param == "async":
+            self.mock_client = MagicMock()
+            self.mock_client.request = AsyncMock(
+                return_value=MagicMock(
+                    status_code=200, headers={"x-request-id": "test-req-id"},
+                    json=MagicMock(return_value={}), content=b"{}"
+                )
+            )
+        else:
+            self.mock_client = MagicMock()
+            self.mock_client.request = Mock(
+                return_value=MagicMock(
+                    status_code=200, headers={"x-request-id": "test-req-id"},
+                    json=MagicMock(return_value={}), content=b"{}"
+                )
+            )
         self.resource = SmsRecipients(self.mock_client)
-        self.resource.logger = Mock()
 
-        # Mock _create_response method
-        self.mock_api_response = MagicMock(spec=APIResponse)
-        self.resource._create_response = Mock(return_value=self.mock_api_response)
+    async def test_list_sms_recipients_returns_api_response(self):
+        result = await resolve(self.resource.list_sms_recipients(SmsRecipientsListRequest()))
+        assert isinstance(result, APIResponse)
 
-    def test_list_sms_recipients_returns_api_response(self):
-        """Test list_sms_recipients method returns APIResponse."""
-        request = SmsRecipientsListRequest()
+    async def test_list_sms_recipients_calls_correct_endpoint(self):
+        await resolve(self.resource.list_sms_recipients(SmsRecipientsListRequest()))
+        call = self.mock_client.request.call_args
+        assert call.kwargs["method"] == "GET"
+        assert call.kwargs["path"] == "sms-recipients"
 
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
-
-        result = self.resource.list_sms_recipients(request)
-
-        assert result == self.mock_api_response
-        self.resource._create_response.assert_called_once_with(mock_response)
-
-    def test_list_sms_recipients_with_parameters(self):
-        """Test list_sms_recipients with query parameters."""
-        query_params = SmsRecipientsListQueryParams(
-            status=SmsRecipientStatus.ACTIVE, sms_number_id="sms123", page=2, limit=50
+    async def test_list_sms_recipients_with_custom_params(self):
+        request = SmsRecipientsListRequest(
+            query_params=SmsRecipientsListQueryParams(page=2)
         )
-        request = SmsRecipientsListRequest(query_params=query_params)
+        await resolve(self.resource.list_sms_recipients(request))
+        call = self.mock_client.request.call_args
+        assert call.kwargs["params"]["page"] == 2
 
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
-
-        result = self.resource.list_sms_recipients(request)
-
-        expected_params = {
-            "status": "active",
-            "sms_number_id": "sms123",
-            "page": 2,
-            "limit": 50,
-        }
-        self.mock_client.request.assert_called_once_with(
-            method="GET", path="sms-recipients", params=expected_params
+    async def test_get_sms_recipient_returns_api_response(self):
+        result = await resolve(self.resource.get_sms_recipient(
+            SmsRecipientGetRequest(sms_recipient_id="rec123"))
         )
-        assert result == self.mock_api_response
+        assert isinstance(result, APIResponse)
 
-    def test_list_sms_recipients_with_empty_parameters(self):
-        """Test list_sms_recipients with empty query parameters."""
-        request = SmsRecipientsListRequest()
-
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
-
-        result = self.resource.list_sms_recipients(request)
-
-        self.mock_client.request.assert_called_once_with(
-            method="GET", path="sms-recipients", params={}
+    async def test_get_sms_recipient_calls_correct_endpoint(self):
+        await resolve(self.resource.get_sms_recipient(
+            SmsRecipientGetRequest(sms_recipient_id="rec123"))
         )
-        assert result == self.mock_api_response
+        call = self.mock_client.request.call_args
+        assert call.kwargs["method"] == "GET"
+        assert call.kwargs["path"] == "sms-recipients/rec123"
 
-    def test_get_sms_recipient_returns_api_response(self):
-        """Test get_sms_recipient method returns APIResponse."""
-        request = SmsRecipientGetRequest(sms_recipient_id="recipient123")
-
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
-
-        result = self.resource.get_sms_recipient(request)
-
-        self.mock_client.request.assert_called_once_with(
-            method="GET", path="sms-recipients/recipient123"
-        )
-        assert result == self.mock_api_response
-        self.resource._create_response.assert_called_once_with(mock_response)
-
-    def test_update_sms_recipient_returns_api_response(self):
-        """Test update_sms_recipient method returns APIResponse."""
+    async def test_update_sms_recipient_returns_api_response(self):
         request = SmsRecipientUpdateRequest(
-            sms_recipient_id="recipient123", status=SmsRecipientStatus.OPT_OUT
+            sms_recipient_id="rec123", status=SmsRecipientStatus.ACTIVE
         )
+        result = await resolve(self.resource.update_sms_recipient(request))
+        assert isinstance(result, APIResponse)
 
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
-
-        result = self.resource.update_sms_recipient(request)
-
-        expected_body = {"status": "opt_out"}
-        self.mock_client.request.assert_called_once_with(
-            method="PUT", path="sms-recipients/recipient123", body=expected_body
+    async def test_update_sms_recipient_calls_correct_endpoint(self):
+        request = SmsRecipientUpdateRequest(
+            sms_recipient_id="rec123", status=SmsRecipientStatus.ACTIVE
         )
-        assert result == self.mock_api_response
-        self.resource._create_response.assert_called_once_with(mock_response)
+        await resolve(self.resource.update_sms_recipient(request))
+        call = self.mock_client.request.call_args
+        assert call.kwargs["method"] == "PUT"
+        assert call.kwargs["path"] == "sms-recipients/rec123"

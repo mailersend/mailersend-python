@@ -29,11 +29,7 @@ class SmsRecipients(BaseResource):
             request.query_params.limit,
         )
 
-        response = self.client.request(
-            method="GET", path="sms-recipients", params=params
-        )
-
-        return self._create_response(response)
+        return self._request(method="GET", path="sms-recipients", params=params)
 
     def get_sms_recipient(self, request: SmsRecipientGetRequest) -> APIResponse:
         """
@@ -47,11 +43,9 @@ class SmsRecipients(BaseResource):
         """
         self.logger.debug("Getting SMS recipient: %s", request.sms_recipient_id)
 
-        response = self.client.request(
+        return self._request(
             method="GET", path=f"sms-recipients/{request.sms_recipient_id}"
         )
-
-        return self._create_response(response)
 
     def update_sms_recipient(self, request: SmsRecipientUpdateRequest) -> APIResponse:
         """
@@ -68,10 +62,10 @@ class SmsRecipients(BaseResource):
             request.status,
         )
 
-        response = self.client.request(
+        return self._request(
             method="PUT",
             path=f"sms-recipients/{request.sms_recipient_id}",
             body=request.to_request_body(),
         )
 
-        return self._create_response(response)
+

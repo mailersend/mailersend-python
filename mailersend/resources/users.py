@@ -37,10 +37,7 @@ class Users(BaseResource):
         params = request.to_query_params()
 
         # Make API call
-        response = self.client.request(method="GET", path="users", params=params)
-
-        # Create standardized response
-        return self._create_response(response)
+        return self._request(method="GET", path="users", params=params)
 
     def get_user(self, request: UserGetRequest) -> APIResponse:
         """Get a single account user.
@@ -54,10 +51,7 @@ class Users(BaseResource):
         self.logger.debug("Getting user: %s", request.user_id)
 
         # Make API call
-        response = self.client.request(method="GET", path=f"users/{request.user_id}")
-
-        # Create standardized response
-        return self._create_response(response)
+        return self._request(method="GET", path=f"users/{request.user_id}")
 
     def invite_user(self, request: UserInviteRequest) -> APIResponse:
         """Invite a user to account.
@@ -73,12 +67,7 @@ class Users(BaseResource):
         )
 
         # Make API call
-        response = self.client.request(
-            method="POST", path="users", body=request.to_json()
-        )
-
-        # Create standardized response
-        return self._create_response(response)
+        return self._request(method="POST", path="users", body=request.to_json())
 
     def update_user(self, request: UserUpdateRequest) -> APIResponse:
         """Update account user.
@@ -94,12 +83,9 @@ class Users(BaseResource):
         )
 
         # Make API call
-        response = self.client.request(
+        return self._request(
             method="PUT", path=f"users/{request.user_id}", body=request.to_json()
         )
-
-        # Create standardized response
-        return self._create_response(response)
 
     def delete_user(self, request: UserDeleteRequest) -> APIResponse:
         """Delete account user.
@@ -113,10 +99,7 @@ class Users(BaseResource):
         self.logger.debug("Deleting user: %s", request.user_id)
 
         # Make API call
-        response = self.client.request(method="DELETE", path=f"users/{request.user_id}")
-
-        # Create standardized response
-        return self._create_response(response, None)
+        return self._request(method="DELETE", path=f"users/{request.user_id}", data=lambda r: None)
 
     def list_invites(self, request: InvitesListRequest) -> APIResponse:
         """Get a list of invites.
@@ -137,10 +120,7 @@ class Users(BaseResource):
         params = request.to_query_params()
 
         # Make API call
-        response = self.client.request(method="GET", path="invites", params=params)
-
-        # Create standardized response
-        return self._create_response(response)
+        return self._request(method="GET", path="invites", params=params)
 
     def get_invite(self, request: InviteGetRequest) -> APIResponse:
         """Get a single invite.
@@ -154,12 +134,7 @@ class Users(BaseResource):
         self.logger.debug("Getting invite: %s", request.invite_id)
 
         # Make API call
-        response = self.client.request(
-            method="GET", path=f"invites/{request.invite_id}"
-        )
-
-        # Create standardized response
-        return self._create_response(response)
+        return self._request(method="GET", path=f"invites/{request.invite_id}")
 
     def resend_invite(self, request: InviteResendRequest) -> APIResponse:
         """Resend an invite.
@@ -173,12 +148,7 @@ class Users(BaseResource):
         self.logger.debug("Resending invite: %s", request.invite_id)
 
         # Make API call
-        response = self.client.request(
-            method="POST", path=f"invites/{request.invite_id}/resend"
-        )
-
-        # Create standardized response
-        return self._create_response(response)
+        return self._request(method="POST", path=f"invites/{request.invite_id}/resend")
 
     def cancel_invite(self, request: InviteCancelRequest) -> APIResponse:
         """Cancel an invite.
@@ -192,9 +162,6 @@ class Users(BaseResource):
         self.logger.debug("Canceling invite: %s", request.invite_id)
 
         # Make API call
-        response = self.client.request(
-            method="DELETE", path=f"invites/{request.invite_id}"
-        )
+        return self._request(method="DELETE", path=f"invites/{request.invite_id}", data=lambda r: None)
 
-        # Create standardized response
-        return self._create_response(response, None)
+

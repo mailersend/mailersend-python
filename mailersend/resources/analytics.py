@@ -33,9 +33,7 @@ class Analytics(BaseResource):
         self.logger.info("Requesting analytics data by date")
         self.logger.debug("Query params: %s", params)
 
-        response = self.client.request("GET", "analytics/date", params=params)
-
-        return self._create_response(response)
+        return self._request("GET", "analytics/date", params=params)
 
     def get_opens_by_country(self, request: AnalyticsRequest) -> APIResponse:
         """
@@ -55,9 +53,7 @@ class Analytics(BaseResource):
         self.logger.info("Requesting analytics data by country")
         self.logger.debug("Query params: %s", params)
 
-        response = self.client.request("GET", "analytics/country", params=params)
-
-        return self._create_response(response)
+        return self._request("GET", "analytics/country", params=params)
 
     def get_opens_by_user_agent(self, request: AnalyticsRequest) -> APIResponse:
         """
@@ -77,9 +73,7 @@ class Analytics(BaseResource):
         self.logger.info("Requesting analytics data by user agent")
         self.logger.debug("Query params: %s", params)
 
-        response = self.client.request("GET", "analytics/ua-name", params=params)
-
-        return self._create_response(response)
+        return self._request("GET", "analytics/ua-name", params=params)
 
     def get_opens_by_reading_environment(
         self, request: AnalyticsRequest
@@ -101,9 +95,7 @@ class Analytics(BaseResource):
         self.logger.info("Requesting analytics data by reading environment")
         self.logger.debug("Query params: %s", params)
 
-        response = self.client.request("GET", "analytics/ua-type", params=params)
-
-        return self._create_response(response)
+        return self._request("GET", "analytics/ua-type", params=params)
 
     def _build_query_params(
         self, request: AnalyticsRequest, exclude_fields: Optional[list] = None
@@ -129,3 +121,5 @@ class Analytics(BaseResource):
             params.pop(f"{field}[]", None)
 
         return params
+
+
