@@ -14,15 +14,15 @@ interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+      - mailersend-python/2.0.3 (Python/3.12.12; OS/Darwin 25.5.0; Impl/CPython)
     method: POST
     uri: https://api.mailersend.com/v1/email-verification
   response:
     body:
-      string: '{"data":{"id":"neqvygmw1840p7w2","name":"Comprehensive Test List","total":0,"verification_started":null,"verification_ended":null,"created_at":"2025-07-29T12:25:11.000000Z","updated_at":"2025-07-29T12:25:11.000000Z","status":{"name":"uploading","count":0},"source":"api","statistics":{"valid":0,"catch_all":0,"mailbox_full":0,"role_based":0,"unknown":0,"syntax_error":0,"typo":0,"mailbox_not_found":0,"disposable":0,"mailbox_blocked":0,"failed":0,"not_verified":0}}}'
+      string: '{"data":{"id":"351ndgwv7vrlzqx8","name":"Comprehensive Test List","total":0,"verification_started":null,"verification_ended":null,"created_at":"2026-07-06T13:05:03.000000Z","updated_at":"2026-07-06T13:05:03.000000Z","status":{"name":"uploading","count":0},"source":"api","statistics":{"valid":0,"catch_all":0,"mailbox_full":0,"role_based":0,"unknown":0,"syntax_error":0,"typo":0,"mailbox_not_found":0,"disposable":0,"mailbox_blocked":0,"failed":0,"not_verified":0}}}'
     headers:
       CF-RAY:
-      - 966c98f8bdfb9d41-VIE
+      - a16ed19f2ec4a8bc-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -30,19 +30,21 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 29 Jul 2025 12:25:12 GMT
+      - Mon, 06 Jul 2026 13:05:04 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
       - chunked
+      alt-svc:
+      - h3=":443"; ma=86400
       cf-cache-status:
       - DYNAMIC
-      strict-transport-security:
-      - max-age=31536000; includeSubDomains
       x-apiquota-remaining:
       - '-1'
       x-apiquota-reset:
-      - '2025-07-30T00:00:00Z'
+      - '2026-07-07T00:00:00Z'
+      x-envoy-upstream-service-time:
+      - '218'
     status:
       code: 201
       message: Created
@@ -58,15 +60,15 @@ interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+      - mailersend-python/2.0.3 (Python/3.12.12; OS/Darwin 25.5.0; Impl/CPython)
     method: GET
-    uri: https://api.mailersend.com/v1/email-verification/neqvygmw1840p7w2
+    uri: https://api.mailersend.com/v1/email-verification/351ndgwv7vrlzqx8
   response:
     body:
-      string: '{"data":{"id":"neqvygmw1840p7w2","name":"Comprehensive Test List","total":0,"verification_started":null,"verification_ended":null,"created_at":"2025-07-29T12:25:11.000000Z","updated_at":"2025-07-29T12:25:11.000000Z","status":{"name":"uploading","count":0},"source":"api","statistics":{"valid":0,"catch_all":0,"mailbox_full":0,"role_based":0,"unknown":0,"syntax_error":0,"typo":0,"mailbox_not_found":0,"disposable":0,"mailbox_blocked":0,"failed":0,"not_verified":0}}}'
+      string: '{"data":{"id":"351ndgwv7vrlzqx8","name":"Comprehensive Test List","total":4,"verification_started":null,"verification_ended":null,"created_at":"2026-07-06T13:05:03.000000Z","updated_at":"2026-07-06T13:05:04.000000Z","status":{"name":"created","count":0},"source":"api","statistics":{"valid":0,"catch_all":0,"mailbox_full":0,"role_based":0,"unknown":0,"syntax_error":0,"typo":0,"mailbox_not_found":0,"disposable":0,"mailbox_blocked":0,"failed":0,"not_verified":4}}}'
     headers:
       CF-RAY:
-      - 966c98fb4801d87b-VIE
+      - a16ed1a108ede295-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -76,19 +78,21 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 29 Jul 2025 12:25:12 GMT
+      - Mon, 06 Jul 2026 13:05:04 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
       - chunked
+      alt-svc:
+      - h3=":443"; ma=86400
       cf-cache-status:
       - DYNAMIC
-      strict-transport-security:
-      - max-age=31536000; includeSubDomains
       x-apiquota-remaining:
       - '-1'
       x-apiquota-reset:
-      - '2025-07-30T00:00:00Z'
+      - '2026-07-07T00:00:00Z'
+      x-envoy-upstream-service-time:
+      - '36'
     status:
       code: 200
       message: OK
@@ -104,39 +108,42 @@ interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+      - mailersend-python/2.0.3 (Python/3.12.12; OS/Darwin 25.5.0; Impl/CPython)
     method: GET
-    uri: https://api.mailersend.com/v1/email-verification/neqvygmw1840p7w2/verify
+    uri: https://api.mailersend.com/v1/email-verification/351ndgwv7vrlzqx8/verify
   response:
     body:
-      string: '{"message":"The email addresses are still being uploaded, wait for
-        the upload to finish to continue."}'
+      string: '{"data":{"id":"351ndgwv7vrlzqx8","name":"Comprehensive Test List","total":4,"verification_started":"2026-07-06T13:05:04.000000Z","verification_ended":null,"created_at":"2026-07-06T13:05:03.000000Z","updated_at":"2026-07-06T13:05:04.000000Z","status":{"name":"verifying","count":0},"source":"api","statistics":{"valid":0,"catch_all":0,"mailbox_full":0,"role_based":0,"unknown":0,"syntax_error":0,"typo":0,"mailbox_not_found":0,"disposable":0,"mailbox_blocked":0,"failed":0,"not_verified":4}}}'
     headers:
       CF-RAY:
-      - 966c98fcba1a1479-VIE
+      - a16ed1a1b83b3267-BEG
       Cache-Control:
       - no-cache, private
       Connection:
       - keep-alive
+      Content-Encoding:
+      - gzip
       Content-Type:
       - application/json
       Date:
-      - Tue, 29 Jul 2025 12:25:12 GMT
+      - Mon, 06 Jul 2026 13:05:04 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
       - chunked
+      alt-svc:
+      - h3=":443"; ma=86400
       cf-cache-status:
       - DYNAMIC
-      strict-transport-security:
-      - max-age=31536000; includeSubDomains
       x-apiquota-remaining:
       - '-1'
       x-apiquota-reset:
-      - '2025-07-30T00:00:00Z'
+      - '2026-07-07T00:00:00Z'
+      x-envoy-upstream-service-time:
+      - '66'
     status:
-      code: 202
-      message: Accepted
+      code: 200
+      message: OK
 - request:
     body: null
     headers:
@@ -149,15 +156,15 @@ interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+      - mailersend-python/2.0.3 (Python/3.12.12; OS/Darwin 25.5.0; Impl/CPython)
     method: GET
-    uri: https://api.mailersend.com/v1/email-verification/neqvygmw1840p7w2/results?page=1&limit=10
+    uri: https://api.mailersend.com/v1/email-verification/351ndgwv7vrlzqx8/results?page=1&limit=10
   response:
     body:
-      string: '{"data":[],"links":{"first":"https:\/\/api.mailersend.com\/v1\/email-verification\/neqvygmw1840p7w2\/results?1=1","last":null,"prev":null,"next":null},"meta":{"current_page":1,"from":null,"path":"https:\/\/api.mailersend.com\/v1\/email-verification\/neqvygmw1840p7w2\/results","per_page":"10","to":null}}'
+      string: '{"data":[{"address":"test1@example.com","result":null},{"address":"test2@example.com","result":null},{"address":"invalid-email","result":null},{"address":"test3@validexample.com","result":null}],"links":{"first":"https:\/\/api.mailersend.com\/v1\/email-verification\/351ndgwv7vrlzqx8\/results?page=1","last":null,"prev":null,"next":null},"meta":{"current_page":1,"current_page_url":"https:\/\/api.mailersend.com\/v1\/email-verification\/351ndgwv7vrlzqx8\/results?page=1","from":1,"path":"https:\/\/api.mailersend.com\/v1\/email-verification\/351ndgwv7vrlzqx8\/results","per_page":"10","to":4}}'
     headers:
       CF-RAY:
-      - 966c98fe3f273a0d-VIE
+      - a16ed1a29a50e28f-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -167,19 +174,21 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 29 Jul 2025 12:25:12 GMT
+      - Mon, 06 Jul 2026 13:05:04 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
       - chunked
+      alt-svc:
+      - h3=":443"; ma=86400
       cf-cache-status:
       - DYNAMIC
-      strict-transport-security:
-      - max-age=31536000; includeSubDomains
       x-apiquota-remaining:
       - '-1'
       x-apiquota-reset:
-      - '2025-07-30T00:00:00Z'
+      - '2026-07-07T00:00:00Z'
+      x-envoy-upstream-service-time:
+      - '73'
     status:
       code: 200
       message: OK

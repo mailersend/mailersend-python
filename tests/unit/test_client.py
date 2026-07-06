@@ -23,8 +23,6 @@ class TestMailerSendClientInitialization:
     def test_client_initialization_with_explicit_api_key(self):
         """Test that client initializes correctly with explicit API key."""
         with (
-            patch("mailersend.client.get_logger"),
-            patch("mailersend.client.RequestLogger"),
             patch("mailersend.client.requests.Session"),
         ):
             client = MailerSendClient(api_key="test-api-key")
@@ -34,8 +32,6 @@ class TestMailerSendClientInitialization:
         """Test that client reads API key from environment variable."""
         with (
             patch.dict(os.environ, {"MAILERSEND_API_KEY": "env-api-key"}),
-            patch("mailersend.client.get_logger"),
-            patch("mailersend.client.RequestLogger"),
             patch("mailersend.client.requests.Session"),
         ):
             client = MailerSendClient()
@@ -45,8 +41,6 @@ class TestMailerSendClientInitialization:
         """Test that explicit API key parameter overrides environment variable."""
         with (
             patch.dict(os.environ, {"MAILERSEND_API_KEY": "env-api-key"}),
-            patch("mailersend.client.get_logger"),
-            patch("mailersend.client.RequestLogger"),
             patch("mailersend.client.requests.Session"),
         ):
             client = MailerSendClient(api_key="param-api-key")
@@ -56,8 +50,6 @@ class TestMailerSendClientInitialization:
         """Test that client initialization fails when no API key is provided."""
         with (
             patch.dict(os.environ, {}, clear=True),
-            patch("mailersend.client.get_logger"),
-            patch("mailersend.client.RequestLogger"),
             patch("mailersend.client.requests.Session"),
         ):
             with pytest.raises(ValueError) as exc_info:
@@ -69,8 +61,6 @@ class TestMailerSendClientInitialization:
         """Test that client initialization fails with None API key and no env var."""
         with (
             patch.dict(os.environ, {}, clear=True),
-            patch("mailersend.client.get_logger"),
-            patch("mailersend.client.RequestLogger"),
             patch("mailersend.client.requests.Session"),
         ):
             with pytest.raises(ValueError) as exc_info:
@@ -82,8 +72,6 @@ class TestMailerSendClientInitialization:
         """Test that client handles empty environment variable correctly."""
         with (
             patch.dict(os.environ, {"MAILERSEND_API_KEY": ""}),
-            patch("mailersend.client.get_logger"),
-            patch("mailersend.client.RequestLogger"),
             patch("mailersend.client.requests.Session"),
         ):
             with pytest.raises(ValueError) as exc_info:
@@ -94,8 +82,6 @@ class TestMailerSendClientInitialization:
     def test_client_initialization_sets_other_properties(self):
         """Test that client initializes other properties correctly."""
         with (
-            patch("mailersend.client.get_logger"),
-            patch("mailersend.client.RequestLogger"),
             patch("mailersend.client.requests.Session"),
         ):
             client = MailerSendClient(
@@ -113,37 +99,63 @@ class TestMailerSendClientInitialization:
             assert client.debug is True
 
     def test_base_url_gets_trailing_slash_normalized(self):
-        with patch("mailersend.base_client.get_logger"), patch(
-            "mailersend.base_client.RequestLogger"
-        ), patch("mailersend.client.requests.Session"):
-            client = MailerSendClient(api_key="k", base_url="https://api.example.com/v1")
+        with (
+            patch("mailersend.base_client.RequestLogger"),
+            patch("mailersend.client.requests.Session"),
+        ):
+            client = MailerSendClient(
+                api_key="k", base_url="https://api.example.com/v1"
+            )
             assert client.base_url == "https://api.example.com/v1/"
 
     def test_base_url_preserves_existing_trailing_slash(self):
-        with patch("mailersend.base_client.get_logger"), patch(
-            "mailersend.base_client.RequestLogger"
-        ), patch("mailersend.client.requests.Session"):
-            client = MailerSendClient(api_key="k", base_url="https://api.example.com/v1/")
+        with (
+            patch("mailersend.base_client.RequestLogger"),
+            patch("mailersend.client.requests.Session"),
+        ):
+            client = MailerSendClient(
+                api_key="k", base_url="https://api.example.com/v1/"
+            )
             assert client.base_url == "https://api.example.com/v1/"
 
     def test_is_base_client_subclass(self):
-        with patch("mailersend.base_client.get_logger"), patch(
-            "mailersend.base_client.RequestLogger"
-        ), patch("mailersend.client.requests.Session"):
+        with (
+            patch("mailersend.base_client.RequestLogger"),
+            patch("mailersend.client.requests.Session"),
+        ):
             client = MailerSendClient(api_key="test-key")
             assert isinstance(client, _BaseMailerSendClient)
 
     def test_exposes_all_resources(self):
-        with patch("mailersend.base_client.get_logger"), patch(
-            "mailersend.base_client.RequestLogger"
-        ), patch("mailersend.client.requests.Session"):
+        with (
+            patch("mailersend.base_client.RequestLogger"),
+            patch("mailersend.client.requests.Session"),
+        ):
             client = MailerSendClient(api_key="test-key")
             for attr in [
-                "emails", "activities", "analytics", "domains", "identities",
-                "inbound", "templates", "tokens", "webhooks", "email_verification",
-                "users", "messages", "recipients", "schedules", "sms_messages",
-                "smtp_users", "sms_sending", "sms_numbers", "sms_activity",
-                "sms_inbounds", "sms_recipients", "sms_webhooks", "api_quota",
+                "emails",
+                "activities",
+                "analytics",
+                "domains",
+                "identities",
+                "inbound",
+                "templates",
+                "tokens",
+                "webhooks",
+                "email_verification",
+                "users",
+                "messages",
+                "recipients",
+                "schedules",
+                "sms_messages",
+                "smtp_users",
+                "sms_sending",
+                "sms_numbers",
+                "sms_activity",
+                "sms_inbounds",
+                "sms_recipients",
+                "sms_webhooks",
+                "api_quota",
                 "dmarc_monitoring",
             ]:
                 assert hasattr(client, attr), f"missing resource: {attr}"
@@ -151,9 +163,10 @@ class TestMailerSendClientInitialization:
 
 class TestMailerSendClientRequest:
     def _make_client(self):
-        with patch("mailersend.base_client.get_logger"), patch(
-            "mailersend.base_client.RequestLogger"
-        ), patch("mailersend.client.requests.Session"):
+        with (
+            patch("mailersend.base_client.RequestLogger"),
+            patch("mailersend.client.requests.Session"),
+        ):
             client = MailerSendClient(api_key="test-key", max_retries=0)
         client.session = MagicMock()
         client.request_logger = MagicMock()
@@ -170,13 +183,17 @@ class TestMailerSendClientRequest:
 
     def test_raises_authentication_error_on_401(self):
         client = self._make_client()
-        client.session.request.return_value = self._make_response(401, {"message": "Unauthorized"})
+        client.session.request.return_value = self._make_response(
+            401, {"message": "Unauthorized"}
+        )
         with pytest.raises(AuthenticationError):
             client.request("GET", "some-endpoint")
 
     def test_raises_not_found_on_404(self):
         client = self._make_client()
-        client.session.request.return_value = self._make_response(404, {"message": "Not found"})
+        client.session.request.return_value = self._make_response(
+            404, {"message": "Not found"}
+        )
         with pytest.raises(ResourceNotFoundError):
             client.request("GET", "some-endpoint")
 
@@ -190,19 +207,25 @@ class TestMailerSendClientRequest:
 
     def test_raises_bad_request_on_400(self):
         client = self._make_client()
-        client.session.request.return_value = self._make_response(400, {"message": "Bad request"})
+        client.session.request.return_value = self._make_response(
+            400, {"message": "Bad request"}
+        )
         with pytest.raises(BadRequestError):
             client.request("GET", "some-endpoint")
 
     def test_raises_server_error_on_500(self):
         client = self._make_client()
-        client.session.request.return_value = self._make_response(500, {"message": "Server error"})
+        client.session.request.return_value = self._make_response(
+            500, {"message": "Server error"}
+        )
         with pytest.raises(ServerError):
             client.request("GET", "some-endpoint")
 
     def test_raises_mailer_send_error_on_unexpected_status(self):
         client = self._make_client()
-        client.session.request.return_value = self._make_response(418, {"message": "Teapot"})
+        client.session.request.return_value = self._make_response(
+            418, {"message": "Teapot"}
+        )
         with pytest.raises(MailerSendError):
             client.request("GET", "some-endpoint")
 
@@ -214,6 +237,7 @@ class TestMailerSendClientRequest:
 
     def test_network_error_raises_mailer_send_error(self):
         import requests as req_lib
+
         client = self._make_client()
         client.session.request.side_effect = req_lib.RequestException("timeout")
         with pytest.raises(MailerSendError, match="Request failed"):
@@ -257,9 +281,11 @@ class TestMailerSendClientDebug:
 
 class TestMailerSendClientContextManager:
     def test_context_manager_closes_session(self):
-        with patch("mailersend.base_client.get_logger"), patch(
-            "mailersend.base_client.RequestLogger"
-        ), patch("mailersend.client.requests.Session"):
+        with (
+            patch("mailersend.base_client.get_logger"),
+            patch("mailersend.base_client.RequestLogger"),
+            patch("mailersend.client.requests.Session"),
+        ):
             client = MailerSendClient(api_key="test-key")
             client.session = MagicMock()
 

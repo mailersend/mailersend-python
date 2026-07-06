@@ -1,4 +1,5 @@
 """Tests for Analytics resource."""
+
 import inspect
 
 from unittest.mock import AsyncMock, MagicMock, Mock
@@ -7,7 +8,6 @@ import pytest
 from mailersend.resources.analytics import Analytics
 from mailersend.models.analytics import AnalyticsRequest
 from mailersend.models.base import APIResponse
-
 
 
 async def resolve(result):
@@ -24,6 +24,7 @@ def _make_request():
         event=["sent", "delivered"],
     )
 
+
 class TestAnalytics:
     @pytest.fixture(autouse=True, params=["sync", "async"])
     def setup(self, request):
@@ -31,16 +32,20 @@ class TestAnalytics:
             self.mock_client = MagicMock()
             self.mock_client.request = AsyncMock(
                 return_value=MagicMock(
-                    status_code=200, headers={"x-request-id": "test-req-id"},
-                    json=MagicMock(return_value={}), content=b"{}"
+                    status_code=200,
+                    headers={"x-request-id": "test-req-id"},
+                    json=MagicMock(return_value={}),
+                    content=b"{}",
                 )
             )
         else:
             self.mock_client = MagicMock()
             self.mock_client.request = Mock(
                 return_value=MagicMock(
-                    status_code=200, headers={"x-request-id": "test-req-id"},
-                    json=MagicMock(return_value={}), content=b"{}"
+                    status_code=200,
+                    headers={"x-request-id": "test-req-id"},
+                    json=MagicMock(return_value={}),
+                    content=b"{}",
                 )
             )
         self.resource = Analytics(self.mock_client)
@@ -91,7 +96,9 @@ class TestAnalytics:
         assert call.kwargs["path"] == "analytics/ua-name"
 
     async def test_get_opens_by_reading_environment_returns_api_response(self):
-        result = await resolve(self.resource.get_opens_by_reading_environment(_make_request()))
+        result = await resolve(
+            self.resource.get_opens_by_reading_environment(_make_request())
+        )
         assert isinstance(result, APIResponse)
 
     async def test_get_opens_by_reading_environment_calls_correct_endpoint(self):

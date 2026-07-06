@@ -11,17 +11,19 @@ interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+      - mailersend-python/2.0.3 (Python/3.12.12; OS/Darwin 25.5.0; Impl/CPython)
     method: GET
     uri: https://api.mailersend.com/v1/inbound?page=1&limit=10
   response:
     body:
-      string: '{"data":[],"links":{"first":"https:\/\/api.mailersend.com\/v1\/inbound?page=1","last":"https:\/\/api.mailersend.com\/v1\/inbound?page=1","prev":null,"next":null},"meta":{"current_page":1,"from":null,"last_page":1,"links":[{"url":null,"label":"&laquo;
-        Previous","active":false},{"url":"https:\/\/api.mailersend.com\/v1\/inbound?page=1","label":"1","active":true},{"url":null,"label":"Next
-        &raquo;","active":false}],"path":"https:\/\/api.mailersend.com\/v1\/inbound","per_page":10,"to":null,"total":0}}'
+      string: '{"data":[{"id":"v69oxl5e83zl785k","name":"Email Receiver","address":"vpv6muiv4toxmhu7v5ac@inbound.mailersend.net","domain":"inbound.cypress.litehub.io","dns_checked_at":"2026-07-06T01:11:27.000000Z","enabled":true,"filters":[{"type":"catch_all","key":null,"comparer":null,"value":null},{"type":"match_all","key":null,"comparer":null,"value":null}],"forwards":[{"type":"webhook","value":"https:\/\/receiver.litesrv.io\/api\/webhooks\/inbound-email","secret":"ZQpuuTEIYqxyGhIQ6W14Kh8hyjgDHAFQ"}],"priority":10,"mxValues":{"priority":"10","target":"inbound.mailersend.net"},"catch_type":"all","match_type":"all"},{"id":"7dnvo4d971xg5r86","name":"My
+        Inbound Route","address":"9xbbdxn5lbewxaqu2wih@inbound.mailersend.net","domain":null,"dns_checked_at":null,"enabled":true,"filters":[{"type":"catch_recipient","key":null,"comparer":"equal","value":"support"},{"type":"match_all","key":null,"comparer":null,"value":null}],"forwards":[{"type":"webhook","value":"https:\/\/igor.fail\/webhook","secret":"mbZkW9RUTLWN2OyXaoQtvtJLJDBOHivI"}],"priority":0,"mxValues":{"priority":"10","target":"inbound.mailersend.net"},"catch_type":"all","match_type":"all"},{"id":"yzkq340ezw6gd796","name":"My
+        Inbound Route","address":"9bihxzuv97bjt91w7jvd@inbound.mailersend.net","domain":null,"dns_checked_at":null,"enabled":true,"filters":[{"type":"catch_recipient","key":null,"comparer":"equal","value":"support"},{"type":"match_sender","key":null,"comparer":"equal","value":"support"}],"forwards":[{"type":"webhook","value":"https:\/\/igor.fail\/webhook","secret":"Y390iwGtlduE6DvoCr7IMtRyQGTIF7jg"}],"priority":0,"mxValues":{"priority":"10","target":"inbound.mailersend.net"},"catch_type":"all","match_type":"all"}],"links":{"first":"https:\/\/api.mailersend.com\/v1\/inbound?page=1","last":"https:\/\/api.mailersend.com\/v1\/inbound?page=1","prev":null,"next":null},"meta":{"current_page":1,"from":1,"last_page":1,"links":[{"url":null,"label":"&laquo;
+        Previous","page":null,"active":false},{"url":"https:\/\/api.mailersend.com\/v1\/inbound?page=1","label":"1","page":1,"active":true},{"url":null,"label":"Next
+        &raquo;","page":null,"active":false}],"path":"https:\/\/api.mailersend.com\/v1\/inbound","per_page":10,"to":3,"total":3}}'
     headers:
       CF-RAY:
-      - 966cbd242e1ef969-BEG
+      - a16ed1aabd13e28f-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -31,19 +33,21 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 29 Jul 2025 12:49:53 GMT
+      - Mon, 06 Jul 2026 13:05:05 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
       - chunked
+      alt-svc:
+      - h3=":443"; ma=86400
       cf-cache-status:
       - DYNAMIC
-      strict-transport-security:
-      - max-age=31536000; includeSubDomains
       x-apiquota-remaining:
       - '-1'
       x-apiquota-reset:
-      - '2025-07-30T00:00:00Z'
+      - '2026-07-07T00:00:00Z'
+      x-envoy-upstream-service-time:
+      - '51'
     status:
       code: 200
       message: OK

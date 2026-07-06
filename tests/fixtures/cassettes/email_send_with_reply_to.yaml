@@ -1,7 +1,7 @@
 interactions:
 - request:
-    body: '{"from": {"email": "ms-sdk@igor.fail", "name": "Sender"}, "to": [{"email":
-      "igor@mailerlite.com", "name": "Recipient"}], "reply_to": {"email": "ms-sdk-replyto@igor.fail",
+    body: '{"from": {"email": "from@igor.fail", "name": "Sender"}, "to": [{"email":
+      "to@igor.fail", "name": "Recipient"}], "reply_to": {"email": "replyto@igor.fail",
       "name": "Reply Handler"}, "subject": "Test Email", "html": "<p>This is a test
       email</p>"}'
     headers:
@@ -12,11 +12,11 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '260'
+      - '244'
       Content-Type:
       - application/json
       User-Agent:
-      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+      - mailersend-python/2.0.3 (Python/3.12.12; OS/Darwin 25.5.0; Impl/CPython)
     method: POST
     uri: https://api.mailersend.com/v1/email
   response:
@@ -24,29 +24,31 @@ interactions:
       string: ''
     headers:
       CF-RAY:
-      - 966d6df8e8a60a8e-BEG
+      - a16ed1943d9ee28f-BEG
       Cache-Control:
       - no-cache, private
       Connection:
       - keep-alive
       Content-Type:
-      - text/html; charset=UTF-8
+      - text/html; charset=utf-8
       Date:
-      - Tue, 29 Jul 2025 14:50:36 GMT
+      - Mon, 06 Jul 2026 13:05:02 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
       - chunked
+      alt-svc:
+      - h3=":443"; ma=86400
       cf-cache-status:
       - DYNAMIC
-      strict-transport-security:
-      - max-age=31536000; includeSubDomains
       x-apiquota-remaining:
       - '-1'
       x-apiquota-reset:
-      - '2025-07-30T00:00:00Z'
+      - '2026-07-07T00:00:00Z'
+      x-envoy-upstream-service-time:
+      - '78'
       x-message-id:
-      - 6888dfbc1b82c3def7569208
+      - 6a4ba7fe257e065d3cdcc01e
       x-send-paused:
       - 'true'
     status:

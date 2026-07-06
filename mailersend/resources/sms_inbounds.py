@@ -94,5 +94,3 @@ class SmsInbounds(BaseResource):
         return self._request(
             method="DELETE", path=f"sms-inbounds/{request.sms_inbound_id}"
         )
-
-

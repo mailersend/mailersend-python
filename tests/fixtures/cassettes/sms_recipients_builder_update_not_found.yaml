@@ -13,7 +13,7 @@ interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+      - mailersend-python/2.0.3 (Python/3.12.12; OS/Darwin 25.5.0; Impl/CPython)
     method: PUT
     uri: https://api.mailersend.com/v1/sms-recipients/test-sms-recipient-id
   response:
@@ -21,7 +21,7 @@ interactions:
       string: "{\n    \"message\": \"Resource not found.\"\n}"
     headers:
       CF-RAY:
-      - 966d529919e2b01d-BEG
+      - a16ed1f538f6cf86-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -31,15 +31,21 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 29 Jul 2025 14:31:55 GMT
+      - Mon, 06 Jul 2026 13:05:17 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
       - chunked
+      alt-svc:
+      - h3=":443"; ma=86400
       cf-cache-status:
       - DYNAMIC
-      strict-transport-security:
-      - max-age=31536000; includeSubDomains
+      x-apiquota-remaining:
+      - '-1'
+      x-apiquota-reset:
+      - '2026-07-07T00:00:00Z'
+      x-envoy-upstream-service-time:
+      - '45'
     status:
       code: 404
       message: Not Found

@@ -1,4 +1,5 @@
 """Tests for Schedules resource."""
+
 import inspect
 
 from unittest.mock import AsyncMock, MagicMock, Mock
@@ -14,7 +15,6 @@ from mailersend.models.schedules import (
 )
 
 
-
 async def resolve(result):
     if inspect.iscoroutine(result):
         return await result
@@ -28,16 +28,20 @@ class TestSchedules:
             self.mock_client = MagicMock()
             self.mock_client.request = AsyncMock(
                 return_value=MagicMock(
-                    status_code=200, headers={"x-request-id": "test-req-id"},
-                    json=MagicMock(return_value={}), content=b"{}"
+                    status_code=200,
+                    headers={"x-request-id": "test-req-id"},
+                    json=MagicMock(return_value={}),
+                    content=b"{}",
                 )
             )
         else:
             self.mock_client = MagicMock()
             self.mock_client.request = Mock(
                 return_value=MagicMock(
-                    status_code=200, headers={"x-request-id": "test-req-id"},
-                    json=MagicMock(return_value={}), content=b"{}"
+                    status_code=200,
+                    headers={"x-request-id": "test-req-id"},
+                    json=MagicMock(return_value={}),
+                    content=b"{}",
                 )
             )
         self.resource = Schedules(self.mock_client)
@@ -55,25 +59,29 @@ class TestSchedules:
         assert call.kwargs["path"] == "message-schedules"
 
     async def test_get_schedule_returns_api_response(self):
-        result = await resolve(self.resource.get_schedule(
-            ScheduleGetRequest(message_id="msg123"))
+        result = await resolve(
+            self.resource.get_schedule(ScheduleGetRequest(message_id="msg123"))
         )
         assert isinstance(result, APIResponse)
 
     async def test_get_schedule_calls_correct_endpoint(self):
-        await resolve(self.resource.get_schedule(ScheduleGetRequest(message_id="msg123")))
+        await resolve(
+            self.resource.get_schedule(ScheduleGetRequest(message_id="msg123"))
+        )
         call = self.mock_client.request.call_args
         assert call.kwargs["method"] == "GET"
         assert call.kwargs["path"] == "message-schedules/msg123"
 
     async def test_delete_schedule_returns_api_response(self):
-        result = await resolve(self.resource.delete_schedule(
-            ScheduleDeleteRequest(message_id="msg123"))
+        result = await resolve(
+            self.resource.delete_schedule(ScheduleDeleteRequest(message_id="msg123"))
         )
         assert isinstance(result, APIResponse)
 
     async def test_delete_schedule_calls_correct_endpoint(self):
-        await resolve(self.resource.delete_schedule(ScheduleDeleteRequest(message_id="msg123")))
+        await resolve(
+            self.resource.delete_schedule(ScheduleDeleteRequest(message_id="msg123"))
+        )
         call = self.mock_client.request.call_args
         assert call.kwargs["method"] == "DELETE"
         assert call.kwargs["path"] == "message-schedules/msg123"

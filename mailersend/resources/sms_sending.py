@@ -28,5 +28,3 @@ class SmsSending(BaseResource):
         self.logger.debug("SMS payload: %s", payload)
 
         return self._request(method="POST", path="sms", body=payload)
-
-

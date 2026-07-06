@@ -77,9 +77,7 @@ class IdentitiesResource(BaseResource):
         self.logger.debug("Preparing to get identity with ID: %s", request.identity_id)
 
         # Make API request
-        return self._request(
-            method="GET", path=f"identities/{request.identity_id}"
-        )
+        return self._request(method="GET", path=f"identities/{request.identity_id}")
 
     def get_identity_by_email(self, request: IdentityGetByEmailRequest) -> APIResponse:
         """
@@ -94,9 +92,7 @@ class IdentitiesResource(BaseResource):
         self.logger.debug("Preparing to get identity by email: %s", request.email)
 
         # Make API request
-        return self._request(
-            method="GET", path=f"identities/email/{request.email}"
-        )
+        return self._request(method="GET", path=f"identities/email/{request.email}")
 
     def update_identity(self, request: IdentityUpdateRequest) -> APIResponse:
         """
@@ -173,9 +169,7 @@ class IdentitiesResource(BaseResource):
         )
 
         # Make API request
-        return self._request(
-            method="DELETE", path=f"identities/{request.identity_id}"
-        )
+        return self._request(method="DELETE", path=f"identities/{request.identity_id}")
 
     def delete_identity_by_email(
         self, request: IdentityDeleteByEmailRequest
@@ -192,8 +186,4 @@ class IdentitiesResource(BaseResource):
         self.logger.debug("Preparing to delete identity by email: %s", request.email)
 
         # Make API request
-        return self._request(
-            method="DELETE", path=f"identities/email/{request.email}"
-        )
-
-
+        return self._request(method="DELETE", path=f"identities/email/{request.email}")

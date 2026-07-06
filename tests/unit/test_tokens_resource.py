@@ -1,4 +1,5 @@
 """Tests for Tokens resource."""
+
 import inspect
 
 from unittest.mock import AsyncMock, MagicMock, Mock
@@ -17,7 +18,6 @@ from mailersend.models.tokens import (
 )
 
 
-
 async def resolve(result):
     if inspect.iscoroutine(result):
         return await result
@@ -31,16 +31,20 @@ class TestTokens:
             self.mock_client = MagicMock()
             self.mock_client.request = AsyncMock(
                 return_value=MagicMock(
-                    status_code=200, headers={"x-request-id": "test-req-id"},
-                    json=MagicMock(return_value={}), content=b"{}"
+                    status_code=200,
+                    headers={"x-request-id": "test-req-id"},
+                    json=MagicMock(return_value={}),
+                    content=b"{}",
                 )
             )
         else:
             self.mock_client = MagicMock()
             self.mock_client.request = Mock(
                 return_value=MagicMock(
-                    status_code=200, headers={"x-request-id": "test-req-id"},
-                    json=MagicMock(return_value={}), content=b"{}"
+                    status_code=200,
+                    headers={"x-request-id": "test-req-id"},
+                    json=MagicMock(return_value={}),
+                    content=b"{}",
                 )
             )
         self.resource = Tokens(self.mock_client)
@@ -56,7 +60,9 @@ class TestTokens:
         assert call.kwargs["path"] == "token"
 
     async def test_get_token_returns_api_response(self):
-        result = await resolve(self.resource.get_token(TokenGetRequest(token_id="tok123")))
+        result = await resolve(
+            self.resource.get_token(TokenGetRequest(token_id="tok123"))
+        )
         assert isinstance(result, APIResponse)
 
     async def test_get_token_calls_correct_endpoint(self):
@@ -110,7 +116,9 @@ class TestTokens:
         assert call.kwargs["path"] == "token/tok123"
 
     async def test_delete_token_returns_api_response(self):
-        result = await resolve(self.resource.delete_token(TokenDeleteRequest(token_id="tok123")))
+        result = await resolve(
+            self.resource.delete_token(TokenDeleteRequest(token_id="tok123"))
+        )
         assert isinstance(result, APIResponse)
 
     async def test_delete_token_calls_correct_endpoint(self):

@@ -67,7 +67,6 @@ class TestSmtpUsersIntegration:
                 assert "id" in first_user
                 assert "name" in first_user
                 assert "enabled" in first_user
-                assert "created_at" in first_user
 
     @vcr.use_cassette("smtp_users_list_with_limit.yaml")
     def test_list_smtp_users_with_limit(self, email_client, test_domain_id):

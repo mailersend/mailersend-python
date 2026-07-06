@@ -46,5 +46,3 @@ class Activity(BaseResource):
         self.logger.debug("Getting single activity: %s", request.activity_id)
 
         return self._request(method="GET", path=f"activities/{request.activity_id}")
-
-

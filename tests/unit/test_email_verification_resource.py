@@ -1,4 +1,5 @@
 """Tests for EmailVerification resource."""
+
 import inspect
 
 from unittest.mock import AsyncMock, MagicMock, Mock
@@ -20,7 +21,6 @@ from mailersend.models.email_verification import (
 )
 
 
-
 async def resolve(result):
     if inspect.iscoroutine(result):
         return await result
@@ -34,56 +34,70 @@ class TestEmailVerification:
             self.mock_client = MagicMock()
             self.mock_client.request = AsyncMock(
                 return_value=MagicMock(
-                    status_code=200, headers={"x-request-id": "test-req-id"},
-                    json=MagicMock(return_value={}), content=b"{}"
+                    status_code=200,
+                    headers={"x-request-id": "test-req-id"},
+                    json=MagicMock(return_value={}),
+                    content=b"{}",
                 )
             )
         else:
             self.mock_client = MagicMock()
             self.mock_client.request = Mock(
                 return_value=MagicMock(
-                    status_code=200, headers={"x-request-id": "test-req-id"},
-                    json=MagicMock(return_value={}), content=b"{}"
+                    status_code=200,
+                    headers={"x-request-id": "test-req-id"},
+                    json=MagicMock(return_value={}),
+                    content=b"{}",
                 )
             )
         self.resource = EmailVerification(self.mock_client)
 
     async def test_verify_email_returns_api_response(self):
-        result = await resolve(self.resource.verify_email(
-            EmailVerifyRequest(email="test@example.com"))
+        result = await resolve(
+            self.resource.verify_email(EmailVerifyRequest(email="test@example.com"))
         )
         assert isinstance(result, APIResponse)
 
     async def test_verify_email_calls_correct_endpoint(self):
-        await resolve(self.resource.verify_email(EmailVerifyRequest(email="test@example.com")))
+        await resolve(
+            self.resource.verify_email(EmailVerifyRequest(email="test@example.com"))
+        )
         call = self.mock_client.request.call_args
         assert call.kwargs["method"] == "POST"
         assert call.kwargs["path"] == "email-verification/verify"
         assert call.kwargs["body"]["email"] == "test@example.com"
 
     async def test_verify_email_async_returns_api_response(self):
-        result = await resolve(self.resource.verify_email_async(
-            EmailVerifyAsyncRequest(email="test@example.com"))
+        result = await resolve(
+            self.resource.verify_email_async(
+                EmailVerifyAsyncRequest(email="test@example.com")
+            )
         )
         assert isinstance(result, APIResponse)
 
     async def test_verify_email_async_calls_correct_endpoint(self):
-        await resolve(self.resource.verify_email_async(
-            EmailVerifyAsyncRequest(email="test@example.com"))
+        await resolve(
+            self.resource.verify_email_async(
+                EmailVerifyAsyncRequest(email="test@example.com")
+            )
         )
         call = self.mock_client.request.call_args
         assert call.kwargs["method"] == "POST"
         assert call.kwargs["path"] == "email-verification/verify-async"
 
     async def test_get_async_status_returns_api_response(self):
-        result = await resolve(self.resource.get_async_status(
-            EmailVerificationAsyncStatusRequest(email_verification_id="abc123"))
+        result = await resolve(
+            self.resource.get_async_status(
+                EmailVerificationAsyncStatusRequest(email_verification_id="abc123")
+            )
         )
         assert isinstance(result, APIResponse)
 
     async def test_get_async_status_calls_correct_endpoint(self):
-        await resolve(self.resource.get_async_status(
-            EmailVerificationAsyncStatusRequest(email_verification_id="abc123"))
+        await resolve(
+            self.resource.get_async_status(
+                EmailVerificationAsyncStatusRequest(email_verification_id="abc123")
+            )
         )
         call = self.mock_client.request.call_args
         assert call.kwargs["method"] == "GET"
@@ -107,14 +121,18 @@ class TestEmailVerification:
         assert call.kwargs["params"] == {"page": 1, "limit": 25}
 
     async def test_get_verification_returns_api_response(self):
-        result = await resolve(self.resource.get_verification(
-            EmailVerificationGetRequest(email_verification_id="abc123"))
+        result = await resolve(
+            self.resource.get_verification(
+                EmailVerificationGetRequest(email_verification_id="abc123")
+            )
         )
         assert isinstance(result, APIResponse)
 
     async def test_get_verification_calls_correct_endpoint(self):
-        await resolve(self.resource.get_verification(
-            EmailVerificationGetRequest(email_verification_id="abc123"))
+        await resolve(
+            self.resource.get_verification(
+                EmailVerificationGetRequest(email_verification_id="abc123")
+            )
         )
         call = self.mock_client.request.call_args
         assert call.kwargs["method"] == "GET"
@@ -138,14 +156,18 @@ class TestEmailVerification:
         assert call.kwargs["body"]["name"] == "Test List"
 
     async def test_verify_list_returns_api_response(self):
-        result = await resolve(self.resource.verify_list(
-            EmailVerificationVerifyRequest(email_verification_id="abc123"))
+        result = await resolve(
+            self.resource.verify_list(
+                EmailVerificationVerifyRequest(email_verification_id="abc123")
+            )
         )
         assert isinstance(result, APIResponse)
 
     async def test_verify_list_calls_correct_endpoint(self):
-        await resolve(self.resource.verify_list(
-            EmailVerificationVerifyRequest(email_verification_id="abc123"))
+        await resolve(
+            self.resource.verify_list(
+                EmailVerificationVerifyRequest(email_verification_id="abc123")
+            )
         )
         call = self.mock_client.request.call_args
         assert call.kwargs["method"] == "GET"

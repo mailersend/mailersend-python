@@ -203,5 +203,3 @@ class DmarcMonitoring(BaseResource):
             method="DELETE",
             path=f"dmarc-monitoring/{request.monitor_id}/favorite/{request.ip}",
         )
-
-

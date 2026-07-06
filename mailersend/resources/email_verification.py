@@ -34,9 +34,7 @@ class EmailVerification(BaseResource):
         self.logger.debug("Verifying email address: %s", body)
 
         # Make API call
-        return self._request(
-            method="POST", path="email-verification/verify", body=body
-        )
+        return self._request(method="POST", path="email-verification/verify", body=body)
 
     def verify_email_async(self, request: EmailVerifyAsyncRequest) -> APIResponse:
         """Verify a single email address (asynchronous).
@@ -102,9 +100,7 @@ class EmailVerification(BaseResource):
         self.logger.debug("Listing email verification lists with params: %s", params)
 
         # Make API call
-        return self._request(
-            method="GET", path="email-verification", params=params
-        )
+        return self._request(method="GET", path="email-verification", params=params)
 
     def get_verification(self, request: EmailVerificationGetRequest) -> APIResponse:
         """Get a single email verification list.
@@ -150,9 +146,7 @@ class EmailVerification(BaseResource):
         )
 
         # Make API call
-        return self._request(
-            method="POST", path="email-verification", body=body
-        )
+        return self._request(method="POST", path="email-verification", body=body)
 
     def verify_list(self, request: EmailVerificationVerifyRequest) -> APIResponse:
         """Start verification of an email verification list.
@@ -200,5 +194,3 @@ class EmailVerification(BaseResource):
             path=f"email-verification/{request.email_verification_id}/results",
             params=params,
         )
-
-

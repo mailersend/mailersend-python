@@ -1,4 +1,5 @@
 """Tests for Other resource."""
+
 import inspect
 
 from unittest.mock import AsyncMock, MagicMock, Mock
@@ -6,7 +7,6 @@ import pytest
 
 from mailersend.resources.other import Other
 from mailersend.models.base import APIResponse
-
 
 
 async def resolve(result):
@@ -22,16 +22,20 @@ class TestOther:
             self.mock_client = MagicMock()
             self.mock_client.request = AsyncMock(
                 return_value=MagicMock(
-                    status_code=200, headers={"x-request-id": "test-req-id"},
-                    json=MagicMock(return_value={}), content=b"{}"
+                    status_code=200,
+                    headers={"x-request-id": "test-req-id"},
+                    json=MagicMock(return_value={}),
+                    content=b"{}",
                 )
             )
         else:
             self.mock_client = MagicMock()
             self.mock_client.request = Mock(
                 return_value=MagicMock(
-                    status_code=200, headers={"x-request-id": "test-req-id"},
-                    json=MagicMock(return_value={}), content=b"{}"
+                    status_code=200,
+                    headers={"x-request-id": "test-req-id"},
+                    json=MagicMock(return_value={}),
+                    content=b"{}",
                 )
             )
         self.resource = Other(self.mock_client)

@@ -1,10 +1,10 @@
 interactions:
 - request:
-    body: '[{"from": {"email": "ms-sdk@igor.fail", "name": "Sender"}, "to": [{"email":
-      "igor@mailerlite.com", "name": "Recipient"}], "subject": "Test Email", "html":
-      "<p>First Email</p>"}, {"from": {"email": "ms-sdk@igor.fail", "name": "Sender"},
-      "to": [{"email": "igor@mailerlite.com", "name": "Recipient"}], "subject": "Test
-      Email", "html": "<p>Second Email</p>"}]'
+    body: '[{"from": {"email": "from@igor.fail", "name": "Sender"}, "to": [{"email":
+      "to@igor.fail", "name": "Recipient"}], "subject": "Test Email", "html": "<p>First
+      Email</p>"}, {"from": {"email": "from@igor.fail", "name": "Sender"}, "to": [{"email":
+      "to@igor.fail", "name": "Recipient"}], "subject": "Test Email", "html": "<p>Second
+      Email</p>"}]'
     headers:
       Accept:
       - application/json
@@ -13,19 +13,19 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '355'
+      - '337'
       Content-Type:
       - application/json
       User-Agent:
-      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+      - mailersend-python/2.0.3 (Python/3.12.12; OS/Darwin 25.5.0; Impl/CPython)
     method: POST
     uri: https://api.mailersend.com/v1/bulk-email
   response:
     body:
-      string: '{"message":"The bulk email is being processed.","bulk_email_id":"6888dfbc0beb2661ce76f512"}'
+      string: '{"message":"The bulk email is being processed.","bulk_email_id":"6a4ba7fecead680ed75f1be3"}'
     headers:
       CF-RAY:
-      - 966d6dfb6ca1126d-BEG
+      - a16ed1964d77c687-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -33,19 +33,21 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 29 Jul 2025 14:50:36 GMT
+      - Mon, 06 Jul 2026 13:05:02 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
       - chunked
+      alt-svc:
+      - h3=":443"; ma=86400
       cf-cache-status:
       - DYNAMIC
-      strict-transport-security:
-      - max-age=31536000; includeSubDomains
       x-apiquota-remaining:
       - '-1'
       x-apiquota-reset:
-      - '2025-07-30T00:00:00Z'
+      - '2026-07-07T00:00:00Z'
+      x-envoy-upstream-service-time:
+      - '60'
     status:
       code: 202
       message: Accepted

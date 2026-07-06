@@ -1,7 +1,7 @@
 interactions:
 - request:
-    body: '{"from": "+1234567890", "to": ["+1234567890"], "text": "Hello, this
-      is a test SMS message!"}'
+    body: '{"from": "+1234567890", "to": ["+1234567890"], "text": "Hello, this is
+      a test SMS message!"}'
     headers:
       Accept:
       - application/json
@@ -10,11 +10,11 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '96'
+      - '92'
       Content-Type:
       - application/json
       User-Agent:
-      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+      - mailersend-python/2.0.3 (Python/3.12.12; OS/Darwin 25.5.0; Impl/CPython)
     method: POST
     uri: https://api.mailersend.com/v1/sms
   response:
@@ -25,7 +25,7 @@ interactions:
         number."]}}'
     headers:
       CF-RAY:
-      - 966d52c86efaaeaa-BEG
+      - a16ed1f908add814-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -33,19 +33,21 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 29 Jul 2025 14:32:02 GMT
+      - Mon, 06 Jul 2026 13:05:18 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
       - chunked
+      alt-svc:
+      - h3=":443"; ma=86400
       cf-cache-status:
       - DYNAMIC
-      strict-transport-security:
-      - max-age=31536000; includeSubDomains
       x-apiquota-remaining:
       - '-1'
       x-apiquota-reset:
-      - '2025-07-30T00:00:00Z'
+      - '2026-07-07T00:00:00Z'
+      x-envoy-upstream-service-time:
+      - '53'
     status:
       code: 422
       message: Unprocessable Entity

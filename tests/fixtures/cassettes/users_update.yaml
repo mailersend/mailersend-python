@@ -14,7 +14,7 @@ interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+      - mailersend-python/2.0.3 (Python/3.12.12; OS/Darwin 25.5.0; Impl/CPython)
     method: PUT
     uri: https://api.mailersend.com/v1/users/test-user-id
   response:
@@ -24,7 +24,7 @@ interactions:
         permission. #MS42224"],"permissions.0":["The selected permissions.0 is invalid."]}}'
     headers:
       CF-RAY:
-      - 966d3dca8c73bbed-BEG
+      - a16ed2360e4ee28f-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -32,19 +32,21 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 29 Jul 2025 14:17:42 GMT
+      - Mon, 06 Jul 2026 13:05:28 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
       - chunked
+      alt-svc:
+      - h3=":443"; ma=86400
       cf-cache-status:
       - DYNAMIC
-      strict-transport-security:
-      - max-age=31536000; includeSubDomains
       x-apiquota-remaining:
       - '-1'
       x-apiquota-reset:
-      - '2025-07-30T00:00:00Z'
+      - '2026-07-07T00:00:00Z'
+      x-envoy-upstream-service-time:
+      - '54'
     status:
       code: 422
       message: Unprocessable Entity

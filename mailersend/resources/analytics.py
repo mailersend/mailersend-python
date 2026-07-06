@@ -121,5 +121,3 @@ class Analytics(BaseResource):
             params.pop(f"{field}[]", None)
 
         return params
-
-

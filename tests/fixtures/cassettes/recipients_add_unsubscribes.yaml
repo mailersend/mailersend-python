@@ -13,7 +13,7 @@ interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+      - mailersend-python/2.0.3 (Python/3.12.12; OS/Darwin 25.5.0; Impl/CPython)
     method: POST
     uri: https://api.mailersend.com/v1/suppressions/unsubscribes
   response:
@@ -22,7 +22,7 @@ interactions:
         domain id field is required. #MS42209"]}}'
     headers:
       CF-RAY:
-      - 966ca7f2fd05cb7b-VIE
+      - a16ed1c95ce9dfc0-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -30,19 +30,21 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 29 Jul 2025 12:35:25 GMT
+      - Mon, 06 Jul 2026 13:05:10 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
       - chunked
+      alt-svc:
+      - h3=":443"; ma=86400
       cf-cache-status:
       - DYNAMIC
-      strict-transport-security:
-      - max-age=31536000; includeSubDomains
       x-apiquota-remaining:
       - '-1'
       x-apiquota-reset:
-      - '2025-07-30T00:00:00Z'
+      - '2026-07-07T00:00:00Z'
+      x-envoy-upstream-service-time:
+      - '33'
     status:
       code: 422
       message: Unprocessable Entity

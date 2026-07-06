@@ -67,5 +67,3 @@ class SmsRecipients(BaseResource):
             path=f"sms-recipients/{request.sms_recipient_id}",
             body=request.to_request_body(),
         )
-
-

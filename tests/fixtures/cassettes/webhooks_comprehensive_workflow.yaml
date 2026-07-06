@@ -11,20 +11,19 @@ interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+      - mailersend-python/2.0.3 (Python/3.12.12; OS/Darwin 25.5.0; Impl/CPython)
     method: GET
     uri: https://api.mailersend.com/v1/webhooks?domain_id=65qngkdovk8lwr12
   response:
     body:
-      string: '{"data":[{"id":"0r83ql3vxvgzw1jm","url":"https:\/\/example.com\/webhook","events":["activity.sent","activity.delivered"],"name":"Test
-        Webhook","enabled":true,"editable":true,"secret":"cRP4dECSXJxo6HmuSVNXCIx1O2eiLgin","created_at":"2025-07-29T14:20:32.000000Z","updated_at":"2025-07-29T14:20:32.000000Z","domain":{"id":"65qngkdovk8lwr12","name":"igor.fail","dkim":true,"spf":true,"tracking":false,"is_verified":true,"is_cname_verified":true,"is_dns_active":true,"is_cname_active":false,"is_tracking_allowed":false,"has_not_queued_messages":true,"not_queued_messages_count":0,"domain_settings":{"send_paused":true,"track_clicks":false,"track_opens":false,"track_opens_pixel_on_top":false,"track_unsubscribe":false,"track_unsubscribe_html":"<p>Custom
+      string: '{"data":[{"id":"k68zxl2w5klj9057","url":"https:\/\/tinyurl.com\/ssrfthatshouldwork","events":["email_list.created"],"name":"Something","version":2,"enabled":true,"editable":true,"secret":"nrgcrVtQNpGBAER7kdCPNUdoIoKLCt81","created_at":"2026-02-25T12:34:06.000000Z","updated_at":"2026-07-06T13:15:55.000000Z","domain":{"id":"65qngkdovk8lwr12","name":"igor.fail","dkim":true,"spf":true,"tracking":false,"is_verified":true,"is_cname_verified":true,"is_dns_active":true,"is_cname_active":false,"is_tracking_allowed":false,"has_not_queued_messages":false,"not_queued_messages_count":0,"domain_settings":{"send_paused":false,"track_clicks":false,"track_opens":false,"track_opens_pixel_on_top":false,"track_unsubscribe":false,"track_unsubscribe_html":"<p>Custom
         unsubscribe {{unsubscribe}}<\/p>","track_unsubscribe_html_enabled":false,"track_unsubscribe_plain":"Custom
-        unsubscribe {{unsubscribe}}","track_unsubscribe_plain_enabled":false,"track_content":false,"custom_tracking_enabled":true,"custom_tracking_subdomain":"track","return_path_subdomain":"mta","inbound_routing_enabled":false,"inbound_routing_subdomain":"inbound","precedence_bulk":false,"ignore_duplicated_recipients":false,"show_dmarc":false},"created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2025-07-29T12:20:49.000000Z","totals":[]}}],"links":{"first":"https:\/\/api.mailersend.com\/v1\/webhooks?page=1","last":"https:\/\/api.mailersend.com\/v1\/webhooks?page=1","prev":null,"next":null},"meta":{"current_page":1,"from":1,"last_page":1,"links":[{"url":null,"label":"&laquo;
-        Previous","active":false},{"url":"https:\/\/api.mailersend.com\/v1\/webhooks?page=1","label":"1","active":true},{"url":null,"label":"Next
-        &raquo;","active":false}],"path":"https:\/\/api.mailersend.com\/v1\/webhooks","per_page":25,"to":1,"total":1}}'
+        unsubscribe {{unsubscribe}}","track_unsubscribe_plain_enabled":false,"track_content":false,"custom_tracking_enabled":true,"custom_tracking_subdomain":"track","return_path_subdomain":"mta","inbound_routing_enabled":false,"inbound_routing_subdomain":"inbound","precedence_bulk":false,"ignore_duplicated_recipients":false,"show_dmarc":false},"created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2026-07-06T13:14:14.000000Z","totals":[]}}],"links":{"first":"https:\/\/api.mailersend.com\/v1\/webhooks?page=1","last":"https:\/\/api.mailersend.com\/v1\/webhooks?page=1","prev":null,"next":null},"meta":{"current_page":1,"from":1,"last_page":1,"links":[{"url":null,"label":"&laquo;
+        Previous","page":null,"active":false},{"url":"https:\/\/api.mailersend.com\/v1\/webhooks?page=1","label":"1","page":1,"active":true},{"url":null,"label":"Next
+        &raquo;","page":null,"active":false}],"path":"https:\/\/api.mailersend.com\/v1\/webhooks","per_page":25,"to":1,"total":1}}'
     headers:
       CF-RAY:
-      - 966d41fddf87bbed-BEG
+      - a16ee47bdae4a8bc-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -34,19 +33,21 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 29 Jul 2025 14:20:35 GMT
+      - Mon, 06 Jul 2026 13:17:56 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
       - chunked
+      alt-svc:
+      - h3=":443"; ma=86400
       cf-cache-status:
       - DYNAMIC
-      strict-transport-security:
-      - max-age=31536000; includeSubDomains
       x-apiquota-remaining:
       - '-1'
       x-apiquota-reset:
-      - '2025-07-30T00:00:00Z'
+      - '2026-07-07T00:00:00Z'
+      x-envoy-upstream-service-time:
+      - '39'
     status:
       code: 200
       message: OK
@@ -62,20 +63,19 @@ interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+      - mailersend-python/2.0.3 (Python/3.12.12; OS/Darwin 25.5.0; Impl/CPython)
     method: GET
     uri: https://api.mailersend.com/v1/webhooks?domain_id=65qngkdovk8lwr12
   response:
     body:
-      string: '{"data":[{"id":"0r83ql3vxvgzw1jm","url":"https:\/\/example.com\/webhook","events":["activity.sent","activity.delivered"],"name":"Test
-        Webhook","enabled":true,"editable":true,"secret":"cRP4dECSXJxo6HmuSVNXCIx1O2eiLgin","created_at":"2025-07-29T14:20:32.000000Z","updated_at":"2025-07-29T14:20:32.000000Z","domain":{"id":"65qngkdovk8lwr12","name":"igor.fail","dkim":true,"spf":true,"tracking":false,"is_verified":true,"is_cname_verified":true,"is_dns_active":true,"is_cname_active":false,"is_tracking_allowed":false,"has_not_queued_messages":true,"not_queued_messages_count":0,"domain_settings":{"send_paused":true,"track_clicks":false,"track_opens":false,"track_opens_pixel_on_top":false,"track_unsubscribe":false,"track_unsubscribe_html":"<p>Custom
+      string: '{"data":[{"id":"k68zxl2w5klj9057","url":"https:\/\/tinyurl.com\/ssrfthatshouldwork","events":["email_list.created"],"name":"Something","version":2,"enabled":true,"editable":true,"secret":"nrgcrVtQNpGBAER7kdCPNUdoIoKLCt81","created_at":"2026-02-25T12:34:06.000000Z","updated_at":"2026-07-06T13:15:55.000000Z","domain":{"id":"65qngkdovk8lwr12","name":"igor.fail","dkim":true,"spf":true,"tracking":false,"is_verified":true,"is_cname_verified":true,"is_dns_active":true,"is_cname_active":false,"is_tracking_allowed":false,"has_not_queued_messages":false,"not_queued_messages_count":0,"domain_settings":{"send_paused":false,"track_clicks":false,"track_opens":false,"track_opens_pixel_on_top":false,"track_unsubscribe":false,"track_unsubscribe_html":"<p>Custom
         unsubscribe {{unsubscribe}}<\/p>","track_unsubscribe_html_enabled":false,"track_unsubscribe_plain":"Custom
-        unsubscribe {{unsubscribe}}","track_unsubscribe_plain_enabled":false,"track_content":false,"custom_tracking_enabled":true,"custom_tracking_subdomain":"track","return_path_subdomain":"mta","inbound_routing_enabled":false,"inbound_routing_subdomain":"inbound","precedence_bulk":false,"ignore_duplicated_recipients":false,"show_dmarc":false},"created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2025-07-29T12:20:49.000000Z","totals":[]}}],"links":{"first":"https:\/\/api.mailersend.com\/v1\/webhooks?page=1","last":"https:\/\/api.mailersend.com\/v1\/webhooks?page=1","prev":null,"next":null},"meta":{"current_page":1,"from":1,"last_page":1,"links":[{"url":null,"label":"&laquo;
-        Previous","active":false},{"url":"https:\/\/api.mailersend.com\/v1\/webhooks?page=1","label":"1","active":true},{"url":null,"label":"Next
-        &raquo;","active":false}],"path":"https:\/\/api.mailersend.com\/v1\/webhooks","per_page":25,"to":1,"total":1}}'
+        unsubscribe {{unsubscribe}}","track_unsubscribe_plain_enabled":false,"track_content":false,"custom_tracking_enabled":true,"custom_tracking_subdomain":"track","return_path_subdomain":"mta","inbound_routing_enabled":false,"inbound_routing_subdomain":"inbound","precedence_bulk":false,"ignore_duplicated_recipients":false,"show_dmarc":false},"created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2026-07-06T13:14:14.000000Z","totals":[]}}],"links":{"first":"https:\/\/api.mailersend.com\/v1\/webhooks?page=1","last":"https:\/\/api.mailersend.com\/v1\/webhooks?page=1","prev":null,"next":null},"meta":{"current_page":1,"from":1,"last_page":1,"links":[{"url":null,"label":"&laquo;
+        Previous","page":null,"active":false},{"url":"https:\/\/api.mailersend.com\/v1\/webhooks?page=1","label":"1","page":1,"active":true},{"url":null,"label":"Next
+        &raquo;","page":null,"active":false}],"path":"https:\/\/api.mailersend.com\/v1\/webhooks","per_page":25,"to":1,"total":1}}'
     headers:
       CF-RAY:
-      - 966d41feeb211b8b-BEG
+      - a16ee47c8fafe294-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -85,19 +85,21 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 29 Jul 2025 14:20:35 GMT
+      - Mon, 06 Jul 2026 13:17:56 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
       - chunked
+      alt-svc:
+      - h3=":443"; ma=86400
       cf-cache-status:
       - DYNAMIC
-      strict-transport-security:
-      - max-age=31536000; includeSubDomains
       x-apiquota-remaining:
       - '-1'
       x-apiquota-reset:
-      - '2025-07-30T00:00:00Z'
+      - '2026-07-07T00:00:00Z'
+      x-envoy-upstream-service-time:
+      - '41'
     status:
       code: 200
       message: OK
@@ -113,7 +115,7 @@ interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+      - mailersend-python/2.0.3 (Python/3.12.12; OS/Darwin 25.5.0; Impl/CPython)
     method: GET
     uri: https://api.mailersend.com/v1/webhooks/non-existent-id
   response:
@@ -121,7 +123,7 @@ interactions:
       string: "{\n    \"message\": \"Resource not found.\"\n}"
     headers:
       CF-RAY:
-      - 966d41ffddc6b01b-BEG
+      - a16ee47d4d46e295-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -131,15 +133,21 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 29 Jul 2025 14:20:35 GMT
+      - Mon, 06 Jul 2026 13:17:56 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
       - chunked
+      alt-svc:
+      - h3=":443"; ma=86400
       cf-cache-status:
       - DYNAMIC
-      strict-transport-security:
-      - max-age=31536000; includeSubDomains
+      x-apiquota-remaining:
+      - '-1'
+      x-apiquota-reset:
+      - '2026-07-07T00:00:00Z'
+      x-envoy-upstream-service-time:
+      - '36'
     status:
       code: 404
       message: Not Found
@@ -158,7 +166,7 @@ interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+      - mailersend-python/2.0.3 (Python/3.12.12; OS/Darwin 25.5.0; Impl/CPython)
     method: POST
     uri: https://api.mailersend.com/v1/webhooks
   response:
@@ -167,7 +175,7 @@ interactions:
         wait a while before retrying.\"\n}"
     headers:
       CF-RAY:
-      - 966d4200cacc076b-BEG
+      - a16ee47dfcc796e0-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -175,19 +183,21 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 29 Jul 2025 14:20:35 GMT
+      - Mon, 06 Jul 2026 13:17:56 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
       - chunked
+      alt-svc:
+      - h3=":443"; ma=86400
       cf-cache-status:
       - DYNAMIC
-      strict-transport-security:
-      - max-age=31536000; includeSubDomains
       x-apiquota-remaining:
       - '-1'
       x-apiquota-reset:
-      - '2025-07-30T00:00:00Z'
+      - '2026-07-07T00:00:00Z'
+      x-envoy-upstream-service-time:
+      - '34'
     status:
       code: 429
       message: Too Many Requests
@@ -206,16 +216,16 @@ interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+      - mailersend-python/2.0.3 (Python/3.12.12; OS/Darwin 25.5.0; Impl/CPython)
     method: POST
     uri: https://api.mailersend.com/v1/webhooks
   response:
     body:
-      string: '{"message":"The url has already been taken.","errors":{"url":["The
-        url has already been taken."]}}'
+      string: "{\n    \"message\": \"You cannot create a resource at the moment. Please
+        wait a while before retrying.\"\n}"
     headers:
       CF-RAY:
-      - 966d4201aa47bbed-BEG
+      - a16ee47eadba1f09-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -223,19 +233,71 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 29 Jul 2025 14:20:35 GMT
+      - Mon, 06 Jul 2026 13:17:56 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
       - chunked
+      alt-svc:
+      - h3=":443"; ma=86400
       cf-cache-status:
       - DYNAMIC
-      strict-transport-security:
-      - max-age=31536000; includeSubDomains
       x-apiquota-remaining:
       - '-1'
       x-apiquota-reset:
-      - '2025-07-30T00:00:00Z'
+      - '2026-07-07T00:00:00Z'
+      x-envoy-upstream-service-time:
+      - '34'
+    status:
+      code: 429
+      message: Too Many Requests
+- request:
+    body: '{"url": "https://example.com/webhook", "name": "Test Webhook", "events":
+      ["activity.sent"], "domain_id": "65qngkdovk8lwr12"}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '124'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - mailersend-python/2.0.3 (Python/3.12.12; OS/Darwin 25.5.0; Impl/CPython)
+    method: POST
+    uri: https://api.mailersend.com/v1/webhooks
+  response:
+    body:
+      string: '{"message":"The endpoint returned HTTP 405.","errors":{"url":["The
+        endpoint returned HTTP 405."]}}'
+    headers:
+      CF-RAY:
+      - a16ee48329f696e0-BEG
+      Cache-Control:
+      - no-cache, private
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Date:
+      - Mon, 06 Jul 2026 13:17:57 GMT
+      Server:
+      - cloudflare
+      Transfer-Encoding:
+      - chunked
+      alt-svc:
+      - h3=":443"; ma=86400
+      cf-cache-status:
+      - DYNAMIC
+      x-apiquota-remaining:
+      - '-1'
+      x-apiquota-reset:
+      - '2026-07-07T00:00:00Z'
+      x-envoy-upstream-service-time:
+      - '101'
     status:
       code: 422
       message: Unprocessable Entity
@@ -251,7 +313,7 @@ interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+      - mailersend-python/2.0.3 (Python/3.12.12; OS/Darwin 25.5.0; Impl/CPython)
     method: GET
     uri: https://api.mailersend.com/v1/webhooks/another-non-existent-id
   response:
@@ -259,7 +321,7 @@ interactions:
       string: "{\n    \"message\": \"Resource not found.\"\n}"
     headers:
       CF-RAY:
-      - 966d42029ad4d814-BEG
+      - a16ee48448920db0-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -269,15 +331,21 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 29 Jul 2025 14:20:35 GMT
+      - Mon, 06 Jul 2026 13:17:57 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
       - chunked
+      alt-svc:
+      - h3=":443"; ma=86400
       cf-cache-status:
       - DYNAMIC
-      strict-transport-security:
-      - max-age=31536000; includeSubDomains
+      x-apiquota-remaining:
+      - '-1'
+      x-apiquota-reset:
+      - '2026-07-07T00:00:00Z'
+      x-envoy-upstream-service-time:
+      - '36'
     status:
       code: 404
       message: Not Found

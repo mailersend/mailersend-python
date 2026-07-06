@@ -3,7 +3,7 @@ interactions:
     body: '{"domain_id": "invalid-domain-id", "name": "Test Inbound Route", "domain_enabled":
       false, "catch_filter": {"type": "catch_all"}, "catch_type": "all", "match_filter":
       {"type": "match_all"}, "match_type": "all", "forwards": [{"type": "email", "value":
-      "ms-sdk@igor.fail"}]}'
+      "from@igor.fail"}]}'
     headers:
       Accept:
       - application/json
@@ -12,11 +12,11 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '271'
+      - '269'
       Content-Type:
       - application/json
       User-Agent:
-      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+      - mailersend-python/2.0.3 (Python/3.12.12; OS/Darwin 25.5.0; Impl/CPython)
     method: POST
     uri: https://api.mailersend.com/v1/inbound
   response:
@@ -25,7 +25,7 @@ interactions:
         domain id field is required. #MS42209"]}}'
     headers:
       CF-RAY:
-      - 9684ca4d2ae2b018-BEG
+      - a16ed1ae28ee870d-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -33,19 +33,21 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 01 Aug 2025 10:53:10 GMT
+      - Mon, 06 Jul 2026 13:05:06 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
       - chunked
+      alt-svc:
+      - h3=":443"; ma=86400
       cf-cache-status:
       - DYNAMIC
-      strict-transport-security:
-      - max-age=31536000; includeSubDomains
       x-apiquota-remaining:
       - '-1'
       x-apiquota-reset:
-      - '2025-08-02T00:00:00Z'
+      - '2026-07-07T00:00:00Z'
+      x-envoy-upstream-service-time:
+      - '57'
     status:
       code: 422
       message: Unprocessable Entity

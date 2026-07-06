@@ -1,4 +1,5 @@
 """Tests for SmsInbounds resource."""
+
 import inspect
 
 from unittest.mock import AsyncMock, MagicMock, Mock
@@ -16,7 +17,6 @@ from mailersend.models.sms_inbounds import (
 )
 
 
-
 async def resolve(result):
     if inspect.iscoroutine(result):
         return await result
@@ -30,22 +30,28 @@ class TestSmsInbounds:
             self.mock_client = MagicMock()
             self.mock_client.request = AsyncMock(
                 return_value=MagicMock(
-                    status_code=200, headers={"x-request-id": "test-req-id"},
-                    json=MagicMock(return_value={}), content=b"{}"
+                    status_code=200,
+                    headers={"x-request-id": "test-req-id"},
+                    json=MagicMock(return_value={}),
+                    content=b"{}",
                 )
             )
         else:
             self.mock_client = MagicMock()
             self.mock_client.request = Mock(
                 return_value=MagicMock(
-                    status_code=200, headers={"x-request-id": "test-req-id"},
-                    json=MagicMock(return_value={}), content=b"{}"
+                    status_code=200,
+                    headers={"x-request-id": "test-req-id"},
+                    json=MagicMock(return_value={}),
+                    content=b"{}",
                 )
             )
         self.resource = SmsInbounds(self.mock_client)
 
     async def test_list_sms_inbounds_returns_api_response(self):
-        result = await resolve(self.resource.list_sms_inbounds(SmsInboundsListRequest()))
+        result = await resolve(
+            self.resource.list_sms_inbounds(SmsInboundsListRequest())
+        )
         assert isinstance(result, APIResponse)
 
     async def test_list_sms_inbounds_calls_correct_endpoint(self):
@@ -55,14 +61,14 @@ class TestSmsInbounds:
         assert call.kwargs["path"] == "sms-inbounds"
 
     async def test_get_sms_inbound_returns_api_response(self):
-        result = await resolve(self.resource.get_sms_inbound(
-            SmsInboundGetRequest(sms_inbound_id="inb123"))
+        result = await resolve(
+            self.resource.get_sms_inbound(SmsInboundGetRequest(sms_inbound_id="inb123"))
         )
         assert isinstance(result, APIResponse)
 
     async def test_get_sms_inbound_calls_correct_endpoint(self):
-        await resolve(self.resource.get_sms_inbound(
-            SmsInboundGetRequest(sms_inbound_id="inb123"))
+        await resolve(
+            self.resource.get_sms_inbound(SmsInboundGetRequest(sms_inbound_id="inb123"))
         )
         call = self.mock_client.request.call_args
         assert call.kwargs["method"] == "GET"
@@ -101,14 +107,18 @@ class TestSmsInbounds:
         assert call.kwargs["path"] == "sms-inbounds/inb123"
 
     async def test_delete_sms_inbound_returns_api_response(self):
-        result = await resolve(self.resource.delete_sms_inbound(
-            SmsInboundDeleteRequest(sms_inbound_id="inb123"))
+        result = await resolve(
+            self.resource.delete_sms_inbound(
+                SmsInboundDeleteRequest(sms_inbound_id="inb123")
+            )
         )
         assert isinstance(result, APIResponse)
 
     async def test_delete_sms_inbound_calls_correct_endpoint(self):
-        await resolve(self.resource.delete_sms_inbound(
-            SmsInboundDeleteRequest(sms_inbound_id="inb123"))
+        await resolve(
+            self.resource.delete_sms_inbound(
+                SmsInboundDeleteRequest(sms_inbound_id="inb123")
+            )
         )
         call = self.mock_client.request.call_args
         assert call.kwargs["method"] == "DELETE"

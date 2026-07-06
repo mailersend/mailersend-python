@@ -1,10 +1,10 @@
 interactions:
 - request:
-    body: '[{"from": {"email": "ms-sdk@igor.fail", "name": "Sender"}, "to": [{"email":
-      "igor@mailerlite.com", "name": "Recipient"}], "subject": "Test Email", "html":
-      "<p>First Email</p>"}, {"from": {"email": "ms-sdk@igor.fail", "name": "Sender"},
-      "to": [{"email": "igor@mailerlite.com", "name": "Recipient"}], "subject": "Test
-      Email", "html": "<p>Second Email</p>"}]'
+    body: '[{"from": {"email": "from@igor.fail", "name": "Sender"}, "to": [{"email":
+      "to@igor.fail", "name": "Recipient"}], "subject": "Test Email", "html": "<p>First
+      Email</p>"}, {"from": {"email": "from@igor.fail", "name": "Sender"}, "to": [{"email":
+      "to@igor.fail", "name": "Recipient"}], "subject": "Test Email", "html": "<p>Second
+      Email</p>"}]'
     headers:
       Accept:
       - application/json
@@ -13,19 +13,19 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '355'
+      - '337'
       Content-Type:
       - application/json
       User-Agent:
-      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+      - mailersend-python/2.0.3 (Python/3.12.12; OS/Darwin 25.5.0; Impl/CPython)
     method: POST
     uri: https://api.mailersend.com/v1/bulk-email
   response:
     body:
-      string: '{"message":"The bulk email is being processed.","bulk_email_id":"6888dfbd45fcac796bfecfb6"}'
+      string: '{"message":"The bulk email is being processed.","bulk_email_id":"6a4ba7fe601233499cce2610"}'
     headers:
       CF-RAY:
-      - 966d6dfcc8e8aeaa-BEG
+      - a16ed1973dff562e-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -33,19 +33,21 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 29 Jul 2025 14:50:37 GMT
+      - Mon, 06 Jul 2026 13:05:02 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
       - chunked
+      alt-svc:
+      - h3=":443"; ma=86400
       cf-cache-status:
       - DYNAMIC
-      strict-transport-security:
-      - max-age=31536000; includeSubDomains
       x-apiquota-remaining:
       - '-1'
       x-apiquota-reset:
-      - '2025-07-30T00:00:00Z'
+      - '2026-07-07T00:00:00Z'
+      x-envoy-upstream-service-time:
+      - '65'
     status:
       code: 202
       message: Accepted
@@ -61,15 +63,15 @@ interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+      - mailersend-python/2.0.3 (Python/3.12.12; OS/Darwin 25.5.0; Impl/CPython)
     method: GET
-    uri: https://api.mailersend.com/v1/bulk-email/6888dfbd45fcac796bfecfb6
+    uri: https://api.mailersend.com/v1/bulk-email/6a4ba7fe601233499cce2610
   response:
     body:
-      string: '{"data":{"id":"6888dfbd45fcac796bfecfb6","state":"queued","total_recipients_count":2,"suppressed_recipients_count":0,"suppressed_recipients":null,"validation_errors_count":0,"validation_errors":null,"messages_id":null,"created_at":"2025-07-29T14:50:37.000000Z","updated_at":"2025-07-29T14:50:37.000000Z"}}'
+      string: '{"data":{"id":"6a4ba7fe601233499cce2610","state":"queued","total_recipients_count":2,"suppressed_recipients_count":0,"suppressed_recipients":null,"validation_errors_count":0,"validation_errors":null,"messages_id":null,"created_at":"2026-07-06T13:05:02.000000Z","updated_at":"2026-07-06T13:05:02.000000Z"}}'
     headers:
       CF-RAY:
-      - 966d6dfddaabe294-BEG
+      - a16ed1980d99e295-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -79,19 +81,21 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 29 Jul 2025 14:50:37 GMT
+      - Mon, 06 Jul 2026 13:05:02 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
       - chunked
+      alt-svc:
+      - h3=":443"; ma=86400
       cf-cache-status:
       - DYNAMIC
-      strict-transport-security:
-      - max-age=31536000; includeSubDomains
       x-apiquota-remaining:
       - '-1'
       x-apiquota-reset:
-      - '2025-07-30T00:00:00Z'
+      - '2026-07-07T00:00:00Z'
+      x-envoy-upstream-service-time:
+      - '47'
     status:
       code: 200
       message: OK

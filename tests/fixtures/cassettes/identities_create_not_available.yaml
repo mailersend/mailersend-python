@@ -1,7 +1,7 @@
 interactions:
 - request:
-    body: '{"domain_id": "65qngkdovk8lwr12", "name": "Test Identity", "email": "ms-sdk@igor.fail",
-      "reply_to_email": "ms-sdk@igor.fail", "reply_to_name": "Reply Test", "add_note":
+    body: '{"domain_id": "65qngkdovk8lwr12", "name": "Test Identity", "email": "from@igor.fail",
+      "reply_to_email": "from@igor.fail", "reply_to_name": "Reply Test", "add_note":
       true, "personal_note": "Test identity for integration testing"}'
     headers:
       Accept:
@@ -11,11 +11,11 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '232'
+      - '228'
       Content-Type:
       - application/json
       User-Agent:
-      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+      - mailersend-python/2.0.3 (Python/3.12.12; OS/Darwin 25.5.0; Impl/CPython)
     method: POST
     uri: https://api.mailersend.com/v1/identities
   response:
@@ -24,7 +24,7 @@ interactions:
         email has already been taken."]}}'
     headers:
       CF-RAY:
-      - 9684c6c4badff339-BEG
+      - a16ed1a52dbe1f09-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -32,19 +32,21 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 01 Aug 2025 10:50:46 GMT
+      - Mon, 06 Jul 2026 13:05:04 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
       - chunked
+      alt-svc:
+      - h3=":443"; ma=86400
       cf-cache-status:
       - DYNAMIC
-      strict-transport-security:
-      - max-age=31536000; includeSubDomains
       x-apiquota-remaining:
       - '-1'
       x-apiquota-reset:
-      - '2025-08-02T00:00:00Z'
+      - '2026-07-07T00:00:00Z'
+      x-envoy-upstream-service-time:
+      - '101'
     status:
       code: 422
       message: Unprocessable Entity

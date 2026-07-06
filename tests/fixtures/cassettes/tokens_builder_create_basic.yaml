@@ -13,18 +13,18 @@ interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+      - mailersend-python/2.0.3 (Python/3.12.12; OS/Darwin 25.5.0; Impl/CPython)
     method: POST
     uri: https://api.mailersend.com/v1/token
   response:
     body:
-      string: '{"data":{"id":"76527c5c823a91eb565857e0efe46f46dd4a2b00ab48c661ca7fd55c2bdbafbab877fda7f4441860","accessToken":"***FILTERED***","name":"Test
-        Token","created_at":"2025-08-01T10:47:24.000000Z","scopes":["email_full"],"has_full":false,"domain":{"id":"65qngkdovk8lwr12","name":"igor.fail","dkim":true,"spf":true,"mx":true,"tracking":false,"is_verified":true,"is_dns_active":true,"is_trial_domain":false,"domain_settings":{"send_paused":false,"track_clicks":true,"track_opens":true,"track_opens_pixel_on_top":false,"track_unsubscribe":true,"track_unsubscribe_html":"<p>Custom
+      string: '{"data":{"id":"4ce0bb437a8306fb4324eb1dd810a7426e3bf1ab8ed9939afed0caf7798c4e787c49776cd3abfc8c","accessToken":"***FILTERED***","name":"Test
+        Token","created_at":"2026-07-06T13:05:26.000000Z","scopes":["email_full"],"has_full":false,"has_only_sending":false,"domain":{"id":"65qngkdovk8lwr12","name":"igor.fail","dkim":true,"spf":true,"mx":true,"tracking":false,"is_verified":true,"is_dns_active":true,"is_trial_domain":false,"domain_settings":{"send_paused":true,"track_clicks":false,"track_opens":false,"track_opens_pixel_on_top":false,"track_unsubscribe":false,"track_unsubscribe_html":"<p>Custom
         unsubscribe {{unsubscribe}}<\/p>","track_unsubscribe_html_enabled":false,"track_unsubscribe_plain":"Custom
-        unsubscribe {{unsubscribe}}","track_unsubscribe_plain_enabled":false,"track_content":true,"custom_tracking_enabled":true,"custom_tracking_subdomain":"track","return_path_subdomain":"mta","inbound_routing_enabled":false,"inbound_routing_subdomain":"inbound","precedence_bulk":false,"ignore_duplicated_recipients":false,"show_dmarc":false},"can":{"manage":true},"totals":[],"is_dkim_txt":false,"show_dkim_info":false,"is_being_verified":true},"preview":"***FILTERED***","expires_at":null}}'
+        unsubscribe {{unsubscribe}}","track_unsubscribe_plain_enabled":false,"track_content":false,"custom_tracking_enabled":true,"custom_tracking_subdomain":"track","return_path_subdomain":"mta","inbound_routing_enabled":false,"inbound_routing_subdomain":"inbound","precedence_bulk":false,"ignore_duplicated_recipients":false,"show_dmarc":false},"can":{"manage":true},"totals":[],"is_dkim_txt":false,"show_dkim_info":false,"is_being_verified":true,"is_custom_links_available":false},"preview":"***FILTERED***","expires_at":null}}'
     headers:
       CF-RAY:
-      - 9684c1da4d44f969-BEG
+      - a16ed228dd2de296-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -34,19 +34,21 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 01 Aug 2025 10:47:24 GMT
+      - Mon, 06 Jul 2026 13:05:26 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
       - chunked
+      alt-svc:
+      - h3=":443"; ma=86400
       cf-cache-status:
       - DYNAMIC
-      strict-transport-security:
-      - max-age=31536000; includeSubDomains
       x-apiquota-remaining:
       - '-1'
       x-apiquota-reset:
-      - '2025-08-02T00:00:00Z'
+      - '2026-07-07T00:00:00Z'
+      x-envoy-upstream-service-time:
+      - '400'
     status:
       code: 200
       message: OK

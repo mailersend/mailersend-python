@@ -122,5 +122,3 @@ class SmtpUsers(BaseResource):
             method="DELETE",
             path=f"domains/{request.domain_id}/smtp-users/{request.smtp_user_id}",
         )
-
-

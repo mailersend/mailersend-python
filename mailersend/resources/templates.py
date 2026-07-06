@@ -60,9 +60,7 @@ class Templates(BaseResource):
         self.logger.debug("Template get request: %s", request)
 
         # Make API call
-        return self._request(
-            method="GET", path=f"templates/{request.template_id}"
-        )
+        return self._request(method="GET", path=f"templates/{request.template_id}")
 
     def delete_template(self, request: TemplateDeleteRequest) -> APIResponse:
         """
@@ -78,8 +76,4 @@ class Templates(BaseResource):
         self.logger.debug("Deleting template: %s", request.template_id)
 
         # Make API call
-        return self._request(
-            method="DELETE", path=f"templates/{request.template_id}"
-        )
-
-
+        return self._request(method="DELETE", path=f"templates/{request.template_id}")

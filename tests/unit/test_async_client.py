@@ -23,22 +23,25 @@ class TestAsyncMailerSendClientInit:
             assert client.api_key == "test-key"
 
     def test_init_reads_env_var(self):
-        with patch.dict(os.environ, {"MAILERSEND_API_KEY": "env-key"}), patch(
-            "mailersend.async_client.httpx.AsyncClient"
+        with (
+            patch.dict(os.environ, {"MAILERSEND_API_KEY": "env-key"}),
+            patch("mailersend.async_client.httpx.AsyncClient"),
         ):
             client = AsyncMailerSendClient()
             assert client.api_key == "env-key"
 
     def test_init_explicit_key_overrides_env(self):
-        with patch.dict(os.environ, {"MAILERSEND_API_KEY": "env-key"}), patch(
-            "mailersend.async_client.httpx.AsyncClient"
+        with (
+            patch.dict(os.environ, {"MAILERSEND_API_KEY": "env-key"}),
+            patch("mailersend.async_client.httpx.AsyncClient"),
         ):
             client = AsyncMailerSendClient(api_key="param-key")
             assert client.api_key == "param-key"
 
     def test_init_raises_without_api_key(self):
-        with patch.dict(os.environ, {}, clear=True), patch(
-            "mailersend.async_client.httpx.AsyncClient"
+        with (
+            patch.dict(os.environ, {}, clear=True),
+            patch("mailersend.async_client.httpx.AsyncClient"),
         ):
             with pytest.raises(ValueError, match="API key is required"):
                 AsyncMailerSendClient()
@@ -61,18 +64,37 @@ class TestAsyncMailerSendClientInit:
         with patch("mailersend.async_client.httpx.AsyncClient"):
             client = AsyncMailerSendClient(api_key="test-key")
             for attr in [
-                "emails", "activities", "analytics", "domains", "identities",
-                "inbound", "templates", "tokens", "webhooks", "email_verification",
-                "users", "messages", "recipients", "schedules", "sms_messages",
-                "smtp_users", "sms_sending", "sms_numbers", "sms_activity",
-                "sms_inbounds", "sms_recipients", "sms_webhooks", "api_quota",
+                "emails",
+                "activities",
+                "analytics",
+                "domains",
+                "identities",
+                "inbound",
+                "templates",
+                "tokens",
+                "webhooks",
+                "email_verification",
+                "users",
+                "messages",
+                "recipients",
+                "schedules",
+                "sms_messages",
+                "smtp_users",
+                "sms_sending",
+                "sms_numbers",
+                "sms_activity",
+                "sms_inbounds",
+                "sms_recipients",
+                "sms_webhooks",
+                "api_quota",
                 "dmarc_monitoring",
             ]:
                 assert hasattr(client, attr), f"missing resource: {attr}"
 
     def test_init_empty_env_var_raises(self):
-        with patch.dict(os.environ, {"MAILERSEND_API_KEY": ""}), patch(
-            "mailersend.async_client.httpx.AsyncClient"
+        with (
+            patch.dict(os.environ, {"MAILERSEND_API_KEY": ""}),
+            patch("mailersend.async_client.httpx.AsyncClient"),
         ):
             with pytest.raises(ValueError, match="API key is required"):
                 AsyncMailerSendClient()
@@ -162,8 +184,9 @@ class TestAsyncMailerSendClientRequest:
         error_response = self._make_mock_response(500, {"message": "Server error"})
         ok_response = self._make_mock_response(200, {"data": "ok"})
 
-        with patch("mailersend.async_client.httpx.AsyncClient"), patch(
-            "mailersend.async_client.asyncio.sleep", new_callable=AsyncMock
+        with (
+            patch("mailersend.async_client.httpx.AsyncClient"),
+            patch("mailersend.async_client.asyncio.sleep", new_callable=AsyncMock),
         ):
             client = AsyncMailerSendClient(api_key="test-key", max_retries=2)
             client._client = AsyncMock()
@@ -178,8 +201,9 @@ class TestAsyncMailerSendClientRequest:
     async def test_exhausting_retries_raises_server_error(self):
         error_response = self._make_mock_response(500, {"message": "Server error"})
 
-        with patch("mailersend.async_client.httpx.AsyncClient"), patch(
-            "mailersend.async_client.asyncio.sleep", new_callable=AsyncMock
+        with (
+            patch("mailersend.async_client.httpx.AsyncClient"),
+            patch("mailersend.async_client.asyncio.sleep", new_callable=AsyncMock),
         ):
             client = AsyncMailerSendClient(api_key="test-key", max_retries=2)
             client._client = AsyncMock()
@@ -194,9 +218,12 @@ class TestAsyncMailerSendClientRequest:
         error_response = self._make_mock_response(500, {"message": "Server error"})
         ok_response = self._make_mock_response(200, {})
 
-        with patch("mailersend.async_client.httpx.AsyncClient"), patch(
-            "mailersend.async_client.asyncio.sleep", new_callable=AsyncMock
-        ) as mock_sleep:
+        with (
+            patch("mailersend.async_client.httpx.AsyncClient"),
+            patch(
+                "mailersend.async_client.asyncio.sleep", new_callable=AsyncMock
+            ) as mock_sleep,
+        ):
             client = AsyncMailerSendClient(api_key="test-key", max_retries=2)
             client._client = AsyncMock()
             client._client.request = AsyncMock(
@@ -220,9 +247,12 @@ class TestAsyncMailerSendClientRequest:
         rate_limit_response.headers = {"retry-after": "30", "x-apiquota-remaining": "0"}
         ok_response = self._make_mock_response(200, {})
 
-        with patch("mailersend.async_client.httpx.AsyncClient"), patch(
-            "mailersend.async_client.asyncio.sleep", new_callable=AsyncMock
-        ) as mock_sleep:
+        with (
+            patch("mailersend.async_client.httpx.AsyncClient"),
+            patch(
+                "mailersend.async_client.asyncio.sleep", new_callable=AsyncMock
+            ) as mock_sleep,
+        ):
             client = AsyncMailerSendClient(api_key="test-key", max_retries=1)
             client._client = AsyncMock()
             client._client.request = AsyncMock(
@@ -240,9 +270,12 @@ class TestAsyncMailerSendClientRequest:
         rate_limit_response.headers = {}
         ok_response = self._make_mock_response(200, {})
 
-        with patch("mailersend.async_client.httpx.AsyncClient"), patch(
-            "mailersend.async_client.asyncio.sleep", new_callable=AsyncMock
-        ) as mock_sleep:
+        with (
+            patch("mailersend.async_client.httpx.AsyncClient"),
+            patch(
+                "mailersend.async_client.asyncio.sleep", new_callable=AsyncMock
+            ) as mock_sleep,
+        ):
             client = AsyncMailerSendClient(api_key="test-key", max_retries=1)
             client._client = AsyncMock()
             client._client.request = AsyncMock(
@@ -267,8 +300,9 @@ class TestAsyncMailerSendClientRequest:
     async def test_retries_on_network_error_then_succeeds(self):
         ok_response = self._make_mock_response(200, {"data": "ok"})
 
-        with patch("mailersend.async_client.httpx.AsyncClient"), patch(
-            "mailersend.async_client.asyncio.sleep", new_callable=AsyncMock
+        with (
+            patch("mailersend.async_client.httpx.AsyncClient"),
+            patch("mailersend.async_client.asyncio.sleep", new_callable=AsyncMock),
         ):
             client = AsyncMailerSendClient(api_key="test-key", max_retries=2)
             client._client = AsyncMock()
@@ -281,8 +315,9 @@ class TestAsyncMailerSendClientRequest:
             assert client._client.request.call_count == 2
 
     async def test_exhausting_retries_on_network_error_raises(self):
-        with patch("mailersend.async_client.httpx.AsyncClient"), patch(
-            "mailersend.async_client.asyncio.sleep", new_callable=AsyncMock
+        with (
+            patch("mailersend.async_client.httpx.AsyncClient"),
+            patch("mailersend.async_client.asyncio.sleep", new_callable=AsyncMock),
         ):
             client = AsyncMailerSendClient(api_key="test-key", max_retries=2)
             client._client = AsyncMock()
@@ -295,31 +330,38 @@ class TestAsyncMailerSendClientRequest:
 
             assert client._client.request.call_count == 3
 
-
     async def test_retries_on_502_then_succeeds(self):
         error_response = self._make_mock_response(502, {"message": "Bad Gateway"})
         ok_response = self._make_mock_response(200, {"data": "ok"})
 
-        with patch("mailersend.async_client.httpx.AsyncClient"), patch(
-            "mailersend.async_client.asyncio.sleep", new_callable=AsyncMock
+        with (
+            patch("mailersend.async_client.httpx.AsyncClient"),
+            patch("mailersend.async_client.asyncio.sleep", new_callable=AsyncMock),
         ):
             client = AsyncMailerSendClient(api_key="test-key", max_retries=1)
             client._client = AsyncMock()
-            client._client.request = AsyncMock(side_effect=[error_response, ok_response])
+            client._client.request = AsyncMock(
+                side_effect=[error_response, ok_response]
+            )
 
             result = await client.request("GET", "some-endpoint")
             assert result.status_code == 200
 
     async def test_retries_on_503_then_succeeds(self):
-        error_response = self._make_mock_response(503, {"message": "Service Unavailable"})
+        error_response = self._make_mock_response(
+            503, {"message": "Service Unavailable"}
+        )
         ok_response = self._make_mock_response(200, {})
 
-        with patch("mailersend.async_client.httpx.AsyncClient"), patch(
-            "mailersend.async_client.asyncio.sleep", new_callable=AsyncMock
+        with (
+            patch("mailersend.async_client.httpx.AsyncClient"),
+            patch("mailersend.async_client.asyncio.sleep", new_callable=AsyncMock),
         ):
             client = AsyncMailerSendClient(api_key="test-key", max_retries=1)
             client._client = AsyncMock()
-            client._client.request = AsyncMock(side_effect=[error_response, ok_response])
+            client._client.request = AsyncMock(
+                side_effect=[error_response, ok_response]
+            )
 
             result = await client.request("GET", "some-endpoint")
             assert result.status_code == 200
@@ -328,28 +370,38 @@ class TestAsyncMailerSendClientRequest:
         error_response = self._make_mock_response(504, {"message": "Gateway Timeout"})
         ok_response = self._make_mock_response(200, {})
 
-        with patch("mailersend.async_client.httpx.AsyncClient"), patch(
-            "mailersend.async_client.asyncio.sleep", new_callable=AsyncMock
+        with (
+            patch("mailersend.async_client.httpx.AsyncClient"),
+            patch("mailersend.async_client.asyncio.sleep", new_callable=AsyncMock),
         ):
             client = AsyncMailerSendClient(api_key="test-key", max_retries=1)
             client._client = AsyncMock()
-            client._client.request = AsyncMock(side_effect=[error_response, ok_response])
+            client._client.request = AsyncMock(
+                side_effect=[error_response, ok_response]
+            )
 
             result = await client.request("GET", "some-endpoint")
             assert result.status_code == 200
 
     async def test_429_retry_after_date_string_falls_back_to_backoff(self):
         """RFC 7231 allows Retry-After to be an HTTP-date; float() would crash without guard."""
-        rate_limit_response = self._make_mock_response(429, {"message": "Too many requests"})
+        rate_limit_response = self._make_mock_response(
+            429, {"message": "Too many requests"}
+        )
         rate_limit_response.headers = {"retry-after": "Wed, 21 Oct 2015 07:28:00 GMT"}
         ok_response = self._make_mock_response(200, {})
 
-        with patch("mailersend.async_client.httpx.AsyncClient"), patch(
-            "mailersend.async_client.asyncio.sleep", new_callable=AsyncMock
-        ) as mock_sleep:
+        with (
+            patch("mailersend.async_client.httpx.AsyncClient"),
+            patch(
+                "mailersend.async_client.asyncio.sleep", new_callable=AsyncMock
+            ) as mock_sleep,
+        ):
             client = AsyncMailerSendClient(api_key="test-key", max_retries=1)
             client._client = AsyncMock()
-            client._client.request = AsyncMock(side_effect=[rate_limit_response, ok_response])
+            client._client.request = AsyncMock(
+                side_effect=[rate_limit_response, ok_response]
+            )
 
             await client.request("GET", "some-endpoint")
             mock_sleep.assert_called_once_with(pytest.approx(0.3))
@@ -358,7 +410,10 @@ class TestAsyncMailerSendClientRequest:
         """_get_error_message formats field-level errors from the errors dict."""
         mock_response = self._make_mock_response(
             422,
-            {"message": "Validation failed", "errors": {"email": ["is required", "is invalid"]}},
+            {
+                "message": "Validation failed",
+                "errors": {"email": ["is required", "is invalid"]},
+            },
         )
 
         with patch("mailersend.async_client.httpx.AsyncClient"):
@@ -390,6 +445,7 @@ class TestAsyncMailerSendClientRequest:
 class TestAsyncMailerSendClientDebug:
     def test_enable_debug_sets_flag_and_log_level(self):
         import logging
+
         with patch("mailersend.async_client.httpx.AsyncClient"):
             client = AsyncMailerSendClient(api_key="test-key", debug=False)
             assert client.debug is False
@@ -399,6 +455,7 @@ class TestAsyncMailerSendClientDebug:
 
     def test_disable_debug_clears_flag_and_log_level(self):
         import logging
+
         with patch("mailersend.async_client.httpx.AsyncClient"):
             client = AsyncMailerSendClient(api_key="test-key", debug=True)
             client.disable_debug()

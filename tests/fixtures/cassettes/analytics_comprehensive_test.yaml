@@ -11,15 +11,15 @@ interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+      - mailersend-python/2.0.3 (Python/3.12.12; OS/Darwin 25.5.0; Impl/CPython)
     method: GET
-    uri: https://api.mailersend.com/v1/analytics/date?date_from=1746144000&date_to=1748736000&tags%5B%5D=integration-test&group_by=days&event%5B%5D=sent&event%5B%5D=delivered
+    uri: https://api.mailersend.com/v1/analytics/date?date_from=1777680000&date_to=1780272000&tags%5B%5D=integration-test&group_by=days&event%5B%5D=sent&event%5B%5D=delivered
   response:
     body:
-      string: '{"data":{"date_from":"1746144000","date_to":"1748822399","group_by":"days","stats":[{"date":"1746144000","sent":0,"delivered":0},{"date":"1746230400","sent":0,"delivered":0},{"date":"1746316800","sent":0,"delivered":0},{"date":"1746403200","sent":0,"delivered":0},{"date":"1746489600","sent":0,"delivered":0},{"date":"1746576000","sent":0,"delivered":0},{"date":"1746662400","sent":0,"delivered":0},{"date":"1746748800","sent":0,"delivered":0},{"date":"1746835200","sent":0,"delivered":0},{"date":"1746921600","sent":0,"delivered":0},{"date":"1747008000","sent":0,"delivered":0},{"date":"1747094400","sent":0,"delivered":0},{"date":"1747180800","sent":0,"delivered":0},{"date":"1747267200","sent":0,"delivered":0},{"date":"1747353600","sent":0,"delivered":0},{"date":"1747440000","sent":0,"delivered":0},{"date":"1747526400","sent":0,"delivered":0},{"date":"1747612800","sent":0,"delivered":0},{"date":"1747699200","sent":0,"delivered":0},{"date":"1747785600","sent":0,"delivered":0},{"date":"1747872000","sent":0,"delivered":0},{"date":"1747958400","sent":0,"delivered":0},{"date":"1748044800","sent":0,"delivered":0},{"date":"1748131200","sent":0,"delivered":0},{"date":"1748217600","sent":0,"delivered":0},{"date":"1748304000","sent":0,"delivered":0},{"date":"1748390400","sent":0,"delivered":0},{"date":"1748476800","sent":0,"delivered":0},{"date":"1748563200","sent":0,"delivered":0},{"date":"1748649600","sent":0,"delivered":0},{"date":"1748736000","sent":0,"delivered":0}]}}'
+      string: '{"data":{"date_from":"1777680000","date_to":"1780358399","group_by":"days","stats":[{"date":"1777680000","sent":0,"delivered":0},{"date":"1777766400","sent":0,"delivered":0},{"date":"1777852800","sent":0,"delivered":0},{"date":"1777939200","sent":0,"delivered":0},{"date":"1778025600","sent":0,"delivered":0},{"date":"1778112000","sent":0,"delivered":0},{"date":"1778198400","sent":0,"delivered":0},{"date":"1778284800","sent":0,"delivered":0},{"date":"1778371200","sent":0,"delivered":0},{"date":"1778457600","sent":0,"delivered":0},{"date":"1778544000","sent":0,"delivered":0},{"date":"1778630400","sent":0,"delivered":0},{"date":"1778716800","sent":0,"delivered":0},{"date":"1778803200","sent":0,"delivered":0},{"date":"1778889600","sent":0,"delivered":0},{"date":"1778976000","sent":0,"delivered":0},{"date":"1779062400","sent":0,"delivered":0},{"date":"1779148800","sent":0,"delivered":0},{"date":"1779235200","sent":0,"delivered":0},{"date":"1779321600","sent":0,"delivered":0},{"date":"1779408000","sent":0,"delivered":0},{"date":"1779494400","sent":0,"delivered":0},{"date":"1779580800","sent":0,"delivered":0},{"date":"1779667200","sent":0,"delivered":0},{"date":"1779753600","sent":0,"delivered":0},{"date":"1779840000","sent":0,"delivered":0},{"date":"1779926400","sent":0,"delivered":0},{"date":"1780012800","sent":0,"delivered":0},{"date":"1780099200","sent":0,"delivered":0},{"date":"1780185600","sent":0,"delivered":0},{"date":"1780272000","sent":0,"delivered":0}]}}'
     headers:
       CF-RAY:
-      - 966c83efa81db01e-BEG
+      - a16ed0ef7af7dfc0-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -29,19 +29,21 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 29 Jul 2025 12:10:50 GMT
+      - Mon, 06 Jul 2026 13:04:35 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
       - chunked
+      alt-svc:
+      - h3=":443"; ma=86400
       cf-cache-status:
       - DYNAMIC
-      strict-transport-security:
-      - max-age=31536000; includeSubDomains
       x-apiquota-remaining:
       - '-1'
       x-apiquota-reset:
-      - '2025-07-30T00:00:00Z'
+      - '2026-07-07T00:00:00Z'
+      x-envoy-upstream-service-time:
+      - '60'
     status:
       code: 200
       message: OK
@@ -57,15 +59,15 @@ interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+      - mailersend-python/2.0.3 (Python/3.12.12; OS/Darwin 25.5.0; Impl/CPython)
     method: GET
-    uri: https://api.mailersend.com/v1/analytics/country?date_from=1746144000&date_to=1748736000&tags%5B%5D=integration-test
+    uri: https://api.mailersend.com/v1/analytics/country?date_from=1777680000&date_to=1780272000&tags%5B%5D=integration-test
   response:
     body:
-      string: '{"data":{"date_from":1746144000,"date_to":1748822399,"stats":[]}}'
+      string: '{"data":{"date_from":1777680000,"date_to":1780358399,"stats":[]}}'
     headers:
       CF-RAY:
-      - 966c83f0c8dd0db0-BEG
+      - a16ed0f06f69fa43-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -75,19 +77,21 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 29 Jul 2025 12:10:50 GMT
+      - Mon, 06 Jul 2026 13:04:36 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
       - chunked
+      alt-svc:
+      - h3=":443"; ma=86400
       cf-cache-status:
       - DYNAMIC
-      strict-transport-security:
-      - max-age=31536000; includeSubDomains
       x-apiquota-remaining:
       - '-1'
       x-apiquota-reset:
-      - '2025-07-30T00:00:00Z'
+      - '2026-07-07T00:00:00Z'
+      x-envoy-upstream-service-time:
+      - '54'
     status:
       code: 200
       message: OK
@@ -103,15 +107,15 @@ interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+      - mailersend-python/2.0.3 (Python/3.12.12; OS/Darwin 25.5.0; Impl/CPython)
     method: GET
-    uri: https://api.mailersend.com/v1/analytics/ua-name?date_from=1746144000&date_to=1748736000&tags%5B%5D=integration-test
+    uri: https://api.mailersend.com/v1/analytics/ua-name?date_from=1777680000&date_to=1780272000&tags%5B%5D=integration-test
   response:
     body:
-      string: '{"data":{"date_from":1746144000,"date_to":1748822399,"stats":[]}}'
+      string: '{"data":{"date_from":1777680000,"date_to":1780358399,"stats":[]}}'
     headers:
       CF-RAY:
-      - 966c83f1df95e290-BEG
+      - a16ed0f14d9cc239-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -121,19 +125,21 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 29 Jul 2025 12:10:50 GMT
+      - Mon, 06 Jul 2026 13:04:36 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
       - chunked
+      alt-svc:
+      - h3=":443"; ma=86400
       cf-cache-status:
       - DYNAMIC
-      strict-transport-security:
-      - max-age=31536000; includeSubDomains
       x-apiquota-remaining:
       - '-1'
       x-apiquota-reset:
-      - '2025-07-30T00:00:00Z'
+      - '2026-07-07T00:00:00Z'
+      x-envoy-upstream-service-time:
+      - '59'
     status:
       code: 200
       message: OK
@@ -149,15 +155,15 @@ interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+      - mailersend-python/2.0.3 (Python/3.12.12; OS/Darwin 25.5.0; Impl/CPython)
     method: GET
-    uri: https://api.mailersend.com/v1/analytics/ua-type?date_from=1746144000&date_to=1748736000&tags%5B%5D=integration-test
+    uri: https://api.mailersend.com/v1/analytics/ua-type?date_from=1777680000&date_to=1780272000&tags%5B%5D=integration-test
   response:
     body:
-      string: '{"data":{"date_from":1746144000,"date_to":1748822399,"stats":[]}}'
+      string: '{"data":{"date_from":1777680000,"date_to":1780358399,"stats":[]}}'
     headers:
       CF-RAY:
-      - 966c83f30d98d814-BEG
+      - a16ed0f23edde296-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -167,19 +173,21 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 29 Jul 2025 12:10:50 GMT
+      - Mon, 06 Jul 2026 13:04:36 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
       - chunked
+      alt-svc:
+      - h3=":443"; ma=86400
       cf-cache-status:
       - DYNAMIC
-      strict-transport-security:
-      - max-age=31536000; includeSubDomains
       x-apiquota-remaining:
       - '-1'
       x-apiquota-reset:
-      - '2025-07-30T00:00:00Z'
+      - '2026-07-07T00:00:00Z'
+      x-envoy-upstream-service-time:
+      - '95'
     status:
       code: 200
       message: OK

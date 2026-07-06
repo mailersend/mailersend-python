@@ -47,9 +47,7 @@ class Webhooks(BaseResource):
         self.logger.debug("Webhook get request: %s", request)
 
         # Make API call
-        return self._request(
-            method="GET", path=f"webhooks/{request.webhook_id}"
-        )
+        return self._request(method="GET", path=f"webhooks/{request.webhook_id}")
 
     def create_webhook(self, request: WebhookCreateRequest) -> APIResponse:
         """Create a new webhook.
@@ -105,8 +103,4 @@ class Webhooks(BaseResource):
         self.logger.debug("Webhook delete request: %s", request)
 
         # Make API call
-        return self._request(
-            method="DELETE", path=f"webhooks/{request.webhook_id}"
-        )
-
-
+        return self._request(method="DELETE", path=f"webhooks/{request.webhook_id}")

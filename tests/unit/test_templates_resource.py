@@ -1,4 +1,5 @@
 """Tests for Templates resource."""
+
 import inspect
 
 from unittest.mock import AsyncMock, MagicMock, Mock
@@ -14,7 +15,6 @@ from mailersend.models.templates import (
 )
 
 
-
 async def resolve(result):
     if inspect.iscoroutine(result):
         return await result
@@ -28,16 +28,20 @@ class TestTemplates:
             self.mock_client = MagicMock()
             self.mock_client.request = AsyncMock(
                 return_value=MagicMock(
-                    status_code=200, headers={"x-request-id": "test-req-id"},
-                    json=MagicMock(return_value={}), content=b"{}"
+                    status_code=200,
+                    headers={"x-request-id": "test-req-id"},
+                    json=MagicMock(return_value={}),
+                    content=b"{}",
                 )
             )
         else:
             self.mock_client = MagicMock()
             self.mock_client.request = Mock(
                 return_value=MagicMock(
-                    status_code=200, headers={"x-request-id": "test-req-id"},
-                    json=MagicMock(return_value={}), content=b"{}"
+                    status_code=200,
+                    headers={"x-request-id": "test-req-id"},
+                    json=MagicMock(return_value={}),
+                    content=b"{}",
                 )
             )
         self.resource = Templates(self.mock_client)
@@ -61,26 +65,28 @@ class TestTemplates:
         assert call.kwargs["params"]["page"] == 2
 
     async def test_get_template_returns_api_response(self):
-        result = await resolve(self.resource.get_template(
-            TemplateGetRequest(template_id="tmpl123"))
+        result = await resolve(
+            self.resource.get_template(TemplateGetRequest(template_id="tmpl123"))
         )
         assert isinstance(result, APIResponse)
 
     async def test_get_template_calls_correct_endpoint(self):
-        await resolve(self.resource.get_template(TemplateGetRequest(template_id="tmpl123")))
+        await resolve(
+            self.resource.get_template(TemplateGetRequest(template_id="tmpl123"))
+        )
         call = self.mock_client.request.call_args
         assert call.kwargs["method"] == "GET"
         assert call.kwargs["path"] == "templates/tmpl123"
 
     async def test_delete_template_returns_api_response(self):
-        result = await resolve(self.resource.delete_template(
-            TemplateDeleteRequest(template_id="tmpl123"))
+        result = await resolve(
+            self.resource.delete_template(TemplateDeleteRequest(template_id="tmpl123"))
         )
         assert isinstance(result, APIResponse)
 
     async def test_delete_template_calls_correct_endpoint(self):
-        await resolve(self.resource.delete_template(
-            TemplateDeleteRequest(template_id="tmpl123"))
+        await resolve(
+            self.resource.delete_template(TemplateDeleteRequest(template_id="tmpl123"))
         )
         call = self.mock_client.request.call_args
         assert call.kwargs["method"] == "DELETE"

@@ -49,5 +49,3 @@ class SmsActivity(BaseResource):
         return self._request(
             method="GET", path=f"sms-messages/{request.sms_message_id}"
         )
-
-

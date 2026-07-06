@@ -1,4 +1,5 @@
 """Tests for SmsActivity resource."""
+
 import inspect
 
 from unittest.mock import AsyncMock, MagicMock, Mock
@@ -10,7 +11,6 @@ from mailersend.models.sms_activity import (
     SmsActivityListRequest,
     SmsMessageGetRequest,
 )
-
 
 
 async def resolve(result):
@@ -26,16 +26,20 @@ class TestSmsActivity:
             self.mock_client = MagicMock()
             self.mock_client.request = AsyncMock(
                 return_value=MagicMock(
-                    status_code=200, headers={"x-request-id": "test-req-id"},
-                    json=MagicMock(return_value={}), content=b"{}"
+                    status_code=200,
+                    headers={"x-request-id": "test-req-id"},
+                    json=MagicMock(return_value={}),
+                    content=b"{}",
                 )
             )
         else:
             self.mock_client = MagicMock()
             self.mock_client.request = Mock(
                 return_value=MagicMock(
-                    status_code=200, headers={"x-request-id": "test-req-id"},
-                    json=MagicMock(return_value={}), content=b"{}"
+                    status_code=200,
+                    headers={"x-request-id": "test-req-id"},
+                    json=MagicMock(return_value={}),
+                    content=b"{}",
                 )
             )
         self.resource = SmsActivity(self.mock_client)
@@ -51,7 +55,9 @@ class TestSmsActivity:
         assert call.kwargs["path"] == "sms-activity"
 
     async def test_get_returns_api_response(self):
-        result = await resolve(self.resource.get(SmsMessageGetRequest(sms_message_id="msg123")))
+        result = await resolve(
+            self.resource.get(SmsMessageGetRequest(sms_message_id="msg123"))
+        )
         assert isinstance(result, APIResponse)
 
     async def test_get_calls_correct_endpoint(self):

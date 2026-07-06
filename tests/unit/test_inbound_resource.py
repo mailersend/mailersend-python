@@ -1,4 +1,5 @@
 """Tests for InboundResource."""
+
 import inspect
 
 from unittest.mock import AsyncMock, MagicMock, Mock
@@ -18,7 +19,6 @@ from mailersend.models.inbound import (
 )
 
 
-
 async def resolve(result):
     if inspect.iscoroutine(result):
         return await result
@@ -32,6 +32,7 @@ def _make_filter_group():
 def _make_forward():
     return InboundForward(type="email", value="forward@example.com")
 
+
 class TestInboundResource:
     @pytest.fixture(autouse=True, params=["sync", "async"])
     def setup(self, request):
@@ -39,16 +40,20 @@ class TestInboundResource:
             self.mock_client = MagicMock()
             self.mock_client.request = AsyncMock(
                 return_value=MagicMock(
-                    status_code=200, headers={"x-request-id": "test-req-id"},
-                    json=MagicMock(return_value={}), content=b"{}"
+                    status_code=200,
+                    headers={"x-request-id": "test-req-id"},
+                    json=MagicMock(return_value={}),
+                    content=b"{}",
                 )
             )
         else:
             self.mock_client = MagicMock()
             self.mock_client.request = Mock(
                 return_value=MagicMock(
-                    status_code=200, headers={"x-request-id": "test-req-id"},
-                    json=MagicMock(return_value={}), content=b"{}"
+                    status_code=200,
+                    headers={"x-request-id": "test-req-id"},
+                    json=MagicMock(return_value={}),
+                    content=b"{}",
                 )
             )
         self.resource = InboundResource(self.mock_client)
@@ -66,7 +71,9 @@ class TestInboundResource:
         assert call.kwargs["path"] == "inbound"
 
     async def test_get_returns_api_response(self):
-        result = await resolve(self.resource.get(InboundGetRequest(inbound_id="inb123")))
+        result = await resolve(
+            self.resource.get(InboundGetRequest(inbound_id="inb123"))
+        )
         assert isinstance(result, APIResponse)
 
     async def test_get_calls_correct_endpoint(self):
@@ -128,7 +135,9 @@ class TestInboundResource:
         assert call.kwargs["path"] == "inbound/inb123"
 
     async def test_delete_returns_api_response(self):
-        result = await resolve(self.resource.delete(InboundDeleteRequest(inbound_id="inb123")))
+        result = await resolve(
+            self.resource.delete(InboundDeleteRequest(inbound_id="inb123"))
+        )
         assert isinstance(result, APIResponse)
 
     async def test_delete_calls_correct_endpoint(self):

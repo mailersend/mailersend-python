@@ -113,5 +113,3 @@ class Tokens(BaseResource):
 
         # Make API call
         return self._request(method="DELETE", path=f"token/{request.token_id}")
-
-

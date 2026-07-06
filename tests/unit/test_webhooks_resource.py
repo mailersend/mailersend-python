@@ -1,4 +1,5 @@
 """Tests for Webhooks resource."""
+
 import inspect
 
 from unittest.mock import AsyncMock, MagicMock, Mock
@@ -16,7 +17,6 @@ from mailersend.models.webhooks import (
 )
 
 
-
 async def resolve(result):
     if inspect.iscoroutine(result):
         return await result
@@ -30,16 +30,20 @@ class TestWebhooks:
             self.mock_client = MagicMock()
             self.mock_client.request = AsyncMock(
                 return_value=MagicMock(
-                    status_code=200, headers={"x-request-id": "test-req-id"},
-                    json=MagicMock(return_value={}), content=b"{}"
+                    status_code=200,
+                    headers={"x-request-id": "test-req-id"},
+                    json=MagicMock(return_value={}),
+                    content=b"{}",
                 )
             )
         else:
             self.mock_client = MagicMock()
             self.mock_client.request = Mock(
                 return_value=MagicMock(
-                    status_code=200, headers={"x-request-id": "test-req-id"},
-                    json=MagicMock(return_value={}), content=b"{}"
+                    status_code=200,
+                    headers={"x-request-id": "test-req-id"},
+                    json=MagicMock(return_value={}),
+                    content=b"{}",
                 )
             )
         self.resource = Webhooks(self.mock_client)
@@ -61,7 +65,9 @@ class TestWebhooks:
         assert call.kwargs["path"] == "webhooks"
 
     async def test_get_webhook_returns_api_response(self):
-        result = await resolve(self.resource.get_webhook(WebhookGetRequest(webhook_id="wh123")))
+        result = await resolve(
+            self.resource.get_webhook(WebhookGetRequest(webhook_id="wh123"))
+        )
         assert isinstance(result, APIResponse)
 
     async def test_get_webhook_calls_correct_endpoint(self):
@@ -106,13 +112,15 @@ class TestWebhooks:
         assert "webhook_id" not in (call.kwargs.get("body") or {})
 
     async def test_delete_webhook_returns_api_response(self):
-        result = await resolve(self.resource.delete_webhook(
-            WebhookDeleteRequest(webhook_id="wh123"))
+        result = await resolve(
+            self.resource.delete_webhook(WebhookDeleteRequest(webhook_id="wh123"))
         )
         assert isinstance(result, APIResponse)
 
     async def test_delete_webhook_calls_correct_endpoint(self):
-        await resolve(self.resource.delete_webhook(WebhookDeleteRequest(webhook_id="wh123")))
+        await resolve(
+            self.resource.delete_webhook(WebhookDeleteRequest(webhook_id="wh123"))
+        )
         call = self.mock_client.request.call_args
         assert call.kwargs["method"] == "DELETE"
         assert call.kwargs["path"] == "webhooks/wh123"

@@ -1,4 +1,5 @@
 """Tests for Messages resource."""
+
 import inspect
 
 from unittest.mock import AsyncMock, MagicMock, Mock
@@ -11,7 +12,6 @@ from mailersend.models.messages import (
     MessagesListQueryParams,
     MessageGetRequest,
 )
-
 
 
 async def resolve(result):
@@ -27,16 +27,20 @@ class TestMessages:
             self.mock_client = MagicMock()
             self.mock_client.request = AsyncMock(
                 return_value=MagicMock(
-                    status_code=200, headers={"x-request-id": "test-req-id"},
-                    json=MagicMock(return_value={}), content=b"{}"
+                    status_code=200,
+                    headers={"x-request-id": "test-req-id"},
+                    json=MagicMock(return_value={}),
+                    content=b"{}",
                 )
             )
         else:
             self.mock_client = MagicMock()
             self.mock_client.request = Mock(
                 return_value=MagicMock(
-                    status_code=200, headers={"x-request-id": "test-req-id"},
-                    json=MagicMock(return_value={}), content=b"{}"
+                    status_code=200,
+                    headers={"x-request-id": "test-req-id"},
+                    json=MagicMock(return_value={}),
+                    content=b"{}",
                 )
             )
         self.resource = Messages(self.mock_client)
@@ -63,7 +67,9 @@ class TestMessages:
         assert call.kwargs["params"]["limit"] == 10
 
     async def test_get_message_returns_api_response(self):
-        result = await resolve(self.resource.get_message(MessageGetRequest(message_id="msg123")))
+        result = await resolve(
+            self.resource.get_message(MessageGetRequest(message_id="msg123"))
+        )
         assert isinstance(result, APIResponse)
 
     async def test_get_message_calls_correct_endpoint(self):
