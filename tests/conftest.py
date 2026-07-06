@@ -12,6 +12,18 @@ load_dotenv()
 TEST_API_KEY = os.environ.get("MAILERSEND_API_KEY", "test-api-key")
 
 
+# Patterns for sensitive values in recorded response bodies
+SENSITIVE_PATTERNS = [
+    # Any credential-bearing JSON fields, regardless of value format
+    (
+        re.compile(r'"(accessToken|password|token|secret)":"[^"]*"'),
+        r'"\1":"***FILTERED***"',
+    ),
+    # MailerSend API tokens (mlsn.) and SMTP passwords (mssp.), wherever they appear
+    (re.compile(r"m(?:lsn|ssp)\.[A-Za-z0-9._-]+"), "***FILTERED***"),
+]
+
+
 def sanitize_response_body(response):
     """Sanitize response body to remove sensitive data like accessToken."""
     try:
@@ -30,23 +42,11 @@ def sanitize_response_body(response):
         if isinstance(body, bytes):
             body = body.decode("utf-8")
 
-        # Only process if it looks like JSON (contains accessToken)
-        if "accessToken" in body or "mlsn." in body:
-            # Replace accessToken values
-            body = re.sub(
-                r'"accessToken":"mlsn\.[a-f0-9]+"',
-                '"accessToken":"***FILTERED***"',
-                body,
-            )
+        original = body
+        for pattern, replacement in SENSITIVE_PATTERNS:
+            body = pattern.sub(replacement, body)
 
-            # Replace any other mlsn tokens
-            body = re.sub(r'"mlsn\.[a-f0-9]{60,}"', '"***FILTERED***"', body)
-
-            # Replace preview tokens
-            body = re.sub(
-                r'"preview":"mlsn\.[a-f0-9]+"', '"preview":"***FILTERED***"', body
-            )
-
+        if body != original:
             # Update the response body (convert back to bytes for VCR)
             if isinstance(response["body"], dict):
                 response["body"]["string"] = body.encode("utf-8")

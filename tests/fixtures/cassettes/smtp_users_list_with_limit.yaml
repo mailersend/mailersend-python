@@ -16,7 +16,7 @@ interactions:
     uri: https://api.mailersend.com/v1/domains/65qngkdovk8lwr12/smtp-users
   response:
     body:
-      string: '{"data":[{"id":"3yxj6ljykk0ldo2r","name":"SMTP User Name","username":"MS_7Pzmoj@igor.fail","password":"mssp.1o7LCEP.3yxj6ljykk0ldo2r.VsJxtTp","enabled":true,"accessed_at":null,"server":"smtp.mailersend.net","port":"587
+      string: '{"data":[{"id":"3yxj6ljykk0ldo2r","name":"SMTP User Name","username":"MS_7Pzmoj@igor.fail","password":"***FILTERED***","enabled":true,"accessed_at":null,"server":"smtp.mailersend.net","port":"587
         or 2525","domain":"65qngkdovk8lwr12"}],"links":{"first":"https:\/\/api.mailersend.com\/v1\/domains\/65qngkdovk8lwr12\/smtp-users?page=1","last":null,"prev":null,"next":null},"meta":{"current_page":1,"current_page_url":"https:\/\/api.mailersend.com\/v1\/domains\/65qngkdovk8lwr12\/smtp-users?page=1","from":1,"path":"https:\/\/api.mailersend.com\/v1\/domains\/65qngkdovk8lwr12\/smtp-users","per_page":25,"to":1}}'
     headers:
       CF-RAY:
