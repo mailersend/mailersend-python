@@ -28,11 +28,9 @@ class Activity(BaseResource):
         self.logger.debug("Getting activity data for domain: %s", request.domain_id)
         self.logger.debug("Query params: %s", params)
 
-        response = self.client.request(
+        return self._request(
             method="GET", path=f"activity/{request.domain_id}", params=params
         )
-
-        return self._create_response(response)
 
     def get_single(self, request: SingleActivityRequest) -> APIResponse:
         """
@@ -47,8 +45,6 @@ class Activity(BaseResource):
         self.logger.debug("Preparing to get single activity")
         self.logger.debug("Getting single activity: %s", request.activity_id)
 
-        response = self.client.request(
-            method="GET", path=f"activities/{request.activity_id}"
-        )
+        return self._request(method="GET", path=f"activities/{request.activity_id}")
 
-        return self._create_response(response)
+

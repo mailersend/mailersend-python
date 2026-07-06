@@ -40,10 +40,7 @@ class DmarcMonitoring(BaseResource):
         params = request.to_query_params()
         self.logger.debug("Listing DMARC monitors with params: %s", params)
 
-        response = self.client.request(
-            method="GET", path="dmarc-monitoring", params=params
-        )
-        return self._create_response(response)
+        return self._request(method="GET", path="dmarc-monitoring", params=params)
 
     def create_monitor(self, request: DmarcMonitoringCreateRequest) -> APIResponse:
         """
@@ -58,10 +55,7 @@ class DmarcMonitoring(BaseResource):
         body = request.model_dump(by_alias=True, exclude_none=True)
         self.logger.debug("Creating DMARC monitor with body: %s", body)
 
-        response = self.client.request(
-            method="POST", path="dmarc-monitoring", body=body
-        )
-        return self._create_response(response)
+        return self._request(method="POST", path="dmarc-monitoring", body=body)
 
     def update_monitor(self, request: DmarcMonitoringUpdateRequest) -> APIResponse:
         """
@@ -80,10 +74,9 @@ class DmarcMonitoring(BaseResource):
             "Updating DMARC monitor %s with body: %s", request.monitor_id, body
         )
 
-        response = self.client.request(
+        return self._request(
             method="PUT", path=f"dmarc-monitoring/{request.monitor_id}", body=body
         )
-        return self._create_response(response)
 
     def delete_monitor(self, request: DmarcMonitoringDeleteRequest) -> APIResponse:
         """
@@ -97,10 +90,9 @@ class DmarcMonitoring(BaseResource):
         """
         self.logger.debug("Deleting DMARC monitor: %s", request.monitor_id)
 
-        response = self.client.request(
+        return self._request(
             method="DELETE", path=f"dmarc-monitoring/{request.monitor_id}"
         )
-        return self._create_response(response)
 
     def get_aggregated_report(
         self, request: DmarcMonitoringReportRequest
@@ -121,12 +113,11 @@ class DmarcMonitoring(BaseResource):
             params,
         )
 
-        response = self.client.request(
+        return self._request(
             method="GET",
             path=f"dmarc-monitoring/{request.monitor_id}/report",
             params=params,
         )
-        return self._create_response(response)
 
     def get_ip_report(self, request: DmarcMonitoringIpReportRequest) -> APIResponse:
         """
@@ -146,12 +137,11 @@ class DmarcMonitoring(BaseResource):
             params,
         )
 
-        response = self.client.request(
+        return self._request(
             method="GET",
             path=f"dmarc-monitoring/{request.monitor_id}/report/{request.ip}",
             params=params,
         )
-        return self._create_response(response)
 
     def get_report_sources(
         self, request: DmarcMonitoringReportSourcesRequest
@@ -167,11 +157,10 @@ class DmarcMonitoring(BaseResource):
         """
         self.logger.debug("Getting report sources for monitor: %s", request.monitor_id)
 
-        response = self.client.request(
+        return self._request(
             method="GET",
             path=f"dmarc-monitoring/{request.monitor_id}/report-sources",
         )
-        return self._create_response(response)
 
     def mark_ip_favorite(self, request: DmarcMonitoringFavoriteRequest) -> APIResponse:
         """
@@ -187,11 +176,10 @@ class DmarcMonitoring(BaseResource):
             "Marking IP %s as favorite for monitor: %s", request.ip, request.monitor_id
         )
 
-        response = self.client.request(
+        return self._request(
             method="PUT",
             path=f"dmarc-monitoring/{request.monitor_id}/favorite/{request.ip}",
         )
-        return self._create_response(response)
 
     def remove_ip_favorite(
         self, request: DmarcMonitoringFavoriteRequest
@@ -211,8 +199,9 @@ class DmarcMonitoring(BaseResource):
             request.monitor_id,
         )
 
-        response = self.client.request(
+        return self._request(
             method="DELETE",
             path=f"dmarc-monitoring/{request.monitor_id}/favorite/{request.ip}",
         )
-        return self._create_response(response)
+
+

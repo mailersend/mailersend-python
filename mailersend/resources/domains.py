@@ -46,9 +46,7 @@ class Domains(BaseResource):
 
         self.logger.debug("Query params: %s", params)
 
-        response = self.client.request(method="GET", path="domains", params=params)
-
-        return self._create_response(response)
+        return self._request(method="GET", path="domains", params=params)
 
     def get_domain(self, request: DomainGetRequest) -> APIResponse:
         """
@@ -63,11 +61,7 @@ class Domains(BaseResource):
         self.logger.debug("Preparing to get domain")
         self.logger.debug("Requesting domain information for: %s", request.domain_id)
 
-        response = self.client.request(
-            method="GET", path=f"domains/{request.domain_id}"
-        )
-
-        return self._create_response(response)
+        return self._request(method="GET", path=f"domains/{request.domain_id}")
 
     def create_domain(self, request: DomainCreateRequest) -> APIResponse:
         """
@@ -86,9 +80,7 @@ class Domains(BaseResource):
 
         self.logger.debug("Request body: %s", body)
 
-        response = self.client.request(method="POST", path="domains", body=body)
-
-        return self._create_response(response)
+        return self._request(method="POST", path="domains", body=body)
 
     def delete_domain(self, request: DomainDeleteRequest) -> APIResponse:
         """
@@ -103,11 +95,7 @@ class Domains(BaseResource):
         self.logger.debug("Preparing to delete domain")
         self.logger.debug("Deleting domain: %s", request.domain_id)
 
-        response = self.client.request(
-            method="DELETE", path=f"domains/{request.domain_id}"
-        )
-
-        return self._create_response(response)
+        return self._request(method="DELETE", path=f"domains/{request.domain_id}")
 
     def get_domain_recipients(self, request: DomainRecipientsRequest) -> APIResponse:
         """
@@ -127,11 +115,11 @@ class Domains(BaseResource):
 
         self.logger.debug("Query params: %s", params)
 
-        response = self.client.request(
-            method="GET", path=f"domains/{request.domain_id}/recipients", params=params
+        return self._request(
+            method="GET",
+            path=f"domains/{request.domain_id}/recipients",
+            params=params,
         )
-
-        return self._create_response(response)
 
     def update_domain_settings(
         self, request: DomainUpdateSettingsRequest
@@ -155,11 +143,9 @@ class Domains(BaseResource):
 
         self.logger.debug("Request body: %s", body)
 
-        response = self.client.request(
+        return self._request(
             method="PUT", path=f"domains/{request.domain_id}/settings", body=body
         )
-
-        return self._create_response(response)
 
     def get_domain_dns_records(self, request: DomainDnsRecordsRequest) -> APIResponse:
         """
@@ -174,11 +160,9 @@ class Domains(BaseResource):
         self.logger.debug("Preparing to get domain DNS records")
         self.logger.debug("Retrieving DNS records for domain: %s", request.domain_id)
 
-        response = self.client.request(
+        return self._request(
             method="GET", path=f"domains/{request.domain_id}/dns-records"
         )
-
-        return self._create_response(response)
 
     def get_domain_verification_status(
         self, request: DomainVerificationRequest
@@ -197,8 +181,8 @@ class Domains(BaseResource):
             "Retrieving verification status for domain: %s", request.domain_id
         )
 
-        response = self.client.request(
+        return self._request(
             method="GET", path=f"domains/{request.domain_id}/verify"
         )
 
-        return self._create_response(response)
+

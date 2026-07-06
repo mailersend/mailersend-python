@@ -33,11 +33,9 @@ class Messages(BaseResource):
         self.logger.debug("Making API request to list messages with params: %s", params)
 
         # Make API request
-        response = self.client.request(
+        return self._request(
             method="GET", path="messages", params=params if params else None
         )
-
-        return self._create_response(response)
 
     def get_message(self, request: MessageGetRequest) -> APIResponse:
         """
@@ -52,8 +50,6 @@ class Messages(BaseResource):
         self.logger.debug("Preparing to get message with ID: %s", request.message_id)
 
         # Make API request
-        response = self.client.request(
-            method="GET", path=f"messages/{request.message_id}"
-        )
+        return self._request(method="GET", path=f"messages/{request.message_id}")
 
-        return self._create_response(response)
+

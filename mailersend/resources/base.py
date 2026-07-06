@@ -1,8 +1,8 @@
+import inspect
 import logging
-from typing import Dict, Any, Optional, Union, List, TypeVar, Type, ClassVar
+from typing import Any, Dict, Optional, Union, TypeVar, Type, ClassVar
 from ..models.base import BaseModel, ModelList, APIResponse
 from ..logging import get_logger
-import requests
 
 T = TypeVar("T", bound=BaseModel)
 
@@ -23,9 +23,7 @@ class BaseResource:
         self.client = client
         self.logger = logger or get_logger()
 
-    def _create_response(
-        self, response: requests.Response, data: Any = None
-    ) -> APIResponse:
+    def _create_response(self, response: Any, data: Any = None) -> APIResponse:
         """
         Create unified APIResponse object from HTTP response.
 
@@ -53,9 +51,27 @@ class BaseResource:
             ),
         )
 
-    def _parse_int_header(
-        self, response: requests.Response, header: str
-    ) -> Optional[int]:
+    def _request(self, method, path, params=None, body=None, data=None) -> Any:
+        kwargs = {"method": method, "path": path}
+        if params is not None:
+            kwargs["params"] = params
+        if body is not None:
+            kwargs["body"] = body
+        result = self.client.request(**kwargs)
+
+        if inspect.isawaitable(result):
+            async def resolve():
+                response = await result
+                if data is not None:
+                    return self._create_response(response, data(response))
+                return self._create_response(response)
+            return resolve()
+
+        if data is not None:
+            return self._create_response(result, data(result))
+        return self._create_response(result)
+
+    def _parse_int_header(self, response: Any, header: str) -> Optional[int]:
         """
         Safely parse integer header value.
 
@@ -110,3 +126,6 @@ class BaseResource:
             return [cls(**item) for item in response_data]
 
         return response_data
+
+
+    pass

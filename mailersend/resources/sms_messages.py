@@ -26,9 +26,7 @@ class SmsMessages(BaseResource):
             request.query_params.limit,
         )
 
-        response = self.client.request(method="GET", path="sms-messages", params=params)
-
-        return self._create_response(response)
+        return self._request(method="GET", path="sms-messages", params=params)
 
     def get_sms_message(self, request: SmsMessageGetRequest) -> APIResponse:
         """
@@ -42,8 +40,8 @@ class SmsMessages(BaseResource):
         """
         self.logger.debug("Getting SMS message: %s", request.sms_message_id)
 
-        response = self.client.request(
+        return self._request(
             method="GET", path=f"sms-messages/{request.sms_message_id}"
         )
 
-        return self._create_response(response)
+
