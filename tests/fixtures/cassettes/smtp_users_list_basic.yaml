@@ -11,15 +11,16 @@ interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+      - mailersend-python/2.0.3 (Python/3.12.12; OS/Darwin 25.5.0; Impl/CPython)
     method: GET
     uri: https://api.mailersend.com/v1/domains/65qngkdovk8lwr12/smtp-users?limit=10
   response:
     body:
-      string: '{"data":[],"links":{"first":"https:\/\/api.mailersend.com\/v1\/domains\/65qngkdovk8lwr12\/smtp-users?page=1","last":null,"prev":null,"next":null},"meta":{"current_page":1,"from":null,"path":"https:\/\/api.mailersend.com\/v1\/domains\/65qngkdovk8lwr12\/smtp-users","per_page":10,"to":null}}'
+      string: '{"data":[{"id":"3yxj6ljykk0ldo2r","name":"SMTP User Name","username":"MS_7Pzmoj@igor.fail","password":"REDACTED","enabled":true,"accessed_at":null,"server":"smtp.mailersend.net","port":"587
+        or 2525","domain":"65qngkdovk8lwr12"}],"links":{"first":"https:\/\/api.mailersend.com\/v1\/domains\/65qngkdovk8lwr12\/smtp-users?page=1","last":null,"prev":null,"next":null},"meta":{"current_page":1,"current_page_url":"https:\/\/api.mailersend.com\/v1\/domains\/65qngkdovk8lwr12\/smtp-users?page=1","from":1,"path":"https:\/\/api.mailersend.com\/v1\/domains\/65qngkdovk8lwr12\/smtp-users","per_page":10,"to":1}}'
     headers:
       CF-RAY:
-      - 966d2f83cf2e3ec1-VIE
+      - a16ed203293f076b-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -29,19 +30,21 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 29 Jul 2025 14:07:58 GMT
+      - Mon, 06 Jul 2026 13:05:19 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
       - chunked
+      alt-svc:
+      - h3=":443"; ma=86400
       cf-cache-status:
       - DYNAMIC
-      strict-transport-security:
-      - max-age=31536000; includeSubDomains
       x-apiquota-remaining:
       - '-1'
       x-apiquota-reset:
-      - '2025-07-30T00:00:00Z'
+      - '2026-07-07T00:00:00Z'
+      x-envoy-upstream-service-time:
+      - '46'
     status:
       code: 200
       message: OK

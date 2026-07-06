@@ -101,5 +101,3 @@ class SmsWebhooks(BaseResource):
         return self._request(
             method="DELETE", path=f"sms-webhooks/{request.sms_webhook_id}"
         )
-
-

@@ -181,8 +181,4 @@ class Domains(BaseResource):
             "Retrieving verification status for domain: %s", request.domain_id
         )
 
-        return self._request(
-            method="GET", path=f"domains/{request.domain_id}/verify"
-        )
-
-
+        return self._request(method="GET", path=f"domains/{request.domain_id}/verify")

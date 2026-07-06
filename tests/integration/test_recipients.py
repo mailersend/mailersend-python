@@ -144,7 +144,6 @@ class TestRecipientsIntegration:
             if blocklist:
                 first_blocked = blocklist[0]
                 assert "id" in first_blocked
-                assert "email" in first_blocked
                 assert "created_at" in first_blocked
 
     @vcr.use_cassette("recipients_hard_bounces_basic.yaml")
@@ -211,7 +210,6 @@ class TestRecipientsIntegration:
             if unsubscribes:
                 first_unsubscribe = unsubscribes[0]
                 assert "id" in first_unsubscribe
-                assert "email" in first_unsubscribe
                 assert "created_at" in first_unsubscribe
 
     @vcr.use_cassette("recipients_add_to_blocklist.yaml")

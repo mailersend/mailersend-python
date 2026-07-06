@@ -1,4 +1,5 @@
 """Tests for IdentitiesResource."""
+
 import inspect
 
 from unittest.mock import AsyncMock, MagicMock, Mock
@@ -19,7 +20,6 @@ from mailersend.models.identities import (
 )
 
 
-
 async def resolve(result):
     if inspect.iscoroutine(result):
         return await result
@@ -33,16 +33,20 @@ class TestIdentitiesResource:
             self.mock_client = MagicMock()
             self.mock_client.request = AsyncMock(
                 return_value=MagicMock(
-                    status_code=200, headers={"x-request-id": "test-req-id"},
-                    json=MagicMock(return_value={}), content=b"{}"
+                    status_code=200,
+                    headers={"x-request-id": "test-req-id"},
+                    json=MagicMock(return_value={}),
+                    content=b"{}",
                 )
             )
         else:
             self.mock_client = MagicMock()
             self.mock_client.request = Mock(
                 return_value=MagicMock(
-                    status_code=200, headers={"x-request-id": "test-req-id"},
-                    json=MagicMock(return_value={}), content=b"{}"
+                    status_code=200,
+                    headers={"x-request-id": "test-req-id"},
+                    json=MagicMock(return_value={}),
+                    content=b"{}",
                 )
             )
         self.resource = IdentitiesResource(self.mock_client)
@@ -78,26 +82,32 @@ class TestIdentitiesResource:
         assert call.kwargs["body"]["email"] == "john@example.com"
 
     async def test_get_identity_returns_api_response(self):
-        result = await resolve(self.resource.get_identity(
-            IdentityGetRequest(identity_id="id123"))
+        result = await resolve(
+            self.resource.get_identity(IdentityGetRequest(identity_id="id123"))
         )
         assert isinstance(result, APIResponse)
 
     async def test_get_identity_calls_correct_endpoint(self):
-        await resolve(self.resource.get_identity(IdentityGetRequest(identity_id="id123")))
+        await resolve(
+            self.resource.get_identity(IdentityGetRequest(identity_id="id123"))
+        )
         call = self.mock_client.request.call_args
         assert call.kwargs["method"] == "GET"
         assert call.kwargs["path"] == "identities/id123"
 
     async def test_get_identity_by_email_returns_api_response(self):
-        result = await resolve(self.resource.get_identity_by_email(
-            IdentityGetByEmailRequest(email="john@example.com"))
+        result = await resolve(
+            self.resource.get_identity_by_email(
+                IdentityGetByEmailRequest(email="john@example.com")
+            )
         )
         assert isinstance(result, APIResponse)
 
     async def test_get_identity_by_email_calls_correct_endpoint(self):
-        await resolve(self.resource.get_identity_by_email(
-            IdentityGetByEmailRequest(email="john@example.com"))
+        await resolve(
+            self.resource.get_identity_by_email(
+                IdentityGetByEmailRequest(email="john@example.com")
+            )
         )
         call = self.mock_client.request.call_args
         assert call.kwargs["method"] == "GET"
@@ -130,26 +140,32 @@ class TestIdentitiesResource:
         assert "email" not in (call.kwargs.get("body") or {})
 
     async def test_delete_identity_returns_api_response(self):
-        result = await resolve(self.resource.delete_identity(
-            IdentityDeleteRequest(identity_id="id123"))
+        result = await resolve(
+            self.resource.delete_identity(IdentityDeleteRequest(identity_id="id123"))
         )
         assert isinstance(result, APIResponse)
 
     async def test_delete_identity_calls_correct_endpoint(self):
-        await resolve(self.resource.delete_identity(IdentityDeleteRequest(identity_id="id123")))
+        await resolve(
+            self.resource.delete_identity(IdentityDeleteRequest(identity_id="id123"))
+        )
         call = self.mock_client.request.call_args
         assert call.kwargs["method"] == "DELETE"
         assert call.kwargs["path"] == "identities/id123"
 
     async def test_delete_identity_by_email_returns_api_response(self):
-        result = await resolve(self.resource.delete_identity_by_email(
-            IdentityDeleteByEmailRequest(email="john@example.com"))
+        result = await resolve(
+            self.resource.delete_identity_by_email(
+                IdentityDeleteByEmailRequest(email="john@example.com")
+            )
         )
         assert isinstance(result, APIResponse)
 
     async def test_delete_identity_by_email_calls_correct_endpoint(self):
-        await resolve(self.resource.delete_identity_by_email(
-            IdentityDeleteByEmailRequest(email="john@example.com"))
+        await resolve(
+            self.resource.delete_identity_by_email(
+                IdentityDeleteByEmailRequest(email="john@example.com")
+            )
         )
         call = self.mock_client.request.call_args
         assert call.kwargs["method"] == "DELETE"

@@ -1,4 +1,5 @@
 """Tests for DmarcMonitoring resource."""
+
 import inspect
 
 from unittest.mock import AsyncMock, MagicMock, Mock
@@ -20,7 +21,6 @@ from mailersend.models.dmarc_monitoring import (
 )
 
 
-
 async def resolve(result):
     if inspect.iscoroutine(result):
         return await result
@@ -34,16 +34,20 @@ class TestDmarcMonitoring:
             self.mock_client = MagicMock()
             self.mock_client.request = AsyncMock(
                 return_value=MagicMock(
-                    status_code=200, headers={"x-request-id": "test-req-id"},
-                    json=MagicMock(return_value={}), content=b"{}"
+                    status_code=200,
+                    headers={"x-request-id": "test-req-id"},
+                    json=MagicMock(return_value={}),
+                    content=b"{}",
                 )
             )
         else:
             self.mock_client = MagicMock()
             self.mock_client.request = Mock(
                 return_value=MagicMock(
-                    status_code=200, headers={"x-request-id": "test-req-id"},
-                    json=MagicMock(return_value={}), content=b"{}"
+                    status_code=200,
+                    headers={"x-request-id": "test-req-id"},
+                    json=MagicMock(return_value={}),
+                    content=b"{}",
                 )
             )
         self.resource = DmarcMonitoring(self.mock_client)
@@ -100,8 +104,10 @@ class TestDmarcMonitoring:
         assert isinstance(result, APIResponse)
 
     async def test_delete_monitor_calls_correct_endpoint(self):
-        await resolve(self.resource.delete_monitor(
-            DmarcMonitoringDeleteRequest(monitor_id="mon123"))
+        await resolve(
+            self.resource.delete_monitor(
+                DmarcMonitoringDeleteRequest(monitor_id="mon123")
+            )
         )
         call = self.mock_client.request.call_args
         assert call.kwargs["method"] == "DELETE"

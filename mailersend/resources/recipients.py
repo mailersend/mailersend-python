@@ -54,9 +54,7 @@ class Recipients(BaseResource):
         self.logger.debug("Getting recipient: %s", request.recipient_id)
 
         # Make API call
-        return self._request(
-            method="GET", path=f"recipients/{request.recipient_id}"
-        )
+        return self._request(method="GET", path=f"recipients/{request.recipient_id}")
 
     def delete_recipient(self, request: RecipientDeleteRequest) -> APIResponse:
         """
@@ -71,9 +69,7 @@ class Recipients(BaseResource):
         self.logger.debug("Deleting recipient: %s", request.recipient_id)
 
         # Make API call
-        return self._request(
-            method="DELETE", path=f"recipients/{request.recipient_id}"
-        )
+        return self._request(method="DELETE", path=f"recipients/{request.recipient_id}")
 
     def list_blocklist(
         self, request: Optional[SuppressionListRequest] = None
@@ -98,9 +94,7 @@ class Recipients(BaseResource):
         self.logger.debug("Listing blocklist with params: %s", params)
 
         # Make API call
-        return self._request(
-            method="GET", path="suppressions/blocklist", params=params
-        )
+        return self._request(method="GET", path="suppressions/blocklist", params=params)
 
     def list_hard_bounces(
         self, request: Optional[SuppressionListRequest] = None
@@ -243,9 +237,7 @@ class Recipients(BaseResource):
         self.logger.debug("Adding hard bounces with body: %s", body)
 
         # Make API call
-        return self._request(
-            method="POST", path="suppressions/hard-bounces", body=body
-        )
+        return self._request(method="POST", path="suppressions/hard-bounces", body=body)
 
     def add_spam_complaints(self, request: SuppressionAddRequest) -> APIResponse:
         """
@@ -284,9 +276,7 @@ class Recipients(BaseResource):
         self.logger.debug("Adding unsubscribes with body: %s", body)
 
         # Make API call
-        return self._request(
-            method="POST", path="suppressions/unsubscribes", body=body
-        )
+        return self._request(method="POST", path="suppressions/unsubscribes", body=body)
 
     def delete_from_blocklist(self, request: SuppressionDeleteRequest) -> APIResponse:
         """
@@ -304,9 +294,7 @@ class Recipients(BaseResource):
         self.logger.debug("Deleting from blocklist with body: %s", body)
 
         # Make API call
-        return self._request(
-            method="DELETE", path="suppressions/blocklist", body=body
-        )
+        return self._request(method="DELETE", path="suppressions/blocklist", body=body)
 
     def delete_hard_bounces(self, request: SuppressionDeleteRequest) -> APIResponse:
         """
@@ -388,5 +376,3 @@ class Recipients(BaseResource):
         return self._request(
             method="DELETE", path="suppressions/on-hold-list", body=body
         )
-
-

@@ -11,27 +11,27 @@ interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+      - mailersend-python/2.0.3 (Python/3.12.12; OS/Darwin 25.5.0; Impl/CPython)
     method: GET
     uri: https://api.mailersend.com/v1/token?limit=10
   response:
     body:
-      string: '{"data":[{"id":"b8d6dba0fe12b9bfdf402a7437dd5c80e3e9530534931edcf82a2d0d2423f931f544fc2845f84653","name":"SDK
-        API Token","status":"unpause","created_at":"2025-06-27T08:18:52.000000Z","scopes":["email_full","tokens_full","webhooks_full","templates_full","inbounds_full","domains_full","activity_full","analytics_full","suppressions_full","sms_full","email_verification_full","recipients_full","sender_identity_full","smtp_users_full","users_full"],"domain":{"id":"65qngkdovk8lwr12","name":"igor.fail","created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2025-07-31T12:21:21.000000Z"}},{"id":"977ac54690b9c84121d9871a3240b0c4aaa783dd8d61e2eb3a1c446e5d8c85d6b321520eb0c9cdd7","name":"Test
-        Token","status":"unpause","created_at":"2025-08-01T10:23:21.000000Z","scopes":["email_full","domains_read"],"domain":{"id":"65qngkdovk8lwr12","name":"igor.fail","created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2025-07-31T12:21:21.000000Z"}},{"id":"d2935faa05d1c78e71b49e2cddcc37da1d3c4acfa9e8eac8f7fbb92a3c40ba1f02fb36e096a5e674","name":"Test
-        Token","status":"unpause","created_at":"2025-08-01T10:23:22.000000Z","scopes":["email_full"],"domain":{"id":"65qngkdovk8lwr12","name":"igor.fail","created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2025-07-31T12:21:21.000000Z"}},{"id":"7d08eef84314952f272fa5a4d3bcf08572f3baff809d5e2c288431433c2c40bd087f45107d351ca9","name":"Test
-        Token","status":"unpause","created_at":"2025-08-01T10:23:23.000000Z","scopes":["email_full"],"domain":{"id":"65qngkdovk8lwr12","name":"igor.fail","created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2025-07-31T12:21:21.000000Z"}},{"id":"2fc12954461160db570aa14c05d8308a9eb134863d2edba6a0e1b4dca5a37719e445e9f54e5feca8","name":"Test
-        Token","status":"unpause","created_at":"2025-08-01T10:41:28.000000Z","scopes":["email_full","domains_read"],"domain":{"id":"65qngkdovk8lwr12","name":"igor.fail","created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2025-07-31T12:21:21.000000Z"}},{"id":"0ca92ac0af3cf0b350762ba4ac8cb890eedfd43bb90973acf26f2015ee9dec95f7a291d5dd0cb9e6","name":"Test
-        Token","status":"unpause","created_at":"2025-08-01T10:41:30.000000Z","scopes":["email_full"],"domain":{"id":"65qngkdovk8lwr12","name":"igor.fail","created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2025-07-31T12:21:21.000000Z"}},{"id":"13f03ba70c21276276b6c34d02e69e1450beef71e28d272dc4d69456f83fbe4fa26561dd9d7e62f0","name":"Test
-        Token","status":"unpause","created_at":"2025-08-01T10:41:31.000000Z","scopes":["email_full"],"domain":{"id":"65qngkdovk8lwr12","name":"igor.fail","created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2025-07-31T12:21:21.000000Z"}},{"id":"3f475e85bdf6a57b185945dda0b4129d4a19d495077c0788f8c1c2e7e5249158b62ec4a0a9a1e3e7","name":"Test
-        Token","status":"unpause","created_at":"2025-08-01T10:47:23.000000Z","scopes":["email_full","domains_read"],"domain":{"id":"65qngkdovk8lwr12","name":"igor.fail","created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2025-07-31T12:21:21.000000Z"}},{"id":"76527c5c823a91eb565857e0efe46f46dd4a2b00ab48c661ca7fd55c2bdbafbab877fda7f4441860","name":"Test
-        Token","status":"unpause","created_at":"2025-08-01T10:47:24.000000Z","scopes":["email_full"],"domain":{"id":"65qngkdovk8lwr12","name":"igor.fail","created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2025-07-31T12:21:21.000000Z"}},{"id":"d4cd83261ff508f98869020e50a620563942e38e1ce7dcc268789ea79588d4f30938aefed9abd20c","name":"Monitoring
-        BlackBox Exporter","status":"unpause","created_at":"2022-02-14T16:13:07.000000Z","scopes":["email_full","domains_full","activity_full","analytics_full","tokens_full","webhooks_full","templates_full","suppressions_full","sms_full","email_verification_full","recipients_full"],"domain":null}],"links":{"first":"https:\/\/api.mailersend.com\/v1\/token?limit=10&page=1","last":"https:\/\/api.mailersend.com\/v1\/token?limit=10&page=1","prev":null,"next":null},"meta":{"current_page":1,"from":1,"last_page":1,"links":[{"url":null,"label":"&laquo;
-        Previous","active":false},{"url":"https:\/\/api.mailersend.com\/v1\/token?limit=10&page=1","label":"1","active":true},{"url":null,"label":"Next
-        &raquo;","active":false}],"path":"https:\/\/api.mailersend.com\/v1\/token","per_page":10,"to":10,"total":10}}'
+      string: '{"data":[{"id":"825056c70c29119c9addc129af51b34999c3259bbc0b33b29f05f2498f99274852444d2053dd1b2d","name":"Sender
+        Identity Testing","status":"unpause","created_at":"2026-02-25T12:49:41.000000Z","scopes":["sender_identity_read"],"domain":{"id":"65qngkdovk8lwr12","name":"igor.fail","created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2026-07-06T13:05:00.000000Z"}},{"id":"4d5e8256f0da8467462128f1f640e636da571ca656611113ecd84be416c513e948e2a13c2a3aa2de","name":"Full
+        access","status":"unpause","created_at":"2026-02-25T12:53:46.000000Z","scopes":["email_full","tokens_full","webhooks_full","templates_full","inbounds_full","domains_full","activity_full","analytics_full","suppressions_full","sms_full","email_verification_full","recipients_full","sender_identity_full","smtp_users_full","users_full","dmarc_monitoring_full","blocklist_monitoring_full","whatsapp_full"],"domain":null},{"id":"38b220526fb2c0e91ccbc30b0d4e094bf873dd058ceef18dfcb8058ce6a3c596b1cb741a956849bb","name":"Identity
+        test 2","status":"unpause","created_at":"2026-02-25T13:04:36.000000Z","scopes":["sender_identity_read"],"domain":{"id":"xkjn41mjxp94z781","name":"bob.fail","created_at":"2025-04-01T12:54:11.000000Z","updated_at":"2026-05-01T12:22:30.000000Z"}},{"id":"d4cd83261ff508f98869020e50a620563942e38e1ce7dcc268789ea79588d4f30938aefed9abd20c","name":"Monitoring
+        BlackBox Exporter","status":"unpause","created_at":"2022-02-14T16:13:07.000000Z","scopes":["email_full","domains_full","activity_full","analytics_full","tokens_full","webhooks_full","templates_full","suppressions_full","sms_full","email_verification_full","recipients_full"],"domain":null},{"id":"b8d6dba0fe12b9bfdf402a7437dd5c80e3e9530534931edcf82a2d0d2423f931f544fc2845f84653","name":"SDK
+        API Token","status":"unpause","created_at":"2025-06-27T08:18:52.000000Z","scopes":["email_full","tokens_full","webhooks_full","templates_full","inbounds_full","domains_full","activity_full","analytics_full","suppressions_full","sms_full","email_verification_full","recipients_full","sender_identity_full","smtp_users_full","users_full","dmarc_monitoring_full","blocklist_monitoring_full","whatsapp_full"],"domain":{"id":"65qngkdovk8lwr12","name":"igor.fail","created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2026-07-06T13:05:00.000000Z"}},{"id":"73653e87dcb10a4da3b1b71421493eaa0ac32595b1c84bf52cd3a103e4e3c9a3d97a139e82aaca48","name":"Test
+        Token","status":"unpause","created_at":"2026-07-06T12:47:05.000000Z","scopes":["email_full","domains_read"],"domain":null},{"id":"7b30402e388f3bf3207e02c30fd28f6731ed41c2884d6d4aba49cedfae41206ee0d80a8b50199b33","name":"Test
+        Token","status":"unpause","created_at":"2026-07-06T12:47:07.000000Z","scopes":["email_full"],"domain":null},{"id":"a041b259ee175e0bec13d140d5057713bc2e2c1bef06c35d41018e29cc4b5fd10239464b1073c6e5","name":"Test
+        Token","status":"unpause","created_at":"2026-07-06T12:47:08.000000Z","scopes":["email_full"],"domain":null},{"id":"977ac54690b9c84121d9871a3240b0c4aaa783dd8d61e2eb3a1c446e5d8c85d6b321520eb0c9cdd7","name":"Test
+        Token","status":"unpause","created_at":"2025-08-01T10:23:21.000000Z","scopes":["email_full","domains_read"],"domain":{"id":"65qngkdovk8lwr12","name":"igor.fail","created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2026-07-06T13:05:00.000000Z"}},{"id":"d2935faa05d1c78e71b49e2cddcc37da1d3c4acfa9e8eac8f7fbb92a3c40ba1f02fb36e096a5e674","name":"Test
+        Token","status":"unpause","created_at":"2025-08-01T10:23:22.000000Z","scopes":["email_full"],"domain":{"id":"65qngkdovk8lwr12","name":"igor.fail","created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2026-07-06T13:05:00.000000Z"}}],"links":{"first":"https:\/\/api.mailersend.com\/v1\/token?limit=10&page=1","last":"https:\/\/api.mailersend.com\/v1\/token?limit=10&page=4","prev":null,"next":"https:\/\/api.mailersend.com\/v1\/token?limit=10&page=2"},"meta":{"current_page":1,"from":1,"last_page":4,"links":[{"url":null,"label":"&laquo;
+        Previous","page":null,"active":false},{"url":"https:\/\/api.mailersend.com\/v1\/token?limit=10&page=1","label":"1","page":1,"active":true},{"url":"https:\/\/api.mailersend.com\/v1\/token?limit=10&page=2","label":"2","page":2,"active":false},{"url":"https:\/\/api.mailersend.com\/v1\/token?limit=10&page=3","label":"3","page":3,"active":false},{"url":"https:\/\/api.mailersend.com\/v1\/token?limit=10&page=4","label":"4","page":4,"active":false},{"url":"https:\/\/api.mailersend.com\/v1\/token?limit=10&page=2","label":"Next
+        &raquo;","page":2,"active":false}],"path":"https:\/\/api.mailersend.com\/v1\/token","per_page":10,"to":10,"total":36}}'
     headers:
       CF-RAY:
-      - 9684c1de58e7e293-BEG
+      - a16ed22de81ff339-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -41,19 +41,21 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 01 Aug 2025 10:47:25 GMT
+      - Mon, 06 Jul 2026 13:05:26 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
       - chunked
+      alt-svc:
+      - h3=":443"; ma=86400
       cf-cache-status:
       - DYNAMIC
-      strict-transport-security:
-      - max-age=31536000; includeSubDomains
       x-apiquota-remaining:
       - '-1'
       x-apiquota-reset:
-      - '2025-08-02T00:00:00Z'
+      - '2026-07-07T00:00:00Z'
+      x-envoy-upstream-service-time:
+      - '46'
     status:
       code: 200
       message: OK
@@ -69,27 +71,42 @@ interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+      - mailersend-python/2.0.3 (Python/3.12.12; OS/Darwin 25.5.0; Impl/CPython)
     method: GET
     uri: https://api.mailersend.com/v1/token
   response:
     body:
-      string: '{"data":[{"id":"b8d6dba0fe12b9bfdf402a7437dd5c80e3e9530534931edcf82a2d0d2423f931f544fc2845f84653","name":"SDK
-        API Token","status":"unpause","created_at":"2025-06-27T08:18:52.000000Z","scopes":["email_full","tokens_full","webhooks_full","templates_full","inbounds_full","domains_full","activity_full","analytics_full","suppressions_full","sms_full","email_verification_full","recipients_full","sender_identity_full","smtp_users_full","users_full"],"domain":{"id":"65qngkdovk8lwr12","name":"igor.fail","created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2025-07-31T12:21:21.000000Z"}},{"id":"977ac54690b9c84121d9871a3240b0c4aaa783dd8d61e2eb3a1c446e5d8c85d6b321520eb0c9cdd7","name":"Test
-        Token","status":"unpause","created_at":"2025-08-01T10:23:21.000000Z","scopes":["email_full","domains_read"],"domain":{"id":"65qngkdovk8lwr12","name":"igor.fail","created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2025-07-31T12:21:21.000000Z"}},{"id":"d2935faa05d1c78e71b49e2cddcc37da1d3c4acfa9e8eac8f7fbb92a3c40ba1f02fb36e096a5e674","name":"Test
-        Token","status":"unpause","created_at":"2025-08-01T10:23:22.000000Z","scopes":["email_full"],"domain":{"id":"65qngkdovk8lwr12","name":"igor.fail","created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2025-07-31T12:21:21.000000Z"}},{"id":"7d08eef84314952f272fa5a4d3bcf08572f3baff809d5e2c288431433c2c40bd087f45107d351ca9","name":"Test
-        Token","status":"unpause","created_at":"2025-08-01T10:23:23.000000Z","scopes":["email_full"],"domain":{"id":"65qngkdovk8lwr12","name":"igor.fail","created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2025-07-31T12:21:21.000000Z"}},{"id":"2fc12954461160db570aa14c05d8308a9eb134863d2edba6a0e1b4dca5a37719e445e9f54e5feca8","name":"Test
-        Token","status":"unpause","created_at":"2025-08-01T10:41:28.000000Z","scopes":["email_full","domains_read"],"domain":{"id":"65qngkdovk8lwr12","name":"igor.fail","created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2025-07-31T12:21:21.000000Z"}},{"id":"0ca92ac0af3cf0b350762ba4ac8cb890eedfd43bb90973acf26f2015ee9dec95f7a291d5dd0cb9e6","name":"Test
-        Token","status":"unpause","created_at":"2025-08-01T10:41:30.000000Z","scopes":["email_full"],"domain":{"id":"65qngkdovk8lwr12","name":"igor.fail","created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2025-07-31T12:21:21.000000Z"}},{"id":"13f03ba70c21276276b6c34d02e69e1450beef71e28d272dc4d69456f83fbe4fa26561dd9d7e62f0","name":"Test
-        Token","status":"unpause","created_at":"2025-08-01T10:41:31.000000Z","scopes":["email_full"],"domain":{"id":"65qngkdovk8lwr12","name":"igor.fail","created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2025-07-31T12:21:21.000000Z"}},{"id":"3f475e85bdf6a57b185945dda0b4129d4a19d495077c0788f8c1c2e7e5249158b62ec4a0a9a1e3e7","name":"Test
-        Token","status":"unpause","created_at":"2025-08-01T10:47:23.000000Z","scopes":["email_full","domains_read"],"domain":{"id":"65qngkdovk8lwr12","name":"igor.fail","created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2025-07-31T12:21:21.000000Z"}},{"id":"76527c5c823a91eb565857e0efe46f46dd4a2b00ab48c661ca7fd55c2bdbafbab877fda7f4441860","name":"Test
-        Token","status":"unpause","created_at":"2025-08-01T10:47:24.000000Z","scopes":["email_full"],"domain":{"id":"65qngkdovk8lwr12","name":"igor.fail","created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2025-07-31T12:21:21.000000Z"}},{"id":"d4cd83261ff508f98869020e50a620563942e38e1ce7dcc268789ea79588d4f30938aefed9abd20c","name":"Monitoring
-        BlackBox Exporter","status":"unpause","created_at":"2022-02-14T16:13:07.000000Z","scopes":["email_full","domains_full","activity_full","analytics_full","tokens_full","webhooks_full","templates_full","suppressions_full","sms_full","email_verification_full","recipients_full"],"domain":null}],"links":{"first":"https:\/\/api.mailersend.com\/v1\/token?page=1","last":"https:\/\/api.mailersend.com\/v1\/token?page=1","prev":null,"next":null},"meta":{"current_page":1,"from":1,"last_page":1,"links":[{"url":null,"label":"&laquo;
-        Previous","active":false},{"url":"https:\/\/api.mailersend.com\/v1\/token?page=1","label":"1","active":true},{"url":null,"label":"Next
-        &raquo;","active":false}],"path":"https:\/\/api.mailersend.com\/v1\/token","per_page":25,"to":10,"total":10}}'
+      string: '{"data":[{"id":"825056c70c29119c9addc129af51b34999c3259bbc0b33b29f05f2498f99274852444d2053dd1b2d","name":"Sender
+        Identity Testing","status":"unpause","created_at":"2026-02-25T12:49:41.000000Z","scopes":["sender_identity_read"],"domain":{"id":"65qngkdovk8lwr12","name":"igor.fail","created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2026-07-06T13:05:00.000000Z"}},{"id":"4d5e8256f0da8467462128f1f640e636da571ca656611113ecd84be416c513e948e2a13c2a3aa2de","name":"Full
+        access","status":"unpause","created_at":"2026-02-25T12:53:46.000000Z","scopes":["email_full","tokens_full","webhooks_full","templates_full","inbounds_full","domains_full","activity_full","analytics_full","suppressions_full","sms_full","email_verification_full","recipients_full","sender_identity_full","smtp_users_full","users_full","dmarc_monitoring_full","blocklist_monitoring_full","whatsapp_full"],"domain":null},{"id":"38b220526fb2c0e91ccbc30b0d4e094bf873dd058ceef18dfcb8058ce6a3c596b1cb741a956849bb","name":"Identity
+        test 2","status":"unpause","created_at":"2026-02-25T13:04:36.000000Z","scopes":["sender_identity_read"],"domain":{"id":"xkjn41mjxp94z781","name":"bob.fail","created_at":"2025-04-01T12:54:11.000000Z","updated_at":"2026-05-01T12:22:30.000000Z"}},{"id":"d4cd83261ff508f98869020e50a620563942e38e1ce7dcc268789ea79588d4f30938aefed9abd20c","name":"Monitoring
+        BlackBox Exporter","status":"unpause","created_at":"2022-02-14T16:13:07.000000Z","scopes":["email_full","domains_full","activity_full","analytics_full","tokens_full","webhooks_full","templates_full","suppressions_full","sms_full","email_verification_full","recipients_full"],"domain":null},{"id":"b8d6dba0fe12b9bfdf402a7437dd5c80e3e9530534931edcf82a2d0d2423f931f544fc2845f84653","name":"SDK
+        API Token","status":"unpause","created_at":"2025-06-27T08:18:52.000000Z","scopes":["email_full","tokens_full","webhooks_full","templates_full","inbounds_full","domains_full","activity_full","analytics_full","suppressions_full","sms_full","email_verification_full","recipients_full","sender_identity_full","smtp_users_full","users_full","dmarc_monitoring_full","blocklist_monitoring_full","whatsapp_full"],"domain":{"id":"65qngkdovk8lwr12","name":"igor.fail","created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2026-07-06T13:05:00.000000Z"}},{"id":"73653e87dcb10a4da3b1b71421493eaa0ac32595b1c84bf52cd3a103e4e3c9a3d97a139e82aaca48","name":"Test
+        Token","status":"unpause","created_at":"2026-07-06T12:47:05.000000Z","scopes":["email_full","domains_read"],"domain":null},{"id":"7b30402e388f3bf3207e02c30fd28f6731ed41c2884d6d4aba49cedfae41206ee0d80a8b50199b33","name":"Test
+        Token","status":"unpause","created_at":"2026-07-06T12:47:07.000000Z","scopes":["email_full"],"domain":null},{"id":"a041b259ee175e0bec13d140d5057713bc2e2c1bef06c35d41018e29cc4b5fd10239464b1073c6e5","name":"Test
+        Token","status":"unpause","created_at":"2026-07-06T12:47:08.000000Z","scopes":["email_full"],"domain":null},{"id":"977ac54690b9c84121d9871a3240b0c4aaa783dd8d61e2eb3a1c446e5d8c85d6b321520eb0c9cdd7","name":"Test
+        Token","status":"unpause","created_at":"2025-08-01T10:23:21.000000Z","scopes":["email_full","domains_read"],"domain":{"id":"65qngkdovk8lwr12","name":"igor.fail","created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2026-07-06T13:05:00.000000Z"}},{"id":"d2935faa05d1c78e71b49e2cddcc37da1d3c4acfa9e8eac8f7fbb92a3c40ba1f02fb36e096a5e674","name":"Test
+        Token","status":"unpause","created_at":"2025-08-01T10:23:22.000000Z","scopes":["email_full"],"domain":{"id":"65qngkdovk8lwr12","name":"igor.fail","created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2026-07-06T13:05:00.000000Z"}},{"id":"7d08eef84314952f272fa5a4d3bcf08572f3baff809d5e2c288431433c2c40bd087f45107d351ca9","name":"Test
+        Token","status":"unpause","created_at":"2025-08-01T10:23:23.000000Z","scopes":["email_full"],"domain":{"id":"65qngkdovk8lwr12","name":"igor.fail","created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2026-07-06T13:05:00.000000Z"}},{"id":"2fc12954461160db570aa14c05d8308a9eb134863d2edba6a0e1b4dca5a37719e445e9f54e5feca8","name":"Test
+        Token","status":"unpause","created_at":"2025-08-01T10:41:28.000000Z","scopes":["email_full","domains_read"],"domain":{"id":"65qngkdovk8lwr12","name":"igor.fail","created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2026-07-06T13:05:00.000000Z"}},{"id":"0ca92ac0af3cf0b350762ba4ac8cb890eedfd43bb90973acf26f2015ee9dec95f7a291d5dd0cb9e6","name":"Test
+        Token","status":"unpause","created_at":"2025-08-01T10:41:30.000000Z","scopes":["email_full"],"domain":{"id":"65qngkdovk8lwr12","name":"igor.fail","created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2026-07-06T13:05:00.000000Z"}},{"id":"13f03ba70c21276276b6c34d02e69e1450beef71e28d272dc4d69456f83fbe4fa26561dd9d7e62f0","name":"Test
+        Token","status":"unpause","created_at":"2025-08-01T10:41:31.000000Z","scopes":["email_full"],"domain":{"id":"65qngkdovk8lwr12","name":"igor.fail","created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2026-07-06T13:05:00.000000Z"}},{"id":"3f475e85bdf6a57b185945dda0b4129d4a19d495077c0788f8c1c2e7e5249158b62ec4a0a9a1e3e7","name":"Test
+        Token","status":"unpause","created_at":"2025-08-01T10:47:23.000000Z","scopes":["email_full","domains_read"],"domain":{"id":"65qngkdovk8lwr12","name":"igor.fail","created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2026-07-06T13:05:00.000000Z"}},{"id":"76527c5c823a91eb565857e0efe46f46dd4a2b00ab48c661ca7fd55c2bdbafbab877fda7f4441860","name":"Test
+        Token","status":"unpause","created_at":"2025-08-01T10:47:24.000000Z","scopes":["email_full"],"domain":{"id":"65qngkdovk8lwr12","name":"igor.fail","created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2026-07-06T13:05:00.000000Z"}},{"id":"ad662d4e160d123d1b61d6d2c65831e16bbc78a32e0e8af120ecaff7c4d9102ae134e04df68dfc08","name":"Test
+        Token","status":"unpause","created_at":"2025-08-01T10:47:25.000000Z","scopes":["email_full"],"domain":{"id":"65qngkdovk8lwr12","name":"igor.fail","created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2026-07-06T13:05:00.000000Z"}},{"id":"7808f5082b2905269b53f0f78ce56cfd5c035096d00bc759e2cc0df0835c7f0c81acb77da8728d7a","name":"SDK
+        Test","status":"unpause","created_at":"2026-07-06T12:45:27.000000Z","scopes":["email_full","tokens_full","webhooks_full","templates_full","inbounds_full","domains_full","activity_full","analytics_full","suppressions_full","sms_full","email_verification_full","recipients_full","sender_identity_full","smtp_users_full","users_full","dmarc_monitoring_full","blocklist_monitoring_full"],"domain":null},{"id":"b2482d15980ef4c836b7e0acd149149a982bec809507ca3443c26303395930088b208b319865a7d8","name":"Test
+        Token","status":"unpause","created_at":"2026-07-06T12:52:20.000000Z","scopes":["email_full","domains_read"],"domain":{"id":"65qngkdovk8lwr12","name":"igor.fail","created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2026-07-06T13:05:00.000000Z"}},{"id":"0ec7e8b5ca9c9d7f8c32bc7f7a70c8a9032a0db8ea9c885f7169c8fd72e7ffd8bdf25eb9c9475d3c","name":"Test
+        Token","status":"unpause","created_at":"2026-07-06T12:52:22.000000Z","scopes":["email_full"],"domain":{"id":"65qngkdovk8lwr12","name":"igor.fail","created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2026-07-06T13:05:00.000000Z"}},{"id":"872b2dd2d39fb21ce56fd6b6b65f1d196f95e380d9313cfe0dffd9a68bc560a3ce8332583f639c65","name":"Test
+        Token","status":"unpause","created_at":"2026-07-06T12:53:31.000000Z","scopes":["email_full","domains_read"],"domain":{"id":"65qngkdovk8lwr12","name":"igor.fail","created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2026-07-06T13:05:00.000000Z"}},{"id":"a104908e2e6f18ad5cfdf009793d42b352760f15f353432c760ccee9fa48ee62f6d2c464b23aef7f","name":"Test
+        Token","status":"unpause","created_at":"2026-07-06T12:52:23.000000Z","scopes":["email_full"],"domain":{"id":"65qngkdovk8lwr12","name":"igor.fail","created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2026-07-06T13:05:00.000000Z"}},{"id":"0e27905c3400076ca3912f30f0fe9090e8ab165b1364a84b3783402887211830b08dd4bceaba160e","name":"Test
+        Token","status":"unpause","created_at":"2026-07-06T12:53:33.000000Z","scopes":["email_full"],"domain":{"id":"65qngkdovk8lwr12","name":"igor.fail","created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2026-07-06T13:05:00.000000Z"}},{"id":"19cbf95976a478eed26c81dd559c7e6ffefeeefdc3b9873a11a6d978dbc29fa1b97a29928dc2da2e","name":"Test
+        Token","status":"unpause","created_at":"2026-07-06T12:53:34.000000Z","scopes":["email_full"],"domain":{"id":"65qngkdovk8lwr12","name":"igor.fail","created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2026-07-06T13:05:00.000000Z"}},{"id":"5ee4bc671311b2aeeced1e9b30588275d751c077da489b34db3e11687c2c342006da119ad6093c77","name":"Test
+        Token","status":"unpause","created_at":"2026-07-06T12:55:52.000000Z","scopes":["email_full","domains_read"],"domain":{"id":"65qngkdovk8lwr12","name":"igor.fail","created_at":"2025-04-01T12:33:41.000000Z","updated_at":"2026-07-06T13:05:00.000000Z"}}],"links":{"first":"https:\/\/api.mailersend.com\/v1\/token?page=1","last":"https:\/\/api.mailersend.com\/v1\/token?page=2","prev":null,"next":"https:\/\/api.mailersend.com\/v1\/token?page=2"},"meta":{"current_page":1,"from":1,"last_page":2,"links":[{"url":null,"label":"&laquo;
+        Previous","page":null,"active":false},{"url":"https:\/\/api.mailersend.com\/v1\/token?page=1","label":"1","page":1,"active":true},{"url":"https:\/\/api.mailersend.com\/v1\/token?page=2","label":"2","page":2,"active":false},{"url":"https:\/\/api.mailersend.com\/v1\/token?page=2","label":"Next
+        &raquo;","page":2,"active":false}],"path":"https:\/\/api.mailersend.com\/v1\/token","per_page":25,"to":25,"total":36}}'
     headers:
       CF-RAY:
-      - 9684c1df6f06aeaa-BEG
+      - a16ed22eacd2e297-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -99,19 +116,21 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 01 Aug 2025 10:47:25 GMT
+      - Mon, 06 Jul 2026 13:05:26 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
       - chunked
+      alt-svc:
+      - h3=":443"; ma=86400
       cf-cache-status:
       - DYNAMIC
-      strict-transport-security:
-      - max-age=31536000; includeSubDomains
       x-apiquota-remaining:
       - '-1'
       x-apiquota-reset:
-      - '2025-08-02T00:00:00Z'
+      - '2026-07-07T00:00:00Z'
+      x-envoy-upstream-service-time:
+      - '62'
     status:
       code: 200
       message: OK
@@ -127,7 +146,7 @@ interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+      - mailersend-python/2.0.3 (Python/3.12.12; OS/Darwin 25.5.0; Impl/CPython)
     method: GET
     uri: https://api.mailersend.com/v1/token/non-existent-id
   response:
@@ -135,7 +154,7 @@ interactions:
       string: "{\n    \"message\": \"Resource not found.\"\n}"
     headers:
       CF-RAY:
-      - 9684c1e12930a8bc-BEG
+      - a16ed22f78bf0380-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -145,15 +164,21 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 01 Aug 2025 10:47:25 GMT
+      - Mon, 06 Jul 2026 13:05:27 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
       - chunked
+      alt-svc:
+      - h3=":443"; ma=86400
       cf-cache-status:
       - DYNAMIC
-      strict-transport-security:
-      - max-age=31536000; includeSubDomains
+      x-apiquota-remaining:
+      - '-1'
+      x-apiquota-reset:
+      - '2026-07-07T00:00:00Z'
+      x-envoy-upstream-service-time:
+      - '34'
     status:
       code: 404
       message: Not Found
@@ -171,18 +196,18 @@ interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+      - mailersend-python/2.0.3 (Python/3.12.12; OS/Darwin 25.5.0; Impl/CPython)
     method: POST
     uri: https://api.mailersend.com/v1/token
   response:
     body:
-      string: '{"data":{"id":"ad662d4e160d123d1b61d6d2c65831e16bbc78a32e0e8af120ecaff7c4d9102ae134e04df68dfc08","accessToken":"***FILTERED***","name":"Test
-        Token","created_at":"2025-08-01T10:47:25.000000Z","scopes":["email_full"],"has_full":false,"domain":{"id":"65qngkdovk8lwr12","name":"igor.fail","dkim":true,"spf":true,"mx":true,"tracking":false,"is_verified":true,"is_dns_active":true,"is_trial_domain":false,"domain_settings":{"send_paused":false,"track_clicks":true,"track_opens":true,"track_opens_pixel_on_top":false,"track_unsubscribe":true,"track_unsubscribe_html":"<p>Custom
+      string: '{"data":{"id":"26905bfe0a6dd08bc9fc926f19f4227147aa1091b6815ee7dde1517de608eac6578eedff70d387d7","accessToken":"***FILTERED***","name":"Test
+        Token","created_at":"2026-07-06T13:05:27.000000Z","scopes":["email_full"],"has_full":false,"has_only_sending":false,"domain":{"id":"65qngkdovk8lwr12","name":"igor.fail","dkim":true,"spf":true,"mx":true,"tracking":false,"is_verified":true,"is_dns_active":true,"is_trial_domain":false,"domain_settings":{"send_paused":true,"track_clicks":false,"track_opens":false,"track_opens_pixel_on_top":false,"track_unsubscribe":false,"track_unsubscribe_html":"<p>Custom
         unsubscribe {{unsubscribe}}<\/p>","track_unsubscribe_html_enabled":false,"track_unsubscribe_plain":"Custom
-        unsubscribe {{unsubscribe}}","track_unsubscribe_plain_enabled":false,"track_content":true,"custom_tracking_enabled":true,"custom_tracking_subdomain":"track","return_path_subdomain":"mta","inbound_routing_enabled":false,"inbound_routing_subdomain":"inbound","precedence_bulk":false,"ignore_duplicated_recipients":false,"show_dmarc":false},"can":{"manage":true},"totals":[],"is_dkim_txt":false,"show_dkim_info":false,"is_being_verified":true},"preview":"***FILTERED***","expires_at":null}}'
+        unsubscribe {{unsubscribe}}","track_unsubscribe_plain_enabled":false,"track_content":false,"custom_tracking_enabled":true,"custom_tracking_subdomain":"track","return_path_subdomain":"mta","inbound_routing_enabled":false,"inbound_routing_subdomain":"inbound","precedence_bulk":false,"ignore_duplicated_recipients":false,"show_dmarc":false},"can":{"manage":true},"totals":[],"is_dkim_txt":false,"show_dkim_info":false,"is_being_verified":true,"is_custom_links_available":false},"preview":"***FILTERED***","expires_at":null}}'
     headers:
       CF-RAY:
-      - 9684c1e219619857-BEG
+      - a16ed2302c908e88-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -192,19 +217,21 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 01 Aug 2025 10:47:26 GMT
+      - Mon, 06 Jul 2026 13:05:27 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
       - chunked
+      alt-svc:
+      - h3=":443"; ma=86400
       cf-cache-status:
       - DYNAMIC
-      strict-transport-security:
-      - max-age=31536000; includeSubDomains
       x-apiquota-remaining:
       - '-1'
       x-apiquota-reset:
-      - '2025-08-02T00:00:00Z'
+      - '2026-07-07T00:00:00Z'
+      x-envoy-upstream-service-time:
+      - '103'
     status:
       code: 200
       message: OK
@@ -220,7 +247,7 @@ interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+      - mailersend-python/2.0.3 (Python/3.12.12; OS/Darwin 25.5.0; Impl/CPython)
     method: GET
     uri: https://api.mailersend.com/v1/token/another-non-existent-id
   response:
@@ -228,7 +255,7 @@ interactions:
       string: "{\n    \"message\": \"Resource not found.\"\n}"
     headers:
       CF-RAY:
-      - 9684c1e41988870d-BEG
+      - a16ed2314c093267-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -238,15 +265,21 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 01 Aug 2025 10:47:26 GMT
+      - Mon, 06 Jul 2026 13:05:27 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
       - chunked
+      alt-svc:
+      - h3=":443"; ma=86400
       cf-cache-status:
       - DYNAMIC
-      strict-transport-security:
-      - max-age=31536000; includeSubDomains
+      x-apiquota-remaining:
+      - '-1'
+      x-apiquota-reset:
+      - '2026-07-07T00:00:00Z'
+      x-envoy-upstream-service-time:
+      - '38'
     status:
       code: 404
       message: Not Found

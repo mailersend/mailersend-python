@@ -1,4 +1,5 @@
 """Tests for Email resource."""
+
 import inspect
 
 import pytest
@@ -7,7 +8,6 @@ from unittest.mock import AsyncMock, MagicMock, Mock
 from mailersend.resources.email import Email
 from mailersend.models.base import APIResponse
 from mailersend.models.email import EmailRequest, EmailContact
-
 
 
 async def resolve(result):
@@ -33,6 +33,7 @@ def _make_email_request():
         text="Test body",
     )
 
+
 class TestEmail:
     @pytest.fixture(autouse=True, params=["sync", "async"])
     def setup(self, request):
@@ -40,16 +41,20 @@ class TestEmail:
             self.mock_client = MagicMock()
             self.mock_client.request = AsyncMock(
                 return_value=MagicMock(
-                    status_code=200, headers={"x-request-id": "test-req-id"},
-                    json=MagicMock(return_value={}), content=b"{}"
+                    status_code=200,
+                    headers={"x-request-id": "test-req-id"},
+                    json=MagicMock(return_value={}),
+                    content=b"{}",
                 )
             )
         else:
             self.mock_client = MagicMock()
             self.mock_client.request = Mock(
                 return_value=MagicMock(
-                    status_code=200, headers={"x-request-id": "test-req-id"},
-                    json=MagicMock(return_value={}), content=b"{}"
+                    status_code=200,
+                    headers={"x-request-id": "test-req-id"},
+                    json=MagicMock(return_value={}),
+                    content=b"{}",
                 )
             )
         self.resource = Email(self.mock_client)

@@ -46,9 +46,7 @@ class SmsNumbers(BaseResource):
         """
         self.logger.debug("Getting SMS phone number: %s", request.sms_number_id)
 
-        return self._request(
-            method="GET", path=f"sms-numbers/{request.sms_number_id}"
-        )
+        return self._request(method="GET", path=f"sms-numbers/{request.sms_number_id}")
 
     def update(self, request: SmsNumberUpdateRequest) -> APIResponse:
         """
@@ -86,5 +84,3 @@ class SmsNumbers(BaseResource):
         return self._request(
             method="DELETE", path=f"sms-numbers/{request.sms_number_id}"
         )
-
-

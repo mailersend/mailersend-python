@@ -60,11 +60,13 @@ class BaseResource:
         result = self.client.request(**kwargs)
 
         if inspect.isawaitable(result):
+
             async def resolve():
                 response = await result
                 if data is not None:
                     return self._create_response(response, data(response))
                 return self._create_response(response)
+
             return resolve()
 
         if data is not None:
@@ -126,6 +128,5 @@ class BaseResource:
             return [cls(**item) for item in response_data]
 
         return response_data
-
 
     pass

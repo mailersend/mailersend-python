@@ -11,18 +11,17 @@ interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+      - mailersend-python/2.0.3 (Python/3.12.12; OS/Darwin 25.5.0; Impl/CPython)
     method: GET
     uri: https://api.mailersend.com/v1/message-schedules?status=scheduled&page=1&limit=10
   response:
     body:
-      string: '{"data":[{"message_id":"6888bb59bbd49a78d3334484","subject":"Test Email","send_at":"2025-07-30T12:15:21.000000Z","status":"scheduled","status_message":null,"created_at":"2025-07-29T12:15:21.000000Z"},{"message_id":"6888bbb9b713a022b0acd094","subject":"Test
-        Email","send_at":"2025-07-30T12:16:57.000000Z","status":"scheduled","status_message":null,"created_at":"2025-07-29T12:16:57.000000Z"}],"links":{"first":"https:\/\/api.mailersend.com\/v1\/message-schedules?page=1","last":"https:\/\/api.mailersend.com\/v1\/message-schedules?page=1","prev":null,"next":null},"meta":{"current_page":1,"from":1,"last_page":1,"links":[{"url":null,"label":"&laquo;
-        Previous","active":false},{"url":"https:\/\/api.mailersend.com\/v1\/message-schedules?page=1","label":"1","active":true},{"url":null,"label":"Next
-        &raquo;","active":false}],"path":"https:\/\/api.mailersend.com\/v1\/message-schedules","per_page":10,"to":2,"total":2}}'
+      string: '{"data":[],"links":{"first":"https:\/\/api.mailersend.com\/v1\/message-schedules?page=1","last":"https:\/\/api.mailersend.com\/v1\/message-schedules?page=1","prev":null,"next":null},"meta":{"current_page":1,"from":null,"last_page":1,"links":[{"url":null,"label":"&laquo;
+        Previous","page":null,"active":false},{"url":"https:\/\/api.mailersend.com\/v1\/message-schedules?page=1","label":"1","page":1,"active":true},{"url":null,"label":"Next
+        &raquo;","page":null,"active":false}],"path":"https:\/\/api.mailersend.com\/v1\/message-schedules","per_page":10,"to":null,"total":0}}'
     headers:
       CF-RAY:
-      - 966d2eca1b761b8b-BEG
+      - a16ed1cf2885e290-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -32,19 +31,21 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 29 Jul 2025 14:07:28 GMT
+      - Mon, 06 Jul 2026 13:05:11 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
       - chunked
+      alt-svc:
+      - h3=":443"; ma=86400
       cf-cache-status:
       - DYNAMIC
-      strict-transport-security:
-      - max-age=31536000; includeSubDomains
       x-apiquota-remaining:
       - '-1'
       x-apiquota-reset:
-      - '2025-07-30T00:00:00Z'
+      - '2026-07-07T00:00:00Z'
+      x-envoy-upstream-service-time:
+      - '43'
     status:
       code: 200
       message: OK

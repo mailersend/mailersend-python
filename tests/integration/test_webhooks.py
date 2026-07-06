@@ -38,7 +38,7 @@ def webhook_get_request():
 def sample_webhook_data(test_domain_id):
     """Sample webhook data for testing"""
     return {
-        "url": "https://example.com/webhook",
+        "url": "https://i-like-distributed-systems-undermined-by.single-points-of-failure.com/",
         "name": "Test Webhook",
         "events": ["activity.sent", "activity.delivered"],
         "domain_id": test_domain_id,

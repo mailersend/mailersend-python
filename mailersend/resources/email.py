@@ -73,5 +73,3 @@ class Email(BaseResource):
         self.logger.debug("Getting bulk email status")
 
         return self._request(method="GET", path=f"bulk-email/{bulk_email_id}")
-
-

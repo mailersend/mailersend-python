@@ -1,8 +1,8 @@
 interactions:
 - request:
-    body: '{"url": "https://example.com/webhook", "name": "Test Webhook", "events":
-      ["activity.sent", "activity.delivered"], "domain_id": "invalid-domain-id", "enabled":
-      true}'
+    body: '{"url": "https://i-like-distributed-systems-undermined-by.single-points-of-failure.com/",
+      "name": "Test Webhook", "events": ["activity.sent", "activity.delivered"], "domain_id":
+      "invalid-domain-id", "enabled": true}'
     headers:
       Accept:
       - application/json
@@ -11,11 +11,11 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '164'
+      - '215'
       Content-Type:
       - application/json
       User-Agent:
-      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+      - mailersend-python/2.0.3 (Python/3.12.12; OS/Darwin 25.5.0; Impl/CPython)
     method: POST
     uri: https://api.mailersend.com/v1/webhooks
   response:
@@ -24,7 +24,7 @@ interactions:
         wait a while before retrying.\"\n}"
     headers:
       CF-RAY:
-      - 966d41ee89240380-BEG
+      - a16ee46d6cef5165-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -32,26 +32,28 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 29 Jul 2025 14:20:32 GMT
+      - Mon, 06 Jul 2026 13:17:54 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
       - chunked
+      alt-svc:
+      - h3=":443"; ma=86400
       cf-cache-status:
       - DYNAMIC
-      strict-transport-security:
-      - max-age=31536000; includeSubDomains
       x-apiquota-remaining:
       - '-1'
       x-apiquota-reset:
-      - '2025-07-30T00:00:00Z'
+      - '2026-07-07T00:00:00Z'
+      x-envoy-upstream-service-time:
+      - '32'
     status:
       code: 429
       message: Too Many Requests
 - request:
-    body: '{"url": "https://example.com/webhook", "name": "Test Webhook", "events":
-      ["activity.sent", "activity.delivered"], "domain_id": "invalid-domain-id", "enabled":
-      true}'
+    body: '{"url": "https://i-like-distributed-systems-undermined-by.single-points-of-failure.com/",
+      "name": "Test Webhook", "events": ["activity.sent", "activity.delivered"], "domain_id":
+      "invalid-domain-id", "enabled": true}'
     headers:
       Accept:
       - application/json
@@ -60,11 +62,11 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '164'
+      - '215'
       Content-Type:
       - application/json
       User-Agent:
-      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+      - mailersend-python/2.0.3 (Python/3.12.12; OS/Darwin 25.5.0; Impl/CPython)
     method: POST
     uri: https://api.mailersend.com/v1/webhooks
   response:
@@ -73,7 +75,7 @@ interactions:
         wait a while before retrying.\"\n}"
     headers:
       CF-RAY:
-      - 966d41ef8eadf969-BEG
+      - a16ee46e0967e296-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -81,26 +83,28 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 29 Jul 2025 14:20:32 GMT
+      - Mon, 06 Jul 2026 13:17:54 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
       - chunked
+      alt-svc:
+      - h3=":443"; ma=86400
       cf-cache-status:
       - DYNAMIC
-      strict-transport-security:
-      - max-age=31536000; includeSubDomains
       x-apiquota-remaining:
       - '-1'
       x-apiquota-reset:
-      - '2025-07-30T00:00:00Z'
+      - '2026-07-07T00:00:00Z'
+      x-envoy-upstream-service-time:
+      - '37'
     status:
       code: 429
       message: Too Many Requests
 - request:
-    body: '{"url": "https://example.com/webhook", "name": "Test Webhook", "events":
-      ["activity.sent", "activity.delivered"], "domain_id": "invalid-domain-id", "enabled":
-      true}'
+    body: '{"url": "https://i-like-distributed-systems-undermined-by.single-points-of-failure.com/",
+      "name": "Test Webhook", "events": ["activity.sent", "activity.delivered"], "domain_id":
+      "invalid-domain-id", "enabled": true}'
     headers:
       Accept:
       - application/json
@@ -109,21 +113,21 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '164'
+      - '215'
       Content-Type:
       - application/json
       User-Agent:
-      - mailersend-python/2.0.0 (Python/3.13.5; OS/Darwin 24.5.0; Impl/CPython)
+      - mailersend-python/2.0.3 (Python/3.12.12; OS/Darwin 25.5.0; Impl/CPython)
     method: POST
     uri: https://api.mailersend.com/v1/webhooks
   response:
     body:
-      string: '{"message":"The url has already been taken. (and 1 more error)","errors":{"url":["The
-        url has already been taken."],"domain_id":["The domain id field is required.
+      string: '{"message":"The endpoint returned HTTP 405. (and 1 more error)","errors":{"url":["The
+        endpoint returned HTTP 405."],"domain_id":["The domain id field is required.
         #MS42209"]}}'
     headers:
       CF-RAY:
-      - 966d41f4396ee294-BEG
+      - a16ee4728a60b01d-BEG
       Cache-Control:
       - no-cache, private
       Connection:
@@ -131,19 +135,21 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 29 Jul 2025 14:20:33 GMT
+      - Mon, 06 Jul 2026 13:17:55 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
       - chunked
+      alt-svc:
+      - h3=":443"; ma=86400
       cf-cache-status:
       - DYNAMIC
-      strict-transport-security:
-      - max-age=31536000; includeSubDomains
       x-apiquota-remaining:
       - '-1'
       x-apiquota-reset:
-      - '2025-07-30T00:00:00Z'
+      - '2026-07-07T00:00:00Z'
+      x-envoy-upstream-service-time:
+      - '164'
     status:
       code: 422
       message: Unprocessable Entity

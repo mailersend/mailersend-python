@@ -1,4 +1,5 @@
 """Tests for Domains resource."""
+
 import inspect
 
 from unittest.mock import AsyncMock, MagicMock, Mock
@@ -20,7 +21,6 @@ from mailersend.models.domains import (
 from mailersend.models.base import APIResponse
 
 
-
 async def resolve(result):
     if inspect.iscoroutine(result):
         return await result
@@ -34,16 +34,20 @@ class TestDomains:
             self.mock_client = MagicMock()
             self.mock_client.request = AsyncMock(
                 return_value=MagicMock(
-                    status_code=200, headers={"x-request-id": "test-req-id"},
-                    json=MagicMock(return_value={}), content=b"{}"
+                    status_code=200,
+                    headers={"x-request-id": "test-req-id"},
+                    json=MagicMock(return_value={}),
+                    content=b"{}",
                 )
             )
         else:
             self.mock_client = MagicMock()
             self.mock_client.request = Mock(
                 return_value=MagicMock(
-                    status_code=200, headers={"x-request-id": "test-req-id"},
-                    json=MagicMock(return_value={}), content=b"{}"
+                    status_code=200,
+                    headers={"x-request-id": "test-req-id"},
+                    json=MagicMock(return_value={}),
+                    content=b"{}",
                 )
             )
         self.resource = Domains(self.mock_client)
@@ -69,7 +73,9 @@ class TestDomains:
         assert call.kwargs["params"]["limit"] == 50
 
     async def test_get_domain_returns_api_response(self):
-        result = await resolve(self.resource.get_domain(DomainGetRequest(domain_id="dom123")))
+        result = await resolve(
+            self.resource.get_domain(DomainGetRequest(domain_id="dom123"))
+        )
         assert isinstance(result, APIResponse)
 
     async def test_get_domain_calls_correct_endpoint(self):
@@ -79,26 +85,30 @@ class TestDomains:
         assert call.kwargs["path"] == "domains/dom123"
 
     async def test_create_domain_returns_api_response(self):
-        result = await resolve(self.resource.create_domain(
-            DomainCreateRequest(name="example.com"))
+        result = await resolve(
+            self.resource.create_domain(DomainCreateRequest(name="example.com"))
         )
         assert isinstance(result, APIResponse)
 
     async def test_create_domain_calls_correct_endpoint(self):
-        await resolve(self.resource.create_domain(DomainCreateRequest(name="example.com")))
+        await resolve(
+            self.resource.create_domain(DomainCreateRequest(name="example.com"))
+        )
         call = self.mock_client.request.call_args
         assert call.kwargs["method"] == "POST"
         assert call.kwargs["path"] == "domains"
         assert call.kwargs["body"]["name"] == "example.com"
 
     async def test_delete_domain_returns_api_response(self):
-        result = await resolve(self.resource.delete_domain(
-            DomainDeleteRequest(domain_id="dom123"))
+        result = await resolve(
+            self.resource.delete_domain(DomainDeleteRequest(domain_id="dom123"))
         )
         assert isinstance(result, APIResponse)
 
     async def test_delete_domain_calls_correct_endpoint(self):
-        await resolve(self.resource.delete_domain(DomainDeleteRequest(domain_id="dom123")))
+        await resolve(
+            self.resource.delete_domain(DomainDeleteRequest(domain_id="dom123"))
+        )
         call = self.mock_client.request.call_args
         assert call.kwargs["method"] == "DELETE"
         assert call.kwargs["path"] == "domains/dom123"
@@ -135,28 +145,36 @@ class TestDomains:
         assert call.kwargs["body"]["track_opens"] is True
 
     async def test_get_domain_dns_records_returns_api_response(self):
-        result = await resolve(self.resource.get_domain_dns_records(
-            DomainDnsRecordsRequest(domain_id="dom123"))
+        result = await resolve(
+            self.resource.get_domain_dns_records(
+                DomainDnsRecordsRequest(domain_id="dom123")
+            )
         )
         assert isinstance(result, APIResponse)
 
     async def test_get_domain_dns_records_calls_correct_endpoint(self):
-        await resolve(self.resource.get_domain_dns_records(
-            DomainDnsRecordsRequest(domain_id="dom123"))
+        await resolve(
+            self.resource.get_domain_dns_records(
+                DomainDnsRecordsRequest(domain_id="dom123")
+            )
         )
         call = self.mock_client.request.call_args
         assert call.kwargs["method"] == "GET"
         assert call.kwargs["path"] == "domains/dom123/dns-records"
 
     async def test_get_domain_verification_status_returns_api_response(self):
-        result = await resolve(self.resource.get_domain_verification_status(
-            DomainVerificationRequest(domain_id="dom123"))
+        result = await resolve(
+            self.resource.get_domain_verification_status(
+                DomainVerificationRequest(domain_id="dom123")
+            )
         )
         assert isinstance(result, APIResponse)
 
     async def test_get_domain_verification_status_calls_correct_endpoint(self):
-        await resolve(self.resource.get_domain_verification_status(
-            DomainVerificationRequest(domain_id="dom123"))
+        await resolve(
+            self.resource.get_domain_verification_status(
+                DomainVerificationRequest(domain_id="dom123")
+            )
         )
         call = self.mock_client.request.call_args
         assert call.kwargs["method"] == "GET"

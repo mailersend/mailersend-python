@@ -121,5 +121,3 @@ class InboundResource(BaseResource):
 
         # Make API request
         return self._request(method="DELETE", path=f"inbound/{request.inbound_id}")
-
-

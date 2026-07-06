@@ -1,4 +1,5 @@
 """Tests for Recipients resource."""
+
 import inspect
 
 from unittest.mock import AsyncMock, MagicMock, Mock
@@ -18,7 +19,6 @@ from mailersend.models.recipients import (
 )
 
 
-
 async def resolve(result):
     if inspect.iscoroutine(result):
         return await result
@@ -32,16 +32,20 @@ class TestRecipients:
             self.mock_client = MagicMock()
             self.mock_client.request = AsyncMock(
                 return_value=MagicMock(
-                    status_code=200, headers={"x-request-id": "test-req-id"},
-                    json=MagicMock(return_value={}), content=b"{}"
+                    status_code=200,
+                    headers={"x-request-id": "test-req-id"},
+                    json=MagicMock(return_value={}),
+                    content=b"{}",
                 )
             )
         else:
             self.mock_client = MagicMock()
             self.mock_client.request = Mock(
                 return_value=MagicMock(
-                    status_code=200, headers={"x-request-id": "test-req-id"},
-                    json=MagicMock(return_value={}), content=b"{}"
+                    status_code=200,
+                    headers={"x-request-id": "test-req-id"},
+                    json=MagicMock(return_value={}),
+                    content=b"{}",
                 )
             )
         self.resource = Recipients(self.mock_client)
@@ -65,26 +69,32 @@ class TestRecipients:
         assert call.kwargs["params"]["page"] == 2
 
     async def test_get_recipient_returns_api_response(self):
-        result = await resolve(self.resource.get_recipient(
-            RecipientGetRequest(recipient_id="rec123"))
+        result = await resolve(
+            self.resource.get_recipient(RecipientGetRequest(recipient_id="rec123"))
         )
         assert isinstance(result, APIResponse)
 
     async def test_get_recipient_calls_correct_endpoint(self):
-        await resolve(self.resource.get_recipient(RecipientGetRequest(recipient_id="rec123")))
+        await resolve(
+            self.resource.get_recipient(RecipientGetRequest(recipient_id="rec123"))
+        )
         call = self.mock_client.request.call_args
         assert call.kwargs["method"] == "GET"
         assert call.kwargs["path"] == "recipients/rec123"
 
     async def test_delete_recipient_returns_api_response(self):
-        result = await resolve(self.resource.delete_recipient(
-            RecipientDeleteRequest(recipient_id="rec123"))
+        result = await resolve(
+            self.resource.delete_recipient(
+                RecipientDeleteRequest(recipient_id="rec123")
+            )
         )
         assert isinstance(result, APIResponse)
 
     async def test_delete_recipient_calls_correct_endpoint(self):
-        await resolve(self.resource.delete_recipient(
-            RecipientDeleteRequest(recipient_id="rec123"))
+        await resolve(
+            self.resource.delete_recipient(
+                RecipientDeleteRequest(recipient_id="rec123")
+            )
         )
         call = self.mock_client.request.call_args
         assert call.kwargs["method"] == "DELETE"
@@ -217,51 +227,57 @@ class TestRecipients:
         assert call.kwargs["path"] == "suppressions/blocklist"
 
     async def test_delete_hard_bounces_returns_api_response(self):
-        result = await resolve(self.resource.delete_hard_bounces(
-            SuppressionDeleteRequest(ids=["id1"]))
+        result = await resolve(
+            self.resource.delete_hard_bounces(SuppressionDeleteRequest(ids=["id1"]))
         )
         assert isinstance(result, APIResponse)
 
     async def test_delete_hard_bounces_calls_correct_endpoint(self):
-        await resolve(self.resource.delete_hard_bounces(SuppressionDeleteRequest(ids=["id1"])))
+        await resolve(
+            self.resource.delete_hard_bounces(SuppressionDeleteRequest(ids=["id1"]))
+        )
         call = self.mock_client.request.call_args
         assert call.kwargs["method"] == "DELETE"
         assert call.kwargs["path"] == "suppressions/hard-bounces"
 
     async def test_delete_spam_complaints_returns_api_response(self):
-        result = await resolve(self.resource.delete_spam_complaints(
-            SuppressionDeleteRequest(ids=["id1"]))
+        result = await resolve(
+            self.resource.delete_spam_complaints(SuppressionDeleteRequest(ids=["id1"]))
         )
         assert isinstance(result, APIResponse)
 
     async def test_delete_spam_complaints_calls_correct_endpoint(self):
-        await resolve(self.resource.delete_spam_complaints(
-            SuppressionDeleteRequest(ids=["id1"]))
+        await resolve(
+            self.resource.delete_spam_complaints(SuppressionDeleteRequest(ids=["id1"]))
         )
         call = self.mock_client.request.call_args
         assert call.kwargs["method"] == "DELETE"
         assert call.kwargs["path"] == "suppressions/spam-complaints"
 
     async def test_delete_unsubscribes_returns_api_response(self):
-        result = await resolve(self.resource.delete_unsubscribes(
-            SuppressionDeleteRequest(ids=["id1"]))
+        result = await resolve(
+            self.resource.delete_unsubscribes(SuppressionDeleteRequest(ids=["id1"]))
         )
         assert isinstance(result, APIResponse)
 
     async def test_delete_unsubscribes_calls_correct_endpoint(self):
-        await resolve(self.resource.delete_unsubscribes(SuppressionDeleteRequest(ids=["id1"])))
+        await resolve(
+            self.resource.delete_unsubscribes(SuppressionDeleteRequest(ids=["id1"]))
+        )
         call = self.mock_client.request.call_args
         assert call.kwargs["method"] == "DELETE"
         assert call.kwargs["path"] == "suppressions/unsubscribes"
 
     async def test_delete_from_on_hold_returns_api_response(self):
-        result = await resolve(self.resource.delete_from_on_hold(
-            SuppressionDeleteRequest(ids=["id1"]))
+        result = await resolve(
+            self.resource.delete_from_on_hold(SuppressionDeleteRequest(ids=["id1"]))
         )
         assert isinstance(result, APIResponse)
 
     async def test_delete_from_on_hold_calls_correct_endpoint(self):
-        await resolve(self.resource.delete_from_on_hold(SuppressionDeleteRequest(ids=["id1"])))
+        await resolve(
+            self.resource.delete_from_on_hold(SuppressionDeleteRequest(ids=["id1"]))
+        )
         call = self.mock_client.request.call_args
         assert call.kwargs["method"] == "DELETE"
         assert call.kwargs["path"] == "suppressions/on-hold-list"

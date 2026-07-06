@@ -1,4 +1,5 @@
 """Tests for Users resource."""
+
 import inspect
 
 from unittest.mock import AsyncMock, MagicMock, Mock
@@ -21,7 +22,6 @@ from mailersend.models.users import (
 )
 
 
-
 async def resolve(result):
     if inspect.iscoroutine(result):
         return await result
@@ -35,16 +35,20 @@ class TestUsers:
             self.mock_client = MagicMock()
             self.mock_client.request = AsyncMock(
                 return_value=MagicMock(
-                    status_code=200, headers={"x-request-id": "test-req-id"},
-                    json=MagicMock(return_value={}), content=b"{}"
+                    status_code=200,
+                    headers={"x-request-id": "test-req-id"},
+                    json=MagicMock(return_value={}),
+                    content=b"{}",
                 )
             )
         else:
             self.mock_client = MagicMock()
             self.mock_client.request = Mock(
                 return_value=MagicMock(
-                    status_code=200, headers={"x-request-id": "test-req-id"},
-                    json=MagicMock(return_value={}), content=b"{}"
+                    status_code=200,
+                    headers={"x-request-id": "test-req-id"},
+                    json=MagicMock(return_value={}),
+                    content=b"{}",
                 )
             )
         self.resource = Users(self.mock_client)
@@ -94,7 +98,9 @@ class TestUsers:
         assert call.kwargs["path"] == "users/usr123"
 
     async def test_delete_user_returns_api_response(self):
-        result = await resolve(self.resource.delete_user(UserDeleteRequest(user_id="usr123")))
+        result = await resolve(
+            self.resource.delete_user(UserDeleteRequest(user_id="usr123"))
+        )
         assert isinstance(result, APIResponse)
 
     async def test_delete_user_calls_correct_endpoint(self):
@@ -114,7 +120,9 @@ class TestUsers:
         assert call.kwargs["path"] == "invites"
 
     async def test_get_invite_returns_api_response(self):
-        result = await resolve(self.resource.get_invite(InviteGetRequest(invite_id="inv123")))
+        result = await resolve(
+            self.resource.get_invite(InviteGetRequest(invite_id="inv123"))
+        )
         assert isinstance(result, APIResponse)
 
     async def test_get_invite_calls_correct_endpoint(self):
@@ -124,25 +132,29 @@ class TestUsers:
         assert call.kwargs["path"] == "invites/inv123"
 
     async def test_resend_invite_returns_api_response(self):
-        result = await resolve(self.resource.resend_invite(
-            InviteResendRequest(invite_id="inv123"))
+        result = await resolve(
+            self.resource.resend_invite(InviteResendRequest(invite_id="inv123"))
         )
         assert isinstance(result, APIResponse)
 
     async def test_resend_invite_calls_correct_endpoint(self):
-        await resolve(self.resource.resend_invite(InviteResendRequest(invite_id="inv123")))
+        await resolve(
+            self.resource.resend_invite(InviteResendRequest(invite_id="inv123"))
+        )
         call = self.mock_client.request.call_args
         assert call.kwargs["method"] == "POST"
         assert call.kwargs["path"] == "invites/inv123/resend"
 
     async def test_cancel_invite_returns_api_response(self):
-        result = await resolve(self.resource.cancel_invite(
-            InviteCancelRequest(invite_id="inv123"))
+        result = await resolve(
+            self.resource.cancel_invite(InviteCancelRequest(invite_id="inv123"))
         )
         assert isinstance(result, APIResponse)
 
     async def test_cancel_invite_calls_correct_endpoint(self):
-        await resolve(self.resource.cancel_invite(InviteCancelRequest(invite_id="inv123")))
+        await resolve(
+            self.resource.cancel_invite(InviteCancelRequest(invite_id="inv123"))
+        )
         call = self.mock_client.request.call_args
         assert call.kwargs["method"] == "DELETE"
         assert call.kwargs["path"] == "invites/inv123"

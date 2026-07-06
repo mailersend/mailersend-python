@@ -99,7 +99,9 @@ class Users(BaseResource):
         self.logger.debug("Deleting user: %s", request.user_id)
 
         # Make API call
-        return self._request(method="DELETE", path=f"users/{request.user_id}", data=lambda r: None)
+        return self._request(
+            method="DELETE", path=f"users/{request.user_id}", data=lambda r: None
+        )
 
     def list_invites(self, request: InvitesListRequest) -> APIResponse:
         """Get a list of invites.
@@ -162,6 +164,6 @@ class Users(BaseResource):
         self.logger.debug("Canceling invite: %s", request.invite_id)
 
         # Make API call
-        return self._request(method="DELETE", path=f"invites/{request.invite_id}", data=lambda r: None)
-
-
+        return self._request(
+            method="DELETE", path=f"invites/{request.invite_id}", data=lambda r: None
+        )

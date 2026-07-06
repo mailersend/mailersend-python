@@ -79,5 +79,3 @@ class Schedules(BaseResource):
         return self._request(
             method="DELETE", path=f"message-schedules/{request.message_id}"
         )
-
-
