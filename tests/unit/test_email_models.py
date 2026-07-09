@@ -6,8 +6,6 @@ from mailersend.models.email import (
     EmailAttachment,
     EmailPersonalization,
     EmailRequest,
-    EmailTrackingSettings,
-    EmailHeader,
 )
 
 
@@ -166,7 +164,7 @@ class TestEmailRequest:
         assert request.from_email.email == "sender@example.com"
         assert request.to[0].email == "recipient@example.com"
         assert request.template_id == "template-123"
-        assert request.subject is "Test Subject"
+        assert request.subject == "Test Subject"
         assert request.html is None
         assert request.text is None
 

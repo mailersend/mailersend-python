@@ -14,7 +14,6 @@ from mailersend.models.dmarc_monitoring import (
     DmarcMonitoringUpdateRequest,
     DmarcMonitoringDeleteRequest,
     DmarcMonitoringReportRequest,
-    DmarcMonitoringReportQueryParams,
     DmarcMonitoringIpReportRequest,
     DmarcMonitoringReportSourcesRequest,
     DmarcMonitoringFavoriteRequest,

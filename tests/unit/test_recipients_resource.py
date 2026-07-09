@@ -12,8 +12,6 @@ from mailersend.models.recipients import (
     RecipientsListQueryParams,
     RecipientGetRequest,
     RecipientDeleteRequest,
-    SuppressionListRequest,
-    SuppressionListQueryParams,
     SuppressionAddRequest,
     SuppressionDeleteRequest,
 )

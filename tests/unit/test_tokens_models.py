@@ -1,7 +1,6 @@
 """Tests for Tokens models."""
 
 import pytest
-from datetime import datetime
 from pydantic import ValidationError
 
 from mailersend.models.tokens import (

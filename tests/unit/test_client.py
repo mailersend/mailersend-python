@@ -3,7 +3,7 @@
 import logging
 import os
 import pytest
-from unittest.mock import AsyncMock, MagicMock, Mock, patch
+from unittest.mock import MagicMock, patch
 
 from mailersend.base_client import _BaseMailerSendClient
 from mailersend.client import MailerSendClient

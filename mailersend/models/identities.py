@@ -1,6 +1,6 @@
 """Identities models."""
 
-from typing import Optional, List, Any
+from typing import Optional
 from pydantic import field_validator, Field
 
 from .base import BaseModel

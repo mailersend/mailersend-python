@@ -1,11 +1,8 @@
 import pytest
-import time
-from datetime import datetime, timezone
 
 from mailersend.models.analytics import (
     AnalyticsRequest,
 )
-from mailersend.exceptions import ValidationError
 
 
 class TestAnalyticsRequest:

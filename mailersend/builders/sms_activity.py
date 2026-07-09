@@ -2,7 +2,7 @@
 SMS Activity API builder.
 """
 
-from typing import Optional, List
+from typing import List
 
 from ..models.sms_activity import SmsActivityListRequest, SmsMessageGetRequest
 

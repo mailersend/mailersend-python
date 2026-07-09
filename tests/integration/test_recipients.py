@@ -1,6 +1,5 @@
 import pytest
-from tests.test_helpers import vcr, email_client
-import os
+from tests.test_helpers import vcr
 
 from mailersend.models.recipients import (
     RecipientsListRequest,
@@ -216,7 +215,6 @@ class TestRecipientsIntegration:
     def test_add_to_blocklist_invalid_domain(self, email_client):
         """Test adding to blocklist with invalid domain ID returns 422."""
         from mailersend.exceptions import BadRequestError
-        from mailersend.models.recipients import SuppressionAddRequest
 
         request = SuppressionAddRequest(
             domain_id="test-domain-id",  # Invalid domain ID
@@ -235,7 +233,6 @@ class TestRecipientsIntegration:
     def test_add_hard_bounces_invalid_domain(self, email_client):
         """Test adding hard bounces with invalid domain ID returns 422."""
         from mailersend.exceptions import BadRequestError
-        from mailersend.models.recipients import SuppressionAddRequest
 
         request = SuppressionAddRequest(
             domain_id="test-domain-id",  # Invalid domain ID
@@ -254,7 +251,6 @@ class TestRecipientsIntegration:
     def test_add_spam_complaints_invalid_domain(self, email_client):
         """Test adding spam complaints with invalid domain ID returns 422."""
         from mailersend.exceptions import BadRequestError
-        from mailersend.models.recipients import SuppressionAddRequest
 
         request = SuppressionAddRequest(
             domain_id="test-domain-id",  # Invalid domain ID
@@ -273,7 +269,6 @@ class TestRecipientsIntegration:
     def test_add_unsubscribes_invalid_domain(self, email_client):
         """Test adding unsubscribes with invalid domain ID returns 422."""
         from mailersend.exceptions import BadRequestError
-        from mailersend.models.recipients import SuppressionAddRequest
 
         request = SuppressionAddRequest(
             domain_id="test-domain-id",  # Invalid domain ID
@@ -292,7 +287,6 @@ class TestRecipientsIntegration:
     def test_delete_from_blocklist_invalid_domain(self, email_client):
         """Test deleting from blocklist with invalid domain ID returns 422."""
         from mailersend.exceptions import BadRequestError
-        from mailersend.models.recipients import SuppressionDeleteRequest
 
         request = SuppressionDeleteRequest(
             domain_id="test-domain-id",  # Invalid domain ID
@@ -311,7 +305,6 @@ class TestRecipientsIntegration:
     def test_comprehensive_recipients_workflow_invalid_domain(self, email_client):
         """Test comprehensive workflow with invalid domain ID returns errors."""
         from mailersend.exceptions import BadRequestError
-        from mailersend.models.recipients import SuppressionAddRequest
 
         # Step 1: Try to add recipient to blocklist (should fail with invalid domain)
         add_request = SuppressionAddRequest(
