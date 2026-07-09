@@ -1,5 +1,5 @@
 import pytest
-from tests.test_helpers import vcr, email_client
+from tests.test_helpers import vcr
 import os
 
 from mailersend.models.inbound import (

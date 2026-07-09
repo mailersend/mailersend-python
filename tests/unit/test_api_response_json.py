@@ -1,5 +1,4 @@
 import json
-import pytest
 from mailersend.models.base import APIResponse
 
 

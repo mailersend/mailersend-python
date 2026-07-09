@@ -9,13 +9,11 @@ from mailersend.resources.users import Users
 from mailersend.models.base import APIResponse
 from mailersend.models.users import (
     UsersListRequest,
-    UsersListQueryParams,
     UserGetRequest,
     UserInviteRequest,
     UserUpdateRequest,
     UserDeleteRequest,
     InvitesListRequest,
-    InvitesListQueryParams,
     InviteGetRequest,
     InviteResendRequest,
     InviteCancelRequest,

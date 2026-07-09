@@ -1,5 +1,5 @@
 import pytest
-from tests.test_helpers import vcr, email_client
+from tests.test_helpers import vcr
 import os
 
 from mailersend.models.identities import (
@@ -13,7 +13,6 @@ from mailersend.models.identities import (
     IdentityDeleteByEmailRequest,
     IdentityListQueryParams,
 )
-from mailersend.models.base import APIResponse
 
 
 @pytest.fixture

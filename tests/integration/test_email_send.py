@@ -1,8 +1,7 @@
 import pytest
-from tests.test_helpers import vcr, email_client
+from tests.test_helpers import vcr
 import os
 import base64
-from datetime import datetime
 
 from mailersend.models.email import (
     EmailContact,

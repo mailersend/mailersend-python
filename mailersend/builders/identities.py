@@ -1,5 +1,4 @@
 from typing import Optional
-from copy import deepcopy
 
 from ..exceptions import ValidationError as MailerSendValidationError
 from ..models.identities import (

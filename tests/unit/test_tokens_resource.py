@@ -9,7 +9,6 @@ from mailersend.resources.tokens import Tokens
 from mailersend.models.base import APIResponse
 from mailersend.models.tokens import (
     TokensListRequest,
-    TokensListQueryParams,
     TokenGetRequest,
     TokenCreateRequest,
     TokenUpdateRequest,

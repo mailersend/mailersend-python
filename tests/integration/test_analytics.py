@@ -1,9 +1,7 @@
 import pytest
-from tests.test_helpers import vcr, email_client
+from tests.test_helpers import vcr
 from datetime import datetime, timezone, timedelta
-from mailersend import MailerSendClient, AnalyticsBuilder
 from mailersend.models.analytics import AnalyticsRequest
-from mailersend.exceptions import ValidationError
 
 
 @pytest.fixture

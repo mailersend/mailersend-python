@@ -5,7 +5,6 @@ Tests builder fluent API, validation, state management, and all helper methods.
 """
 
 import pytest
-from pydantic import ValidationError
 
 from mailersend.builders.domains import DomainsBuilder
 from mailersend.models.domains import (

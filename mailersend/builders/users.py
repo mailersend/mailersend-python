@@ -1,7 +1,6 @@
 """Builder for Users API."""
 
-from typing import List, Optional, Dict, Any
-from copy import deepcopy
+from typing import List, Optional
 
 from ..models.users import (
     UsersListRequest,

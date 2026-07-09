@@ -9,7 +9,6 @@ from mailersend.resources.sms_inbounds import SmsInbounds
 from mailersend.models.base import APIResponse
 from mailersend.models.sms_inbounds import (
     SmsInboundsListRequest,
-    SmsInboundsListQueryParams,
     SmsInboundGetRequest,
     SmsInboundCreateRequest,
     SmsInboundUpdateRequest,

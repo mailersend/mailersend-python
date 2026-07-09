@@ -9,7 +9,6 @@ from mailersend.resources.smtp_users import SmtpUsers
 from mailersend.models.base import APIResponse
 from mailersend.models.smtp_users import (
     SmtpUsersListRequest,
-    SmtpUsersListQueryParams,
     SmtpUserGetRequest,
     SmtpUserCreateRequest,
     SmtpUserUpdateRequest,

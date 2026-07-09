@@ -1,8 +1,7 @@
 import pytest
 import os
-import time
-from datetime import datetime, timedelta
-from tests.test_helpers import vcr, email_client
+from datetime import datetime
+from tests.test_helpers import vcr
 
 from mailersend.models.activity import ActivityRequest, ActivityQueryParams
 from mailersend.models.base import APIResponse

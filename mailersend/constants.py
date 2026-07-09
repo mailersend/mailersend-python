@@ -1,5 +1,4 @@
 import platform
-import sys
 
 # Base API information
 API_VERSION = "v1"

@@ -1,18 +1,12 @@
 import pytest
 import base64
 import tempfile
-import os
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
 from mailersend.builders.email import EmailBuilder
 from mailersend.models.email import (
     EmailRequest,
-    EmailContact,
-    EmailAttachment,
-    EmailPersonalization,
-    EmailTrackingSettings,
-    EmailHeader,
 )
 from mailersend.exceptions import ValidationError
 
