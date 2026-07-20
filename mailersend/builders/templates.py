@@ -1,7 +1,6 @@
 """Templates builder for MailerSend SDK."""
 
 from typing import Optional
-from copy import deepcopy
 
 from ..models.templates import (
     TemplatesListRequest,

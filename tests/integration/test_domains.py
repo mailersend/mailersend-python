@@ -1,8 +1,6 @@
 import pytest
-from tests.test_helpers import vcr, email_client
+from tests.test_helpers import vcr
 import os
-import time
-from datetime import datetime, timezone
 
 from mailersend.builders.domains import DomainsBuilder
 from mailersend.models.domains import (

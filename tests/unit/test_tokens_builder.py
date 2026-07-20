@@ -4,12 +4,9 @@ import pytest
 
 from mailersend.builders.tokens import TokensBuilder
 from mailersend.models.tokens import (
-    TOKEN_SCOPES,
     TokensListRequest,
     TokenGetRequest,
     TokenCreateRequest,
-    TokenUpdateRequest,
-    TokenUpdateNameRequest,
     TokenDeleteRequest,
 )
 

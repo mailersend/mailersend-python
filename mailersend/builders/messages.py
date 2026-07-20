@@ -1,5 +1,4 @@
 from typing import Optional
-from copy import deepcopy
 
 from ..models.messages import (
     MessagesListRequest,

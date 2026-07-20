@@ -1,5 +1,5 @@
 import pytest
-from tests.test_helpers import vcr, email_client
+from tests.test_helpers import vcr
 import os
 
 from mailersend.models.inbound import (
@@ -109,12 +109,12 @@ class TestInboundIntegration:
                 first_route = inbound_routes[0]
                 assert "id" in first_route
                 assert "name" in first_route
-                assert "domain_id" in first_route
-                assert "domain_enabled" in first_route
-                assert "created_at" in first_route
-                assert "catch_filter" in first_route
-                assert "match_filter" in first_route
+                assert "address" in first_route
+                assert "domain" in first_route
+                assert "enabled" in first_route
+                assert "dns_checked_at" in first_route
                 assert "forwards" in first_route
+                assert "filters" in first_route
 
     @vcr.use_cassette("inbound_list_with_pagination.yaml")
     def test_list_inbound_routes_with_pagination(self, email_client):

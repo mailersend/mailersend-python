@@ -1,6 +1,6 @@
 """DMARC Monitoring models."""
 
-from typing import Optional, Dict, Any
+from typing import Dict, Any
 
 from pydantic import Field, field_validator
 

@@ -20,6 +20,4 @@ class Other(BaseResource):
         """
         self.logger.debug("Retrieving API quota information")
 
-        response = self.client.request(method="GET", path="api-quota")
-
-        return self._create_response(response)
+        return self._request(method="GET", path="api-quota")

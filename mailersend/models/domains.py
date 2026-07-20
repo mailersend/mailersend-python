@@ -84,7 +84,7 @@ class DomainCreateRequest(BaseModel):
             raise ValueError("Domain name must be lowercase")
 
         # Basic domain validation
-        if not "." in v or " " in v:
+        if "." not in v or " " in v:
             raise ValueError("Invalid domain name format")
 
         return v.strip()

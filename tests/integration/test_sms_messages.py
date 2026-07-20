@@ -1,6 +1,5 @@
 import pytest
-from tests.test_helpers import vcr, email_client
-import os
+from tests.test_helpers import vcr
 
 from mailersend.models.sms_messages import (
     SmsMessagesListRequest,

@@ -1,5 +1,4 @@
 from typing import Optional, Literal
-from copy import deepcopy
 
 from ..models.schedules import (
     SchedulesListRequest,

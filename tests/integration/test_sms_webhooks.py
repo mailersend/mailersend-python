@@ -1,5 +1,5 @@
 import pytest
-from tests.test_helpers import vcr, email_client
+from tests.test_helpers import vcr
 import os
 
 from mailersend.models.sms_webhooks import (
@@ -11,7 +11,6 @@ from mailersend.models.sms_webhooks import (
     SmsWebhooksListQueryParams,
     SmsWebhookEvent,
 )
-from mailersend.models.base import APIResponse
 
 
 @pytest.fixture

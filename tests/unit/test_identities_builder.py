@@ -1,5 +1,4 @@
 import pytest
-from copy import deepcopy
 
 from mailersend.builders.identities import IdentityBuilder
 from mailersend.exceptions import ValidationError as MailerSendValidationError
