@@ -43,6 +43,9 @@ class Activity(BaseModel):
     updated_at: str
     type: str  # Activity type (queued, sent, delivered, etc.)
     email: ActivityEmail
+    # Present only for "suppressed" activities: on_hold, hard_bounced,
+    # unsubscribed, spam_complained, blocklisted
+    suppression_reason: Optional[str] = None
 
     model_config = ConfigDict(validate_by_name=True)
 
@@ -84,6 +87,7 @@ class ActivityQueryParams(BaseModel):
                 "spam_complaints",
                 "survey_opened",
                 "survey_submitted",
+                "suppressed",
             }
             invalid_events = set(self.event) - valid_events
             if invalid_events:

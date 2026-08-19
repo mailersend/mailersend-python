@@ -185,6 +185,66 @@ class TestActivity:
         assert activity.type == "sent"
         assert activity.email == email
 
+    def test_suppression_reason_is_parsed_for_suppressed_activity(self):
+        """Test that suppression_reason is retained for suppressed activities."""
+        recipient = ActivityRecipient(
+            id="recipient-123",
+            email="user@example.com",
+            created_at="2023-01-01T00:00:00Z",
+            updated_at="2023-01-01T00:00:00Z",
+        )
+
+        email = ActivityEmail(
+            id="email-456",
+            **{"from": "sender@example.com"},
+            subject="Test Subject",
+            status="suppressed",
+            created_at="2023-01-01T00:00:00Z",
+            updated_at="2023-01-01T00:00:00Z",
+            recipient=recipient,
+        )
+
+        activity = Activity(
+            id="activity-789",
+            created_at="2023-01-01T00:00:00Z",
+            updated_at="2023-01-01T00:00:00Z",
+            type="suppressed",
+            email=email,
+            suppression_reason="hard_bounced",
+        )
+
+        assert activity.type == "suppressed"
+        assert activity.suppression_reason == "hard_bounced"
+
+    def test_suppression_reason_defaults_to_none_when_absent(self):
+        """Test that suppression_reason is None for non-suppressed activities."""
+        recipient = ActivityRecipient(
+            id="recipient-123",
+            email="user@example.com",
+            created_at="2023-01-01T00:00:00Z",
+            updated_at="2023-01-01T00:00:00Z",
+        )
+
+        email = ActivityEmail(
+            id="email-456",
+            **{"from": "sender@example.com"},
+            subject="Test Subject",
+            status="sent",
+            created_at="2023-01-01T00:00:00Z",
+            updated_at="2023-01-01T00:00:00Z",
+            recipient=recipient,
+        )
+
+        activity = Activity(
+            id="activity-789",
+            created_at="2023-01-01T00:00:00Z",
+            updated_at="2023-01-01T00:00:00Z",
+            type="sent",
+            email=email,
+        )
+
+        assert activity.suppression_reason is None
+
     def test_required_fields(self):
         with pytest.raises(ValidationError) as exc_info:
             Activity()
@@ -349,6 +409,7 @@ class TestActivityQueryParams:
             "spam_complaints",
             "survey_opened",
             "survey_submitted",
+            "suppressed",
         ]
 
         params = ActivityQueryParams(
@@ -356,6 +417,32 @@ class TestActivityQueryParams:
         )
 
         assert params.event == all_events
+
+    def test_to_query_params_with_suppressed_event(self):
+        """Test that the suppressed event is serialized into the query params."""
+        current_time = int(time.time())
+        date_from = current_time - 3600
+        date_to = current_time
+
+        params = ActivityQueryParams(
+            date_from=date_from,
+            date_to=date_to,
+            page=1,
+            limit=25,
+            event=["suppressed"],
+        )
+
+        query_params = params.to_query_params()
+
+        expected = {
+            "page": 1,
+            "limit": 25,
+            "date_from": date_from,
+            "date_to": date_to,
+            "event[0]": "suppressed",
+        }
+
+        assert query_params == expected
 
 
 class TestActivityRequest:
