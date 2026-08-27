@@ -48,6 +48,11 @@ MailerSend Python SDK
     - [Send email with attachment](#send-email-with-attachment)
     - [Send bulk email](#send-bulk-email)
     - [Get bulk email status](#get-bulk-email-status)
+  - [Emails](#emails)
+    - [Get a list of emails](#get-a-list-of-emails)
+    - [Filter emails](#filter-emails)
+    - [Paginate through emails](#paginate-through-emails)
+    - [Get a single email](#get-a-single-email)
   - [Activity](#activity)
     - [Get a list of activities](#get-a-list-of-activities)
     - [Get activity with filters](#get-activity-with-filters)
@@ -830,6 +835,167 @@ ms = MailerSendClient()
 
 response = ms.emails.get_bulk_status("bulk-email-id")
 ```
+
+## Emails
+
+An email is the record of a message delivered to one recipient. Use these requests to list the emails sent from one of your domains and to retrieve a single email together with its activity events.
+
+`ms.emails.list()` returns one row per email. If you need one row per *event* instead, use [Activity](#activity).
+
+### Get a list of emails
+
+```python
+from mailersend import MailerSendClient, EmailsBuilder
+from datetime import datetime, timedelta
+
+ms = MailerSendClient()
+
+date_from = int((datetime.now() - timedelta(days=7)).timestamp())
+date_to = int(datetime.now().timestamp())
+
+request = (EmailsBuilder()
+          .domain_id("domain-id")
+          .date_from(date_from)
+          .date_to(date_to)
+          .limit(50)
+          .build_list_request())
+
+response = ms.emails.list(request)
+
+for email in response["data"]:
+    print(email["id"], email["status"], email["to"], email["subject"])
+```
+
+`domain_id`, `date_from` and `date_to` are required. Emails are returned newest first.
+
+`date_from` and `date_to` accept a `datetime` object, a Unix timestamp, or a datetime string such as `"2015-10-01 00:00:00"`. A `datetime` is converted to a Unix timestamp for you.
+
+| Builder method       | Type                    | Required | Details                                                                                                    |
+|----------------------|-------------------------|----------|------------------------------------------------------------------------------------------------------------|
+| `domain_id()`        | `str`                   | yes      | Must be a domain that belongs to your account. An unknown ID returns `404`.                                 |
+| `date_from()`        | `datetime \| int \| str`| yes      | Must be lower than `date_to`. The allowed timeframe depends on your plan's data retention limit (1–30 days). |
+| `date_to()`          | `datetime \| int \| str`| yes      | Must be higher than `date_from` and must not be in the future.                                              |
+| `page()`             | `int`                   | no       | Min `1`, max `1000`, default `1`. See [Paginate through emails](#paginate-through-emails).                   |
+| `limit()`            | `int`                   | no       | Min `10`, max `100`, default `25`.                                                                          |
+| `status()`           | `str \| list[str]`      | no       | Any of `queued`, `sent`, `rejected`, `delivered`. Combined with `OR`.                                       |
+| `interaction()`      | `str \| list[str]`      | no       | Any of `opened`, `clicked`, `unsubscribed`, `complained`, `no_interaction`. Combined with `OR`.              |
+| `recipient_email()`  | `str`                   | no       | Exact, case-insensitive match. An unknown address returns `200` with an empty `data` array.                  |
+| `message_id()`       | `str`                   | no       | Alphanumeric. Exact match.                                                                                  |
+| `template_id()`      | `str`                   | no       | Exact match.                                                                                                |
+| `tag()`              | `str`                   | no       | Exact match against a value in the email's `tags` array.                                                    |
+| `subject()`          | `str`                   | no       | Min 3 characters. Partial, case-insensitive match.                                                          |
+
+`add_status()` and `add_interaction()` append a single value instead of replacing the whole filter.
+
+Requires a token with either the `activity_read` or the `activity_full` scope. Requests are limited to 10 requests/minute, shared with [Get a list of activities](#get-a-list-of-activities).
+
+### Filter emails
+
+`status` and `interaction` values are combined with `OR` within each filter, and the two filters are combined with `AND`. The example below returns emails that are sent **or** delivered **and** that were opened.
+
+```python
+from mailersend import MailerSendClient, EmailsBuilder
+from datetime import datetime, timedelta
+
+ms = MailerSendClient()
+
+date_from = int((datetime.now() - timedelta(days=7)).timestamp())
+date_to = int(datetime.now().timestamp())
+
+request = (EmailsBuilder()
+          .domain_id("domain-id")
+          .date_from(date_from)
+          .date_to(date_to)
+          .status(["sent", "delivered"])
+          .interaction(["opened"])
+          .recipient_email("tyra.cummerata@example.org")
+          .subject("Your order")
+          .tag("receipt")
+          .limit(50)
+          .build_list_request())
+
+response = ms.emails.list(request)
+```
+
+`no_interaction` matches emails with none of `opened`, `clicked`, `unsubscribed` or `complained` recorded. It is a filter value only and is never returned in the response.
+
+### Paginate through emails
+
+Use `page()` and `limit()`, the same way as [Get a list of activities](#get-a-list-of-activities). Keep `domain_id`, `date_from`, `date_to` and every filter unchanged between pages — dropping any required parameter returns a `422`.
+
+The response carries a `links` and a `meta` object:
+
+```python
+response["links"]  # {"first": "<url>", "last": None, "prev": None, "next": "<url>"}
+response["meta"]   # {"current_page": 1, "current_page_url": "<url>", "from": 1,
+                   #  "path": "<url>", "per_page": 10, "to": 3}
+```
+
+There is no `total` and no `last_page`, so you cannot tell up front how many pages there are — walk pages until `links["next"]` is `None`. `links["last"]` is always `None`.
+
+```python
+from mailersend import MailerSendClient, EmailsBuilder
+from datetime import datetime, timedelta
+
+ms = MailerSendClient()
+
+builder = (EmailsBuilder()
+          .domain_id("domain-id")
+          .date_from(int((datetime.now() - timedelta(days=7)).timestamp()))
+          .date_to(int(datetime.now().timestamp()))
+          .limit(100))
+
+page = 1
+
+while True:
+    response = ms.emails.list(builder.page(page).build_list_request())
+
+    for email in response["data"]:
+        print(email["id"], email["status"], email["to"])
+
+    if not response["links"]["next"]:
+        break
+
+    page += 1
+```
+
+Each row in `data` contains `id`, `from`, `to`, `subject`, `text`, `html`, `template_id`, `domain_id`, `message_id`, `status`, `tags`, `interaction`, `suppression_reason`, `created_at`, `updated_at` and `headers`. `interaction` is an empty list when there was no interaction, and `suppression_reason` is only set when `status` is `rejected`. `text` and `html` are always `None` in list rows and the rows carry no events — use [Get a single email](#get-a-single-email) for the content and the activity.
+
+### Get a single email
+
+```python
+from mailersend import MailerSendClient, EmailsBuilder
+
+ms = MailerSendClient()
+
+request = (EmailsBuilder()
+          .email_id("email-id")
+          .build_get_request())
+
+response = ms.emails.get(request)
+
+print(response["data"]["subject"])
+
+for event in response["data"]["activity"]:
+    print(event["type"], event["created_at"])
+```
+
+`ms.emails.get()` also accepts the email ID directly:
+
+```python
+response = ms.emails.get("email-id")
+```
+
+The response contains the email's `from`, `to`, `subject`, `text`, `html`, `template_id`, `domain_id`, `message_id`, `status`, `tags`, `interaction`, `suppression_reason`, `recipient`, `headers` and an `activity` array of the events recorded for it. `template_id` is `None` when the email was not sent from a template.
+
+Each entry in `activity` has an `id`, a `type` and a `created_at`, plus a `suppression_reason` on `suppressed` events. A few things to know about it:
+
+- Events are returned **newest first** and are **capped at 200 events per email**. There is no pagination on this array — use [Get a list of activities](#get-a-list-of-activities) if you need the complete event history for a domain.
+- The `junk` event type is reported as `soft_bounced`.
+- `deferred` and `suppressed` events are only included if your plan has those features enabled. They are available on the Starter plan and above.
+- `activity` is returned even when content tracking is disabled for the domain. In that case `html` and `text` are `None` but the events are still present.
+
+Requires a token with one of the `email_full`, `activity_read` or `activity_full` scopes.
 
 ## Activity
 

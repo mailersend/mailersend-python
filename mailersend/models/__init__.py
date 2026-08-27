@@ -10,6 +10,11 @@ from .email import (
     EmailRequest,
     EmailTrackingSettings,
     EmailHeader,
+    EmailActivityEvent,
+    EmailListItem,
+    EmailsListQueryParams,
+    EmailsListRequest,
+    EmailGetRequest,
 )
 from .activity import (
     ActivityRecipient,
@@ -178,6 +183,11 @@ __all__ = [
     "EmailRequest",
     "EmailTrackingSettings",
     "EmailHeader",
+    "EmailActivityEvent",
+    "EmailListItem",
+    "EmailsListQueryParams",
+    "EmailsListRequest",
+    "EmailGetRequest",
     "ActivityRecipient",
     "ActivityEmail",
     "Activity",

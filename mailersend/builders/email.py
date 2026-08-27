@@ -18,6 +18,9 @@ from ..models.email import (
     EmailPersonalization,
     EmailTrackingSettings,
     EmailHeader,
+    EmailsListQueryParams,
+    EmailsListRequest,
+    EmailGetRequest,
 )
 from ..exceptions import ValidationError
 
@@ -766,3 +769,202 @@ class EmailBuilder:
         new_builder._headers = self._headers.copy()
 
         return new_builder
+
+
+class EmailsBuilder:
+    """
+    Fluent builder for constructing emails list and single email requests.
+
+    Examples:
+        >>> # List the delivered emails that were opened
+        >>> request = (EmailsBuilder()
+        ...     .domain_id("domain-id")
+        ...     .date_from(1623073576)
+        ...     .date_to(1623074976)
+        ...     .limit(50)
+        ...     .status(["sent", "delivered"])
+        ...     .interaction(["opened"])
+        ...     .build_list_request())
+
+        >>> # Get a single email with its activity events
+        >>> request = (EmailsBuilder()
+        ...     .email_id("email-id")
+        ...     .build_get_request())
+    """
+
+    def __init__(self):
+        self._domain_id: Optional[str] = None
+        self._date_from: Optional[Union[datetime, int, str]] = None
+        self._date_to: Optional[Union[datetime, int, str]] = None
+        self._page: Optional[int] = None
+        self._limit: Optional[int] = None
+        self._status: List[str] = []
+        self._interaction: List[str] = []
+        self._recipient_email: Optional[str] = None
+        self._message_id: Optional[str] = None
+        self._template_id: Optional[str] = None
+        self._subject: Optional[str] = None
+        self._tag: Optional[str] = None
+        self._email_id: Optional[str] = None
+
+    def domain_id(self, domain_id: str) -> "EmailsBuilder":
+        """Set the domain ID to list emails for (required)."""
+        self._domain_id = domain_id
+        return self
+
+    def date_from(self, date_from: Union[datetime, int, str]) -> "EmailsBuilder":
+        """Set the start of the time window (required)."""
+        self._date_from = date_from
+        return self
+
+    def date_to(self, date_to: Union[datetime, int, str]) -> "EmailsBuilder":
+        """Set the end of the time window (required)."""
+        self._date_to = date_to
+        return self
+
+    def page(self, page: int) -> "EmailsBuilder":
+        """Set the page number (min 1, max 1000, default 1)."""
+        self._page = page
+        return self
+
+    def limit(self, limit: int) -> "EmailsBuilder":
+        """Set the number of emails per page (min 10, max 100, default 25)."""
+        self._limit = limit
+        return self
+
+    def status(self, status: Union[str, List[str]]) -> "EmailsBuilder":
+        """
+        Set the status filter, replacing any previously set values.
+
+        Possible values: queued, sent, rejected, delivered.
+        """
+        self._status = [status] if isinstance(status, str) else list(status)
+        return self
+
+    def add_status(self, status: str) -> "EmailsBuilder":
+        """Add a single status to the status filter."""
+        if status not in self._status:
+            self._status.append(status)
+        return self
+
+    def interaction(self, interaction: Union[str, List[str]]) -> "EmailsBuilder":
+        """
+        Set the interaction filter, replacing any previously set values.
+
+        Possible values: opened, clicked, unsubscribed, complained,
+        no_interaction.
+        """
+        self._interaction = (
+            [interaction] if isinstance(interaction, str) else list(interaction)
+        )
+        return self
+
+    def add_interaction(self, interaction: str) -> "EmailsBuilder":
+        """Add a single interaction to the interaction filter."""
+        if interaction not in self._interaction:
+            self._interaction.append(interaction)
+        return self
+
+    def recipient_email(self, recipient_email: str) -> "EmailsBuilder":
+        """Filter by recipient email address (exact match)."""
+        self._recipient_email = recipient_email
+        return self
+
+    def message_id(self, message_id: str) -> "EmailsBuilder":
+        """Filter by the ID of the message that created the emails."""
+        self._message_id = message_id
+        return self
+
+    def template_id(self, template_id: str) -> "EmailsBuilder":
+        """Filter by template ID."""
+        self._template_id = template_id
+        return self
+
+    def subject(self, subject: str) -> "EmailsBuilder":
+        """Filter by subject (partial match, min 3 characters)."""
+        self._subject = subject
+        return self
+
+    def tag(self, tag: str) -> "EmailsBuilder":
+        """Filter by tag (exact match against the email's tags)."""
+        self._tag = tag
+        return self
+
+    def email_id(self, email_id: str) -> "EmailsBuilder":
+        """Set the email ID for a single email request."""
+        self._email_id = email_id
+        return self
+
+    def copy(self) -> "EmailsBuilder":
+        """Create a copy of this builder."""
+        builder = EmailsBuilder()
+        builder._domain_id = self._domain_id
+        builder._date_from = self._date_from
+        builder._date_to = self._date_to
+        builder._page = self._page
+        builder._limit = self._limit
+        builder._status = self._status.copy()
+        builder._interaction = self._interaction.copy()
+        builder._recipient_email = self._recipient_email
+        builder._message_id = self._message_id
+        builder._template_id = self._template_id
+        builder._subject = self._subject
+        builder._tag = self._tag
+        builder._email_id = self._email_id
+        return builder
+
+    def reset(self) -> "EmailsBuilder":
+        """Reset all parameters."""
+        self.__init__()
+        return self
+
+    def _convert_to_timestamp(
+        self, value: Union[datetime, int, str]
+    ) -> Union[int, str]:
+        """Convert datetime to a unix timestamp, leaving other values as-is."""
+        if isinstance(value, datetime):
+            return int(value.timestamp())
+        return value
+
+    def build_list_request(self) -> EmailsListRequest:
+        """
+        Build the EmailsListRequest object for listing emails.
+
+        Raises:
+            ValidationError: If a required parameter is missing
+        """
+        if not self._domain_id:
+            raise ValidationError("domain_id is required")
+        if self._date_from is None:
+            raise ValidationError("date_from is required")
+        if self._date_to is None:
+            raise ValidationError("date_to is required")
+
+        query_params = EmailsListQueryParams(
+            domain_id=self._domain_id,
+            date_from=self._convert_to_timestamp(self._date_from),
+            date_to=self._convert_to_timestamp(self._date_to),
+            page=self._page,
+            limit=self._limit,
+            status=self._status or None,
+            interaction=self._interaction or None,
+            recipient_email=self._recipient_email,
+            message_id=self._message_id,
+            template_id=self._template_id,
+            subject=self._subject,
+            tag=self._tag,
+        )
+
+        return EmailsListRequest(query_params=query_params)
+
+    def build_get_request(self) -> EmailGetRequest:
+        """
+        Build the EmailGetRequest object for getting a single email.
+
+        Raises:
+            ValidationError: If email_id is missing
+        """
+        if not self._email_id:
+            raise ValidationError("email_id is required")
+
+        return EmailGetRequest(email_id=self._email_id)
