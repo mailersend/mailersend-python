@@ -182,6 +182,9 @@ MailerSend Python SDK
     - [Remove IP from favorites](#remove-ip-from-favorites)
   - [Other Endpoints](#other-endpoints)
     - [Get API Quota](#get-api-quota)
+  - [WhatsApp](#whatsapp)
+    - [Send a WhatsApp message](#send-a-whatsapp-message)
+    - [Send a WhatsApp message with personalization](#send-a-whatsapp-message-with-personalization)
   - [Async Usage](#async-usage)
     - [Basic Async Usage](#basic-async-usage)
     - [Concurrent Requests](#concurrent-requests)
@@ -2685,6 +2688,68 @@ from mailersend import MailerSendClient
 ms = MailerSendClient()
 
 response = ms.api_quota.get_quota()
+```
+
+<a name="whatsapp"></a>
+
+## WhatsApp
+
+### Send a WhatsApp message
+
+```python
+from mailersend import MailerSendClient, WhatsAppBuilder
+
+ms = MailerSendClient()
+
+request = (
+    WhatsAppBuilder()
+    .from_number("12345678901")
+    .add_recipient("19191234567")
+    .template_id("your-template-id")
+    .build()
+)
+
+response = ms.whatsapp.send(request)
+```
+
+### Send a WhatsApp message with personalization
+
+```python
+from mailersend import MailerSendClient, WhatsAppBuilder
+from mailersend.models.whatsapp import WhatsAppPersonalization, WhatsAppPersonalizationData
+
+ms = MailerSendClient()
+
+p1 = WhatsAppPersonalization(
+    to="19191234567",
+    data=WhatsAppPersonalizationData(
+        header=["John"],
+        body=["order #1234", "tomorrow"],
+        buttons=["https://example.com/track/1234"],
+    )
+)
+
+p2 = WhatsAppPersonalization(
+    to="19199876543",
+    data=WhatsAppPersonalizationData(
+        header=["Jane"],
+        body=["order #5678", "Friday"],
+        buttons=["https://example.com/track/5678"],
+    )
+)
+
+request = (
+    WhatsAppBuilder()
+    .from_number("12345678901")
+    .add_recipient("19191234567")
+    .add_recipient("19199876543")
+    .template_id("your-template-id")
+    .add_personalization(p1)
+    .add_personalization(p2)
+    .build()
+)
+
+response = ms.whatsapp.send(request)
 ```
 
 <a name="async-usage"></a>

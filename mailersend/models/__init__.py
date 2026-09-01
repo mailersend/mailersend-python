@@ -169,6 +169,11 @@ from .dmarc_monitoring import (
     DmarcMonitoringReportSourcesRequest,
     DmarcMonitoringFavoriteRequest,
 )
+from .whatsapp import (
+    WhatsAppPersonalizationData,
+    WhatsAppPersonalization,
+    WhatsAppSendRequest,
+)
 
 __all__ = [
     "BaseModel",
@@ -308,4 +313,8 @@ __all__ = [
     "DmarcMonitoringIpReportRequest",
     "DmarcMonitoringReportSourcesRequest",
     "DmarcMonitoringFavoriteRequest",
+    # WhatsApp models
+    "WhatsAppPersonalizationData",
+    "WhatsAppPersonalization",
+    "WhatsAppSendRequest",
 ]
