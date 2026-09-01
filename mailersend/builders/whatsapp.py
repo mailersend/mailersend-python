@@ -17,10 +17,21 @@ class WhatsAppBuilder:
 
     def from_number(self, phone_number: str) -> "WhatsAppBuilder":
         """
-        Set the from phone number.
+        Set the sender to send from.
+
+        Accepts either form of sender identifier, both found in your
+        MailerSend account under WhatsApp > Phone numbers:
+
+        - A phone number in E.164 format (e.g., 15550001234)
+        - A MailerSend sender ID (e.g., 3enl6x27wmrxrl2v)
+
+        A sender connected with a Meta virtual number has no phone number,
+        so it can only be addressed by its MailerSend sender ID. The sender
+        ID is also stable across disconnecting and reconnecting a sender,
+        which the phone number is not.
 
         Args:
-            phone_number: Phone number in international format without + (e.g., 12345678901)
+            phone_number: Phone number in E.164 format, or a MailerSend sender ID
 
         Returns:
             Self for method chaining
@@ -30,23 +41,35 @@ class WhatsAppBuilder:
 
     def to(self, phone_numbers: List[str]) -> "WhatsAppBuilder":
         """
-        Set the recipient phone numbers.
+        Set the recipients, replacing any already added.
+
+        Each recipient is either a phone number in E.164 format
+        (e.g., +48600000001) or a BSUID taken from an inbound message
+        (e.g., US.13491208655302741918). Spaces, dashes, brackets, dots and
+        the leading + are ignored, so "+48 600 000 001" and "48600000001"
+        are the same recipient. WhatsApp usernames cannot be used.
+
+        A message accepts at most 10 recipients, and each must be unique.
 
         Args:
-            phone_numbers: List of phone numbers in international format without +
+            phone_numbers: List of phone numbers in E.164 format, or BSUIDs
 
         Returns:
             Self for method chaining
         """
-        self._to = phone_numbers
+        self._to = list(phone_numbers)
         return self
 
     def add_recipient(self, phone_number: str) -> "WhatsAppBuilder":
         """
-        Add a single recipient phone number.
+        Add a single recipient, ignoring it if already added.
+
+        The recipient is either a phone number in E.164 format
+        (e.g., +48600000001) or a BSUID taken from an inbound message
+        (e.g., US.13491208655302741918). WhatsApp usernames cannot be used.
 
         Args:
-            phone_number: Phone number in international format without +
+            phone_number: Phone number in E.164 format, or a BSUID
 
         Returns:
             Self for method chaining
@@ -60,7 +83,8 @@ class WhatsAppBuilder:
         Set the WhatsApp template ID.
 
         Args:
-            template_id: ID of an approved WhatsApp template
+            template_id: ID of an approved WhatsApp template belonging to the
+                sender set with from_number(), found under WhatsApp > Templates
 
         Returns:
             Self for method chaining

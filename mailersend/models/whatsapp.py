@@ -1,6 +1,6 @@
 """WhatsApp models."""
 
-from typing import List, Optional, Dict, Any
+from typing import ClassVar, List, Optional, Dict, Any
 from pydantic import Field, field_validator, model_validator
 
 from .base import BaseModel
@@ -14,6 +14,27 @@ class WhatsAppPersonalizationData(BaseModel):
     buttons: Optional[List[str]] = None
 
     model_config = {"validate_by_name": True}
+
+    SECTION_VALUE_LIMITS: ClassVar[dict[str, int]] = {
+        "header": 60,
+        "body": 1024,
+        "buttons": 2000,
+    }
+
+    @field_validator("header", "body", "buttons")
+    @classmethod
+    def validate_value_lengths(cls, v, info):
+        """Validate each value is within its section's character limit."""
+        if v is None:
+            return v
+
+        limit = cls.SECTION_VALUE_LIMITS[info.field_name]
+        for value in v:
+            if len(value) > limit:
+                raise ValueError(
+                    f"Each {info.field_name} value must be at most {limit} characters"
+                )
+        return v
 
 
 class WhatsAppPersonalization(BaseModel):
@@ -33,7 +54,9 @@ class WhatsAppSendRequest(BaseModel):
     from_number: str = Field(alias="from")
     to: List[str] = Field(min_length=1, max_length=10)
     template_id: str
-    personalization: Optional[List[WhatsAppPersonalization]] = None
+    personalization: Optional[List[WhatsAppPersonalization]] = Field(
+        default=None, max_length=10
+    )
 
     model_config = {"validate_by_name": True}
 
@@ -48,10 +71,10 @@ class WhatsAppSendRequest(BaseModel):
     @field_validator("to")
     @classmethod
     def validate_to_numbers(cls, v):
-        """Validate all to numbers are non-empty."""
+        """Validate all recipients are non-empty."""
         for number in v:
             if not number or not number.strip():
-                raise ValueError("All recipient phone numbers must be non-empty")
+                raise ValueError("All recipients must be non-empty")
         return v
 
     @field_validator("template_id")
@@ -72,7 +95,7 @@ class WhatsAppSendRequest(BaseModel):
             invalid_numbers = personalization_numbers - to_numbers
             if invalid_numbers:
                 raise ValueError(
-                    f"Personalization phone numbers not in recipient list: {invalid_numbers}"
+                    f"Personalization recipients not in recipient list: {invalid_numbers}"
                 )
 
         return self
