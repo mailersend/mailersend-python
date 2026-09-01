@@ -2,7 +2,7 @@ import logging
 import json
 import time
 import uuid
-from typing import Optional, Dict, Any, Set
+from typing import Optional, Dict, Any
 
 # Sensitive fields that should be redacted in logs
 SENSITIVE_FIELDS = {

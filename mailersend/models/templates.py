@@ -1,6 +1,6 @@
 """Templates API models for MailerSend SDK."""
 
-from typing import List, Optional, Dict, Any
+from typing import Optional, Dict, Any
 from pydantic import Field, field_validator
 
 from .base import BaseModel

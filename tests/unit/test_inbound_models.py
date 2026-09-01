@@ -2,11 +2,6 @@ import pytest
 from pydantic import ValidationError
 
 from mailersend.models.inbound import (
-    InboundListRequest,
-    InboundListQueryParams,
-    InboundGetRequest,
-    InboundCreateRequest,
-    InboundUpdateRequest,
     InboundDeleteRequest,
     InboundFilter,
     InboundFilterGroup,

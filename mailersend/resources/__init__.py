@@ -25,6 +25,8 @@ from .sms_recipients import SmsRecipients
 from .sms_webhooks import SmsWebhooks
 from .sms_inbounds import SmsInbounds
 from .other import Other
+from .dmarc_monitoring import DmarcMonitoring
+from .smtp_users import SmtpUsers
 from .whatsapp import WhatsApp
 
 __all__ = [
@@ -50,6 +52,8 @@ __all__ = [
     "SmsRecipients",
     "SmsWebhooks",
     "SmsInbounds",
+    "SmtpUsers",
     "Other",
+    "DmarcMonitoring",
     "WhatsApp",
 ]

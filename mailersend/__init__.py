@@ -6,6 +6,11 @@ A comprehensive Python SDK for the MailerSend API.
 
 from .client import MailerSendClient
 
+try:
+    from .async_client import AsyncMailerSendClient
+except ImportError:
+    AsyncMailerSendClient = None  # type: ignore[assignment,misc]
+
 # Import all builders for better UX - users can import everything from main module
 from .builders.email import EmailBuilder
 from .builders.activity import ActivityBuilder, SingleActivityBuilder
@@ -29,6 +34,7 @@ from .builders.sms_sending import SmsSendingBuilder
 from .builders.sms_recipients import SmsRecipientsBuilder
 from .builders.sms_webhooks import SmsWebhooksBuilder
 from .builders.sms_inbounds import SmsInboundsBuilder
+from .builders.dmarc_monitoring import DmarcMonitoringBuilder
 from .builders.whatsapp import WhatsAppBuilder
 from .resources.email import Email
 from .resources.activity import Activity
@@ -40,14 +46,14 @@ from .models.email import (
     EmailPersonalization,
     EmailRequest,
     EmailTrackingSettings,
-    EmailHeader
+    EmailHeader,
 )
 from .models.activity import (
     ActivityRecipient,
     ActivityEmail,
     Activity as ActivityModel,
     ActivityQueryParams,
-    SingleActivityRequest
+    SingleActivityRequest,
 )
 from .models.analytics import (
     AnalyticsRequest,
@@ -59,39 +65,40 @@ from .exceptions import (
     ResourceNotFoundError,
     BadRequestError,
     ServerError,
-    ValidationError
+    ValidationError,
 )
 
 __version__ = "2.0.0"
 
 __all__ = [
-    # Core client
+    # Core clients
     "MailerSendClient",
-    
+    "AsyncMailerSendClient",
     # Builders - All available from main module for better UX
     "EmailBuilder",
-    "ActivityBuilder", 
+    "ActivityBuilder",
     "SingleActivityBuilder",
     "AnalyticsBuilder",
     "DomainsBuilder",
     "IdentityBuilder",
-    "InboundBuilder", 
+    "InboundBuilder",
     "MessagesBuilder",
     "SchedulesBuilder",
     "RecipientsBuilder",
     "TemplatesBuilder",
-    "TokensBuilder", 
+    "TokensBuilder",
     "SmtpUsersBuilder",
     "WebhooksBuilder",
     "EmailVerificationBuilder",
     "UsersBuilder",
     "SmsMessagesBuilder",
-    "SmsNumbersBuilder", 
+    "SmsNumbersBuilder",
     "SmsActivityBuilder",
     "SmsSendingBuilder",
     "SmsRecipientsBuilder",
     "SmsWebhooksBuilder",
     "SmsInboundsBuilder",
+    "DmarcMonitoringBuilder",
     "WhatsAppBuilder",
 
     # Resources
@@ -99,28 +106,24 @@ __all__ = [
     "Activity",
     "Analytics",
     "Domains",
-    
     # Email models
     "EmailContact",
-    "EmailAttachment", 
+    "EmailAttachment",
     "EmailPersonalization",
     "EmailRequest",
     "EmailTrackingSettings",
     "EmailHeader",
-    
     # Activity models
     "ActivityRecipient",
     "ActivityEmail",
     "ActivityModel",
     "ActivityQueryParams",
     "SingleActivityRequest",
-    
     # Analytics models
     "AnalyticsRequest",
-    
     # Exceptions
     "MailerSendError",
-    "AuthenticationError", 
+    "AuthenticationError",
     "RateLimitExceeded",
     "ResourceNotFoundError",
     "BadRequestError",

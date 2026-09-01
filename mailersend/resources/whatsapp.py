@@ -26,8 +26,4 @@ class WhatsApp(BaseResource):
 
         self.logger.debug("WhatsApp payload: %s", payload)
 
-        response = self.client.request(
-            method="POST", path="whatsapp/send", body=payload
-        )
-
-        return self._create_response(response)
+        return self._request(method="POST", path="whatsapp/send", body=payload)

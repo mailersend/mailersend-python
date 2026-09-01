@@ -1,11 +1,10 @@
-from typing import Optional
-import requests
+from typing import Any, Optional
 
 
 class MailerSendError(Exception):
     """Base exception for all MailerSend API errors."""
-    
-    def __init__(self, message: str, response: Optional[requests.Response] = None):
+
+    def __init__(self, message: str, response: Optional[Any] = None):
         self.message = message
         self.response = response
         super().__init__(self.message)
@@ -13,17 +12,19 @@ class MailerSendError(Exception):
 
 class AuthenticationError(MailerSendError):
     """Raised when authentication fails."""
+
     pass
 
 
 class ResourceNotFoundError(MailerSendError):
     """Raised when a requested resource is not found."""
+
     pass
 
 
 class RateLimitExceeded(MailerSendError):
     """Raised when API rate limits are exceeded."""
-    
+
     @property
     def retry_after(self) -> Optional[int]:
         """Get the recommended retry time in seconds."""
@@ -37,14 +38,17 @@ class RateLimitExceeded(MailerSendError):
 
 class BadRequestError(MailerSendError):
     """Raised when the request was malformed."""
+
     pass
 
 
 class ServerError(MailerSendError):
     """Raised when a server-side error occurs."""
+
     pass
 
 
 class ValidationError(MailerSendError):
     """Raised when request validation fails."""
+
     pass

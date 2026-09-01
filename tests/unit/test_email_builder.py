@@ -1,18 +1,12 @@
 import pytest
 import base64
 import tempfile
-import os
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
 from mailersend.builders.email import EmailBuilder
 from mailersend.models.email import (
     EmailRequest,
-    EmailContact,
-    EmailAttachment,
-    EmailPersonalization,
-    EmailTrackingSettings,
-    EmailHeader,
 )
 from mailersend.exceptions import ValidationError
 
@@ -194,10 +188,12 @@ class TestEmailBuilder:
             .cc("single-cc@example.com", "Single CC")
             .cc([{"email": "array-cc1@example.com", "name": "Array CC 1"}])
             .bcc("single-bcc@example.com")
-            .bcc_many([
-                {"email": "many-bcc1@example.com", "name": "Many BCC 1"},
-                {"email": "many-bcc2@example.com"}
-            ])
+            .bcc_many(
+                [
+                    {"email": "many-bcc1@example.com", "name": "Many BCC 1"},
+                    {"email": "many-bcc2@example.com"},
+                ]
+            )
             .subject("Mixed Usage Test")
             .text("Test message")
             .build()
@@ -222,11 +218,15 @@ class TestEmailBuilder:
         builder = EmailBuilder()
 
         # Test invalid type for cc method
-        with pytest.raises(ValidationError, match="Email must be a string or list of recipient objects"):
+        with pytest.raises(
+            ValidationError, match="Email must be a string or list of recipient objects"
+        ):
             builder.cc(123)  # Invalid type
 
         # Test invalid type for bcc method
-        with pytest.raises(ValidationError, match="Email must be a string or list of recipient objects"):
+        with pytest.raises(
+            ValidationError, match="Email must be a string or list of recipient objects"
+        ):
             builder.bcc({"email": "test@example.com"})  # Dict instead of string or list
 
     def test_content_methods(self):
@@ -293,6 +293,35 @@ class TestEmailBuilder:
         )
 
         assert email.template_id == "template-123"
+
+    def test_language_method(self):
+        """Test language is set when provided"""
+        email = (
+            EmailBuilder()
+            .from_email("sender@example.com")
+            .to("recipient@example.com")
+            .subject("Language Test")
+            .template("template-123")
+            .language("de")
+            .build()
+        )
+
+        assert email.language == "de"
+        assert "language" in email.model_dump(by_alias=True, exclude_none=True)
+
+    def test_language_omitted_when_not_set(self):
+        """Test language defaults to None and is omitted from the payload"""
+        email = (
+            EmailBuilder()
+            .from_email("sender@example.com")
+            .to("recipient@example.com")
+            .subject("No Language Test")
+            .template("template-123")
+            .build()
+        )
+
+        assert email.language is None
+        assert "language" not in email.model_dump(by_alias=True, exclude_none=True)
 
     def test_attach_file(self):
         """Test file attachment"""

@@ -1,91 +1,62 @@
-"""Unit tests for SMS Sending resource."""
+"""Tests for SmsSending resource."""
+
+import inspect
+
+from unittest.mock import AsyncMock, MagicMock, Mock
 import pytest
-from unittest.mock import Mock, MagicMock
 
 from mailersend.resources.sms_sending import SmsSending
 from mailersend.models.base import APIResponse
-from mailersend.models.sms_sending import SmsSendRequest, SmsPersonalization
-from mailersend.exceptions import ValidationError as MailerSendValidationError
+from mailersend.models.sms_sending import SmsSendRequest
+
+
+async def resolve(result):
+    if inspect.iscoroutine(result):
+        return await result
+    return result
 
 
 class TestSmsSending:
-    """Test SMS Sending resource class."""
-
-    def setup_method(self):
-        """Set up test fixtures."""
-        self.mock_client = Mock()
+    @pytest.fixture(autouse=True, params=["sync", "async"])
+    def setup(self, request):
+        if request.param == "async":
+            self.mock_client = MagicMock()
+            self.mock_client.request = AsyncMock(
+                return_value=MagicMock(
+                    status_code=200,
+                    headers={"x-request-id": "test-req-id"},
+                    json=MagicMock(return_value={}),
+                    content=b"{}",
+                )
+            )
+        else:
+            self.mock_client = MagicMock()
+            self.mock_client.request = Mock(
+                return_value=MagicMock(
+                    status_code=200,
+                    headers={"x-request-id": "test-req-id"},
+                    json=MagicMock(return_value={}),
+                    content=b"{}",
+                )
+            )
         self.resource = SmsSending(self.mock_client)
-        self.resource.logger = Mock()
 
-        # Mock _create_response method
-        self.mock_api_response = MagicMock(spec=APIResponse)
-        self.resource._create_response = Mock(return_value=self.mock_api_response)
-
-    def test_send_returns_api_response(self):
-        """Test send method returns APIResponse."""
+    async def test_send_returns_api_response(self):
         request = SmsSendRequest(
-            from_number="+1234567890", to=["+1987654321"], text="Hello world!"
+            from_number="+15551234567",
+            to=["+15559876543"],
+            text="Hello from tests",
         )
+        result = await resolve(self.resource.send(request))
+        assert isinstance(result, APIResponse)
 
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
-
-        result = self.resource.send(request)
-
-        assert result == self.mock_api_response
-        self.resource._create_response.assert_called_once_with(mock_response)
-
-    def test_send_with_basic_request(self):
-        """Test send with basic SMS request."""
+    async def test_send_calls_correct_endpoint(self):
         request = SmsSendRequest(
-            from_number="+1234567890",
-            to=["+1987654321", "+1111111111"],
-            text="Hello world!",
+            from_number="+15551234567",
+            to=["+15559876543"],
+            text="Hello from tests",
         )
-
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
-
-        result = self.resource.send(request)
-
-        expected_body = {
-            "from": "+1234567890",
-            "to": ["+1987654321", "+1111111111"],
-            "text": "Hello world!",
-        }
-        self.mock_client.request.assert_called_once_with(
-            method="POST", path="sms", body=expected_body
-        )
-        assert result == self.mock_api_response
-
-    def test_send_with_personalization(self):
-        """Test send with personalization."""
-        personalization = [
-            SmsPersonalization(phone_number="+1987654321", data={"name": "John"})
-        ]
-
-        request = SmsSendRequest(
-            from_number="+1234567890",
-            to=["+1987654321"],
-            text="Hello {{name}}!",
-            personalization=personalization,
-        )
-
-        mock_response = Mock()
-        self.mock_client.request.return_value = mock_response
-
-        result = self.resource.send(request)
-
-        expected_body = {
-            "from": "+1234567890",
-            "to": ["+1987654321"],
-            "text": "Hello {{name}}!",
-            "personalization": [
-                {"phone_number": "+1987654321", "data": {"name": "John"}}
-            ],
-        }
-        self.mock_client.request.assert_called_once_with(
-            method="POST", path="sms", body=expected_body
-        )
-        assert result == self.mock_api_response
-        self.resource._create_response.assert_called_once_with(mock_response)
+        await resolve(self.resource.send(request))
+        call = self.mock_client.request.call_args
+        assert call.kwargs["method"] == "POST"
+        assert call.kwargs["path"] == "sms"

@@ -159,6 +159,16 @@ from .sms_inbounds import (
     SmsInboundDeleteRequest,
     SmsInbound,
 )
+from .dmarc_monitoring import (
+    DmarcMonitoringListRequest,
+    DmarcMonitoringCreateRequest,
+    DmarcMonitoringUpdateRequest,
+    DmarcMonitoringDeleteRequest,
+    DmarcMonitoringReportRequest,
+    DmarcMonitoringIpReportRequest,
+    DmarcMonitoringReportSourcesRequest,
+    DmarcMonitoringFavoriteRequest,
+)
 from .whatsapp import (
     WhatsAppPersonalizationData,
     WhatsAppPersonalization,
@@ -294,6 +304,15 @@ __all__ = [
     "SmsInboundUpdateRequest",
     "SmsInboundDeleteRequest",
     "SmsInbound",
+    # DMARC Monitoring models
+    "DmarcMonitoringListRequest",
+    "DmarcMonitoringCreateRequest",
+    "DmarcMonitoringUpdateRequest",
+    "DmarcMonitoringDeleteRequest",
+    "DmarcMonitoringReportRequest",
+    "DmarcMonitoringIpReportRequest",
+    "DmarcMonitoringReportSourcesRequest",
+    "DmarcMonitoringFavoriteRequest",
     # WhatsApp models
     "WhatsAppPersonalizationData",
     "WhatsAppPersonalization",

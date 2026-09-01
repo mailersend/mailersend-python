@@ -1,7 +1,5 @@
 """Tests for Email Verification API models."""
 
-from datetime import datetime
-from typing import List
 import pytest
 from pydantic import ValidationError
 

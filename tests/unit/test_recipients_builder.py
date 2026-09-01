@@ -1,4 +1,5 @@
 """Test cases for Recipients API builder."""
+
 import pytest
 
 from mailersend.builders.recipients import RecipientsBuilder

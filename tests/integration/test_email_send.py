@@ -1,8 +1,7 @@
 import pytest
-from tests.test_helpers import vcr, email_client
+from tests.test_helpers import vcr
 import os
 import base64
-from datetime import datetime
 
 from mailersend.models.email import (
     EmailContact,
@@ -103,7 +102,7 @@ class TestEmailSend:
         email_request = self.email_request_factory(
             self.base_email_request,
             text="This is a plain text email for testing.",
-            precedence_bulk=True
+            precedence_bulk=True,
         )
 
         result = self.email_client.emails.send(email_request)
@@ -302,7 +301,7 @@ class TestEmailSend:
         assert "bulk_email_id" in send_result
         assert send_result["bulk_email_id"] is not None
         assert send_result.status_code == 202
-        
+
         # Step 2: Get bulk status using the ID from the send operation
         bulk_email_id = send_result["bulk_email_id"]
         status_result = self.email_client.emails.get_bulk_status(bulk_email_id)

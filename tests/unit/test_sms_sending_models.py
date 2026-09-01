@@ -25,7 +25,8 @@ class TestSmsPersonalization:
         """Test phone number validation."""
         with pytest.raises(ValueError, match="Phone number must be in E164 format"):
             SmsPersonalization(
-                phone_number="1234567890", data={"name": "John"}  # Missing +
+                phone_number="1234567890",
+                data={"name": "John"},  # Missing +
             )
 
     def test_empty_data(self):
@@ -72,7 +73,9 @@ class TestSmsSendRequest:
         """Test from number validation."""
         with pytest.raises(ValueError, match="From number must be in E164 format"):
             SmsSendRequest(
-                from_number="1234567890", to=["+1987654321"], text="Hello!"  # Missing +
+                from_number="1234567890",
+                to=["+1987654321"],
+                text="Hello!",  # Missing +
             )
 
     def test_to_numbers_validation(self):
@@ -81,7 +84,9 @@ class TestSmsSendRequest:
             ValueError, match="All phone numbers must be in E164 format"
         ):
             SmsSendRequest(
-                from_number="+1234567890", to=["1987654321"], text="Hello!"  # Missing +
+                from_number="+1234567890",
+                to=["1987654321"],
+                text="Hello!",  # Missing +
             )
 
     def test_text_length_validation(self):
@@ -105,7 +110,9 @@ class TestSmsSendRequest:
         """Test empty to list validation."""
         with pytest.raises(ValidationError):
             SmsSendRequest(
-                from_number="+1234567890", to=[], text="Hello!"  # Empty list
+                from_number="+1234567890",
+                to=[],
+                text="Hello!",  # Empty list
             )
 
     def test_too_many_recipients_validation(self):

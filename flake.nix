@@ -17,7 +17,7 @@
             pkgs.go-task
           ];
 
-          packages = [ pkgs.lefthook pkgs.terraform ];
+          packages = [ pkgs.lefthook pkgs.terraform pkgs.git-secrets ];
         };
       });
 }

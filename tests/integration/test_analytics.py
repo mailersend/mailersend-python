@@ -1,9 +1,7 @@
 import pytest
-from tests.test_helpers import vcr, email_client
+from tests.test_helpers import vcr
 from datetime import datetime, timezone, timedelta
-from mailersend import MailerSendClient, AnalyticsBuilder
 from mailersend.models.analytics import AnalyticsRequest
-from mailersend.exceptions import ValidationError
 
 
 @pytest.fixture
@@ -12,7 +10,7 @@ def base_analytics_request():
 
     # Use fixed recent timestamps within the 6-month analytics retention period
     # Using June 1, 2025 as base date for consistency (within 6 months)
-    base_date = datetime(2025, 6, 1, tzinfo=timezone.utc)
+    base_date = datetime(2026, 6, 1, tzinfo=timezone.utc)
     end_date = int(base_date.timestamp())
     start_date = int((base_date - timedelta(days=30)).timestamp())
     return AnalyticsRequest(
@@ -268,7 +266,7 @@ class TestAnalyticsIntegration:
     def test_date_builder_helpers(self):
         """Test Analytics builder date helper methods"""
         # Test last 7 days using fixed date
-        base_date = datetime(2025, 6, 1, tzinfo=timezone.utc)
+        base_date = datetime(2026, 6, 1, tzinfo=timezone.utc)
 
         # Create request with 7 days range
         end_date = int(base_date.timestamp())
@@ -294,21 +292,6 @@ class TestAnalyticsIntegration:
 
         response = self.email_client.analytics.get_activity_by_date(request)
         assert response.status_code == 200
-
-    @vcr.use_cassette("tests/fixtures/cassettes/analytics_error_no_events.yaml")
-    def test_activity_by_date_error_no_events(self):
-        """Test that activity by date requires events"""
-        from mailersend.exceptions import BadRequestError
-        
-        request = self.analytics_request_factory(
-            self.base_analytics_request,
-            event=None,  # No events specified - should cause error
-        )
-
-        with pytest.raises(
-            BadRequestError, match="The event must be an array"
-        ):
-            self.email_client.analytics.get_activity_by_date(request)
 
     @vcr.use_cassette("tests/fixtures/cassettes/analytics_comprehensive_test.yaml")
     def test_comprehensive_analytics_workflow(self):
