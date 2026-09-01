@@ -7,7 +7,7 @@ DEFAULT_TIMEOUT = 30  # seconds
 
 # Package info for user agent
 PACKAGE_NAME = "mailersend-python"
-__version__ = "2.0.3"
+__version__ = "2.1.0"
 
 USER_AGENT = (
     f"{PACKAGE_NAME}/{__version__} "
