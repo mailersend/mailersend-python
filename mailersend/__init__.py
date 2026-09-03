@@ -12,7 +12,7 @@ except ImportError:
     AsyncMailerSendClient = None  # type: ignore[assignment,misc]
 
 # Import all builders for better UX - users can import everything from main module
-from .builders.email import EmailBuilder
+from .builders.email import EmailBuilder, EmailsBuilder
 from .builders.activity import ActivityBuilder, SingleActivityBuilder
 from .builders.analytics import AnalyticsBuilder
 from .builders.domains import DomainsBuilder
@@ -47,6 +47,11 @@ from .models.email import (
     EmailRequest,
     EmailTrackingSettings,
     EmailHeader,
+    EmailActivityEvent,
+    EmailListItem,
+    EmailsListQueryParams,
+    EmailsListRequest,
+    EmailGetRequest,
 )
 from .models.activity import (
     ActivityRecipient,
@@ -76,6 +81,7 @@ __all__ = [
     "AsyncMailerSendClient",
     # Builders - All available from main module for better UX
     "EmailBuilder",
+    "EmailsBuilder",
     "ActivityBuilder",
     "SingleActivityBuilder",
     "AnalyticsBuilder",
@@ -113,6 +119,11 @@ __all__ = [
     "EmailRequest",
     "EmailTrackingSettings",
     "EmailHeader",
+    "EmailActivityEvent",
+    "EmailListItem",
+    "EmailsListQueryParams",
+    "EmailsListRequest",
+    "EmailGetRequest",
     # Activity models
     "ActivityRecipient",
     "ActivityEmail",
