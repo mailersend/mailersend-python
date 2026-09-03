@@ -385,7 +385,7 @@ class TestEmailsListQueryParams:
                 domain_id=domain_id, date_from=1672574400, date_to=1672660800
             )
 
-    @pytest.mark.parametrize("page", [0, 1001])
+    @pytest.mark.parametrize("page", [0, 101])
     def test_page_validation(self, page):
         with pytest.raises(ValidationError):
             EmailsListQueryParams(
@@ -395,7 +395,7 @@ class TestEmailsListQueryParams:
                 page=page,
             )
 
-    @pytest.mark.parametrize("limit", [9, 101])
+    @pytest.mark.parametrize("limit", [9, 1001])
     def test_limit_validation(self, limit):
         with pytest.raises(ValidationError):
             EmailsListQueryParams(

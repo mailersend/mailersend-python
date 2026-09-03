@@ -823,12 +823,12 @@ class EmailsBuilder:
         return self
 
     def page(self, page: int) -> "EmailsBuilder":
-        """Set the page number (min 1, max 1000, default 1)."""
+        """Set the page number (min 1, max 100, default 1)."""
         self._page = page
         return self
 
     def limit(self, limit: int) -> "EmailsBuilder":
-        """Set the number of emails per page (min 10, max 100, default 25)."""
+        """Set the number of emails per page (min 10, max 1000, default 25)."""
         self._limit = limit
         return self
 

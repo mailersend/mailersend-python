@@ -183,8 +183,8 @@ class EmailsListQueryParams(BaseModel):
     domain_id: str
     date_from: Union[int, str]  # Unix timestamp or datetime string
     date_to: Union[int, str]  # Unix timestamp or datetime string
-    page: Optional[int] = Field(default=1, ge=1, le=1000)
-    limit: Optional[int] = Field(default=25, ge=10, le=100)
+    page: Optional[int] = Field(default=1, ge=1, le=100)
+    limit: Optional[int] = Field(default=25, ge=10, le=1000)
     status: Optional[List[str]] = None
     interaction: Optional[List[str]] = None
     recipient_email: Optional[EmailStr] = None

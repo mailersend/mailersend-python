@@ -875,8 +875,8 @@ for email in response["data"]:
 | `domain_id()`        | `str`                   | yes      | Must be a domain that belongs to your account. An unknown ID returns `404`.                                 |
 | `date_from()`        | `datetime \| int \| str`| yes      | Must be lower than `date_to`. The allowed timeframe depends on your plan's data retention limit (1–30 days). |
 | `date_to()`          | `datetime \| int \| str`| yes      | Must be higher than `date_from` and must not be in the future.                                              |
-| `page()`             | `int`                   | no       | Min `1`, max `1000`, default `1`. See [Paginate through emails](#paginate-through-emails).                   |
-| `limit()`            | `int`                   | no       | Min `10`, max `100`, default `25`.                                                                          |
+| `page()`             | `int`                   | no       | Min `1`, max `100`, default `1`. See [Paginate through emails](#paginate-through-emails).                    |
+| `limit()`            | `int`                   | no       | Min `10`, max `1000`, default `25`.                                                                         |
 | `status()`           | `str \| list[str]`      | no       | Any of `queued`, `sent`, `rejected`, `delivered`. Combined with `OR`.                                       |
 | `interaction()`      | `str \| list[str]`      | no       | Any of `opened`, `clicked`, `unsubscribed`, `complained`, `no_interaction`. Combined with `OR`.              |
 | `recipient_email()`  | `str`                   | no       | Exact, case-insensitive match. An unknown address returns `200` with an empty `data` array.                  |

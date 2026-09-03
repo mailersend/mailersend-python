@@ -602,25 +602,25 @@ class TestEmailsBuilderValidation:
 
         assert "domain_id is required" in str(exc_info.value)
 
-    @pytest.mark.parametrize("page", [0, 1001])
+    @pytest.mark.parametrize("page", [0, 101])
     def test_invalid_page_raises_error(self, page):
-        """Test that a page outside 1..1000 raises an error."""
+        """Test that a page outside 1..100 raises an error."""
         with pytest.raises(ValidationError):
             _base_builder().page(page).build_list_request()
 
-    @pytest.mark.parametrize("page", [1, 1000])
+    @pytest.mark.parametrize("page", [1, 100])
     def test_valid_page_boundaries(self, page):
         """Test that the page boundaries are accepted."""
         request = _base_builder().page(page).build_list_request()
         assert request.query_params.page == page
 
-    @pytest.mark.parametrize("limit", [9, 101])
+    @pytest.mark.parametrize("limit", [9, 1001])
     def test_invalid_limit_raises_error(self, limit):
-        """Test that a limit outside 10..100 raises an error."""
+        """Test that a limit outside 10..1000 raises an error."""
         with pytest.raises(ValidationError):
             _base_builder().limit(limit).build_list_request()
 
-    @pytest.mark.parametrize("limit", [10, 100])
+    @pytest.mark.parametrize("limit", [10, 1000])
     def test_valid_limit_boundaries(self, limit):
         """Test that the limit boundaries are accepted."""
         request = _base_builder().limit(limit).build_list_request()
