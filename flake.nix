@@ -15,6 +15,7 @@
         devShells.default = pkgs.mkShell {
           buildInputs = [
             pkgs.go-task
+            pkgs.gitleaks
           ];
 
           packages = [ pkgs.lefthook pkgs.terraform pkgs.git-secrets ];
