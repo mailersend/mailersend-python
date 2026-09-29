@@ -77,7 +77,9 @@ class TestWhatsAppBuilder:
         assert request.personalization[0].to == "19191234567"
         assert request.personalization[0].data.header == ["John"]
         assert request.personalization[0].data.body == ["order #1234", "tomorrow"]
-        assert request.personalization[0].data.buttons == ["https://example.com/track/1234"]
+        assert request.personalization[0].data.buttons == [
+            "https://example.com/track/1234"
+        ]
 
     def test_build_missing_from_number(self, builder):
         """Test building without from number raises error."""

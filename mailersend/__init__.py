@@ -108,7 +108,6 @@ __all__ = [
     "SmsInboundsBuilder",
     "DmarcMonitoringBuilder",
     "WhatsAppBuilder",
-
     # Resources
     "Email",
     "Activity",
