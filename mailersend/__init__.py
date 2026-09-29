@@ -73,9 +73,11 @@ from .exceptions import (
     ValidationError,
 )
 
-__version__ = "2.1.0"
+from .constants import __version__
 
 __all__ = [
+    # Package metadata
+    "__version__",
     # Core clients
     "MailerSendClient",
     "AsyncMailerSendClient",
@@ -106,7 +108,6 @@ __all__ = [
     "SmsInboundsBuilder",
     "DmarcMonitoringBuilder",
     "WhatsAppBuilder",
-
     # Resources
     "Email",
     "Activity",

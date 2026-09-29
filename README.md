@@ -292,12 +292,14 @@ from mailersend import SmsRecipientsBuilder
 ms = MailerSendClient()
 
 # Build a request using the fluent builder pattern
-request = (SmsRecipientsBuilder()
-          .sms_number_id("sms123")
-          .status("active")
-          .page(1)
-          .limit(25)
-          .build_list_request())
+request = (
+    SmsRecipientsBuilder()
+    .sms_number_id("sms123")
+    .status("active")
+    .page(1)
+    .limit(25)
+    .build_list_request()
+)
 
 # Execute the request
 response = ms.sms_recipients.list_sms_recipients(request)
@@ -309,11 +311,11 @@ Each API endpoint group has its own resource class that provides clean method in
 
 ```python
 # Access different API resources
-ms.sms_recipients    # SMS Recipients operations
-ms.sms_webhooks      # SMS Webhooks operations
-ms.sms_inbounds      # SMS Inbound Routing operations
-ms.email             # Email operations
-ms.domains           # Domain operations
+ms.sms_recipients  # SMS Recipients operations
+ms.sms_webhooks  # SMS Webhooks operations
+ms.sms_inbounds  # SMS Inbound Routing operations
+ms.email  # Email operations
+ms.domains  # Domain operations
 # ... and more
 ```
 
@@ -324,9 +326,9 @@ All data is validated using Pydantic models ensuring type safety and data integr
 ```python
 # All responses are strongly typed
 response = ms.sms_recipients.get_sms_recipient(request)
-print(response.id)           # Validated string
-print(response.number)       # Validated phone number
-print(response.created_at)   # Validated datetime object
+print(response.id)  # Validated string
+print(response.number)  # Validated phone number
+print(response.created_at)  # Validated datetime object
 ```
 
 ## Async Support
@@ -386,7 +388,7 @@ if "sms" in response["data"]:
 
 # Check if key exists
 if "error" in response:
-    error_message = response['error']
+    error_message = response["error"]
 ```
 
 ### Attribute Access
@@ -400,7 +402,7 @@ phone_number = response.number
 status = response.status
 
 # Nested attribute access for complex data
-if hasattr(response, 'sms') and response.sms:
+if hasattr(response, "sms") and response.sms:
     latest_sms = response.sms[0].text
 ```
 
@@ -428,7 +430,7 @@ When response data contains fields that conflict with built-in methods, use the 
 response_data = {
     "items": [{"id": 1, "name": "Item 1"}],
     "keys": ["key1", "key2"],
-    "values": [100, 200]
+    "values": [100, 200],
 }
 
 # Use dict access (recommended for conflicts)
@@ -484,6 +486,7 @@ unicode_json = response.to_json(ensure_ascii=False, indent=4)
 
 # Direct json.dumps() also works
 import json
+
 json_string = json.dumps(response)
 ```
 
@@ -497,9 +500,9 @@ raw_data = response.data
 
 # For paginated responses
 if isinstance(raw_data, dict) and "data" in raw_data:
-    items = raw_data["data"]        # List of items
-    meta = raw_data.get("meta", {}) # Pagination info
-    links = raw_data.get("links", {}) # Pagination links
+    items = raw_data["data"]  # List of items
+    meta = raw_data.get("meta", {})  # Pagination info
+    links = raw_data.get("links", {})  # Pagination links
 else:
     # Single item response
     item_data = raw_data
@@ -615,8 +618,8 @@ if users_response.success:
     total_count = users_response.data["meta"]["total"]
 
     for user in users:
-        user_name = user['name']
-        user_email = user['email']
+        user_name = user["name"]
+        user_email = user["email"]
 
 # Empty responses (delete operations)
 delete_response = ms.users.delete_user(request)
@@ -654,11 +657,8 @@ from mailersend import MailerSendClient
 # Configure logging with custom format
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler('mailersend.log'),
-        logging.StreamHandler()
-    ]
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    handlers=[logging.FileHandler("mailersend.log"), logging.StreamHandler()],
 )
 
 ms = MailerSendClient()
@@ -683,13 +683,15 @@ from mailersend import MailerSendClient, EmailBuilder
 
 ms = MailerSendClient()
 
-email = (EmailBuilder()
-         .from_email("sender@domain.com", "Your Name")
-         .to_many([{"email": "recipient@domain.com", "name": "Recipient"}])
-         .subject("Hello from MailerSend!")
-         .html("<h1>Hello World!</h1>")
-         .text("Hello World!")
-         .build())
+email = (
+    EmailBuilder()
+    .from_email("sender@domain.com", "Your Name")
+    .to_many([{"email": "recipient@domain.com", "name": "Recipient"}])
+    .subject("Hello from MailerSend!")
+    .html("<h1>Hello World!</h1>")
+    .text("Hello World!")
+    .build()
+)
 
 response = ms.emails.send(email)
 ```
@@ -701,20 +703,26 @@ from mailersend import MailerSendClient, EmailBuilder
 
 ms = MailerSendClient()
 
-email = (EmailBuilder()
-         .from_email("sender@domain.com", "Your Name")
-         .to_many([{"email": "recipient@domain.com", "name": "Recipient"}])
-         .cc([
+email = (
+    EmailBuilder()
+    .from_email("sender@domain.com", "Your Name")
+    .to_many([{"email": "recipient@domain.com", "name": "Recipient"}])
+    .cc(
+        [
             {"email": "cc1@example.com", "name": "CC User 1"},
-            {"email": "cc2@example.com", "name": "CC User 2"}
-         ])
-         .bcc([
+            {"email": "cc2@example.com", "name": "CC User 2"},
+        ]
+    )
+    .bcc(
+        [
             {"email": "bcc1@example.com", "name": "BCC User 1"},
-            {"email": "bcc2@example.com"}
-         ])
-         .subject("Hello with CC/BCC!")
-         .html("<h1>Hello World!</h1>")
-         .build())
+            {"email": "bcc2@example.com"},
+        ]
+    )
+    .subject("Hello with CC/BCC!")
+    .html("<h1>Hello World!</h1>")
+    .build()
+)
 
 response = ms.emails.send(email)
 ```
@@ -726,18 +734,21 @@ from mailersend import MailerSendClient, EmailBuilder
 
 ms = MailerSendClient()
 
-email = (EmailBuilder()
-         .from_email("sender@domain.com", "Your Name")
-         .to_many([{"email": "recipient@domain.com", "name": "Recipient"}])
-         .template("template-id")
-         .personalize_many([{
-             "email": "recipient@domain.com",
-             "data": {
-                 "name": "John",
-                 "company": "MailerSend"
-             }
-         }])
-         .build())
+email = (
+    EmailBuilder()
+    .from_email("sender@domain.com", "Your Name")
+    .to_many([{"email": "recipient@domain.com", "name": "Recipient"}])
+    .template("template-id")
+    .personalize_many(
+        [
+            {
+                "email": "recipient@domain.com",
+                "data": {"name": "John", "company": "MailerSend"},
+            }
+        ]
+    )
+    .build()
+)
 
 response = ms.emails.send(email)
 ```
@@ -747,12 +758,14 @@ only meaningful with a template and is ignored for raw html/text sends.
 Supported codes: `de`, `en`, `es`, `fr`, `it`, `lt`, `nl`, `pl`, `pt-BR`.
 
 ```python
-email = (EmailBuilder()
-         .from_email("sender@domain.com", "Your Name")
-         .to_many([{"email": "recipient@domain.com", "name": "Recipient"}])
-         .template("template-id")
-         .language("de")
-         .build())
+email = (
+    EmailBuilder()
+    .from_email("sender@domain.com", "Your Name")
+    .to_many([{"email": "recipient@domain.com", "name": "Recipient"}])
+    .template("template-id")
+    .language("de")
+    .build()
+)
 
 response = ms.emails.send(email)
 ```
@@ -764,21 +777,27 @@ from mailersend import MailerSendClient, EmailBuilder
 
 ms = MailerSendClient()
 
-email = (EmailBuilder()
-         .from_email("sender@domain.com", "Your Name")
-         .to_many([{"email": "recipient@domain.com", "name": "Recipient"}])
-         .subject("Hello {$name}!")
-         .html("<h1>Hello {$name} from {$company}!</h1>")
-         .personalize_many([{
-             "email": "recipient@domain.com",
-             "data": {
-                 "name": "John",
-                 "company": "MailerSend",
-                 "items": ["item1", "item2"],
-                 "total": 99.99
-             }
-         }])
-         .build())
+email = (
+    EmailBuilder()
+    .from_email("sender@domain.com", "Your Name")
+    .to_many([{"email": "recipient@domain.com", "name": "Recipient"}])
+    .subject("Hello {$name}!")
+    .html("<h1>Hello {$name} from {$company}!</h1>")
+    .personalize_many(
+        [
+            {
+                "email": "recipient@domain.com",
+                "data": {
+                    "name": "John",
+                    "company": "MailerSend",
+                    "items": ["item1", "item2"],
+                    "total": 99.99,
+                },
+            }
+        ]
+    )
+    .build()
+)
 
 response = ms.emails.send(email)
 ```
@@ -790,13 +809,15 @@ from mailersend import MailerSendClient, EmailBuilder
 
 ms = MailerSendClient()
 
-email = (EmailBuilder()
-         .from_email("sender@domain.com", "Your Name")
-         .to_many([{"email": "recipient@domain.com", "name": "Recipient"}])
-         .subject("Email with attachment")
-         .html("<h1>Please find attached document</h1>")
-         .attach_file("document.pdf")
-         .build())
+email = (
+    EmailBuilder()
+    .from_email("sender@domain.com", "Your Name")
+    .to_many([{"email": "recipient@domain.com", "name": "Recipient"}])
+    .subject("Email with attachment")
+    .html("<h1>Please find attached document</h1>")
+    .attach_file("document.pdf")
+    .build()
+)
 
 response = ms.emails.send(email)
 ```
@@ -811,19 +832,19 @@ ms = MailerSendClient()
 # Create individual EmailRequest objects
 emails = [
     EmailBuilder()
-        .from_email("sender@domain.com", "Sender")
-        .to_many([{"email": "recipient1@domain.com", "name": "Recipient 1"}])
-        .subject("Bulk email 1")
-        .html("<h1>Hello from bulk email 1</h1>")
-        .text("Hello from bulk email 1")
-        .build(),
+    .from_email("sender@domain.com", "Sender")
+    .to_many([{"email": "recipient1@domain.com", "name": "Recipient 1"}])
+    .subject("Bulk email 1")
+    .html("<h1>Hello from bulk email 1</h1>")
+    .text("Hello from bulk email 1")
+    .build(),
     EmailBuilder()
-        .from_email("sender@domain.com", "Sender")
-        .to_many([{"email": "recipient2@domain.com", "name": "Recipient 2"}])
-        .subject("Bulk email 2")
-        .html("<h1>Hello from bulk email 2</h1>")
-        .text("Hello from bulk email 2")
-        .build()
+    .from_email("sender@domain.com", "Sender")
+    .to_many([{"email": "recipient2@domain.com", "name": "Recipient 2"}])
+    .subject("Bulk email 2")
+    .html("<h1>Hello from bulk email 2</h1>")
+    .text("Hello from bulk email 2")
+    .build(),
 ]
 
 response = ms.emails.send_bulk(emails)
@@ -856,12 +877,14 @@ ms = MailerSendClient()
 date_from = int((datetime.now() - timedelta(days=7)).timestamp())
 date_to = int(datetime.now().timestamp())
 
-request = (EmailsBuilder()
-          .domain_id("domain-id")
-          .date_from(date_from)
-          .date_to(date_to)
-          .limit(50)
-          .build_list_request())
+request = (
+    EmailsBuilder()
+    .domain_id("domain-id")
+    .date_from(date_from)
+    .date_to(date_to)
+    .limit(50)
+    .build_list_request()
+)
 
 response = ms.emails.list(request)
 
@@ -905,17 +928,19 @@ ms = MailerSendClient()
 date_from = int((datetime.now() - timedelta(days=7)).timestamp())
 date_to = int(datetime.now().timestamp())
 
-request = (EmailsBuilder()
-          .domain_id("domain-id")
-          .date_from(date_from)
-          .date_to(date_to)
-          .status(["sent", "delivered"])
-          .interaction(["opened"])
-          .recipient_email("tyra.cummerata@example.org")
-          .subject("Your order")
-          .tag("receipt")
-          .limit(50)
-          .build_list_request())
+request = (
+    EmailsBuilder()
+    .domain_id("domain-id")
+    .date_from(date_from)
+    .date_to(date_to)
+    .status(["sent", "delivered"])
+    .interaction(["opened"])
+    .recipient_email("tyra.cummerata@example.org")
+    .subject("Your order")
+    .tag("receipt")
+    .limit(50)
+    .build_list_request()
+)
 
 response = ms.emails.list(request)
 ```
@@ -930,8 +955,8 @@ The response carries a `links` and a `meta` object:
 
 ```python
 response["links"]  # {"first": "<url>", "last": None, "prev": None, "next": "<url>"}
-response["meta"]   # {"current_page": 1, "current_page_url": "<url>", "from": 1,
-                   #  "path": "<url>", "per_page": 10, "to": 3}
+response["meta"]  # {"current_page": 1, "current_page_url": "<url>", "from": 1,
+#  "path": "<url>", "per_page": 10, "to": 3}
 ```
 
 There is no `total` and no `last_page`, so you cannot tell up front how many pages there are — walk pages until `links["next"]` is `None`. `links["last"]` is always `None`.
@@ -942,11 +967,13 @@ from datetime import datetime, timedelta
 
 ms = MailerSendClient()
 
-builder = (EmailsBuilder()
-          .domain_id("domain-id")
-          .date_from(int((datetime.now() - timedelta(days=7)).timestamp()))
-          .date_to(int(datetime.now().timestamp()))
-          .limit(100))
+builder = (
+    EmailsBuilder()
+    .domain_id("domain-id")
+    .date_from(int((datetime.now() - timedelta(days=7)).timestamp()))
+    .date_to(int(datetime.now().timestamp()))
+    .limit(100)
+)
 
 page = 1
 
@@ -971,9 +998,7 @@ from mailersend import MailerSendClient, EmailsBuilder
 
 ms = MailerSendClient()
 
-request = (EmailsBuilder()
-          .email_id("email-id")
-          .build_get_request())
+request = EmailsBuilder().email_id("email-id").build_get_request()
 
 response = ms.emails.get(request)
 
@@ -1014,13 +1039,15 @@ ms = MailerSendClient()
 date_from = int((datetime.now() - timedelta(days=7)).timestamp())
 date_to = int(datetime.now().timestamp())
 
-request = (ActivityBuilder()
-          .domain_id("domain-id")
-          .date_from(date_from)
-          .date_to(date_to)
-          .page(1)
-          .limit(25)
-          .build_list_request())
+request = (
+    ActivityBuilder()
+    .domain_id("domain-id")
+    .date_from(date_from)
+    .date_to(date_to)
+    .page(1)
+    .limit(25)
+    .build_list_request()
+)
 
 response = ms.activities.get(request)
 ```
@@ -1037,14 +1064,16 @@ ms = MailerSendClient()
 date_from = int((datetime.now() - timedelta(days=7)).timestamp())
 date_to = int(datetime.now().timestamp())
 
-request = (ActivityBuilder()
-          .domain_id("domain-id")
-          .date_from(date_from)
-          .date_to(date_to)
-          .events(["sent", "delivered", "opened"])
-          .page(1)
-          .limit(50)
-          .build_list_request())
+request = (
+    ActivityBuilder()
+    .domain_id("domain-id")
+    .date_from(date_from)
+    .date_to(date_to)
+    .events(["sent", "delivered", "opened"])
+    .page(1)
+    .limit(50)
+    .build_list_request()
+)
 
 response = ms.activities.get(request)
 ```
@@ -1056,9 +1085,7 @@ from mailersend import MailerSendClient, SingleActivityBuilder
 
 ms = MailerSendClient()
 
-request = (SingleActivityBuilder()
-          .activity_id("activity-id")
-          .build_get_request())
+request = SingleActivityBuilder().activity_id("activity-id").build_get_request()
 
 response = ms.activities.get_single(request)
 ```
@@ -1076,13 +1103,15 @@ ms = MailerSendClient()
 date_from = int((datetime.now() - timedelta(days=30)).timestamp())
 date_to = int(datetime.now().timestamp())
 
-request = (AnalyticsBuilder()
-          .date_from(date_from)
-          .date_to(date_to)
-          .events("sent", "delivered", "opened")
-          .domain_id("domain-id")
-          .group_by("days")
-          .build())
+request = (
+    AnalyticsBuilder()
+    .date_from(date_from)
+    .date_to(date_to)
+    .events("sent", "delivered", "opened")
+    .domain_id("domain-id")
+    .group_by("days")
+    .build()
+)
 
 response = ms.analytics.get_activity_by_date(request)
 ```
@@ -1094,11 +1123,13 @@ from mailersend import MailerSendClient, AnalyticsBuilder
 
 ms = MailerSendClient()
 
-request = (AnalyticsBuilder()
-          .date_from(date_from)
-          .date_to(date_to)
-          .domain_id("domain-id")
-          .build())
+request = (
+    AnalyticsBuilder()
+    .date_from(date_from)
+    .date_to(date_to)
+    .domain_id("domain-id")
+    .build()
+)
 
 response = ms.analytics.get_opens_by_country(request)
 ```
@@ -1110,11 +1141,13 @@ from mailersend import MailerSendClient, AnalyticsBuilder
 
 ms = MailerSendClient()
 
-request = (AnalyticsBuilder()
-          .date_from(date_from)
-          .date_to(date_to)
-          .domain_id("domain-id")
-          .build())
+request = (
+    AnalyticsBuilder()
+    .date_from(date_from)
+    .date_to(date_to)
+    .domain_id("domain-id")
+    .build()
+)
 
 response = ms.analytics.get_opens_by_user_agent(request)
 ```
@@ -1126,11 +1159,13 @@ from mailersend import MailerSendClient, AnalyticsBuilder
 
 ms = MailerSendClient()
 
-request = (AnalyticsBuilder()
-          .date_from(date_from)
-          .date_to(date_to)
-          .domain_id("domain-id")
-          .build())
+request = (
+    AnalyticsBuilder()
+    .date_from(date_from)
+    .date_to(date_to)
+    .domain_id("domain-id")
+    .build()
+)
 
 response = ms.analytics.get_opens_by_reading_environment(request)
 ```
@@ -1144,10 +1179,7 @@ from mailersend import MailerSendClient, DomainsBuilder
 
 ms = MailerSendClient()
 
-request = (DomainsBuilder()
-          .page(1)
-          .limit(25)
-          .build_list_request())
+request = DomainsBuilder().page(1).limit(25).build_list_request()
 
 response = ms.domains.list_domains(request)
 ```
@@ -1159,9 +1191,7 @@ from mailersend import MailerSendClient, DomainsBuilder
 
 ms = MailerSendClient()
 
-request = (DomainsBuilder()
-          .domain_id("domain-id")
-          .build_get_request())
+request = DomainsBuilder().domain_id("domain-id").build_get_request()
 
 response = ms.domains.get_domain(request)
 ```
@@ -1173,12 +1203,14 @@ from mailersend import MailerSendClient, DomainsBuilder
 
 ms = MailerSendClient()
 
-request = (DomainsBuilder()
-          .domain_name("mydomain.com")
-          .return_path_subdomain("rp")
-          .custom_tracking_subdomain("ct")
-          .inbound_routing_subdomain("ir")
-          .build_create_request())
+request = (
+    DomainsBuilder()
+    .domain_name("mydomain.com")
+    .return_path_subdomain("rp")
+    .custom_tracking_subdomain("ct")
+    .inbound_routing_subdomain("ir")
+    .build_create_request()
+)
 
 response = ms.domains.create_domain(request)
 ```
@@ -1190,9 +1222,7 @@ from mailersend import MailerSendClient, DomainsBuilder
 
 ms = MailerSendClient()
 
-request = (DomainsBuilder()
-          .domain_id("domain-id")
-          .build_delete_request())
+request = DomainsBuilder().domain_id("domain-id").build_delete_request()
 
 response = ms.domains.delete_domain(request)
 ```
@@ -1204,11 +1234,9 @@ from mailersend import MailerSendClient, DomainsBuilder
 
 ms = MailerSendClient()
 
-request = (DomainsBuilder()
-          .domain_id("domain-id")
-          .page(1)
-          .limit(25)
-          .build_recipients_request())
+request = (
+    DomainsBuilder().domain_id("domain-id").page(1).limit(25).build_recipients_request()
+)
 
 response = ms.domains.get_domain_recipients(request)
 ```
@@ -1220,17 +1248,19 @@ from mailersend import MailerSendClient, DomainsBuilder
 
 ms = MailerSendClient()
 
-request = (DomainsBuilder()
-          .domain_id("domain-id")
-          .send_paused(False)
-          .track_clicks(True)
-          .track_opens(True)
-          .track_unsubscribe(True)
-          .track_content(True)
-          .custom_tracking_enabled(True)
-          .custom_tracking_subdomain("email")
-          .precedence_bulk(False)
-          .build_update_settings_request())
+request = (
+    DomainsBuilder()
+    .domain_id("domain-id")
+    .send_paused(False)
+    .track_clicks(True)
+    .track_opens(True)
+    .track_unsubscribe(True)
+    .track_content(True)
+    .custom_tracking_enabled(True)
+    .custom_tracking_subdomain("email")
+    .precedence_bulk(False)
+    .build_update_settings_request()
+)
 
 response = ms.domains.update_domain_settings(request)
 ```
@@ -1242,9 +1272,7 @@ from mailersend import MailerSendClient, DomainsBuilder
 
 ms = MailerSendClient()
 
-request = (DomainsBuilder()
-          .domain_id("domain-id")
-          .build_dns_records_request())
+request = DomainsBuilder().domain_id("domain-id").build_dns_records_request()
 
 response = ms.domains.get_domain_dns_records(request)
 ```
@@ -1257,9 +1285,7 @@ from mailersend import DomainsBuilder
 
 ms = MailerSendClient()
 
-request = (DomainsBuilder()
-          .domain_id("domain-id")
-          .build_verification_request())
+request = DomainsBuilder().domain_id("domain-id").build_verification_request()
 
 response = ms.domains.get_domain_verification_status(request)
 ```
@@ -1273,9 +1299,7 @@ from mailersend import MailerSendClient, IdentityBuilder
 
 ms = MailerSendClient()
 
-request = (IdentityBuilder()
-          .domain_id("domain-id")
-          .build_list_request())
+request = IdentityBuilder().domain_id("domain-id").build_list_request()
 
 response = ms.identities.list_identities(request)
 ```
@@ -1287,9 +1311,7 @@ from mailersend import MailerSendClient, IdentityBuilder
 
 ms = MailerSendClient()
 
-request = (IdentityBuilder()
-          .identity_id("identity-id")
-          .build_get_request())
+request = IdentityBuilder().identity_id("identity-id").build_get_request()
 
 response = ms.identities.get_identity(request)
 ```
@@ -1301,14 +1323,16 @@ from mailersend import MailerSendClient, IdentityBuilder
 
 ms = MailerSendClient()
 
-request = (IdentityBuilder()
-          .domain_id("domain-id")
-          .name("John Doe")
-          .email("john@yourdomain.com")
-          .reply_to_email("support@yourdomain.com")
-          .reply_to_name("Support Team")
-          .add_note(True)
-          .build_create_request())
+request = (
+    IdentityBuilder()
+    .domain_id("domain-id")
+    .name("John Doe")
+    .email("john@yourdomain.com")
+    .reply_to_email("support@yourdomain.com")
+    .reply_to_name("Support Team")
+    .add_note(True)
+    .build_create_request()
+)
 
 response = ms.identities.create_identity(request)
 ```
@@ -1320,13 +1344,15 @@ from mailersend import MailerSendClient, IdentityBuilder
 
 ms = MailerSendClient()
 
-request = (IdentityBuilder()
-          .identity_id("identity-id")
-          .name("Jane Doe")
-          .reply_to_email("support@yourdomain.com")
-          .reply_to_name("Support Team")
-          .add_note(True)
-          .build_update_request())
+request = (
+    IdentityBuilder()
+    .identity_id("identity-id")
+    .name("Jane Doe")
+    .reply_to_email("support@yourdomain.com")
+    .reply_to_name("Support Team")
+    .add_note(True)
+    .build_update_request()
+)
 
 response = ms.identities.update_identity(request)
 ```
@@ -1338,13 +1364,15 @@ from mailersend import MailerSendClient, IdentityBuilder
 
 ms = MailerSendClient()
 
-request = (IdentityBuilder()
-          .email("support@yourdomain.com")
-          .name("Doe Jane")
-          .reply_to_email("support@yourdomain.com")
-          .reply_to_name("Support Team")
-          .add_note(True)
-          .build_update_by_email_request())
+request = (
+    IdentityBuilder()
+    .email("support@yourdomain.com")
+    .name("Doe Jane")
+    .reply_to_email("support@yourdomain.com")
+    .reply_to_name("Support Team")
+    .add_note(True)
+    .build_update_by_email_request()
+)
 
 response = ms.identities.update_identity(request)
 ```
@@ -1356,9 +1384,7 @@ from mailersend import MailerSendClient, IdentityBuilder
 
 ms = MailerSendClient()
 
-request = (IdentityBuilder()
-          .identity_id("identity-id")
-          .build_delete_request())
+request = IdentityBuilder().identity_id("identity-id").build_delete_request()
 
 response = ms.identities.delete_identity(request)
 ```
@@ -1370,9 +1396,9 @@ from mailersend import MailerSendClient, IdentityBuilder
 
 ms = MailerSendClient()
 
-request = (IdentityBuilder()
-          .email("support@yourdomain.com")
-          .build_delete_by_email_request())
+request = (
+    IdentityBuilder().email("support@yourdomain.com").build_delete_by_email_request()
+)
 
 response = ms.identities.delete_identity_by_email(request)
 ```
@@ -1386,9 +1412,7 @@ from mailersend import MailerSendClient, InboundBuilder
 
 ms = MailerSendClient()
 
-request = (InboundBuilder()
-          .domain_id("domain-id")
-          .build_list_request())
+request = InboundBuilder().domain_id("domain-id").build_list_request()
 
 response = ms.inbound.list(request)
 ```
@@ -1400,9 +1424,7 @@ from mailersend import MailerSendClient, InboundBuilder
 
 ms = MailerSendClient()
 
-request = (InboundBuilder()
-          .inbound_id("inbound-id")
-          .build_get_request())
+request = InboundBuilder().inbound_id("inbound-id").build_get_request()
 
 response = ms.inbound.get(request)
 ```
@@ -1414,18 +1436,20 @@ from mailersend import MailerSendClient, InboundBuilder
 
 ms = MailerSendClient()
 
-request = (InboundBuilder()
-          .domain_id("domain-id")
-          .name("My Inbound Route")
-          .domain_enabled(False)
-          .inbound_priority(1)
-          .catch_type("all")
-          .match_type("all")
-          .add_forward("email", "support@mycompany.com")
-          .catch_recipient([{"comparer": "equal", "value": "support"}])
-          .add_match_filter("match_sender", [{"comparer": "equal", "value": "support"}])
-          .add_webhook_forward("https://mycompany.com/webhook")
-          .build_create_request())
+request = (
+    InboundBuilder()
+    .domain_id("domain-id")
+    .name("My Inbound Route")
+    .domain_enabled(False)
+    .inbound_priority(1)
+    .catch_type("all")
+    .match_type("all")
+    .add_forward("email", "support@mycompany.com")
+    .catch_recipient([{"comparer": "equal", "value": "support"}])
+    .add_match_filter("match_sender", [{"comparer": "equal", "value": "support"}])
+    .add_webhook_forward("https://mycompany.com/webhook")
+    .build_create_request()
+)
 
 response = ms.inbound.create_inbound_route(request)
 ```
@@ -1437,11 +1461,13 @@ from mailersend import MailerSendClient, InboundBuilder
 
 ms = MailerSendClient()
 
-request = (InboundBuilder()
-          .inbound_id("inbound-id")
-          .name("Updated Route Name")
-          .enabled(False)
-          .build_update_request())
+request = (
+    InboundBuilder()
+    .inbound_id("inbound-id")
+    .name("Updated Route Name")
+    .enabled(False)
+    .build_update_request()
+)
 
 response = ms.inbound.update_inbound_route(request)
 ```
@@ -1453,9 +1479,7 @@ from mailersend import MailerSendClient, InboundBuilder
 
 ms = MailerSendClient()
 
-request = (InboundBuilder()
-          .inbound_id("inbound-id")
-          .build_delete_request())
+request = InboundBuilder().inbound_id("inbound-id").build_delete_request()
 
 response = ms.inbound.delete_inbound_route(request)
 ```
@@ -1469,8 +1493,7 @@ from mailersend import MailerSendClient, MessagesBuilder
 
 ms = MailerSendClient()
 
-request = (MessagesBuilder()
-          .build_list_request())
+request = MessagesBuilder().build_list_request()
 
 response = ms.messages.list_messages(request)
 ```
@@ -1482,9 +1505,7 @@ from mailersend import MailerSendClient, MessagesBuilder
 
 ms = MailerSendClient()
 
-request = (MessagesBuilder()
-          .message_id("message-id")
-          .build_get_request())
+request = MessagesBuilder().message_id("message-id").build_get_request()
 
 response = ms.messages.get_message(request)
 ```
@@ -1498,9 +1519,7 @@ from mailersend import MailerSendClient, SchedulesBuilder
 
 ms = MailerSendClient()
 
-request = (SchedulesBuilder()
-          .domain_id("domain-id")
-          .build_list_request())
+request = SchedulesBuilder().domain_id("domain-id").build_list_request()
 
 response = ms.schedules.list_schedules(request)
 ```
@@ -1512,9 +1531,7 @@ from mailersend import MailerSendClient, SchedulesBuilder
 
 ms = MailerSendClient()
 
-request = (SchedulesBuilder()
-          .message_id("scheduled-id")
-          .build_get_request())
+request = SchedulesBuilder().message_id("scheduled-id").build_get_request()
 
 response = ms.schedules.get_schedule(request)
 ```
@@ -1526,9 +1543,7 @@ from mailersend import MailerSendClient, SchedulesBuilder
 
 ms = MailerSendClient()
 
-request = (SchedulesBuilder()
-          .message_id("scheduled-id")
-          .build_delete_request())
+request = SchedulesBuilder().message_id("scheduled-id").build_delete_request()
 
 response = ms.schedules.delete_schedule(request)
 ```
@@ -1542,9 +1557,7 @@ from mailersend import MailerSendClient, RecipientsBuilder
 
 ms = MailerSendClient()
 
-request = (RecipientsBuilder()
-          .domain_id("domain-id")
-          .build_recipients_list_request())
+request = RecipientsBuilder().domain_id("domain-id").build_recipients_list_request()
 
 response = ms.recipients.list_recipients(request)
 ```
@@ -1556,9 +1569,7 @@ from mailersend import MailerSendClient, RecipientsBuilder
 
 ms = MailerSendClient()
 
-request = (RecipientsBuilder()
-          .recipient_id("recipient-id")
-          .build_recipient_get_request())
+request = RecipientsBuilder().recipient_id("recipient-id").build_recipient_get_request()
 
 response = ms.recipients.get_recipient(request)
 ```
@@ -1570,9 +1581,9 @@ from mailersend import MailerSendClient, RecipientsBuilder
 
 ms = MailerSendClient()
 
-request = (RecipientsBuilder()
-          .recipient_id("recipient-id")
-          .build_recipient_delete_request())
+request = (
+    RecipientsBuilder().recipient_id("recipient-id").build_recipient_delete_request()
+)
 
 response = ms.recipients.delete_recipient(request)
 ```
@@ -1584,9 +1595,7 @@ from mailersend import MailerSendClient, RecipientsBuilder
 
 ms = MailerSendClient()
 
-request = (RecipientsBuilder()
-          .domain_id("domain-id")
-          .build_suppression_list_request())
+request = RecipientsBuilder().domain_id("domain-id").build_suppression_list_request()
 
 response = ms.recipients.list_blocklist(request)
 ```
@@ -1598,9 +1607,7 @@ from mailersend import MailerSendClient, RecipientsBuilder
 
 ms = MailerSendClient()
 
-request = (RecipientsBuilder()
-          .domain_id("domain-id")
-          .build_suppression_list_request())
+request = RecipientsBuilder().domain_id("domain-id").build_suppression_list_request()
 
 response = ms.recipients.list_hard_bounces(request)
 ```
@@ -1612,9 +1619,7 @@ from mailersend import MailerSendClient, RecipientsBuilder
 
 ms = MailerSendClient()
 
-request = (RecipientsBuilder()
-          .domain_id("domain-id")
-          .build_suppression_list_request())
+request = RecipientsBuilder().domain_id("domain-id").build_suppression_list_request()
 
 response = ms.recipients.list_spam_complaints(request)
 ```
@@ -1626,9 +1631,7 @@ from mailersend import MailerSendClient, RecipientsBuilder
 
 ms = MailerSendClient()
 
-request = (RecipientsBuilder()
-          .domain_id("domain-id")
-          .build_suppression_list_request())
+request = RecipientsBuilder().domain_id("domain-id").build_suppression_list_request()
 
 response = ms.recipients.list_unsubscribes(request)
 ```
@@ -1641,18 +1644,22 @@ from mailersend import MailerSendClient, RecipientsBuilder
 ms = MailerSendClient()
 
 # Using specific emails
-request = (RecipientsBuilder()
-          .domain_id("domain-id")
-          .recipients(["blocked@example.com", "spam@example.com"])
-          .build_suppression_add_request())
+request = (
+    RecipientsBuilder()
+    .domain_id("domain-id")
+    .recipients(["blocked@example.com", "spam@example.com"])
+    .build_suppression_add_request()
+)
 
 response = ms.recipients.add_to_blocklist(request)
 
 # Using patterns
-request = (RecipientsBuilder()
-          .domain_id("domain-id")
-          .patterns(["*@spammer.com", "*@blocked-domain.com"])
-          .build_suppression_add_request())
+request = (
+    RecipientsBuilder()
+    .domain_id("domain-id")
+    .patterns(["*@spammer.com", "*@blocked-domain.com"])
+    .build_suppression_add_request()
+)
 
 response = ms.recipients.add_to_blocklist(request)
 ```
@@ -1664,10 +1671,12 @@ from mailersend import MailerSendClient, RecipientsBuilder
 
 ms = MailerSendClient()
 
-request = (RecipientsBuilder()
-          .domain_id("domain-id")
-          .recipients(["bounced@example.com"])
-          .build_suppression_add_request())
+request = (
+    RecipientsBuilder()
+    .domain_id("domain-id")
+    .recipients(["bounced@example.com"])
+    .build_suppression_add_request()
+)
 
 response = ms.recipients.add_hard_bounces(request)
 ```
@@ -1679,10 +1688,12 @@ from mailersend import MailerSendClient, RecipientsBuilder
 
 ms = MailerSendClient()
 
-request = (RecipientsBuilder()
-          .domain_id("domain-id")
-          .recipients(["complainer@example.com"])
-          .build_suppression_add_request())
+request = (
+    RecipientsBuilder()
+    .domain_id("domain-id")
+    .recipients(["complainer@example.com"])
+    .build_suppression_add_request()
+)
 
 response = ms.recipients.add_spam_complaints(request)
 ```
@@ -1694,10 +1705,12 @@ from mailersend import MailerSendClient, RecipientsBuilder
 
 ms = MailerSendClient()
 
-request = (RecipientsBuilder()
-          .domain_id("domain-id")
-          .recipients(["unsubscribed@example.com"])
-          .build_suppression_add_request())
+request = (
+    RecipientsBuilder()
+    .domain_id("domain-id")
+    .recipients(["unsubscribed@example.com"])
+    .build_suppression_add_request()
+)
 
 response = ms.recipients.add_unsubscribes(request)
 ```
@@ -1710,18 +1723,22 @@ from mailersend import MailerSendClient, RecipientsBuilder
 ms = MailerSendClient()
 
 # Delete specific entries by IDs
-request = (RecipientsBuilder()
-          .domain_id("domain-id")
-          .ids(["recipient-id-1", "recipient-id-2"])
-          .build_suppression_delete_request())
+request = (
+    RecipientsBuilder()
+    .domain_id("domain-id")
+    .ids(["recipient-id-1", "recipient-id-2"])
+    .build_suppression_delete_request()
+)
 
 response = ms.recipients.delete_from_blocklist(request)
 
 # Or delete all entries
-request = (RecipientsBuilder()
-          .domain_id("domain-id")
-          .all(True)
-          .build_suppression_delete_request())
+request = (
+    RecipientsBuilder()
+    .domain_id("domain-id")
+    .all(True)
+    .build_suppression_delete_request()
+)
 
 response = ms.recipients.delete_from_blocklist(request)
 ```
@@ -1734,18 +1751,22 @@ from mailersend import MailerSendClient, RecipientsBuilder
 ms = MailerSendClient()
 
 # Delete specific entries by IDs
-request = (RecipientsBuilder()
-          .domain_id("domain-id")
-          .ids(["recipient-id"])
-          .build_suppression_delete_request())
+request = (
+    RecipientsBuilder()
+    .domain_id("domain-id")
+    .ids(["recipient-id"])
+    .build_suppression_delete_request()
+)
 
 response = ms.recipients.delete_hard_bounces(request)
 
 # Or delete all entries
-request = (RecipientsBuilder()
-          .domain_id("domain-id")
-          .all(True)
-          .build_suppression_delete_request())
+request = (
+    RecipientsBuilder()
+    .domain_id("domain-id")
+    .all(True)
+    .build_suppression_delete_request()
+)
 
 response = ms.recipients.delete_hard_bounces(request)
 ```
@@ -1758,18 +1779,22 @@ from mailersend import MailerSendClient, RecipientsBuilder
 ms = MailerSendClient()
 
 # Delete specific entries by IDs
-request = (RecipientsBuilder()
-          .domain_id("domain-id")
-          .ids(["recipient-id"])
-          .build_suppression_delete_request())
+request = (
+    RecipientsBuilder()
+    .domain_id("domain-id")
+    .ids(["recipient-id"])
+    .build_suppression_delete_request()
+)
 
 response = ms.recipients.delete_spam_complaints(request)
 
 # Or delete all entries
-request = (RecipientsBuilder()
-          .domain_id("domain-id")
-          .all(True)
-          .build_suppression_delete_request())
+request = (
+    RecipientsBuilder()
+    .domain_id("domain-id")
+    .all(True)
+    .build_suppression_delete_request()
+)
 
 response = ms.recipients.delete_spam_complaints(request)
 ```
@@ -1782,18 +1807,22 @@ from mailersend import MailerSendClient, RecipientsBuilder
 ms = MailerSendClient()
 
 # Delete specific entries by IDs
-request = (RecipientsBuilder()
-          .domain_id("domain-id")
-          .ids(["recipient-id"])
-          .build_suppression_delete_request())
+request = (
+    RecipientsBuilder()
+    .domain_id("domain-id")
+    .ids(["recipient-id"])
+    .build_suppression_delete_request()
+)
 
 response = ms.recipients.delete_unsubscribes(request)
 
 # Or delete all entries
-request = (RecipientsBuilder()
-          .domain_id("domain-id")
-          .all(True)
-          .build_suppression_delete_request())
+request = (
+    RecipientsBuilder()
+    .domain_id("domain-id")
+    .all(True)
+    .build_suppression_delete_request()
+)
 
 response = ms.recipients.delete_unsubscribes(request)
 ```
@@ -1807,11 +1836,13 @@ from mailersend import MailerSendClient, TemplatesBuilder
 
 ms = MailerSendClient()
 
-request = (TemplatesBuilder()
-          .domain_id("domain-id")
-          .page(1)
-          .limit(25)
-          .build_templates_list_request())
+request = (
+    TemplatesBuilder()
+    .domain_id("domain-id")
+    .page(1)
+    .limit(25)
+    .build_templates_list_request()
+)
 
 response = ms.templates.list_templates(request)
 ```
@@ -1823,9 +1854,7 @@ from mailersend import MailerSendClient, TemplatesBuilder
 
 ms = MailerSendClient()
 
-request = (TemplatesBuilder()
-          .template("template-id")
-          .build_template_get_request())
+request = TemplatesBuilder().template("template-id").build_template_get_request()
 
 response = ms.templates.get_template(request)
 ```
@@ -1837,9 +1866,7 @@ from mailersend import MailerSendClient, TemplatesBuilder
 
 ms = MailerSendClient()
 
-request = (TemplatesBuilder()
-          .template("template-id")
-          .build_delete_request())
+request = TemplatesBuilder().template("template-id").build_delete_request()
 
 response = ms.templates.delete_template(request)
 ```
@@ -1853,9 +1880,7 @@ from mailersend import MailerSendClient, WebhooksBuilder
 
 ms = MailerSendClient()
 
-request = (WebhooksBuilder()
-          .domain_id("domain-id")
-          .build_webhooks_list_request())
+request = WebhooksBuilder().domain_id("domain-id").build_webhooks_list_request()
 
 response = ms.webhooks.list_webhooks(request)
 ```
@@ -1867,9 +1892,7 @@ from mailersend import MailerSendClient, WebhooksBuilder
 
 ms = MailerSendClient()
 
-request = (WebhooksBuilder()
-          .webhook_id("webhook-id")
-          .build_webhook_get_request())
+request = WebhooksBuilder().webhook_id("webhook-id").build_webhook_get_request()
 
 response = ms.webhooks.get_webhook(request)
 ```
@@ -1881,13 +1904,15 @@ from mailersend import MailerSendClient, WebhooksBuilder
 
 ms = MailerSendClient()
 
-request = (WebhooksBuilder()
-          .domain_id("domain-id")
-          .url("https://yourdomain.com/webhook")
-          .name("My webhook")
-          .events(["activity.sent", "activity.delivered"])
-          .enabled(True)
-          .build_webhook_create_request())
+request = (
+    WebhooksBuilder()
+    .domain_id("domain-id")
+    .url("https://yourdomain.com/webhook")
+    .name("My webhook")
+    .events(["activity.sent", "activity.delivered"])
+    .enabled(True)
+    .build_webhook_create_request()
+)
 
 response = ms.webhooks.create_webhook(request)
 ```
@@ -1899,13 +1924,15 @@ from mailersend import MailerSendClient, WebhooksBuilder
 
 ms = MailerSendClient()
 
-request = (WebhooksBuilder()
-          .domain_id("domain-id")
-          .url("https://yourdomain.com/webhook")
-          .name("My disabled webhook")
-          .events(["activity.sent", "activity.delivered"])
-          .enabled(False)
-          .build_webhook_create_request())
+request = (
+    WebhooksBuilder()
+    .domain_id("domain-id")
+    .url("https://yourdomain.com/webhook")
+    .name("My disabled webhook")
+    .events(["activity.sent", "activity.delivered"])
+    .enabled(False)
+    .build_webhook_create_request()
+)
 
 response = ms.webhooks.create_webhook(request)
 ```
@@ -1917,13 +1944,15 @@ from mailersend import MailerSendClient, WebhooksBuilder
 
 ms = MailerSendClient()
 
-request = (WebhooksBuilder()
-          .webhook_id("webhook-id")
-          .url("https://yourdomain.com/webhook-updated")
-          .name("My updated webhook")
-          .events(["activity.sent"])
-          .enabled(True)
-          .build_webhook_update_request())
+request = (
+    WebhooksBuilder()
+    .webhook_id("webhook-id")
+    .url("https://yourdomain.com/webhook-updated")
+    .name("My updated webhook")
+    .events(["activity.sent"])
+    .enabled(True)
+    .build_webhook_update_request()
+)
 
 response = ms.webhooks.update_webhook(request)
 ```
@@ -1936,18 +1965,22 @@ from mailersend import MailerSendClient, WebhooksBuilder
 ms = MailerSendClient()
 
 # Disable webhook
-request = (WebhooksBuilder()
-          .webhook_id("webhook-id")
-          .enabled(False)
-          .build_webhook_update_request())
+request = (
+    WebhooksBuilder()
+    .webhook_id("webhook-id")
+    .enabled(False)
+    .build_webhook_update_request()
+)
 
 response = ms.webhooks.update_webhook(request)
 
 # Enable webhook
-request = (WebhooksBuilder()
-          .webhook_id("webhook-id")
-          .enabled(True)
-          .build_webhook_update_request())
+request = (
+    WebhooksBuilder()
+    .webhook_id("webhook-id")
+    .enabled(True)
+    .build_webhook_update_request()
+)
 
 response = ms.webhooks.update_webhook(request)
 ```
@@ -1959,9 +1992,7 @@ from mailersend import MailerSendClient, WebhooksBuilder
 
 ms = MailerSendClient()
 
-request = (WebhooksBuilder()
-          .webhook_id("webhook-id")
-          .build_webhook_delete_request())
+request = WebhooksBuilder().webhook_id("webhook-id").build_webhook_delete_request()
 
 response = ms.webhooks.delete_webhook(request)
 ```
@@ -1987,9 +2018,7 @@ from mailersend import MailerSendClient, EmailVerificationBuilder
 
 ms = MailerSendClient()
 
-request = (EmailVerificationBuilder()
-          .email_verification_id("list-id")
-          .build_get())
+request = EmailVerificationBuilder().email_verification_id("list-id").build_get()
 
 response = ms.email_verification.get_verification(request)
 ```
@@ -2001,10 +2030,12 @@ from mailersend import MailerSendClient, EmailVerificationBuilder
 
 ms = MailerSendClient()
 
-request = (EmailVerificationBuilder()
-          .name("My Verification List")
-          .emails(["test1@example.com", "test2@example.com"])
-          .build_create())
+request = (
+    EmailVerificationBuilder()
+    .name("My Verification List")
+    .emails(["test1@example.com", "test2@example.com"])
+    .build_create()
+)
 
 response = ms.email_verification.create_verification(request)
 ```
@@ -2016,9 +2047,9 @@ from mailersend import MailerSendClient, EmailVerificationBuilder
 
 ms = MailerSendClient()
 
-request = (EmailVerificationBuilder()
-          .email_verification_id("list-id")
-          .build_verify_list())
+request = (
+    EmailVerificationBuilder().email_verification_id("list-id").build_verify_list()
+)
 
 response = ms.email_verification.verify_list(request)
 ```
@@ -2030,9 +2061,7 @@ from mailersend import MailerSendClient, EmailVerificationBuilder
 
 ms = MailerSendClient()
 
-request = (EmailVerificationBuilder()
-          .email_verification_id("list-id")
-          .build_results())
+request = EmailVerificationBuilder().email_verification_id("list-id").build_results()
 
 response = ms.email_verification.get_results(request)
 ```
@@ -2047,30 +2076,36 @@ from mailersend import MailerSendClient, SmsSendingBuilder
 ms = MailerSendClient()
 
 # Simple SMS
-request = (SmsSendingBuilder()
-          .from_number("sms-number")
-          .to(["+1234567890", "+1234567891"])
-          .text("Hello from MailerSend SMS!")
-          .build())
+request = (
+    SmsSendingBuilder()
+    .from_number("sms-number")
+    .to(["+1234567890", "+1234567891"])
+    .text("Hello from MailerSend SMS!")
+    .build()
+)
 
 response = ms.sms_sending.send(request)
 
 # SMS with personalization
-request = (SmsSendingBuilder()
-          .from_number("sms-number")
-          .to(["+1234567890", "+1234567891"])
-          .text("Hello {{name}}, your order {{order_id}} is ready!")
-          .personalization([
-              {
-                  "phone_number": "+1234567890",
-                  "data": {"name": "John", "order_id": "12345"}
-              },
-              {
-                  "phone_number": "+1234567891",
-                  "data": {"name": "Jane", "order_id": "12346"}
-              }
-          ])
-          .build())
+request = (
+    SmsSendingBuilder()
+    .from_number("sms-number")
+    .to(["+1234567890", "+1234567891"])
+    .text("Hello {{name}}, your order {{order_id}} is ready!")
+    .personalization(
+        [
+            {
+                "phone_number": "+1234567890",
+                "data": {"name": "John", "order_id": "12345"},
+            },
+            {
+                "phone_number": "+1234567891",
+                "data": {"name": "Jane", "order_id": "12346"},
+            },
+        ]
+    )
+    .build()
+)
 
 response = ms.sms_sending.send(request)
 ```
@@ -2089,14 +2124,16 @@ ms = MailerSendClient()
 date_from = int((datetime.now() - timedelta(days=7)).timestamp())
 date_to = int(datetime.now().timestamp())
 
-request = (SmsActivityBuilder()
-          .sms_number_id("sms-number-id")
-          .date_from(date_from)
-          .date_to(date_to)
-          .status(["sent", "delivered", "failed"])
-          .page(1)
-          .limit(25)
-          .build_list_request())
+request = (
+    SmsActivityBuilder()
+    .sms_number_id("sms-number-id")
+    .date_from(date_from)
+    .date_to(date_to)
+    .status(["sent", "delivered", "failed"])
+    .page(1)
+    .limit(25)
+    .build_list_request()
+)
 
 response = ms.sms_activity.list(request)
 ```
@@ -2108,9 +2145,7 @@ from mailersend import MailerSendClient, SmsActivityBuilder
 
 ms = MailerSendClient()
 
-request = (SmsActivityBuilder()
-          .sms_message_id("sms-message-id")
-          .build_get_request())
+request = SmsActivityBuilder().sms_message_id("sms-message-id").build_get_request()
 
 response = ms.sms_activity.get(request)
 ```
@@ -2124,11 +2159,7 @@ from mailersend import MailerSendClient, SmsNumbersBuilder
 
 ms = MailerSendClient()
 
-request = (SmsNumbersBuilder()
-          .paused(False)
-          .page(1)
-          .limit(25)
-          .build_list_request())
+request = SmsNumbersBuilder().paused(False).page(1).limit(25).build_list_request()
 
 response = ms.sms_numbers.list(request)
 ```
@@ -2140,9 +2171,7 @@ from mailersend import MailerSendClient, SmsNumbersBuilder
 
 ms = MailerSendClient()
 
-request = (SmsNumbersBuilder()
-          .sms_number_id("sms-number-id")
-          .build_get_request())
+request = SmsNumbersBuilder().sms_number_id("sms-number-id").build_get_request()
 
 response = ms.sms_numbers.get(request)
 ```
@@ -2154,10 +2183,12 @@ from mailersend import MailerSendClient, SmsNumbersBuilder
 
 ms = MailerSendClient()
 
-request = (SmsNumbersBuilder()
-          .sms_number_id("sms-number-id")
-          .paused(True)
-          .build_update_request())
+request = (
+    SmsNumbersBuilder()
+    .sms_number_id("sms-number-id")
+    .paused(True)
+    .build_update_request()
+)
 
 response = ms.sms_numbers.update(request)
 ```
@@ -2169,9 +2200,7 @@ from mailersend import MailerSendClient, SmsNumbersBuilder
 
 ms = MailerSendClient()
 
-request = (SmsNumbersBuilder()
-          .sms_number_id("sms-number-id")
-          .build_delete_request())
+request = SmsNumbersBuilder().sms_number_id("sms-number-id").build_delete_request()
 
 response = ms.sms_numbers.delete(request)
 ```
@@ -2186,12 +2215,14 @@ from mailersend.models.sms_recipients import SmsRecipientStatus
 
 ms = MailerSendClient()
 
-request = (SmsRecipientsBuilder()
-          .sms_number_id("sms-number-id")
-          .status(SmsRecipientStatus.ACTIVE)
-          .page(1)
-          .limit(25)
-          .build_list_request())
+request = (
+    SmsRecipientsBuilder()
+    .sms_number_id("sms-number-id")
+    .status(SmsRecipientStatus.ACTIVE)
+    .page(1)
+    .limit(25)
+    .build_list_request()
+)
 
 response = ms.sms_recipients.list_sms_recipients(request)
 ```
@@ -2203,9 +2234,7 @@ from mailersend import MailerSendClient, SmsRecipientsBuilder
 
 ms = MailerSendClient()
 
-request = (SmsRecipientsBuilder()
-          .sms_recipient_id("recipient-id")
-          .build_get_request())
+request = SmsRecipientsBuilder().sms_recipient_id("recipient-id").build_get_request()
 
 response = ms.sms_recipients.get_sms_recipient(request)
 ```
@@ -2218,9 +2247,11 @@ from mailersend.models.sms_recipients import SmsRecipientStatus
 
 ms = MailerSendClient()
 
-request = (SmsRecipientsBuilder()
-          .sms_recipient_id("recipient-id")
-          .build_update_request(SmsRecipientStatus.OPT_OUT))
+request = (
+    SmsRecipientsBuilder()
+    .sms_recipient_id("recipient-id")
+    .build_update_request(SmsRecipientStatus.OPT_OUT)
+)
 
 response = ms.sms_recipients.update_sms_recipient(request)
 ```
@@ -2234,10 +2265,7 @@ from mailersend import MailerSendClient, SmsMessagesBuilder
 
 ms = MailerSendClient()
 
-request = (SmsMessagesBuilder()
-          .page(1)
-          .limit(25)
-          .build_sms_messages_list())
+request = SmsMessagesBuilder().page(1).limit(25).build_sms_messages_list()
 
 response = ms.sms_messages.list_sms_messages(request)
 ```
@@ -2249,9 +2277,7 @@ from mailersend import MailerSendClient, SmsMessagesBuilder
 
 ms = MailerSendClient()
 
-request = (SmsMessagesBuilder()
-          .sms_message_id("message-id")
-          .build_sms_message_get())
+request = SmsMessagesBuilder().sms_message_id("message-id").build_sms_message_get()
 
 response = ms.sms_messages.get_sms_message(request)
 ```
@@ -2265,9 +2291,7 @@ from mailersend import MailerSendClient, SmsWebhooksBuilder
 
 ms = MailerSendClient()
 
-request = (SmsWebhooksBuilder()
-          .sms_number_id("sms-number-id")
-          .build_list_request())
+request = SmsWebhooksBuilder().sms_number_id("sms-number-id").build_list_request()
 
 response = ms.sms_webhooks.list_sms_webhooks(request)
 ```
@@ -2279,9 +2303,7 @@ from mailersend import MailerSendClient, SmsWebhooksBuilder
 
 ms = MailerSendClient()
 
-request = (SmsWebhooksBuilder()
-          .sms_webhook_id("webhook-id")
-          .build_get_request())
+request = SmsWebhooksBuilder().sms_webhook_id("webhook-id").build_get_request()
 
 response = ms.sms_webhooks.get_sms_webhook(request)
 ```
@@ -2294,15 +2316,17 @@ from mailersend.models.sms_webhooks import SmsWebhookEvent
 
 ms = MailerSendClient()
 
-request = (SmsWebhooksBuilder()
-          .from_number("sms-number-id")
-          .url("https://webhook.example.com/sms")
-          .name("SMS Webhook")
-          .add_event(SmsWebhookEvent.SMS_SENT)
-          .add_event(SmsWebhookEvent.SMS_DELIVERED)
-          .add_event(SmsWebhookEvent.SMS_FAILED)
-          .enabled(True)
-          .build_create_request())
+request = (
+    SmsWebhooksBuilder()
+    .from_number("sms-number-id")
+    .url("https://webhook.example.com/sms")
+    .name("SMS Webhook")
+    .add_event(SmsWebhookEvent.SMS_SENT)
+    .add_event(SmsWebhookEvent.SMS_DELIVERED)
+    .add_event(SmsWebhookEvent.SMS_FAILED)
+    .enabled(True)
+    .build_create_request()
+)
 
 response = ms.sms_webhooks.create_sms_webhook(request)
 ```
@@ -2315,13 +2339,15 @@ from mailersend.models.sms_webhooks import SmsWebhookEvent
 
 ms = MailerSendClient()
 
-request = (SmsWebhooksBuilder()
-          .sms_webhook_id("webhook-id")
-          .name("Updated SMS Webhook")
-          .url("https://new-webhook.example.com/sms")
-          .events([SmsWebhookEvent.SMS_DELIVERED, SmsWebhookEvent.SMS_FAILED])
-          .enabled(False)
-          .build_update_request())
+request = (
+    SmsWebhooksBuilder()
+    .sms_webhook_id("webhook-id")
+    .name("Updated SMS Webhook")
+    .url("https://new-webhook.example.com/sms")
+    .events([SmsWebhookEvent.SMS_DELIVERED, SmsWebhookEvent.SMS_FAILED])
+    .enabled(False)
+    .build_update_request()
+)
 
 response = ms.sms_webhooks.update_sms_webhook(request)
 ```
@@ -2333,9 +2359,7 @@ from mailersend import MailerSendClient, SmsWebhooksBuilder
 
 ms = MailerSendClient()
 
-request = (SmsWebhooksBuilder()
-          .sms_webhook_id("webhook-id")
-          .build_delete_request())
+request = SmsWebhooksBuilder().sms_webhook_id("webhook-id").build_delete_request()
 
 response = ms.sms_webhooks.delete_sms_webhook(request)
 ```
@@ -2349,10 +2373,12 @@ from mailersend import MailerSendClient, SmsInboundsBuilder
 
 ms = MailerSendClient()
 
-request = (SmsInboundsBuilder()
-          .sms_number_id("sms-number-id")
-          .enabled(True)
-          .build_list_request())
+request = (
+    SmsInboundsBuilder()
+    .sms_number_id("sms-number-id")
+    .enabled(True)
+    .build_list_request()
+)
 
 response = ms.sms_inbounds.list_sms_inbounds(request)
 ```
@@ -2364,9 +2390,7 @@ from mailersend import MailerSendClient, SmsInboundsBuilder
 
 ms = MailerSendClient()
 
-request = (SmsInboundsBuilder()
-          .sms_inbound_id("inbound-id")
-          .build_get_request())
+request = SmsInboundsBuilder().sms_inbound_id("inbound-id").build_get_request()
 
 response = ms.sms_inbounds.get_sms_inbound(request)
 ```
@@ -2379,13 +2403,15 @@ from mailersend.models.sms_inbounds import FilterComparer
 
 ms = MailerSendClient()
 
-request = (SmsInboundsBuilder()
-          .sms_number_id("sms-number-id")
-          .name("Support Route")
-          .forward_url("https://api.example.com/sms/support")
-          .filter(FilterComparer.STARTS_WITH, "SUPPORT")
-          .enabled(True)
-          .build_create_request())
+request = (
+    SmsInboundsBuilder()
+    .sms_number_id("sms-number-id")
+    .name("Support Route")
+    .forward_url("https://api.example.com/sms/support")
+    .filter(FilterComparer.STARTS_WITH, "SUPPORT")
+    .enabled(True)
+    .build_create_request()
+)
 
 response = ms.sms_inbounds.create_sms_inbound(request)
 ```
@@ -2398,13 +2424,15 @@ from mailersend.models.sms_inbounds import FilterComparer
 
 ms = MailerSendClient()
 
-request = (SmsInboundsBuilder()
-          .sms_number_id("inbound-id")
-          .name("Updated Support Route")
-          .forward_url("https://api.example.com/sms/new-support")
-          .filter(FilterComparer.CONTAINS, "HELP")
-          .enabled(False)
-          .build_update_request())
+request = (
+    SmsInboundsBuilder()
+    .sms_number_id("inbound-id")
+    .name("Updated Support Route")
+    .forward_url("https://api.example.com/sms/new-support")
+    .filter(FilterComparer.CONTAINS, "HELP")
+    .enabled(False)
+    .build_update_request()
+)
 
 response = ms.sms_inbounds.update_sms_inbound(request)
 ```
@@ -2416,9 +2444,7 @@ from mailersend import MailerSendClient, SmsInboundsBuilder
 
 ms = MailerSendClient()
 
-request = (SmsInboundsBuilder()
-          .sms_inbound_id("inbound-id")
-          .build_delete_request())
+request = SmsInboundsBuilder().sms_inbound_id("inbound-id").build_delete_request()
 
 response = ms.sms_inbounds.delete_sms_inbound(request)
 ```
@@ -2432,11 +2458,13 @@ from mailersend import MailerSendClient, TokensBuilder
 
 ms = MailerSendClient()
 
-request = (TokensBuilder()
-          .name("My API Token")
-          .scopes(["email_full", "analytics_read"])
-          .domain_id("domain-id")
-          .build_token_create())
+request = (
+    TokensBuilder()
+    .name("My API Token")
+    .scopes(["email_full", "analytics_read"])
+    .domain_id("domain-id")
+    .build_token_create()
+)
 
 response = ms.tokens.create_token(request)
 ```
@@ -2449,18 +2477,12 @@ from mailersend import MailerSendClient, TokensBuilder
 ms = MailerSendClient()
 
 # Pause token
-request = (TokensBuilder()
-          .token_id("token-id")
-          .status("pause")
-          .build_token_update())
+request = TokensBuilder().token_id("token-id").status("pause").build_token_update()
 
 response = ms.tokens.update_token(request)
 
 # Unpause token
-request = (TokensBuilder()
-          .token_id("token-id")
-          .status("unpause")
-          .build_token_update())
+request = TokensBuilder().token_id("token-id").status("unpause").build_token_update()
 
 response = ms.tokens.update_token(request)
 ```
@@ -2472,9 +2494,7 @@ from mailersend import MailerSendClient, TokensBuilder
 
 ms = MailerSendClient()
 
-request = (TokensBuilder()
-          .token_id("token-id")
-          .build_token_delete())
+request = TokensBuilder().token_id("token-id").build_token_delete()
 
 response = ms.tokens.delete_token(request)
 ```
@@ -2488,9 +2508,7 @@ from mailersend import MailerSendClient, SmtpUsersBuilder
 
 ms = MailerSendClient()
 
-request = (SmtpUsersBuilder()
-          .domain_id("domain-id")
-          .build_smtp_users_list())
+request = SmtpUsersBuilder().domain_id("domain-id").build_smtp_users_list()
 
 response = ms.smtp_users.list_smtp_users(request)
 ```
@@ -2502,10 +2520,12 @@ from mailersend import MailerSendClient, SmtpUsersBuilder
 
 ms = MailerSendClient()
 
-request = (SmtpUsersBuilder()
-          .domain_id("domain-id")
-          .smtp_user_id("smtp-user-id")
-          .build_smtp_user_get())
+request = (
+    SmtpUsersBuilder()
+    .domain_id("domain-id")
+    .smtp_user_id("smtp-user-id")
+    .build_smtp_user_get()
+)
 
 response = ms.smtp_users.get_smtp_user(request)
 ```
@@ -2517,11 +2537,13 @@ from mailersend import MailerSendClient, SmtpUsersBuilder
 
 ms = MailerSendClient()
 
-request = (SmtpUsersBuilder()
-          .domain_id("domain-id")
-          .name("SMTP User Name")
-          .enabled(True)
-          .build_smtp_user_create())
+request = (
+    SmtpUsersBuilder()
+    .domain_id("domain-id")
+    .name("SMTP User Name")
+    .enabled(True)
+    .build_smtp_user_create()
+)
 
 response = ms.smtp_users.create_smtp_user(request)
 ```
@@ -2533,12 +2555,14 @@ from mailersend import MailerSendClient, SmtpUsersBuilder
 
 ms = MailerSendClient()
 
-request = (SmtpUsersBuilder()
-          .domain_id("domain-id")
-          .smtp_user_id("smtp-user-id")
-          .name("Updated SMTP User Name")
-          .enabled(False)
-          .build_smtp_user_update())
+request = (
+    SmtpUsersBuilder()
+    .domain_id("domain-id")
+    .smtp_user_id("smtp-user-id")
+    .name("Updated SMTP User Name")
+    .enabled(False)
+    .build_smtp_user_update()
+)
 
 response = ms.smtp_users.update_smtp_user(request)
 ```
@@ -2550,10 +2574,12 @@ from mailersend import MailerSendClient, SmtpUsersBuilder
 
 ms = MailerSendClient()
 
-request = (SmtpUsersBuilder()
-          .domain_id("domain-id")
-          .smtp_user_id("smtp-user-id")
-          .build_smtp_user_delete())
+request = (
+    SmtpUsersBuilder()
+    .domain_id("domain-id")
+    .smtp_user_id("smtp-user-id")
+    .build_smtp_user_delete()
+)
 
 response = ms.smtp_users.delete_smtp_user(request)
 ```
@@ -2567,10 +2593,7 @@ from mailersend import MailerSendClient, UsersBuilder
 
 ms = MailerSendClient()
 
-request = (UsersBuilder()
-          .page(1)
-          .limit(25)
-          .build_users_list())
+request = UsersBuilder().page(1).limit(25).build_users_list()
 
 response = ms.users.list_users(request)
 ```
@@ -2582,9 +2605,7 @@ from mailersend import MailerSendClient, UsersBuilder
 
 ms = MailerSendClient()
 
-request = (UsersBuilder()
-          .user_id("user-id")
-          .build_user_get())
+request = UsersBuilder().user_id("user-id").build_user_get()
 
 response = ms.users.get_user(request)
 ```
@@ -2597,23 +2618,22 @@ from mailersend import MailerSendClient, UsersBuilder
 ms = MailerSendClient()
 
 # Basic invite with admin role
-request = (UsersBuilder()
-          .email("newuser@example.com")
-          .admin_role()
-          .build_user_invite())
+request = UsersBuilder().email("newuser@example.com").admin_role().build_user_invite()
 
 response = ms.users.invite_user(request)
 
 # Custom invite with specific permissions and access
-request = (UsersBuilder()
-          .email("designer@example.com")
-          .designer_role()
-          .add_permission("read-all-templates")
-          .add_permission("manage-template")
-          .add_template("template-id")
-          .add_domain("domain-id")
-          .requires_periodic_password_change(True)
-          .build_user_invite())
+request = (
+    UsersBuilder()
+    .email("designer@example.com")
+    .designer_role()
+    .add_permission("read-all-templates")
+    .add_permission("manage-template")
+    .add_template("template-id")
+    .add_domain("domain-id")
+    .requires_periodic_password_change(True)
+    .build_user_invite()
+)
 
 response = ms.users.invite_user(request)
 ```
@@ -2625,13 +2645,15 @@ from mailersend import MailerSendClient, UsersBuilder
 
 ms = MailerSendClient()
 
-request = (UsersBuilder()
-          .user_id("user-id")
-          .manager_role()
-          .add_permission("read-analytics")
-          .add_permission("read-activity")
-          .add_domain("domain-id")
-          .build_user_update())
+request = (
+    UsersBuilder()
+    .user_id("user-id")
+    .manager_role()
+    .add_permission("read-analytics")
+    .add_permission("read-activity")
+    .add_domain("domain-id")
+    .build_user_update()
+)
 
 response = ms.users.update_user(request)
 ```
@@ -2643,9 +2665,7 @@ from mailersend import MailerSendClient, UsersBuilder
 
 ms = MailerSendClient()
 
-request = (UsersBuilder()
-          .user_id("user-id")
-          .build_user_delete())
+request = UsersBuilder().user_id("user-id").build_user_delete()
 
 response = ms.users.delete_user(request)
 ```
@@ -2657,10 +2677,7 @@ from mailersend import MailerSendClient, UsersBuilder
 
 ms = MailerSendClient()
 
-request = (UsersBuilder()
-          .page(1)
-          .limit(25)
-          .build_invites_list())
+request = UsersBuilder().page(1).limit(25).build_invites_list()
 
 response = ms.users.list_invites(request)
 ```
@@ -2672,9 +2689,7 @@ from mailersend import MailerSendClient, UsersBuilder
 
 ms = MailerSendClient()
 
-request = (UsersBuilder()
-          .invite_id("invite-id")
-          .build_invite_get())
+request = UsersBuilder().invite_id("invite-id").build_invite_get()
 
 response = ms.users.get_invite(request)
 ```
@@ -2686,9 +2701,7 @@ from mailersend import MailerSendClient, UsersBuilder
 
 ms = MailerSendClient()
 
-request = (UsersBuilder()
-          .invite_id("invite-id")
-          .build_invite_resend())
+request = UsersBuilder().invite_id("invite-id").build_invite_resend()
 
 response = ms.users.resend_invite(request)
 ```
@@ -2700,9 +2713,7 @@ from mailersend import MailerSendClient, UsersBuilder
 
 ms = MailerSendClient()
 
-request = (UsersBuilder()
-          .invite_id("invite-id")
-          .build_invite_cancel())
+request = UsersBuilder().invite_id("invite-id").build_invite_cancel()
 
 response = ms.users.cancel_invite(request)
 ```
@@ -2716,10 +2727,7 @@ from mailersend import MailerSendClient, DmarcMonitoringBuilder
 
 ms = MailerSendClient()
 
-request = (DmarcMonitoringBuilder()
-          .page(1)
-          .limit(25)
-          .build_list_request())
+request = DmarcMonitoringBuilder().page(1).limit(25).build_list_request()
 
 response = ms.dmarc_monitoring.list_monitors(request)
 ```
@@ -2731,9 +2739,7 @@ from mailersend import MailerSendClient, DmarcMonitoringBuilder
 
 ms = MailerSendClient()
 
-request = (DmarcMonitoringBuilder()
-          .domain_id("your-domain-id")
-          .build_create_request())
+request = DmarcMonitoringBuilder().domain_id("your-domain-id").build_create_request()
 
 response = ms.dmarc_monitoring.create_monitor(request)
 ```
@@ -2745,10 +2751,12 @@ from mailersend import MailerSendClient, DmarcMonitoringBuilder
 
 ms = MailerSendClient()
 
-request = (DmarcMonitoringBuilder()
-          .monitor_id("monitor-id")
-          .wanted_dmarc_record("v=DMARC1; p=reject; rua=mailto:dmarc@example.com")
-          .build_update_request())
+request = (
+    DmarcMonitoringBuilder()
+    .monitor_id("monitor-id")
+    .wanted_dmarc_record("v=DMARC1; p=reject; rua=mailto:dmarc@example.com")
+    .build_update_request()
+)
 
 response = ms.dmarc_monitoring.update_monitor(request)
 ```
@@ -2760,9 +2768,7 @@ from mailersend import MailerSendClient, DmarcMonitoringBuilder
 
 ms = MailerSendClient()
 
-request = (DmarcMonitoringBuilder()
-          .monitor_id("monitor-id")
-          .build_delete_request())
+request = DmarcMonitoringBuilder().monitor_id("monitor-id").build_delete_request()
 
 response = ms.dmarc_monitoring.delete_monitor(request)
 ```
@@ -2774,11 +2780,13 @@ from mailersend import MailerSendClient, DmarcMonitoringBuilder
 
 ms = MailerSendClient()
 
-request = (DmarcMonitoringBuilder()
-          .monitor_id("monitor-id")
-          .page(1)
-          .limit(25)
-          .build_report_request())
+request = (
+    DmarcMonitoringBuilder()
+    .monitor_id("monitor-id")
+    .page(1)
+    .limit(25)
+    .build_report_request()
+)
 
 response = ms.dmarc_monitoring.get_aggregated_report(request)
 ```
@@ -2790,12 +2798,14 @@ from mailersend import MailerSendClient, DmarcMonitoringBuilder
 
 ms = MailerSendClient()
 
-request = (DmarcMonitoringBuilder()
-          .monitor_id("monitor-id")
-          .ip("192.168.1.1")
-          .page(1)
-          .limit(25)
-          .build_ip_report_request())
+request = (
+    DmarcMonitoringBuilder()
+    .monitor_id("monitor-id")
+    .ip("192.168.1.1")
+    .page(1)
+    .limit(25)
+    .build_ip_report_request()
+)
 
 response = ms.dmarc_monitoring.get_ip_report(request)
 ```
@@ -2807,9 +2817,9 @@ from mailersend import MailerSendClient, DmarcMonitoringBuilder
 
 ms = MailerSendClient()
 
-request = (DmarcMonitoringBuilder()
-          .monitor_id("monitor-id")
-          .build_report_sources_request())
+request = (
+    DmarcMonitoringBuilder().monitor_id("monitor-id").build_report_sources_request()
+)
 
 response = ms.dmarc_monitoring.get_report_sources(request)
 ```
@@ -2821,10 +2831,12 @@ from mailersend import MailerSendClient, DmarcMonitoringBuilder
 
 ms = MailerSendClient()
 
-request = (DmarcMonitoringBuilder()
-          .monitor_id("monitor-id")
-          .ip("192.168.1.1")
-          .build_mark_favorite_request())
+request = (
+    DmarcMonitoringBuilder()
+    .monitor_id("monitor-id")
+    .ip("192.168.1.1")
+    .build_mark_favorite_request()
+)
 
 response = ms.dmarc_monitoring.mark_ip_favorite(request)
 ```
@@ -2836,10 +2848,12 @@ from mailersend import MailerSendClient, DmarcMonitoringBuilder
 
 ms = MailerSendClient()
 
-request = (DmarcMonitoringBuilder()
-          .monitor_id("monitor-id")
-          .ip("192.168.1.1")
-          .build_remove_favorite_request())
+request = (
+    DmarcMonitoringBuilder()
+    .monitor_id("monitor-id")
+    .ip("192.168.1.1")
+    .build_remove_favorite_request()
+)
 
 response = ms.dmarc_monitoring.remove_ip_favorite(request)
 ```
@@ -2882,7 +2896,10 @@ response = ms.whatsapp.send(request)
 
 ```python
 from mailersend import MailerSendClient, WhatsAppBuilder
-from mailersend.models.whatsapp import WhatsAppPersonalization, WhatsAppPersonalizationData
+from mailersend.models.whatsapp import (
+    WhatsAppPersonalization,
+    WhatsAppPersonalizationData,
+)
 
 ms = MailerSendClient()
 
@@ -2892,7 +2909,7 @@ p1 = WhatsAppPersonalization(
         header=["John"],
         body=["order #1234", "tomorrow"],
         buttons=["https://example.com/track/1234"],
-    )
+    ),
 )
 
 p2 = WhatsAppPersonalization(
@@ -2901,7 +2918,7 @@ p2 = WhatsAppPersonalization(
         header=["Jane"],
         body=["order #5678", "Friday"],
         buttons=["https://example.com/track/5678"],
-    )
+    ),
 )
 
 request = (
@@ -2932,18 +2949,22 @@ Use `AsyncMailerSendClient` as an async context manager (recommended) to ensure 
 import asyncio
 from mailersend import AsyncMailerSendClient, EmailBuilder
 
+
 async def main():
     async with AsyncMailerSendClient() as client:
-        email = (EmailBuilder()
-                 .from_email("sender@domain.com", "Your Name")
-                 .to_many([{"email": "recipient@domain.com", "name": "Recipient"}])
-                 .subject("Hello from MailerSend!")
-                 .html("<h1>Hello World!</h1>")
-                 .text("Hello World!")
-                 .build())
+        email = (
+            EmailBuilder()
+            .from_email("sender@domain.com", "Your Name")
+            .to_many([{"email": "recipient@domain.com", "name": "Recipient"}])
+            .subject("Hello from MailerSend!")
+            .html("<h1>Hello World!</h1>")
+            .text("Hello World!")
+            .build()
+        )
 
         response = await client.emails.send(email)
         print(response.status_code)
+
 
 asyncio.run(main())
 ```
@@ -2965,29 +2986,29 @@ All resources available on `MailerSendClient` are also available on `AsyncMailer
 
 ```python
 async with AsyncMailerSendClient() as client:
-    client.emails            # Email operations
-    client.activities        # Activity operations
-    client.analytics         # Analytics operations
-    client.domains           # Domain operations
-    client.identities        # Sender identity operations
-    client.inbound           # Inbound route operations
-    client.templates         # Template operations
-    client.tokens            # Token operations
-    client.webhooks          # Webhook operations
+    client.emails  # Email operations
+    client.activities  # Activity operations
+    client.analytics  # Analytics operations
+    client.domains  # Domain operations
+    client.identities  # Sender identity operations
+    client.inbound  # Inbound route operations
+    client.templates  # Template operations
+    client.tokens  # Token operations
+    client.webhooks  # Webhook operations
     client.email_verification  # Email verification operations
-    client.users             # User operations
-    client.messages          # Message operations
-    client.recipients        # Recipient & suppression operations
-    client.schedules         # Scheduled message operations
-    client.smtp_users        # SMTP user operations
-    client.sms_sending       # SMS sending operations
-    client.sms_numbers       # SMS phone number operations
-    client.sms_activity      # SMS activity operations
-    client.sms_inbounds      # SMS inbound routing operations
-    client.sms_recipients    # SMS recipient operations
-    client.sms_webhooks      # SMS webhook operations
-    client.sms_messages      # SMS message operations
-    client.api_quota         # API quota operations
+    client.users  # User operations
+    client.messages  # Message operations
+    client.recipients  # Recipient & suppression operations
+    client.schedules  # Scheduled message operations
+    client.smtp_users  # SMTP user operations
+    client.sms_sending  # SMS sending operations
+    client.sms_numbers  # SMS phone number operations
+    client.sms_activity  # SMS activity operations
+    client.sms_inbounds  # SMS inbound routing operations
+    client.sms_recipients  # SMS recipient operations
+    client.sms_webhooks  # SMS webhook operations
+    client.sms_messages  # SMS message operations
+    client.api_quota  # API quota operations
     client.dmarc_monitoring  # DMARC monitoring operations
 ```
 
@@ -2998,6 +3019,7 @@ The main benefit of `AsyncMailerSendClient` is the ability to run multiple API c
 ```python
 import asyncio
 from mailersend import AsyncMailerSendClient, DomainsBuilder, TemplatesBuilder
+
 
 async def main():
     async with AsyncMailerSendClient() as client:
@@ -3012,6 +3034,7 @@ async def main():
 
         print(f"Domains: {domains_response.data}")
         print(f"Templates: {templates_response.data}")
+
 
 asyncio.run(main())
 ```
@@ -3032,6 +3055,7 @@ from mailersend.exceptions import (
     MailerSendError,
 )
 
+
 async def main():
     async with AsyncMailerSendClient() as client:
         try:
@@ -3049,6 +3073,7 @@ async def main():
         except MailerSendError as e:
             print(f"Unexpected error: {e}")
 
+
 asyncio.run(main())
 ```
 
@@ -3062,6 +3087,7 @@ Debug logging works the same way as the synchronous client:
 import asyncio
 from mailersend import AsyncMailerSendClient
 
+
 async def main():
     # Enable debug at construction time
     async with AsyncMailerSendClient(debug=True) as client:
@@ -3072,6 +3098,7 @@ async def main():
         client.enable_debug()
         response = await client.api_quota.get_quota()
         client.disable_debug()
+
 
 asyncio.run(main())
 ```
@@ -3090,12 +3117,14 @@ from mailersend import EmailBuilder
 ms = MailerSendClient()
 
 try:
-    email = (EmailBuilder()
-             .from_email("invalid-email", "Sender")  # Invalid email
-             .to_many([{"email": "recipient@domain.com", "name": "Recipient"}])
-             .subject("Test")
-             .html("<h1>Test</h1>")
-             .build())
+    email = (
+        EmailBuilder()
+        .from_email("invalid-email", "Sender")  # Invalid email
+        .to_many([{"email": "recipient@domain.com", "name": "Recipient"}])
+        .subject("Test")
+        .html("<h1>Test</h1>")
+        .build()
+    )
 
     response = ms.emails.send(email)
 
@@ -3144,6 +3173,7 @@ The SDK uses VCR.py for integration tests to record and replay API responses:
 import pytest
 from mailersend import MailerSendClient
 from mailersend import SmsRecipientsBuilder
+
 
 @pytest.mark.vcr
 def test_list_sms_recipients():
