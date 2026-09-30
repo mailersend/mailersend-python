@@ -141,6 +141,18 @@ class TestWebhooksBuilder:
         ]
         assert builder._events == expected_events
 
+    def test_reputation_events(self):
+        """Test adding all reputation events."""
+        builder = WebhooksBuilder()
+        result = builder.reputation_events()
+        assert result is builder  # Fluent interface
+
+        expected_events = [
+            "domain.reputation_changed",
+            "account.reputation_changed",
+        ]
+        assert builder._events == expected_events
+
     def test_all_events(self):
         """Test adding all available events."""
         builder = WebhooksBuilder()
@@ -175,10 +187,15 @@ class TestWebhooksBuilder:
             "recipient.on_hold_added",
             "recipient.on_hold_removed",
         ]
+        expected_reputation_events = [
+            "domain.reputation_changed",
+            "account.reputation_changed",
+        ]
         expected_all_events = (
             expected_activity_events
             + expected_system_events
             + expected_recipient_events
+            + expected_reputation_events
         )
         assert builder._events == expected_all_events
 
