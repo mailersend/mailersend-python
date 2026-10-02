@@ -179,6 +179,20 @@ from .whatsapp import (
     WhatsAppPersonalization,
     WhatsAppSendRequest,
 )
+from .whatsapp_messages import (
+    WhatsAppMessagesListRequest,
+    WhatsAppMessageGetRequest,
+)
+from .whatsapp_inbound_messages import (
+    WhatsAppInboundMessageType,
+    WhatsAppInboundMessagesListRequest,
+    WhatsAppInboundMessageGetRequest,
+)
+from .whatsapp_recipients import (
+    WhatsAppRecipientStatus,
+    WhatsAppRecipientsListRequest,
+    WhatsAppRecipientGetRequest,
+)
 
 __all__ = [
     "BaseModel",
@@ -327,4 +341,15 @@ __all__ = [
     "WhatsAppPersonalizationData",
     "WhatsAppPersonalization",
     "WhatsAppSendRequest",
+    # WhatsApp Messages models
+    "WhatsAppMessagesListRequest",
+    "WhatsAppMessageGetRequest",
+    # WhatsApp Inbound Messages models
+    "WhatsAppInboundMessageType",
+    "WhatsAppInboundMessagesListRequest",
+    "WhatsAppInboundMessageGetRequest",
+    # WhatsApp Recipients models
+    "WhatsAppRecipientStatus",
+    "WhatsAppRecipientsListRequest",
+    "WhatsAppRecipientGetRequest",
 ]

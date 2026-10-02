@@ -32,6 +32,8 @@ TOKEN_SCOPES = [
     "users_full",
     "smtp_users_read",
     "smtp_users_full",
+    "whatsapp_full",
+    "whatsapp_read",
 ]
 
 # Token status types
