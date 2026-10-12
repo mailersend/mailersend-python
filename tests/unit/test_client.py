@@ -157,6 +157,9 @@ class TestMailerSendClientInitialization:
                 "sms_webhooks",
                 "api_quota",
                 "dmarc_monitoring",
+                "whatsapp_messages",
+                "whatsapp_inbound_messages",
+                "whatsapp_recipients",
             ]:
                 assert hasattr(client, attr), f"missing resource: {attr}"
 

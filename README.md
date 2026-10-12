@@ -190,6 +190,15 @@ MailerSend Python SDK
   - [WhatsApp](#whatsapp)
     - [Send a WhatsApp message](#send-a-whatsapp-message)
     - [Send a WhatsApp message with personalization](#send-a-whatsapp-message-with-personalization)
+  - [WhatsApp Messages](#whatsapp-messages)
+    - [Get a list of WhatsApp messages](#get-a-list-of-whatsapp-messages)
+    - [Get a WhatsApp message](#get-a-whatsapp-message)
+  - [WhatsApp Inbound Messages](#whatsapp-inbound-messages)
+    - [Get a list of WhatsApp inbound messages](#get-a-list-of-whatsapp-inbound-messages)
+    - [Get a WhatsApp inbound message](#get-a-whatsapp-inbound-message)
+  - [WhatsApp Recipients](#whatsapp-recipients)
+    - [Get a list of WhatsApp recipients](#get-a-list-of-whatsapp-recipients)
+    - [Get a WhatsApp recipient](#get-a-whatsapp-recipient)
   - [Async Usage](#async-usage)
     - [Basic Async Usage](#basic-async-usage)
     - [Concurrent Requests](#concurrent-requests)
@@ -2935,6 +2944,109 @@ request = (
 response = ms.whatsapp.send(request)
 ```
 
+## WhatsApp Messages
+
+### Get a list of WhatsApp messages
+
+```python
+from mailersend import MailerSendClient, WhatsAppMessagesBuilder
+
+ms = MailerSendClient()
+
+request = WhatsAppMessagesBuilder().page(1).limit(25).build_list_request()
+
+response = ms.whatsapp_messages.list_whatsapp_messages(request)
+```
+
+### Get a WhatsApp message
+
+```python
+from mailersend import MailerSendClient, WhatsAppMessagesBuilder
+
+ms = MailerSendClient()
+
+request = WhatsAppMessagesBuilder().whatsapp_message_id("message-id").build_get_request()
+
+response = ms.whatsapp_messages.get_whatsapp_message(request)
+```
+
+## WhatsApp Inbound Messages
+
+### Get a list of WhatsApp inbound messages
+
+```python
+from datetime import datetime, timedelta
+from mailersend import MailerSendClient, WhatsAppInboundMessagesBuilder
+
+ms = MailerSendClient()
+
+# Get inbound messages from the last day
+date_from = int((datetime.now() - timedelta(days=1)).timestamp())
+date_to = int(datetime.now().timestamp())
+
+request = (
+    WhatsAppInboundMessagesBuilder()
+    .whatsapp_account_id("whatsapp-account-id")
+    .type(["text", "image"])
+    .date_from(date_from)
+    .date_to(date_to)
+    .page(1)
+    .limit(25)
+    .build_list_request()
+)
+
+response = ms.whatsapp_inbound_messages.list_whatsapp_inbound_messages(request)
+```
+
+### Get a WhatsApp inbound message
+
+```python
+from mailersend import MailerSendClient, WhatsAppInboundMessagesBuilder
+
+ms = MailerSendClient()
+
+request = (
+    WhatsAppInboundMessagesBuilder()
+    .whatsapp_inbound_message_id("inbound-message-id")
+    .build_get_request()
+)
+
+response = ms.whatsapp_inbound_messages.get_whatsapp_inbound_message(request)
+```
+
+## WhatsApp Recipients
+
+### Get a list of WhatsApp recipients
+
+```python
+from mailersend import MailerSendClient, WhatsAppRecipientsBuilder
+from mailersend.models.whatsapp_recipients import WhatsAppRecipientStatus
+
+ms = MailerSendClient()
+
+request = (
+    WhatsAppRecipientsBuilder()
+    .status(WhatsAppRecipientStatus.ACTIVE)
+    .page(1)
+    .limit(25)
+    .build_list_request()
+)
+
+response = ms.whatsapp_recipients.list_whatsapp_recipients(request)
+```
+
+### Get a WhatsApp recipient
+
+```python
+from mailersend import MailerSendClient, WhatsAppRecipientsBuilder
+
+ms = MailerSendClient()
+
+request = WhatsAppRecipientsBuilder().whatsapp_recipient_id("recipient-id").build_get_request()
+
+response = ms.whatsapp_recipients.get_whatsapp_recipient(request)
+```
+
 <a name="async-usage"></a>
 
 ## Async Usage
@@ -3010,6 +3122,9 @@ async with AsyncMailerSendClient() as client:
     client.sms_messages  # SMS message operations
     client.api_quota  # API quota operations
     client.dmarc_monitoring  # DMARC monitoring operations
+    client.whatsapp_messages  # WhatsApp message operations
+    client.whatsapp_inbound_messages  # WhatsApp inbound message operations
+    client.whatsapp_recipients  # WhatsApp recipient operations
 ```
 
 ### Concurrent Requests
@@ -3215,6 +3330,9 @@ def test_list_sms_recipients():
 | Sender Identities   | `{GET, POST, PUT, DELETE} identities`       | ✅        |
 | API Quota           | `GET api-quota`                             | ✅        |
 | DMARC Monitoring    | `{GET, POST, PUT, DELETE} dmarc-monitoring` | ✅        |
+| WhatsApp Messages   | `GET whatsapp/messages`                     | ✅        |
+| WhatsApp Inbound    | `GET whatsapp/inbound-messages`             | ✅        |
+| WhatsApp Recipients | `GET whatsapp/recipients`                   | ✅        |
 
 _All endpoints are available and fully tested. Refer to [official API docs](https://developers.mailersend.com/) for the most up-to-date API specifications._
 

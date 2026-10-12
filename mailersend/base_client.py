@@ -39,6 +39,9 @@ from .resources.tokens import Tokens
 from .resources.users import Users
 from .resources.webhooks import Webhooks
 from .resources.whatsapp import WhatsApp
+from .resources.whatsapp_inbound_messages import WhatsAppInboundMessages
+from .resources.whatsapp_messages import WhatsAppMessages
+from .resources.whatsapp_recipients import WhatsAppRecipients
 
 # HTTP status codes that warrant a retry
 RETRY_STATUSES: frozenset = frozenset([429, 500, 502, 503, 504])
@@ -106,6 +109,9 @@ class _BaseMailerSendClient:
         self.api_quota = Other(self)
         self.dmarc_monitoring = DmarcMonitoring(self)
         self.whatsapp = WhatsApp(self)
+        self.whatsapp_messages = WhatsAppMessages(self)
+        self.whatsapp_inbound_messages = WhatsAppInboundMessages(self)
+        self.whatsapp_recipients = WhatsAppRecipients(self)
 
     @staticmethod
     def _get_error_message(response: Any) -> str:

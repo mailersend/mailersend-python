@@ -28,6 +28,9 @@ from .other import Other
 from .dmarc_monitoring import DmarcMonitoring
 from .smtp_users import SmtpUsers
 from .whatsapp import WhatsApp
+from .whatsapp_messages import WhatsAppMessages
+from .whatsapp_inbound_messages import WhatsAppInboundMessages
+from .whatsapp_recipients import WhatsAppRecipients
 
 __all__ = [
     "BaseResource",
@@ -56,4 +59,7 @@ __all__ = [
     "Other",
     "DmarcMonitoring",
     "WhatsApp",
+    "WhatsAppMessages",
+    "WhatsAppInboundMessages",
+    "WhatsAppRecipients",
 ]
