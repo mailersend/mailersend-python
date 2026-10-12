@@ -169,6 +169,20 @@ class WebhooksBuilder:
             self.add_event(event)
         return self
 
+    def reputation_events(self) -> "WebhooksBuilder":
+        """Add all reputation events to the webhook.
+
+        Returns:
+            WebhooksBuilder: Self for method chaining
+        """
+        reputation_events = [
+            "domain.reputation_changed",
+            "account.reputation_changed",
+        ]
+        for event in reputation_events:
+            self.add_event(event)
+        return self
+
     def all_events(self) -> "WebhooksBuilder":
         """Add all available events to the webhook.
 
@@ -178,6 +192,7 @@ class WebhooksBuilder:
         self.activity_events()
         self.system_events()
         self.recipient_events()
+        self.reputation_events()
         return self
 
     def build_webhooks_list_request(self) -> WebhooksListRequest:
