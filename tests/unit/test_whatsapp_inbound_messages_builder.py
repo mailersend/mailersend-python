@@ -28,6 +28,7 @@ class TestWhatsAppInboundMessagesBuilder:
         request = (
             WhatsAppInboundMessagesBuilder()
             .whatsapp_account_id("whatsapp-account-id")
+            .from_number("48600000002")
             .type(["text", WhatsAppInboundMessageType.IMAGE])
             .date_from(1790000000)
             .date_to(1790086400)
@@ -38,6 +39,7 @@ class TestWhatsAppInboundMessagesBuilder:
 
         assert request.to_query_params() == {
             "whatsapp_account_id": "whatsapp-account-id",
+            "from": "48600000002",
             "type[]": ["text", "image"],
             "date_from": 1790000000,
             "date_to": 1790086400,
@@ -77,6 +79,31 @@ class TestWhatsAppInboundMessagesBuilder:
                 .date_to(1790000000)
                 .build_list_request()
             )
+
+    def test_from_number_accepts_bsuid(self):
+        request = (
+            WhatsAppInboundMessagesBuilder()
+            .from_number("US.13491208655302741918")
+            .build_list_request()
+        )
+
+        assert request.to_query_params() == {"from": "US.13491208655302741918"}
+
+    @pytest.mark.parametrize("limit", [1, 100])
+    def test_build_list_request_accepts_limit_bounds(self, limit):
+        request = WhatsAppInboundMessagesBuilder().limit(limit).build_list_request()
+
+        assert request.query_params.limit == limit
+
+    @pytest.mark.parametrize("limit", [0, 101])
+    def test_build_list_request_rejects_invalid_limit(self, limit):
+        with pytest.raises(ValidationError):
+            WhatsAppInboundMessagesBuilder().limit(limit).build_list_request()
+
+    @pytest.mark.parametrize("page", [0, 101])
+    def test_build_list_request_rejects_invalid_page(self, page):
+        with pytest.raises(ValidationError):
+            WhatsAppInboundMessagesBuilder().page(page).build_list_request()
 
     def test_build_list_request_rejects_unknown_type(self):
         with pytest.raises(ValidationError):

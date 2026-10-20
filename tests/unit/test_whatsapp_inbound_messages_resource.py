@@ -58,12 +58,13 @@ class TestWhatsAppInboundMessages:
     async def test_list_whatsapp_inbound_messages_with_query_params(self):
         request = WhatsAppInboundMessagesListRequest(
             query_params=WhatsAppInboundMessagesListQueryParams(
-                type=["text", "image"], date_from=1790000000
+                from_="48600000002", type=["text", "image"], date_from=1790000000
             )
         )
         await resolve(self.resource.list_whatsapp_inbound_messages(request))
         call = self.mock_client.request.call_args
         assert call.kwargs["params"] == {
+            "from": "48600000002",
             "type[]": ["text", "image"],
             "date_from": 1790000000,
         }

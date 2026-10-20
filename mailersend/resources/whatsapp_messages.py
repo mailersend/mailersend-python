@@ -35,7 +35,7 @@ class WhatsAppMessages(BaseResource):
 
     def get_whatsapp_message(self, request: WhatsAppMessageGetRequest) -> APIResponse:
         """
-        Get a single WhatsApp message with the status and activity of its recipients.
+        Get a single WhatsApp message with an item for each of its recipients.
 
         Args:
             request: WhatsAppMessageGetRequest object containing WhatsApp message ID

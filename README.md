@@ -193,12 +193,20 @@ MailerSend Python SDK
   - [WhatsApp Messages](#whatsapp-messages)
     - [Get a list of WhatsApp messages](#get-a-list-of-whatsapp-messages)
     - [Get a WhatsApp message](#get-a-whatsapp-message)
+  - [WhatsApp Items](#whatsapp-items)
+    - [Get a list of WhatsApp items](#get-a-list-of-whatsapp-items)
+    - [Get a WhatsApp item](#get-a-whatsapp-item)
+  - [WhatsApp Activities](#whatsapp-activities)
+    - [Get a list of WhatsApp activities](#get-a-list-of-whatsapp-activities)
   - [WhatsApp Inbound Messages](#whatsapp-inbound-messages)
     - [Get a list of WhatsApp inbound messages](#get-a-list-of-whatsapp-inbound-messages)
     - [Get a WhatsApp inbound message](#get-a-whatsapp-inbound-message)
   - [WhatsApp Recipients](#whatsapp-recipients)
     - [Get a list of WhatsApp recipients](#get-a-list-of-whatsapp-recipients)
     - [Get a WhatsApp recipient](#get-a-whatsapp-recipient)
+  - [WhatsApp Templates](#whatsapp-templates)
+    - [Get a list of WhatsApp templates](#get-a-list-of-whatsapp-templates)
+    - [Get a WhatsApp template](#get-a-whatsapp-template)
   - [Async Usage](#async-usage)
     - [Basic Async Usage](#basic-async-usage)
     - [Concurrent Requests](#concurrent-requests)
@@ -2953,7 +2961,17 @@ from mailersend import MailerSendClient, WhatsAppMessagesBuilder
 
 ms = MailerSendClient()
 
-request = WhatsAppMessagesBuilder().page(1).limit(25).build_list_request()
+request = (
+    WhatsAppMessagesBuilder()
+    .whatsapp_account_id("whatsapp-account-id")
+    .from_number("48600000001")
+    .template_id("template-id")
+    .date_from("2026-10-14T00:00:00Z")
+    .date_to("2026-10-15T00:00:00Z")
+    .page(1)
+    .limit(25)
+    .build_list_request()
+)
 
 response = ms.whatsapp_messages.list_whatsapp_messages(request)
 ```
@@ -2968,6 +2986,72 @@ ms = MailerSendClient()
 request = WhatsAppMessagesBuilder().whatsapp_message_id("message-id").build_get_request()
 
 response = ms.whatsapp_messages.get_whatsapp_message(request)
+```
+
+## WhatsApp Items
+
+### Get a list of WhatsApp items
+
+```python
+from mailersend import MailerSendClient, WhatsAppItemsBuilder
+from mailersend.models.whatsapp_items import WhatsAppItemStatus
+
+ms = MailerSendClient()
+
+request = (
+    WhatsAppItemsBuilder()
+    .recipient("48600000002")
+    .whatsapp_message_id("message-id")
+    .status([WhatsAppItemStatus.DELIVERED, WhatsAppItemStatus.READ])
+    .whatsapp_account_id("whatsapp-account-id")
+    .from_number("48600000001")
+    .template_id("template-id")
+    .date_from("2026-10-14T00:00:00Z")
+    .date_to("2026-10-15T00:00:00Z")
+    .page(1)
+    .limit(25)
+    .build_list_request()
+)
+
+response = ms.whatsapp_items.list_whatsapp_items(request)
+```
+
+### Get a WhatsApp item
+
+```python
+from mailersend import MailerSendClient, WhatsAppItemsBuilder
+
+ms = MailerSendClient()
+
+request = WhatsAppItemsBuilder().whatsapp_item_id("item-id").build_get_request()
+
+response = ms.whatsapp_items.get_whatsapp_item(request)
+```
+
+## WhatsApp Activities
+
+### Get a list of WhatsApp activities
+
+```python
+from mailersend import MailerSendClient, WhatsAppActivitiesBuilder
+from mailersend.models.whatsapp_activities import WhatsAppActivityType
+
+ms = MailerSendClient()
+
+request = (
+    WhatsAppActivitiesBuilder()
+    .whatsapp_item_id("item-id")
+    .whatsapp_message_id("message-id")
+    .recipient("48600000002")
+    .type([WhatsAppActivityType.FAILED])
+    .date_from("2026-10-14T00:00:00Z")
+    .date_to("2026-10-15T00:00:00Z")
+    .page(1)
+    .limit(25)
+    .build_list_request()
+)
+
+response = ms.whatsapp_activities.list_whatsapp_activities(request)
 ```
 
 ## WhatsApp Inbound Messages
@@ -2987,6 +3071,7 @@ date_to = int(datetime.now().timestamp())
 request = (
     WhatsAppInboundMessagesBuilder()
     .whatsapp_account_id("whatsapp-account-id")
+    .from_number("48600000002")  # the customer's phone number or BSUID
     .type(["text", "image"])
     .date_from(date_from)
     .date_to(date_to)
@@ -3027,6 +3112,7 @@ ms = MailerSendClient()
 request = (
     WhatsAppRecipientsBuilder()
     .status(WhatsAppRecipientStatus.ACTIVE)
+    .phone_number("48600000001")
     .page(1)
     .limit(25)
     .build_list_request()
@@ -3045,6 +3131,45 @@ ms = MailerSendClient()
 request = WhatsAppRecipientsBuilder().whatsapp_recipient_id("recipient-id").build_get_request()
 
 response = ms.whatsapp_recipients.get_whatsapp_recipient(request)
+```
+
+## WhatsApp Templates
+
+### Get a list of WhatsApp templates
+
+```python
+from mailersend import MailerSendClient, WhatsAppTemplatesBuilder
+from mailersend.models.whatsapp_templates import (
+    WhatsAppTemplateCategory,
+    WhatsAppTemplateStatus,
+)
+
+ms = MailerSendClient()
+
+request = (
+    WhatsAppTemplatesBuilder()
+    .whatsapp_account_id("whatsapp-account-id")
+    .status(WhatsAppTemplateStatus.APPROVED)
+    .category(WhatsAppTemplateCategory.UTILITY)
+    .language("en_US")
+    .page(1)
+    .limit(25)
+    .build_list_request()
+)
+
+response = ms.whatsapp_templates.list_whatsapp_templates(request)
+```
+
+### Get a WhatsApp template
+
+```python
+from mailersend import MailerSendClient, WhatsAppTemplatesBuilder
+
+ms = MailerSendClient()
+
+request = WhatsAppTemplatesBuilder().whatsapp_template_id("template-id").build_get_request()
+
+response = ms.whatsapp_templates.get_whatsapp_template(request)
 ```
 
 <a name="async-usage"></a>

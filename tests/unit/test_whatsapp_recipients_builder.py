@@ -31,6 +31,7 @@ class TestWhatsAppRecipientsBuilder:
         request = (
             WhatsAppRecipientsBuilder()
             .status(WhatsAppRecipientStatus.BLOCKED)
+            .phone_number("48600000001")
             .page(3)
             .limit(10)
             .build_list_request()
@@ -38,13 +39,26 @@ class TestWhatsAppRecipientsBuilder:
 
         assert request.to_query_params() == {
             "status": "blocked",
+            "phone_number": "48600000001",
             "page": 3,
             "limit": 10,
         }
 
-    def test_build_list_request_rejects_invalid_limit(self):
+    @pytest.mark.parametrize("limit", [1, 100])
+    def test_build_list_request_accepts_limit_bounds(self, limit):
+        request = WhatsAppRecipientsBuilder().limit(limit).build_list_request()
+
+        assert request.query_params.limit == limit
+
+    @pytest.mark.parametrize("limit", [0, 101])
+    def test_build_list_request_rejects_invalid_limit(self, limit):
         with pytest.raises(ValidationError):
-            WhatsAppRecipientsBuilder().limit(200).build_list_request()
+            WhatsAppRecipientsBuilder().limit(limit).build_list_request()
+
+    @pytest.mark.parametrize("page", [0, 101])
+    def test_build_list_request_rejects_invalid_page(self, page):
+        with pytest.raises(ValidationError):
+            WhatsAppRecipientsBuilder().page(page).build_list_request()
 
     def test_build_list_request_rejects_invalid_status(self):
         with pytest.raises(ValidationError):

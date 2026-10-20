@@ -37,7 +37,7 @@ class WhatsAppRecipients(BaseResource):
         self, request: WhatsAppRecipientGetRequest
     ) -> APIResponse:
         """
-        Get a single WhatsApp recipient with their latest messages.
+        Get a single WhatsApp recipient with their latest items.
 
         Args:
             request: WhatsAppRecipientGetRequest object containing WhatsApp recipient ID

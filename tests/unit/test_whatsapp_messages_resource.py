@@ -53,11 +53,23 @@ class TestWhatsAppMessages:
 
     async def test_list_whatsapp_messages_with_query_params(self):
         request = WhatsAppMessagesListRequest(
-            query_params=WhatsAppMessagesListQueryParams(page=2)
+            query_params=WhatsAppMessagesListQueryParams(
+                whatsapp_account_id="whatsapp-account-id",
+                from_="48600000001",
+                template_id="template-id",
+                date_from="2026-10-14T00:00:00Z",
+                page=2,
+            )
         )
         await resolve(self.resource.list_whatsapp_messages(request))
         call = self.mock_client.request.call_args
-        assert call.kwargs["params"] == {"page": 2}
+        assert call.kwargs["params"] == {
+            "whatsapp_account_id": "whatsapp-account-id",
+            "from": "48600000001",
+            "template_id": "template-id",
+            "date_from": "2026-10-14T00:00:00Z",
+            "page": 2,
+        }
 
     async def test_get_whatsapp_message_returns_api_response(self):
         result = await resolve(
