@@ -21,10 +21,21 @@ class WhatsAppRecipientsListQueryParams(BaseModel):
     status: Optional[WhatsAppRecipientStatus] = Field(
         None, description="Recipient status filter"
     )
-    page: int = Field(default=1, ge=1, description="Page number")
-    limit: int = Field(
-        default=25, ge=10, le=100, description="Number of results per page"
+    phone_number: Optional[str] = Field(
+        None, description="Recipient phone number filter"
     )
+    page: int = Field(default=1, ge=1, le=100, description="Page number")
+    limit: int = Field(
+        default=25, ge=1, le=100, description="Number of results per page"
+    )
+
+    @field_validator("phone_number")
+    @classmethod
+    def validate_phone_number(cls, v: Optional[str]) -> Optional[str]:
+        """Validate and clean phone_number."""
+        if v is not None:
+            return v.strip()
+        return v
 
     def to_query_params(self) -> Dict[str, Any]:
         """Convert to query parameters dict, excluding None and default values."""
@@ -32,6 +43,8 @@ class WhatsAppRecipientsListQueryParams(BaseModel):
 
         if self.status is not None:
             params["status"] = self.status.value
+        if self.phone_number is not None:
+            params["phone_number"] = self.phone_number
         if self.page != 1:
             params["page"] = self.page
         if self.limit != 25:

@@ -32,6 +32,9 @@ class WhatsAppInboundMessagesListQueryParams(BaseModel):
     whatsapp_account_id: Optional[str] = Field(
         None, description="WhatsApp account (sender) ID filter"
     )
+    from_: Optional[str] = Field(
+        None, alias="from", description="Customer phone number or BSUID filter"
+    )
     type: Optional[List[WhatsAppInboundMessageType]] = Field(
         None, description="Message type filter"
     )
@@ -41,15 +44,15 @@ class WhatsAppInboundMessagesListQueryParams(BaseModel):
     date_to: Optional[Union[int, str]] = Field(
         None, description="Unix timestamp or ISO 8601 datetime (exclusive)"
     )
-    page: int = Field(default=1, ge=1, description="Page number")
+    page: int = Field(default=1, ge=1, le=100, description="Page number")
     limit: int = Field(
-        default=25, ge=10, le=100, description="Number of results per page"
+        default=25, ge=1, le=100, description="Number of results per page"
     )
 
-    @field_validator("whatsapp_account_id")
+    @field_validator("whatsapp_account_id", "from_")
     @classmethod
     def validate_whatsapp_account_id(cls, v: Optional[str]) -> Optional[str]:
-        """Validate and clean whatsapp_account_id."""
+        """Validate and clean whatsapp_account_id and from."""
         if v is not None:
             return v.strip()
         return v
@@ -71,6 +74,8 @@ class WhatsAppInboundMessagesListQueryParams(BaseModel):
 
         if self.whatsapp_account_id is not None:
             params["whatsapp_account_id"] = self.whatsapp_account_id
+        if self.from_ is not None:
+            params["from"] = self.from_
         if self.type:
             params["type[]"] = [message_type.value for message_type in self.type]
         if self.date_from is not None:

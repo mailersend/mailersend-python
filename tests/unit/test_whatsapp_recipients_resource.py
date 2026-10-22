@@ -53,11 +53,17 @@ class TestWhatsAppRecipients:
 
     async def test_list_whatsapp_recipients_with_query_params(self):
         request = WhatsAppRecipientsListRequest(
-            query_params=WhatsAppRecipientsListQueryParams(status="active", limit=50)
+            query_params=WhatsAppRecipientsListQueryParams(
+                status="active", phone_number="48600000001", limit=50
+            )
         )
         await resolve(self.resource.list_whatsapp_recipients(request))
         call = self.mock_client.request.call_args
-        assert call.kwargs["params"] == {"status": "active", "limit": 50}
+        assert call.kwargs["params"] == {
+            "status": "active",
+            "phone_number": "48600000001",
+            "limit": 50,
+        }
 
     async def test_get_whatsapp_recipient_returns_api_response(self):
         result = await resolve(

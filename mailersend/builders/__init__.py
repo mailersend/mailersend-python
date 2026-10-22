@@ -29,8 +29,11 @@ from .sms_inbounds import SmsInboundsBuilder
 from .dmarc_monitoring import DmarcMonitoringBuilder
 from .whatsapp import WhatsAppBuilder
 from .whatsapp_messages import WhatsAppMessagesBuilder
+from .whatsapp_items import WhatsAppItemsBuilder
+from .whatsapp_activities import WhatsAppActivitiesBuilder
 from .whatsapp_inbound_messages import WhatsAppInboundMessagesBuilder
 from .whatsapp_recipients import WhatsAppRecipientsBuilder
+from .whatsapp_templates import WhatsAppTemplatesBuilder
 
 __all__ = [
     "EmailBuilder",
@@ -59,6 +62,9 @@ __all__ = [
     "DmarcMonitoringBuilder",
     "WhatsAppBuilder",
     "WhatsAppMessagesBuilder",
+    "WhatsAppItemsBuilder",
+    "WhatsAppActivitiesBuilder",
     "WhatsAppInboundMessagesBuilder",
     "WhatsAppRecipientsBuilder",
+    "WhatsAppTemplatesBuilder",
 ]
