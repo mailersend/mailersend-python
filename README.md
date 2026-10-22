@@ -2983,7 +2983,9 @@ from mailersend import MailerSendClient, WhatsAppMessagesBuilder
 
 ms = MailerSendClient()
 
-request = WhatsAppMessagesBuilder().whatsapp_message_id("message-id").build_get_request()
+request = (
+    WhatsAppMessagesBuilder().whatsapp_message_id("message-id").build_get_request()
+)
 
 response = ms.whatsapp_messages.get_whatsapp_message(request)
 ```
@@ -3128,7 +3130,11 @@ from mailersend import MailerSendClient, WhatsAppRecipientsBuilder
 
 ms = MailerSendClient()
 
-request = WhatsAppRecipientsBuilder().whatsapp_recipient_id("recipient-id").build_get_request()
+request = (
+    WhatsAppRecipientsBuilder()
+    .whatsapp_recipient_id("recipient-id")
+    .build_get_request()
+)
 
 response = ms.whatsapp_recipients.get_whatsapp_recipient(request)
 ```
@@ -3167,7 +3173,9 @@ from mailersend import MailerSendClient, WhatsAppTemplatesBuilder
 
 ms = MailerSendClient()
 
-request = WhatsAppTemplatesBuilder().whatsapp_template_id("template-id").build_get_request()
+request = (
+    WhatsAppTemplatesBuilder().whatsapp_template_id("template-id").build_get_request()
+)
 
 response = ms.whatsapp_templates.get_whatsapp_template(request)
 ```
