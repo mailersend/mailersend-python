@@ -17,6 +17,7 @@ class WhatsAppInboundMessagesBuilder:
     def __init__(self) -> None:
         """Initialize the WhatsAppInboundMessagesBuilder."""
         self._whatsapp_account_id: Optional[str] = None
+        self._from_number: Optional[str] = None
         self._type: Optional[List[Union[WhatsAppInboundMessageType, str]]] = None
         self._date_from: Optional[Union[int, str]] = None
         self._date_to: Optional[Union[int, str]] = None
@@ -39,19 +40,38 @@ class WhatsAppInboundMessagesBuilder:
         self._whatsapp_account_id = whatsapp_account_id
         return self
 
+    def from_number(self, phone_number: str) -> "WhatsAppInboundMessagesBuilder":
+        """
+        Set the customer filter.
+
+        Args:
+            phone_number: Customer's phone number in international format, or
+                their BSUID when Meta withholds the phone number
+
+        Returns:
+            WhatsAppInboundMessagesBuilder: Builder instance for method chaining
+        """
+        self._from_number = phone_number
+        return self
+
     def type(
-        self, types: List[Union[WhatsAppInboundMessageType, str]]
+        self,
+        types: Union[
+            WhatsAppInboundMessageType,
+            str,
+            List[Union[WhatsAppInboundMessageType, str]],
+        ],
     ) -> "WhatsAppInboundMessagesBuilder":
         """
         Set the message type filter. Multiple values are combined with OR.
 
         Args:
-            types: Message types to filter by (e.g. ["text", "image"])
+            types: A message type, or a list of them (e.g. "image" or ["text", "image"])
 
         Returns:
             WhatsAppInboundMessagesBuilder: Builder instance for method chaining
         """
-        self._type = list(types)
+        self._type = [types] if isinstance(types, str) else list(types)
         return self
 
     def date_from(
@@ -89,7 +109,7 @@ class WhatsAppInboundMessagesBuilder:
         Set the page number for pagination.
 
         Args:
-            page: Page number (must be >= 1)
+            page: Page number (1-100)
 
         Returns:
             WhatsAppInboundMessagesBuilder: Builder instance for method chaining
@@ -102,7 +122,7 @@ class WhatsAppInboundMessagesBuilder:
         Set the limit for number of results per page.
 
         Args:
-            limit: Number of results per page (10-100)
+            limit: Number of results per page (1-100)
 
         Returns:
             WhatsAppInboundMessagesBuilder: Builder instance for method chaining
@@ -143,6 +163,8 @@ class WhatsAppInboundMessagesBuilder:
 
         if self._whatsapp_account_id is not None:
             params["whatsapp_account_id"] = self._whatsapp_account_id
+        if self._from_number is not None:
+            params["from_"] = self._from_number
         if self._type is not None:
             params["type"] = self._type
         if self._date_from is not None:

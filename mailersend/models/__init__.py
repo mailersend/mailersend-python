@@ -183,6 +183,15 @@ from .whatsapp_messages import (
     WhatsAppMessagesListRequest,
     WhatsAppMessageGetRequest,
 )
+from .whatsapp_items import (
+    WhatsAppItemStatus,
+    WhatsAppItemsListRequest,
+    WhatsAppItemGetRequest,
+)
+from .whatsapp_activities import (
+    WhatsAppActivityType,
+    WhatsAppActivitiesListRequest,
+)
 from .whatsapp_inbound_messages import (
     WhatsAppInboundMessageType,
     WhatsAppInboundMessagesListRequest,
@@ -192,6 +201,12 @@ from .whatsapp_recipients import (
     WhatsAppRecipientStatus,
     WhatsAppRecipientsListRequest,
     WhatsAppRecipientGetRequest,
+)
+from .whatsapp_templates import (
+    WhatsAppTemplateStatus,
+    WhatsAppTemplateCategory,
+    WhatsAppTemplatesListRequest,
+    WhatsAppTemplateGetRequest,
 )
 
 __all__ = [
@@ -344,6 +359,13 @@ __all__ = [
     # WhatsApp Messages models
     "WhatsAppMessagesListRequest",
     "WhatsAppMessageGetRequest",
+    # WhatsApp Items models
+    "WhatsAppItemStatus",
+    "WhatsAppItemsListRequest",
+    "WhatsAppItemGetRequest",
+    # WhatsApp Activities models
+    "WhatsAppActivityType",
+    "WhatsAppActivitiesListRequest",
     # WhatsApp Inbound Messages models
     "WhatsAppInboundMessageType",
     "WhatsAppInboundMessagesListRequest",
@@ -352,4 +374,9 @@ __all__ = [
     "WhatsAppRecipientStatus",
     "WhatsAppRecipientsListRequest",
     "WhatsAppRecipientGetRequest",
+    # WhatsApp Templates models
+    "WhatsAppTemplateStatus",
+    "WhatsAppTemplateCategory",
+    "WhatsAppTemplatesListRequest",
+    "WhatsAppTemplateGetRequest",
 ]

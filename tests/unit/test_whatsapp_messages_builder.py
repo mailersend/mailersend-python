@@ -1,5 +1,7 @@
 """Tests for WhatsApp Messages builder."""
 
+from datetime import datetime, timezone
+
 import pytest
 from pydantic import ValidationError
 
@@ -26,14 +28,77 @@ class TestWhatsAppMessagesBuilder:
 
         assert request.to_query_params() == {"page": 2, "limit": 50}
 
-    @pytest.mark.parametrize("limit", [9, 101])
+    def test_build_list_request_with_all_params(self):
+        request = (
+            WhatsAppMessagesBuilder()
+            .whatsapp_account_id("whatsapp-account-id")
+            .from_number("48600000001")
+            .template_id("template-id")
+            .date_from(1790000000)
+            .date_to(1790086400)
+            .page(2)
+            .limit(50)
+            .build_list_request()
+        )
+
+        assert request.to_query_params() == {
+            "whatsapp_account_id": "whatsapp-account-id",
+            "from": "48600000001",
+            "template_id": "template-id",
+            "date_from": 1790000000,
+            "date_to": 1790086400,
+            "page": 2,
+            "limit": 50,
+        }
+
+    def test_date_accepts_datetime(self):
+        request = (
+            WhatsAppMessagesBuilder()
+            .date_from(datetime(2026, 10, 1, tzinfo=timezone.utc))
+            .date_to(datetime(2026, 10, 2, tzinfo=timezone.utc))
+            .build_list_request()
+        )
+
+        params = request.to_query_params()
+        assert params["date_from"] == 1790812800
+        assert params["date_to"] == 1790899200
+
+    def test_date_accepts_iso_string(self):
+        request = (
+            WhatsAppMessagesBuilder()
+            .date_from("2026-10-01T00:00:00Z")
+            .date_to("2026-10-02T00:00:00Z")
+            .build_list_request()
+        )
+
+        params = request.to_query_params()
+        assert params["date_from"] == "2026-10-01T00:00:00Z"
+        assert params["date_to"] == "2026-10-02T00:00:00Z"
+
+    def test_build_list_request_rejects_date_to_before_date_from(self):
+        with pytest.raises(ValidationError, match="date_to must be greater"):
+            (
+                WhatsAppMessagesBuilder()
+                .date_from(1790086400)
+                .date_to(1790000000)
+                .build_list_request()
+            )
+
+    @pytest.mark.parametrize("limit", [1, 100])
+    def test_build_list_request_accepts_limit_bounds(self, limit):
+        request = WhatsAppMessagesBuilder().limit(limit).build_list_request()
+
+        assert request.query_params.limit == limit
+
+    @pytest.mark.parametrize("limit", [0, 101])
     def test_build_list_request_rejects_invalid_limit(self, limit):
         with pytest.raises(ValidationError):
             WhatsAppMessagesBuilder().limit(limit).build_list_request()
 
-    def test_build_list_request_rejects_invalid_page(self):
+    @pytest.mark.parametrize("page", [0, 101])
+    def test_build_list_request_rejects_invalid_page(self, page):
         with pytest.raises(ValidationError):
-            WhatsAppMessagesBuilder().page(0).build_list_request()
+            WhatsAppMessagesBuilder().page(page).build_list_request()
 
     def test_build_get_request(self):
         request = (

@@ -16,6 +16,7 @@ class WhatsAppRecipientsBuilder:
     def __init__(self) -> None:
         """Initialize the WhatsAppRecipientsBuilder."""
         self._status: Optional[WhatsAppRecipientStatus] = None
+        self._phone_number: Optional[str] = None
         self._page: Optional[int] = None
         self._limit: Optional[int] = None
         self._whatsapp_recipient_id: Optional[str] = None
@@ -33,12 +34,26 @@ class WhatsAppRecipientsBuilder:
         self._status = status
         return self
 
+    def phone_number(self, phone_number: str) -> "WhatsAppRecipientsBuilder":
+        """
+        Set the phone number filter for listing WhatsApp recipients.
+
+        Args:
+            phone_number: Recipient's phone number in international format.
+                Spaces, dashes and the leading + are ignored.
+
+        Returns:
+            WhatsAppRecipientsBuilder: Builder instance for method chaining
+        """
+        self._phone_number = phone_number
+        return self
+
     def page(self, page: int) -> "WhatsAppRecipientsBuilder":
         """
         Set the page number for pagination.
 
         Args:
-            page: Page number (must be >= 1)
+            page: Page number (1-100)
 
         Returns:
             WhatsAppRecipientsBuilder: Builder instance for method chaining
@@ -51,7 +66,7 @@ class WhatsAppRecipientsBuilder:
         Set the limit for number of results per page.
 
         Args:
-            limit: Number of results per page (10-100)
+            limit: Number of results per page (1-100)
 
         Returns:
             WhatsAppRecipientsBuilder: Builder instance for method chaining
@@ -85,6 +100,8 @@ class WhatsAppRecipientsBuilder:
 
         if self._status is not None:
             params["status"] = self._status
+        if self._phone_number is not None:
+            params["phone_number"] = self._phone_number
         if self._page is not None:
             params["page"] = self._page
         if self._limit is not None:
