@@ -67,18 +67,19 @@ class WhatsAppActivitiesBuilder:
         return self
 
     def type(
-        self, types: List[Union[WhatsAppActivityType, str]]
+        self,
+        types: Union[WhatsAppActivityType, str, List[Union[WhatsAppActivityType, str]]],
     ) -> "WhatsAppActivitiesBuilder":
         """
         Set the activity type filter. Multiple values are combined with OR.
 
         Args:
-            types: Activity types to filter by (e.g. ["delivered", "read"])
+            types: An activity type, or a list of them (e.g. "failed" or ["delivered", "read"])
 
         Returns:
             WhatsAppActivitiesBuilder: Builder instance for method chaining
         """
-        self._type = list(types)
+        self._type = [types] if isinstance(types, str) else list(types)
         return self
 
     def date_from(

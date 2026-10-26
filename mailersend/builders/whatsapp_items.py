@@ -56,18 +56,19 @@ class WhatsAppItemsBuilder:
         return self
 
     def status(
-        self, statuses: List[Union[WhatsAppItemStatus, str]]
+        self,
+        statuses: Union[WhatsAppItemStatus, str, List[Union[WhatsAppItemStatus, str]]],
     ) -> "WhatsAppItemsBuilder":
         """
         Set the status filter. Multiple values are combined with OR.
 
         Args:
-            statuses: Statuses to filter by (e.g. ["delivered", "read"])
+            statuses: A status, or a list of statuses (e.g. "failed" or ["delivered", "read"])
 
         Returns:
             WhatsAppItemsBuilder: Builder instance for method chaining
         """
-        self._status = list(statuses)
+        self._status = [statuses] if isinstance(statuses, str) else list(statuses)
         return self
 
     def whatsapp_account_id(self, whatsapp_account_id: str) -> "WhatsAppItemsBuilder":

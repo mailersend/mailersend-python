@@ -75,6 +75,12 @@ class TestWhatsAppActivitiesBuilder:
                 .build_list_request()
             )
 
+    @pytest.mark.parametrize("activity_type", ["failed", WhatsAppActivityType.FAILED])
+    def test_type_accepts_a_single_value(self, activity_type):
+        request = WhatsAppActivitiesBuilder().type(activity_type).build_list_request()
+
+        assert request.to_query_params() == {"type[]": ["failed"]}
+
     def test_build_list_request_rejects_unknown_type(self):
         with pytest.raises(ValidationError):
             WhatsAppActivitiesBuilder().type(["clicked"]).build_list_request()

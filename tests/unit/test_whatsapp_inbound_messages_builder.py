@@ -105,6 +105,16 @@ class TestWhatsAppInboundMessagesBuilder:
         with pytest.raises(ValidationError):
             WhatsAppInboundMessagesBuilder().page(page).build_list_request()
 
+    @pytest.mark.parametrize(
+        "message_type", ["image", WhatsAppInboundMessageType.IMAGE]
+    )
+    def test_type_accepts_a_single_value(self, message_type):
+        request = (
+            WhatsAppInboundMessagesBuilder().type(message_type).build_list_request()
+        )
+
+        assert request.to_query_params() == {"type[]": ["image"]}
+
     def test_build_list_request_rejects_unknown_type(self):
         with pytest.raises(ValidationError):
             WhatsAppInboundMessagesBuilder().type(["fax"]).build_list_request()

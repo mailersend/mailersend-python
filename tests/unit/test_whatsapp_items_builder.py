@@ -92,6 +92,12 @@ class TestWhatsAppItemsBuilder:
                 .build_list_request()
             )
 
+    @pytest.mark.parametrize("status", ["failed", WhatsAppItemStatus.FAILED])
+    def test_status_accepts_a_single_value(self, status):
+        request = WhatsAppItemsBuilder().status(status).build_list_request()
+
+        assert request.to_query_params() == {"status[]": ["failed"]}
+
     def test_build_list_request_rejects_unknown_status(self):
         with pytest.raises(ValidationError):
             WhatsAppItemsBuilder().status(["bounced"]).build_list_request()

@@ -55,18 +55,23 @@ class WhatsAppInboundMessagesBuilder:
         return self
 
     def type(
-        self, types: List[Union[WhatsAppInboundMessageType, str]]
+        self,
+        types: Union[
+            WhatsAppInboundMessageType,
+            str,
+            List[Union[WhatsAppInboundMessageType, str]],
+        ],
     ) -> "WhatsAppInboundMessagesBuilder":
         """
         Set the message type filter. Multiple values are combined with OR.
 
         Args:
-            types: Message types to filter by (e.g. ["text", "image"])
+            types: A message type, or a list of them (e.g. "image" or ["text", "image"])
 
         Returns:
             WhatsAppInboundMessagesBuilder: Builder instance for method chaining
         """
-        self._type = list(types)
+        self._type = [types] if isinstance(types, str) else list(types)
         return self
 
     def date_from(
