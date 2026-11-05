@@ -118,6 +118,37 @@ class TestMailerSendClientInitialization:
             )
             assert client.base_url == "https://api.example.com/v1/"
 
+    @pytest.mark.parametrize(
+        "api_version, expected",
+        [
+            (None, "https://api.mailersend.com/2026-10/"),
+            ("v1", "https://api.mailersend.com/v1/"),
+            ("2027-01", "https://api.mailersend.com/2027-01/"),
+        ],
+    )
+    def test_base_url_uses_the_api_version(self, api_version, expected):
+        with (
+            patch("mailersend.base_client.RequestLogger"),
+            patch("mailersend.client.requests.Session"),
+        ):
+            client = MailerSendClient(api_key="k", api_version=api_version)
+            assert client.base_url == expected
+
+    @pytest.mark.parametrize("api_version", ["2026-13", "2026-1", "latest", ""])
+    def test_invalid_api_version_raises(self, api_version):
+        with patch("mailersend.client.requests.Session"):
+            with pytest.raises(ValueError, match="api_version"):
+                MailerSendClient(api_key="k", api_version=api_version)
+
+    def test_base_url_and_api_version_together_raise(self):
+        with patch("mailersend.client.requests.Session"):
+            with pytest.raises(ValueError, match="not both"):
+                MailerSendClient(
+                    api_key="k",
+                    base_url="https://api.example.com/v1",
+                    api_version="2026-10",
+                )
+
     def test_is_base_client_subclass(self):
         with (
             patch("mailersend.base_client.RequestLogger"),

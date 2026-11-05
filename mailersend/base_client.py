@@ -4,7 +4,13 @@ import logging
 import os
 from typing import Any, Dict, NoReturn, Optional
 
-from .constants import DEFAULT_BASE_URL, DEFAULT_TIMEOUT, USER_AGENT
+from .constants import (
+    API_HOST,
+    API_VERSION_PATTERN,
+    DEFAULT_API_VERSION,
+    DEFAULT_TIMEOUT,
+    USER_AGENT,
+)
 from .exceptions import (
     AuthenticationError,
     BadRequestError,
@@ -62,11 +68,12 @@ class _BaseMailerSendClient:
     def __init__(
         self,
         api_key: Optional[str] = None,
-        base_url: str = DEFAULT_BASE_URL,
+        base_url: Optional[str] = None,
         timeout: int = DEFAULT_TIMEOUT,
         max_retries: int = 3,
         debug: bool = False,
         logger: Optional[logging.Logger] = None,
+        api_version: Optional[str] = None,
     ) -> None:
         resolved_api_key = api_key or os.getenv("MAILERSEND_API_KEY")
         if not resolved_api_key:
@@ -76,7 +83,7 @@ class _BaseMailerSendClient:
             )
 
         self.api_key = resolved_api_key
-        self.base_url = base_url.rstrip("/") + "/"
+        self.base_url = self._resolve_base_url(base_url, api_version)
         self.timeout = timeout
         self.max_retries = max_retries
         self.debug = debug
@@ -84,6 +91,22 @@ class _BaseMailerSendClient:
         self.request_logger = RequestLogger(self.logger)
 
         self._init_resources()
+
+    @staticmethod
+    def _resolve_base_url(base_url: Optional[str], api_version: Optional[str]) -> str:
+        if base_url is not None and api_version is not None:
+            raise ValueError("Pass either 'base_url' or 'api_version', not both.")
+
+        if base_url is None:
+            version = DEFAULT_API_VERSION if api_version is None else api_version
+            if not API_VERSION_PATTERN.match(version):
+                raise ValueError(
+                    f"'api_version' must be 'v1' or a dated version such as "
+                    f"'{DEFAULT_API_VERSION}', got '{version}'."
+                )
+            base_url = f"{API_HOST}/{version}"
+
+        return base_url.rstrip("/") + "/"
 
     def _init_resources(self) -> None:
         """Instantiate all API resource objects."""

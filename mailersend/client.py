@@ -7,7 +7,7 @@ from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
 from .base_client import _BaseMailerSendClient, RETRY_STATUSES
-from .constants import DEFAULT_BASE_URL, DEFAULT_TIMEOUT, USER_AGENT
+from .constants import DEFAULT_TIMEOUT, USER_AGENT
 from .exceptions import MailerSendError
 
 
@@ -34,11 +34,12 @@ class MailerSendClient(_BaseMailerSendClient):
     def __init__(
         self,
         api_key: Optional[str] = None,
-        base_url: str = DEFAULT_BASE_URL,
+        base_url: Optional[str] = None,
         timeout: int = DEFAULT_TIMEOUT,
         max_retries: int = 3,
         debug: bool = False,
         logger: Optional[logging.Logger] = None,
+        api_version: Optional[str] = None,
     ) -> None:
         """
         Initialize the MailerSend client.
@@ -46,17 +47,23 @@ class MailerSendClient(_BaseMailerSendClient):
         Args:
             api_key: Your MailerSend API key. If not provided, will try to read
                     from MAILERSEND_API_KEY environment variable
-            base_url: Base URL for API requests
+            base_url: Full base URL for API requests, including the version.
+                    Overrides api_version
             timeout: Request timeout in seconds
             max_retries: Maximum number of retries for failed requests
             debug: Enable detailed debug logging
             logger: Custom logger instance
+            api_version: API version, "v1" or a dated version such as "2026-10".
+                    Defaults to DEFAULT_API_VERSION
 
         Raises:
             ValueError: If no API key is provided and MAILERSEND_API_KEY
-                       environment variable is not set
+                       environment variable is not set, if api_version is
+                       invalid, or if both base_url and api_version are passed
         """
-        super().__init__(api_key, base_url, timeout, max_retries, debug, logger)
+        super().__init__(
+            api_key, base_url, timeout, max_retries, debug, logger, api_version
+        )
 
         self.session = requests.Session()
         retry_strategy = Retry(
