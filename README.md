@@ -14,6 +14,7 @@ MailerSend Python SDK
       - [Option 1: System Environment Variable](#option-1-system-environment-variable)
       - [Option 2: Using .env File](#option-2-using-env-file)
     - [Direct API Key](#direct-api-key)
+  - [API version](#api-version)
 - [SDK Architecture](#sdk-architecture)
   - [Builder Pattern](#builder-pattern)
   - [Resource Classes](#resource-classes)
@@ -292,6 +293,20 @@ from mailersend import MailerSendClient
 ms = MailerSendClient(api_key="your-api-key")
 ```
 
+## API version
+
+The SDK sends requests to API version `2026-10` by default, which returns the same responses as `v1`. To pin a version, or to stay on `v1`, pass `api_version`:
+
+```python
+from mailersend import MailerSendClient
+
+ms = MailerSendClient(api_version="2026-10")
+```
+
+To send requests somewhere else, such as a proxy, pass the full `base_url` including the version instead. `base_url` and `api_version` can't be combined.
+
+See the [API changelog](https://developers.mailersend.com/api/changelog) for what changes between versions.
+
 <a name="sdk-architecture"></a>
 
 # SDK Architecture
@@ -369,6 +384,7 @@ client = AsyncMailerSendClient(
     timeout=30,
     max_retries=3,
     debug=True,
+    api_version="2026-10",
 )
 ```
 
