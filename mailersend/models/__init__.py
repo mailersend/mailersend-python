@@ -208,6 +208,16 @@ from .whatsapp_templates import (
     WhatsAppTemplatesListRequest,
     WhatsAppTemplateGetRequest,
 )
+from .account import (
+    Account,
+    AccountEmails,
+    AccountRateLimits,
+    AccountResourceUsage,
+    AccountResources,
+    AccountSmsAddon,
+    AccountWhatsAppAddon,
+    AccountAddons,
+)
 
 __all__ = [
     "BaseModel",
@@ -379,4 +389,13 @@ __all__ = [
     "WhatsAppTemplateCategory",
     "WhatsAppTemplatesListRequest",
     "WhatsAppTemplateGetRequest",
+    # Account models
+    "Account",
+    "AccountEmails",
+    "AccountRateLimits",
+    "AccountResourceUsage",
+    "AccountResources",
+    "AccountSmsAddon",
+    "AccountWhatsAppAddon",
+    "AccountAddons",
 ]
