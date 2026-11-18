@@ -55,7 +55,7 @@ class AsyncMailerSendClient(_BaseMailerSendClient):
             api_key: Your MailerSend API key. If not provided, will try to read
                     from MAILERSEND_API_KEY environment variable
             base_url: Full base URL for API requests, including the version.
-                    Overrides api_version
+                    Cannot be combined with api_version
             timeout: Request timeout in seconds
             max_retries: Maximum number of retries for failed requests
             debug: Enable detailed debug logging
