@@ -20,11 +20,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1763966396,
-        "narHash": "sha256-6eeL1YPcY1MV3DDStIDIdy/zZCDKgHdkCmsrLJFiZf0=",
+        "lastModified": 1794890597,
+        "narHash": "sha256-lME2lHoDHAaSHP3/okgiVoJ0icVEvsQH8LeU3We7tcc=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "5ae3b07d8d6527c42f17c876e404993199144b6a",
+        "rev": "04906337b6d53e8bb0eaf0470ae9f070a4d4eb55",
         "type": "github"
       },
       "original": {
@@ -37,7 +37,8 @@
     "root": {
       "inputs": {
         "flake-utils": "flake-utils",
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": "nixpkgs",
+        "vesnik": "vesnik"
       }
     },
     "systems": {
@@ -52,6 +53,27 @@
       "original": {
         "owner": "nix-systems",
         "repo": "default",
+        "type": "github"
+      }
+    },
+    "vesnik": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1792501163,
+        "narHash": "sha256-NL9FUQSh2m8WD67KBuWi0Y5jy+qkGE/0dT+BC3MJD60=",
+        "owner": "nklmilojevic",
+        "repo": "vesnik",
+        "rev": "ee5d22cdabf097da4fbcd975da9473a8be78ea28",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nklmilojevic",
+        "ref": "v0.2.0",
+        "repo": "vesnik",
         "type": "github"
       }
     }
