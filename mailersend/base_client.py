@@ -14,6 +14,7 @@ from .exceptions import (
     ServerError,
 )
 from .logging import get_logger, RequestLogger
+from .resources.account import AccountResource
 from .resources.activity import Activity
 from .resources.analytics import Analytics
 from .resources.dmarc_monitoring import DmarcMonitoring
@@ -110,6 +111,7 @@ class _BaseMailerSendClient:
         self.sms_recipients = SmsRecipients(self)
         self.sms_webhooks = SmsWebhooks(self)
         self.api_quota = Other(self)
+        self.account = AccountResource(self)
         self.dmarc_monitoring = DmarcMonitoring(self)
         self.whatsapp = WhatsApp(self)
         self.whatsapp_messages = WhatsAppMessages(self)

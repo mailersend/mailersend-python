@@ -187,6 +187,7 @@ MailerSend Python SDK
     - [Remove IP from favorites](#remove-ip-from-favorites)
   - [Other Endpoints](#other-endpoints)
     - [Get API Quota](#get-api-quota)
+    - [Get account](#get-account)
   - [WhatsApp](#whatsapp)
     - [Send a WhatsApp message](#send-a-whatsapp-message)
     - [Send a WhatsApp message with personalization](#send-a-whatsapp-message-with-personalization)
@@ -2887,6 +2888,22 @@ ms = MailerSendClient()
 response = ms.api_quota.get_quota()
 ```
 
+### Get account
+
+```python
+from mailersend import MailerSendClient
+from mailersend.models import Account
+
+ms = MailerSendClient()
+
+response = ms.account.get_account()
+
+account = Account(**response.data["data"])
+print(account.plan_type, account.emails.sent, account.emails.limit)
+```
+
+A `limit` of `-1` means unlimited. `account.addons.whatsapp` is `None` when the account has no WhatsApp add-on.
+
 <a name="whatsapp"></a>
 
 ## WhatsApp
@@ -3254,6 +3271,7 @@ async with AsyncMailerSendClient() as client:
     client.sms_webhooks  # SMS webhook operations
     client.sms_messages  # SMS message operations
     client.api_quota  # API quota operations
+    client.account  # Account operations
     client.dmarc_monitoring  # DMARC monitoring operations
     client.whatsapp_messages  # WhatsApp message operations
     client.whatsapp_inbound_messages  # WhatsApp inbound message operations
@@ -3462,6 +3480,7 @@ def test_list_sms_recipients():
 | SMS Inbound Routing | `{GET, POST, PUT, DELETE} sms-inbounds`     | ✅        |
 | Sender Identities   | `{GET, POST, PUT, DELETE} identities`       | ✅        |
 | API Quota           | `GET api-quota`                             | ✅        |
+| Account             | `GET account`                               | ✅        |
 | DMARC Monitoring    | `{GET, POST, PUT, DELETE} dmarc-monitoring` | ✅        |
 | WhatsApp Messages   | `GET whatsapp/messages`                     | ✅        |
 | WhatsApp Inbound    | `GET whatsapp/inbound-messages`             | ✅        |

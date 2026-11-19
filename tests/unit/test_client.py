@@ -156,6 +156,7 @@ class TestMailerSendClientInitialization:
                 "sms_recipients",
                 "sms_webhooks",
                 "api_quota",
+                "account",
                 "dmarc_monitoring",
                 "whatsapp_messages",
                 "whatsapp_items",
