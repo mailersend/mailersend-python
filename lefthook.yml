@@ -4,6 +4,7 @@ remotes:
     ref: main
     configs:
       - branch-validation-config.yml
+      - zizmor.yml
 
 pre-commit:
   parallel: true
