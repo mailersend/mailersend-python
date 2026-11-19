@@ -60,6 +60,21 @@ class TestAsyncMailerSendClientInit:
             assert client.max_retries == 5
             assert client.debug is True
 
+    def test_init_uses_the_default_api_version(self):
+        with patch("mailersend.async_client.httpx.AsyncClient"):
+            client = AsyncMailerSendClient(api_key="k")
+            assert client.base_url == "https://api.mailersend.com/2026-10/"
+
+    def test_init_uses_the_given_api_version(self):
+        with patch("mailersend.async_client.httpx.AsyncClient"):
+            client = AsyncMailerSendClient(api_key="k", api_version="v1")
+            assert client.base_url == "https://api.mailersend.com/v1/"
+
+    def test_init_raises_on_invalid_api_version(self):
+        with patch("mailersend.async_client.httpx.AsyncClient"):
+            with pytest.raises(ValueError, match="api_version"):
+                AsyncMailerSendClient(api_key="k", api_version="latest")
+
     def test_init_exposes_all_resources(self):
         with patch("mailersend.async_client.httpx.AsyncClient"):
             client = AsyncMailerSendClient(api_key="test-key")

@@ -1,9 +1,12 @@
 import platform
+import re
 from importlib.metadata import PackageNotFoundError, version
 
 # Base API information
-API_VERSION = "v1"
-DEFAULT_BASE_URL = f"https://api.mailersend.com/{API_VERSION}/"
+API_HOST = "https://api.mailersend.com"
+DEFAULT_API_VERSION = "2026-10"
+API_VERSION_PATTERN = re.compile(r"^(v1|\d{4}-(0[1-9]|1[0-2]))$")
+DEFAULT_BASE_URL = f"{API_HOST}/{DEFAULT_API_VERSION}/"
 DEFAULT_TIMEOUT = 30  # seconds
 
 # Package info for user agent
