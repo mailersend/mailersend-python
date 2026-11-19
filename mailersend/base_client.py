@@ -100,7 +100,7 @@ class _BaseMailerSendClient:
 
         if base_url is None:
             version = DEFAULT_API_VERSION if api_version is None else api_version
-            if not API_VERSION_PATTERN.match(version):
+            if not API_VERSION_PATTERN.fullmatch(version):
                 raise ValueError(
                     f"'api_version' must be 'v1' or a dated version such as "
                     f"'{DEFAULT_API_VERSION}', got '{version}'."

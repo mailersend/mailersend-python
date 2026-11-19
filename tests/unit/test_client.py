@@ -134,7 +134,7 @@ class TestMailerSendClientInitialization:
             client = MailerSendClient(api_key="k", api_version=api_version)
             assert client.base_url == expected
 
-    @pytest.mark.parametrize("api_version", ["2026-13", "2026-1", "latest", ""])
+    @pytest.mark.parametrize("api_version", ["2026-13", "2026-1", "latest", "", "v1\n"])
     def test_invalid_api_version_raises(self, api_version):
         with patch("mailersend.client.requests.Session"):
             with pytest.raises(ValueError, match="api_version"):
