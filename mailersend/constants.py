@@ -1,4 +1,5 @@
 import platform
+from importlib.metadata import PackageNotFoundError, version
 
 # Base API information
 API_VERSION = "v1"
@@ -7,7 +8,11 @@ DEFAULT_TIMEOUT = 30  # seconds
 
 # Package info for user agent
 PACKAGE_NAME = "mailersend-python"
-__version__ = "2.2.0"
+# The version comes from the git tag at build time; see [tool.hatch.version].
+try:
+    __version__ = version("mailersend")
+except PackageNotFoundError:
+    __version__ = "0.0.0.dev0"
 
 USER_AGENT = (
     f"{PACKAGE_NAME}/{__version__} "

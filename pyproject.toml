@@ -18,7 +18,6 @@ dev = [
     "pytest-asyncio>=1.3.0",
     "pytest-mock>=3.10.0",
     "python-dotenv>=0.21.0",
-    "python-semantic-release>=7.32.2",
     "vcrpy>=8.0.0",
     "pre-commit>=2.12.1",
 ]
@@ -28,18 +27,14 @@ asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
 
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
 
+# The git tag is the only source of the version. The publish workflow sets
+# SETUPTOOLS_SCM_PRETEND_VERSION from the tag.
 [tool.hatch.version]
-path = "mailersend/constants.py"
-
-[tool.semantic_release]
-branch = "main"
-build_command = "pip install uv && uv build"
-upload_to_pypi = false
-upload_to_release = true
-version_variable = "setup.py:__version__"
+source = "vcs"
+fallback-version = "0.0.0.dev0"
 
 [tool.ruff]
 line-length = 88
